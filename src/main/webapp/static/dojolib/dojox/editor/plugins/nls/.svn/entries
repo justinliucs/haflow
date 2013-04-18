@@ -1,0 +1,565 @@
+8
+
+dir
+7131
+svn://133.133.133.108/mapreducegroup/lili/springDemo/src/main/webapp/static/dojolib/dojox/editor/plugins/nls
+svn://133.133.133.108
+
+
+
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+
+svn:special svn:externals svn:needs-lock
+
+TextColor.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:42.120623Z
+d81723414eb6fe75d7312be414bec1d3
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+ja
+dir
+
+InsertEntity.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:41.469586Z
+541e926f31dd4d384892cfc485b7ed51
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+fi
+dir
+
+nb
+dir
+
+Breadcrumb.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:40.587535Z
+443644ef80cc2e856536b7ae4deb8f48
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+Blockquote.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:40.584535Z
+73f6edc25e88ed4c9316edad21e42595
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+SafePaste.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:41.884609Z
+f364bc563623cb3d891c66c2c53d6ded
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+fr
+dir
+
+CollapsibleToolbar.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:40.637538Z
+f97f703db13584aec5866c8f4bb4da0e
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+Save.js
+file
+
+
+
+
+2013-04-12T03:33:41.885609Z
+a4ec2192ff5de5b1c4c159735d11f407
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+nl
+dir
+
+ro
+dir
+
+zh
+dir
+
+TableDialog.js
+file
+
+
+
+
+2013-04-12T03:33:42.115622Z
+49bb95ded3c4dc10cf340c37135e13dc
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+ca
+dir
+
+ru
+dir
+
+ShowBlockNodes.js
+file
+
+
+
+
+2013-04-12T03:33:41.887609Z
+38f3e303b0476e68c36a9d086b670545
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+AutoSave.js
+file
+
+
+
+
+2013-04-12T03:33:40.578535Z
+cf4a2eb32015dd1342cb651d6f570ada
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+pt-pt
+dir
+
+cs
+dir
+
+kk
+dir
+
+PasteFromWord.js
+file
+
+
+
+
+2013-04-12T03:33:41.700599Z
+6284ebd62fb07c5d7f450a29bed63ce3
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+LocalImage.js
+file
+
+
+
+
+2013-04-12T03:33:41.619594Z
+3ed4d25d212d4c5709a046cdd18077dc
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+ko
+dir
+
+zh-tw
+dir
+
+InsertAnchor.js
+file
+
+
+
+
+2013-04-12T03:33:41.466585Z
+44ecb90a161372637d06de188ed9b558
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+Smiley.js
+file
+
+
+
+
+2013-04-12T03:33:42.075620Z
+afe1874c1719a2491b4f5895ca240cef
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+sk
+dir
+
+sl
+dir
+
+da
+dir
+
+FindReplace.js
+file
+
+
+
+
+2013-04-12T03:33:41.325577Z
+fdcbe5555ddad69aa60c214c33919a49
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+latinEntities.js
+file
+
+
+
+
+2013-04-12T03:33:41.617594Z
+48b651605504eaf24e410bc04f6fd1bc
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+SpellCheck.js
+file
+
+
+
+
+2013-04-12T03:33:42.077620Z
+a44d1709d6311e7c5a7dc13ec72e2915
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+de
+dir
+
+sv
+dir
+
+Save.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:41.886609Z
+c54c70eafcb27e96fe72c206a049383d
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+he
+dir
+
+Preview.js
+file
+
+
+
+
+2013-04-12T03:33:41.743601Z
+11147d79fa4ba37e5aba51b71ba422f0
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+PageBreak.js
+file
+
+
+
+
+2013-04-12T03:33:41.698599Z
+978dffe3028f8884b340a528356356ae
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+TextColor.js
+file
+
+
+
+
+2013-04-12T03:33:42.119623Z
+746f24bf0e5181638d5119ce0308727e
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+TableDialog.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:42.118623Z
+391ef5d09c532d7f0f0fcc7845a38975
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+hr
+dir
+
+pl
+dir
+
+th
+dir
+
+InsertEntity.js
+file
+
+
+
+
+2013-04-12T03:33:41.468585Z
+e9132f26ef51a4acaef0935de4ffdccb
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+hu
+dir
+
+ShowBlockNodes.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:41.888609Z
+ac45627d66f03fa7aaf172e287a28e99
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+Breadcrumb.js
+file
+
+
+
+
+2013-04-12T03:33:40.586535Z
+e2440f3709674a62c70d7af088f0c27b
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+pt
+dir
+
+AutoSave.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:40.579535Z
+dabe3b2001ff5589f7d6901351194ae9
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+Blockquote.js
+file
+
+
+
+
+2013-04-12T03:33:40.583535Z
+509a2ea8d5d146e233b928b700b52eb3
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+tr
+dir
+
+SafePaste.js
+file
+
+
+
+
+2013-04-12T03:33:41.882609Z
+00c819ecaf0a927c0faec597df445acb
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+CollapsibleToolbar.js
+file
+
+
+
+
+2013-04-12T03:33:40.636538Z
+d58049afb08a003423477eebdc0e8987
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+PasteFromWord.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:41.701599Z
+301a72d6e8cabdd82a00dd953d65c01e
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+LocalImage.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:41.621594Z
+bb5c4fe8cd5282b7ad91ccb24aa7f52c
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+InsertAnchor.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:41.467585Z
+59078b9eb3ebde43840a9495f7f1f6f5
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+Smiley.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:42.076620Z
+cd16e71a31a14ed82801f39c9b93b7a4
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+el
+dir
+
+ar
+dir
+
+es
+dir
+
+latinEntities.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:41.618594Z
+7ff65a5d6e6c014876bc4d71030af502
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+FindReplace.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:41.327577Z
+11e567e20623e230a2267995c8334386
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+SpellCheck.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:42.079620Z
+259c6d891ffc9fc1bef9535a27e8294c
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+az
+dir
+
+it
+dir
+
+Preview.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:41.744601Z
+af99968c643f6b9bf25026de872ef0ba
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+PageBreak.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:41.699599Z
+fa779cd17fb338c5b898f4f422c3463c
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+

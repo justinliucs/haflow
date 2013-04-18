@@ -1,0 +1,67 @@
+8
+
+dir
+7131
+svn://133.133.133.108/mapreducegroup/lili/springDemo/src/main/webapp/static/dojolib/dojox/mobile/themes/android/dijit
+svn://133.133.133.108
+
+
+
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+
+svn:special svn:externals svn:needs-lock
+
+Calendar-compat.less
+file
+
+
+
+
+2013-04-12T03:33:45.815834Z
+6aea453b58c990b5698df12f88849b23
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+Calendar.css
+file
+
+
+
+
+2013-04-12T03:33:45.816834Z
+57c762d37161194461dcb8af13492cb0
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+Calendar-compat.css
+file
+
+
+
+
+2013-04-12T03:33:45.814834Z
+560031544c2563338c4f3d4cdda6dccd
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+compat
+dir
+
+Calendar.less
+file
+
+
+
+
+2013-04-12T03:33:45.817834Z
+b541914c1273f806948a9c18bcfb7488
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+

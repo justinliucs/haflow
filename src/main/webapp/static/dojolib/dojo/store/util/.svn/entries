@@ -1,0 +1,64 @@
+8
+
+dir
+7131
+svn://133.133.133.108/mapreducegroup/lili/springDemo/src/main/webapp/static/dojolib/dojo/store/util
+svn://133.133.133.108
+
+
+
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+
+svn:special svn:externals svn:needs-lock
+
+SimpleQueryEngine.js
+file
+
+
+
+
+2013-04-12T03:33:38.009388Z
+a586dd02efddb633faf83c07c1d9298d
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+SimpleQueryEngine.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:38.010388Z
+e22f9c0b549c9f147601220a55df0049
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+QueryResults.js
+file
+
+
+
+
+2013-04-12T03:33:38.006387Z
+aacb4b5c698a8336b6b90fc34f0bc53c
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+QueryResults.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:38.007387Z
+64ee7d4afdd024629ffbdffe4618b716
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+

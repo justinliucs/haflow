@@ -1,0 +1,55 @@
+8
+
+dir
+7131
+svn://133.133.133.108/mapreducegroup/lili/springDemo/src/main/webapp/static/dojolib/dojox/av/resources
+svn://133.133.133.108
+
+
+
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+
+svn:special svn:externals svn:needs-lock
+
+audio.swf
+file
+
+
+
+
+2013-04-12T03:33:38.752430Z
+2e456ce2f5fdbd5489bf1bb3d7d83c29
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+has-props
+
+video.swf
+file
+
+
+
+
+2013-04-12T03:33:38.766431Z
+be6feb36af6062fc59e6d4e07740f86c
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+has-props
+
+version.mov
+file
+
+
+
+
+2013-04-12T03:33:38.756430Z
+701da341e9e89e8c3448f73bdaa3539f
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+has-props
+
