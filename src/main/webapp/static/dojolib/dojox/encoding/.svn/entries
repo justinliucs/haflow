@@ -1,0 +1,169 @@
+8
+
+dir
+7131
+svn://133.133.133.108/mapreducegroup/lili/springDemo/src/main/webapp/static/dojolib/dojox/encoding
+svn://133.133.133.108
+
+
+
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+
+svn:special svn:externals svn:needs-lock
+
+crypto
+dir
+
+ascii85.js
+file
+
+
+
+
+2013-04-12T03:33:42.492644Z
+d5561e56839e22de1fb7b34c029e8c7e
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+base64.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:42.495644Z
+34c885d771f08c0ac745344b2333eeb3
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+LICENSE
+file
+
+
+
+
+2013-04-12T03:33:42.526646Z
+1a0fb2a7485f9e834d3bccd53008a728
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+_base.js
+file
+
+
+
+
+2013-04-12T03:33:42.527646Z
+fb16e7dea1fc09804f29a23e7e43fdeb
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+easy64.js
+file
+
+
+
+
+2013-04-12T03:33:42.524646Z
+3cce4863875a8dba28c75db6e47540ff
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+bits.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:42.497644Z
+07f87eb075ae66959f09374acc404af2
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+README
+file
+
+
+
+
+2013-04-12T03:33:42.526646Z
+0b41491a828f50f03ea297405cc07278
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+base64.js
+file
+
+
+
+
+2013-04-12T03:33:42.494644Z
+9e3991e1c5211728b5f1c69ef6e61805
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+compression
+dir
+
+ascii85.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:42.493644Z
+68b8b5f4dcf47eda646228b935f52ba3
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+digests
+dir
+
+_base.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:42.528646Z
+032925b520f3d3990d1fa626c2ed919b
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+easy64.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:42.525646Z
+2f8d1e2ea8928f90534d7988c07f4c49
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+bits.js
+file
+
+
+
+
+2013-04-12T03:33:42.496644Z
+a50885ecd9d69967973192787fac7c28
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+

@@ -1,0 +1,64 @@
+8
+
+dir
+7131
+svn://133.133.133.108/mapreducegroup/lili/springDemo/src/main/webapp/static/dojolib/dijit/nls/pt
+svn://133.133.133.108
+
+
+
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+
+svn:special svn:externals svn:needs-lock
+
+common.js
+file
+
+
+
+
+2013-04-12T03:33:35.070219Z
+4e87236f122036effa45db35d9be5e52
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+common.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:35.070219Z
+3f1098c4dc1ead5b826a63d2fe5c28a6
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+loading.js
+file
+
+
+
+
+2013-04-12T03:33:35.071220Z
+1675841ebc0fa85470ace1ab902446c2
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+loading.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:35.072220Z
+61c484dbbafb5eb2cf40ab14a364e5c8
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+

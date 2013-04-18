@@ -1,0 +1,64 @@
+8
+
+dir
+7131
+svn://133.133.133.108/mapreducegroup/lili/springDemo/src/main/webapp/static/dojolib/dojox/app/module
+svn://133.133.133.108
+
+
+
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+
+svn:special svn:externals svn:needs-lock
+
+env.js
+file
+
+
+
+
+2013-04-12T03:33:38.233400Z
+d19842714e1766210f3bcc44e5154b74
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+env.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:38.234400Z
+116326f5346508b0b811dcd1196166df
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+lifecycle.js
+file
+
+
+
+
+2013-04-12T03:33:38.235401Z
+8250ed92519248cc1e2a3e214dce7f40
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+lifecycle.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:38.236401Z
+42377acc2e16c779bf37fafc1b4fd180
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+

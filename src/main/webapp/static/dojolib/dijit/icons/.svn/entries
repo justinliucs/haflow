@@ -1,0 +1,67 @@
+8
+
+dir
+7131
+svn://133.133.133.108/mapreducegroup/lili/springDemo/src/main/webapp/static/dojolib/dijit/icons
+svn://133.133.133.108
+
+
+
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+
+svn:special svn:externals svn:needs-lock
+
+images
+dir
+
+editorIcons.css
+file
+
+
+
+
+2013-04-12T03:33:34.916211Z
+205f459dcacb223c08dc97d87176ac29
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+editorIcons_rtl.css
+file
+
+
+
+
+2013-04-12T03:33:34.917211Z
+72423d705ac75d4dcd2a5983626be418
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+commonIcons.css
+file
+
+
+
+
+2013-04-12T03:33:34.915211Z
+0eaa19d3b3f3c810290943e54f76bfec
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+commonIcons_rtl.css
+file
+
+
+
+
+2013-04-12T03:33:34.916211Z
+edfc20b7518a08acb4688f7cc7199c7b
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
