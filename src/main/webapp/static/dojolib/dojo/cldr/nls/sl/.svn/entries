@@ -1,0 +1,88 @@
+8
+
+dir
+7131
+svn://133.133.133.108/mapreducegroup/lili/springDemo/src/main/webapp/static/dojolib/dojo/cldr/nls/sl
+svn://133.133.133.108
+
+
+
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+
+svn:special svn:externals svn:needs-lock
+
+number.js
+file
+
+
+
+
+2013-04-12T03:33:36.363293Z
+6a7eafaa4deb6a1c5a7118d786842f28
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+number.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:36.364294Z
+ac60acd842445087679ca6b8068509d2
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+currency.js
+file
+
+
+
+
+2013-04-12T03:33:36.359293Z
+9838638e48b34d0bbe409cf2626dec50
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+currency.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:36.360293Z
+93c9ff997888a0ef3785e155377bfa6d
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+gregorian.js
+file
+
+
+
+
+2013-04-12T03:33:36.361293Z
+c1117104a77d63485716287bc48a67c1
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+gregorian.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:36.362293Z
+487828f81db2315f7329ce748f07f06e
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+

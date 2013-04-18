@@ -1,0 +1,40 @@
+8
+
+dir
+7131
+svn://133.133.133.108/mapreducegroup/lili/springDemo/src/main/webapp/static/dojolib/dojox/mobile/build
+svn://133.133.133.108
+
+
+
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+
+svn:special svn:externals svn:needs-lock
+
+build.bat
+file
+
+
+
+
+2013-04-12T03:33:45.566820Z
+7051e1c70284496a317f4efc7243fa7f
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+build.sh
+file
+
+
+
+
+2013-04-12T03:33:45.566820Z
+6bca241e36fe0c4338d355740f0df236
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
