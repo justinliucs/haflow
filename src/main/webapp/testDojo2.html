@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>test demo</title>
+		<link rel="stylesheet" href="static/dojolib/dojo/resources/dojo.css" />
+		<link rel="stylesheet"
+			href="static/dojolib/dijit/themes/claro/claro.css" />
+		<link rel="stylesheet"
+			href="static/dojolib/dojox/grid/_grid/tundraGrid.css" />
+		<script type="text/javascript" src="static/dojolib/dojo/dojo.js" 
+		         data-dojo-config="parseOnLoad: true, async:true"></script>
+		
+        
+
+	</head>
+	<body class="claro">
+    <script>
+        // Require the Menu and MenuItem class, and the dojo/parser,
+        // and make sure the DOM is ready
+        require([
+            "dijit/Menu",
+            "dijit/MenuItem",
+            "dojo/parser",
+            "dojo/ready",
+            "dijit/PopupMenuItem"
+        ]);
+    </script>
+    <div id="mainMenu" data-dojo-type="dijit/Menu">
+        <div id="edit" data-dojo-type="dijit/MenuItem" data-dojo-props="iconClass: 'taskIcon'">Edit</div>
+        <div id="view" data-dojo-type="dijit/MenuItem">View</div>
+        <div id="task" data-dojo-type="dijit/PopupMenuItem">
+            <span>Task</span>
+            <div id="taskMenu" data-dojo-type="dijit.Menu">
+                <div id="complete" data-dojo-type="dijit.MenuItem">
+                    Mark as Complete
+                </div>
+                <div id="cancel" data-dojo-type="dijit.MenuItem">
+                    Cancel
+                </div>
+                <div id="begin" data-dojo-type="dijit.MenuItem">
+                    Begin
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
