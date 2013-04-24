@@ -1,18 +1,16 @@
-<!DOCTYPE html>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
-
-	<title>Theme Previewer</title>
-
-	<link rel="stylesheet" href="static/dojolib/dijit/themes/claro/document.css"/>
-	<link rel="stylesheet" href="static/dojolib/dijit/themes/claro/claro.css"/>
-	<link rel="stylesheet" href="static/css/demo.css"/>
-
-	<script type="text/javascript" src="static/dojolib/dojo/dojo.js"
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>demo preview</title>
+<link rel="stylesheet" href="static/dojolib/dijit/themes/claro/document.css"/>
+<link rel="stylesheet" href="static/dojolib/dijit/themes/claro/claro.css"/>
+<link rel="stylesheet" href="static/css/demo.css"/>
+<script type="text/javascript" src="static/dojolib/dojo/dojo.js"
 		data-dojo-config="parseOnLoad: false, async:true"></script>
-
-	<script type="text/javascript" src="static/js/src.js"></script>
+<script type="text/javascript" src="static/js/src2.js"></script>
 </head>
 <body class="claro">
 	<!-- basic preloader: -->
@@ -47,14 +45,7 @@
 				<div data-dojo-type="dijit.MenuItem">Submenu Item Two</div>
 			</div>
 		</div>
-		<div data-dojo-type="dijit.PopupMenuItem">
-			<span>Different popup</span>
-			<div data-dojo-type="dijit.ColorPalette"></div>
-		</div>
-		<div data-dojo-type="dijit.PopupMenuItem">
-			<span>Different popup</span>
-			<div data-dojo-type="dijit.Calendar"></div>
-		</div>
+		
 	</div>
 	<!-- end contextMenu -->
 
@@ -111,8 +102,9 @@
 
 		
 
-		</div><!-- end AccordionContainer -->
-			<div data-dojo-type="dijit.layout.AccordionContainer" data-dojo-props="region:'right', splitter:true, minSize:20"
+		</div>
+		<!-- end left AccordionContainer -->
+			<div data-dojo-type="dijit.layout.AccordionContainer" data-dojo-props="region:'trailing', splitter:true, minSize:20"
 			style="width: 300px;" id="rightAccordion">
 
 
@@ -124,7 +116,7 @@
 			</div>
 
 			<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title:'Rootless Tree'">
-				<div id="rootlessTree" data-dojo-type="dijit.Tree" data-dojo-props="
+				<div id="rootlessTree1" data-dojo-type="dijit.Tree" data-dojo-props="
 					model:continentModel,
 					query:{ type:'continent' },
 					showRoot: false,
@@ -134,7 +126,8 @@
 
 		
 
-		</div><!-- end AccordionContainer -->
+		</div>
+		<!-- end right AccordionContainer -->
 
 		<!-- top tabs (marked as "center" to take up the main part of the BorderContainer) -->
 		<div data-dojo-type="dijit.layout.TabContainer" data-dojo-props="region:'center', tabStrip:true" id="topTabs">
