@@ -77,8 +77,8 @@
 	      <artifactId>jackson-mapper-asl</artifactId>
 	      <version>1.9.12</version>
          </dependency>
+       
             
-
 		<!-- spring data access -->
 		<dependency>
 			<groupId>org.springframework.data</groupId>
@@ -142,6 +142,14 @@
 			</exclusions>
 		</dependency>
 		<!-- WEB begin -->
+		
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			<scope>provided</scope>
+		</dependency>
+		
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
@@ -161,12 +169,7 @@
 			<version>1.2</version>
 		</dependency>
 
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.5</version>
-			<scope>provided</scope>
-		</dependency>
+		
 		<!-- WEB end -->
 		<!-- GENERAL UTILS begin -->
 		<dependency>
