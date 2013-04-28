@@ -1,43 +1,0 @@
-8
-
-dir
-7131
-svn://133.133.133.108/mapreducegroup/lili/springDemo/src/main/webapp/static/dojolib/dojox/widget/ColorPicker
-svn://133.133.133.108
-
-
-
-2013-04-15T01:59:24.008611Z
-7131
-liqiyuan
-
-
-svn:special svn:externals svn:needs-lock
-
-ColorPicker.html
-file
-
-
-
-
-2013-04-12T03:33:48.341979Z
-e0f8f6f4dc0be368b9663a56dd257bd3
-2013-04-15T01:59:24.008611Z
-7131
-liqiyuan
-
-ColorPicker.css
-file
-
-
-
-
-2013-04-12T03:33:48.340979Z
-7cff25d0110fd111e3d202a94df46ea4
-2013-04-15T01:59:24.008611Z
-7131
-liqiyuan
-
-images
-dir
-

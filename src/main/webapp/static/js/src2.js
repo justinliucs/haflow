@@ -85,7 +85,7 @@ require([
 			setTimeout(function hideLoader(){
 				fx.fadeOut({ 
 					node: 'loader', 
-					duration:500,
+					duration:50,
 					onEnd: function(n){
 						n.style.display = "none";
 					}
