@@ -34,25 +34,24 @@
 </head>
 <body class="tundra">
 
-<h1>Justa Cigar Corporation</h1>
-<h3>"Sometimes a cigar is a Justa Cigar!"</h3>
+<h1>User test</h1>
+
 
     
     <div dojoType="dojo.data.ItemFileReadStore" 
-        jsId="wishStore" url="service/cigar_wish_list.json">
+        jsId="wishStore" url="/haflow/UserTest">
     </div>
     
 
     
     <table id="grid" dojoType="dojox.grid.Grid" store="wishStore" 
-         query="{ wishId: '*' }" clientSort="true">
+          >
         <thead>
            <tr>
-              <th field="description" width="15em">Cigar</th> 
-              <th field="size">Length/Ring</th> 
-              <th field="origin">Origin</th> 
-              <th field="wrapper">Wrapper</th> 
-              <th field="shape">Shape</th> 
+              <th field="name" >name</th> 
+              <th field="password">password</th> 
+              <th field="sex">sex</th> 
+             
            </tr>
         </thead>        
     </table>
