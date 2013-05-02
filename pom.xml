@@ -77,7 +77,12 @@
 	      <artifactId>jackson-mapper-asl</artifactId>
 	      <version>1.9.12</version>
          </dependency>
-       
+       <dependency>
+	 <groupId>org.codehaus.jackson</groupId>
+	   <artifactId>jackson-core-asl</artifactId>
+	   <version>1.9.12</version>
+     </dependency>
+            
             
 		<!-- spring data access -->
 		<dependency>
@@ -177,7 +182,20 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>${commons-lang3.version}</version>
 		</dependency>
-
+         <!-- common-logging 实际调用slf4j -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+		<!-- java.util.logging 实际调用slf4j -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+	        <artifactId>jul-to-slf4j</artifactId>
+	        <version>${slf4j.version}</version>
+	        <scope>runtime</scope>
+	    </dependency>
 		<!-- GENERAL UTILS end -->
 	</dependencies>
 
