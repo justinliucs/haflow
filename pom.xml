@@ -77,9 +77,12 @@
 	      <artifactId>jackson-mapper-asl</artifactId>
 	      <version>1.9.12</version>
          </dependency>
-       
-       <!-- added by zhaowei -->
-		<!-- end added by zhaowei -->
+       <dependency>
+	 <groupId>org.codehaus.jackson</groupId>
+	   <artifactId>jackson-core-asl</artifactId>
+	   <version>1.9.12</version>
+     </dependency>
+            
             
 		<!-- spring data access -->
 		<dependency>
@@ -145,6 +148,12 @@
 		</dependency>
 		<!-- WEB begin -->
 		
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			<scope>provided</scope>
+		</dependency>
 		
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -173,68 +182,21 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>${commons-lang3.version}</version>
 		</dependency>
-
+         <!-- common-logging 实际调用slf4j -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+		<!-- java.util.logging 实际调用slf4j -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+	        <artifactId>jul-to-slf4j</artifactId>
+	        <version>${slf4j.version}</version>
+	        <scope>runtime</scope>
+	    </dependency>
 		<!-- GENERAL UTILS end -->
-		<dependency>
-			<groupId>javax.activation</groupId>
-			<artifactId>activation</artifactId>
-			<version>1.0.2</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.4</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet.jsp</groupId>
-			<artifactId>jsp-api</artifactId>
-			<version>2.0</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>jboss</groupId>
-			<artifactId>jboss-j2ee</artifactId>
-			<version>4.0.0</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.xml</groupId>
-			<artifactId>jaxrpc-api</artifactId>
-			<version>1.1</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>jboss</groupId>
-			<artifactId>jboss-jsr77</artifactId>
-			<version>3.2.3</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>axis</groupId>
-			<artifactId>axis-saaj</artifactId>
-			<version>1.3</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.mail</groupId>
-			<artifactId>mail</artifactId>
-			<version>1.3.1</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.xml</groupId>
-			<artifactId>namespace</artifactId>
-			<version>1.0.1</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>xerces</groupId>
-			<artifactId>xmlParserAPIs</artifactId>
-			<version>2.6.2</version>
-			<scope>provided</scope>
-		</dependency>
 	</dependencies>
 
 	<build>

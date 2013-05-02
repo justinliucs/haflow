@@ -8,6 +8,11 @@
 </head>
 <body>
 世界，你好！
+<form method="post" action="\">
+<input type="text" value="name"/>
+<input  type="submit" />
+
 ${message} 
+</form>
 </body>
 </html>
