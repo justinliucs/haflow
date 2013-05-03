@@ -1,0 +1,34 @@
+8
+
+dir
+7131
+svn://133.133.133.108/mapreducegroup/lili/springDemo/src/main/webapp/static/dojolib/dojox/geo
+svn://133.133.133.108
+
+
+
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+
+svn:special svn:externals svn:needs-lock
+
+charting
+dir
+
+openlayers
+dir
+
+README
+file
+
+
+
+
+2013-04-12T03:33:43.967728Z
+c06ca0d55d43e9093c7a7c38291639a5
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+

@@ -27,6 +27,8 @@
 	
 	<link href="static/zcss/flowchartDemo.css" rel="stylesheet" type="text/css" />
 	<link href="static/zcss/perimeterAnchorsDemo.css" rel="stylesheet" type="text/css" />
+	
+	<link rel="stylesheet" href="static/zcss/form.css"/>	
 <!-- end added by zhaowei -->
 </head>
 <body class="claro">
@@ -254,6 +256,17 @@
 					</div>
 			</div>
 			
+			<div id="btab3" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Info3", style:" padding:10px; "'>								
+				<div id="contentPane" dojoType="dojox.layout.ContentPane" href="<c:url value="/form" />"> 
+			   		Loading contents.html. 
+				</div> 
+			</div>
+			
+			<div id="btab4" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Info4", style:" padding:10px; "'>								
+				<div id="entryContentPane" dojoType="dojox.layout.ContentPane" href="<c:url value="/entry" />"> 
+			   		Loading contents.html. 
+				</div> 
+			</div>
 
 		</div><!-- end Bottom TabContainer -->
 

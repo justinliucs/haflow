@@ -1,0 +1,214 @@
+8
+
+dir
+7131
+svn://133.133.133.108/mapreducegroup/lili/springDemo/src/main/webapp/static/dojolib/dojox/dtl
+svn://133.133.133.108
+
+
+
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+
+svn:special svn:externals svn:needs-lock
+
+render
+dir
+
+Context.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:40.434526Z
+29dac64e1be6b040fc55cfb4e41c8fa0
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+_base.js
+file
+
+
+
+
+2013-04-12T03:33:40.487529Z
+0d6abd081c45c1a320d87427f01cb252
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+filter
+dir
+
+_Templated.js
+file
+
+
+
+
+2013-04-12T03:33:40.490530Z
+db8040fcd06fc5f3e7c29fdf0e2fa5c5
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+ext-dojo
+dir
+
+_DomTemplated.js
+file
+
+
+
+
+2013-04-12T03:33:40.489529Z
+a39bf550c4d9478b32c925ec3bc89f2d
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+DomInline.js
+file
+
+
+
+
+2013-04-12T03:33:40.448527Z
+c71756b95f5a0ac6effd18e1bef26df2
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+Inline.js
+file
+
+
+
+
+2013-04-12T03:33:40.466528Z
+3def657bc261a6018285dfbdf1666d4b
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+dom.js
+file
+
+
+
+
+2013-04-12T03:33:40.444527Z
+5b468ab8984665d71556045bfe72d3e9
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+README
+file
+
+
+
+
+2013-04-12T03:33:40.469528Z
+c9adf868e9d082577f60c0b60eeedc6d
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+Context.js
+file
+
+
+
+
+2013-04-12T03:33:40.433526Z
+8a3c89e7e8b72041ed590b3a99c120a6
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+contrib
+dir
+
+utils
+dir
+
+_base.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:40.488529Z
+01ad77848b7d654023e68db587e7f3e4
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+_DomTemplated.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:40.489529Z
+2dddce3bf9c60d49b0c8aae0456ab06b
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+DomInline.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:40.449527Z
+dcfe64b1d7a74407fc2a53f7af6b5e68
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+Inline.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:40.468528Z
+2e3839bdb240690f27b2884f96eb710f
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+_Templated.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:40.491530Z
+5c484aafd80376ea0bf814cf485fa910
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+tag
+dir
+
+dom.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:40.446527Z
+af60fd57c03d485437babe7759995768
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+

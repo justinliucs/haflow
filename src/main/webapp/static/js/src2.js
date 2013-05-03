@@ -19,8 +19,9 @@ require([
 	"dojo/number", // dojo.number.format
 	"dojo/dnd/Source", // dojo.dnd.Source
 	"dojo/_base/json", // dojo.toJson
-	"dijit/dijit-all" // dijit.*
-], function(require, array, config, dom, domClass, domConstruct, kernel, query, ready, win, fx, registry, MenuItem, locale, parser, ItemFileReadStore, ForestStoreModel){
+	"dijit/dijit-all", // dijit.*
+	"dojox/layout/ContentPane"
+], function(require, array, config, dom, domClass, domConstruct, kernel, query, ready, win, fx, registry, MenuItem, locale, parser, ItemFileReadStore, ForestStoreModel, xContentPane){
 
 	continentStore = new ItemFileReadStore({ data: {
 		identifier: 'id',
