@@ -145,9 +145,9 @@
 			
 			<!-- added by zhaowei -->
 			<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='selected:true, title:"Modules List"'>
-				<div class="window boxstyle" id="1"> <strong>1</strong></div>
-		      	<div class="window boxstyle" id="2"> <strong>2</strong></div>
-      			<div class="window boxstyle" id="3"> <strong>3</strong></div>			
+				<div class="window boxstyle" id="1"> <strong>ER</strong></div>
+		      	<div class="window boxstyle" id="2"> <strong>TEST</strong></div>
+      			<div class="window boxstyle" id="3"> <strong>HQ</strong></div>			
 			</div>
 			
 			<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='selected:true, title:"Modules List 2"'>
@@ -262,8 +262,14 @@
 				</div> 
 			</div>
 			
-			<div id="btab4" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Info4", style:" padding:10px; "'>								
+			<div id="btab4" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"ER Conf", style:" padding:10px; "'>								
 				<div id="entryContentPane" dojoType="dojox.layout.ContentPane" href="<c:url value="/entry" />"> 
+			   		Loading contents.html. 
+				</div> 
+			</div>
+			
+			<div id="btab5" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"HQ Conf", style:" padding:10px; "'>								
+				<div id="hiveContentPane" dojoType="dojox.layout.ContentPane" href="<c:url value="/hive" />"> 
 			   		Loading contents.html. 
 				</div> 
 			</div>

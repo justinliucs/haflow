@@ -55,23 +55,77 @@ $(function() {
                         $(this).find("p")
                             .append('<div class="box jq-draggable-incontainer ui-draggable boxstyle" id="window'+idCount+'"' +
 							'style="position: absolute; left: '+ x + 'px; top: ' + y 
-							+'px;"><strong>1</strong></div><div style="height:100px;"></div>');
-                            SBS.UI.Views.Plumb.AddEndpoints("window"+idCount++, ["BottomCenter"], []);							
-							break;
+							+'px;"><strong>ER</strong></div><div style="height:100px;"></div>');
+                         SBS.UI.Views.Plumb.AddEndpoints("window"+idCount++, ["BottomCenter"], []);		
+                      //   boo.after("<div id=\"btab5\" data-dojo-type=\"dijit.layout.ContentPane\" data-dojo-props=\'title:\"Info5\", style:\" padding:10px; \"\'>" +							
+                      //  		 "<div id=\"entryContentPane5\" dojoType=\"dojox.layout.ContentPane\" href=\"<c:url value=\"/entry\" />\">" + 
+                       // 		 "	Loading contents.html." +
+                       // 		 "</div>" +  "</div>");
+                         require(["dojo/dom","dojo/dom-construct", "dijit/registry", "dijit/layout/TabContainer", 
+                                  "dijit/layout/ContentPane", "dojox/layout/ContentPane"], 
+                        		 function(dom, domConstruct,registry,TabContainer, ContentPane, xContentPane){
+                        	 var btab4 = dom.byId("btab4");
+                        	 var tabContainer = registry.byId("bottomTabs");
+                        	 var entryPane = new xContentPane({                        		 
+                        		 content : "Loading contents.html.",
+                        		 executescripts: true
+                        	 });
+                        	 entryPane.setHref("/haflow/entry");
+                        	 var pane = new ContentPane({
+                        		 content :  entryPane,
+                        		 style: "padding:10px",                        	
+                        		 title:"ER Conf"
+                        	 });
+                        	 tabContainer.addChild(pane);
+                        	 tabContainer.selectChild(pane);
+                         });
+                         break;
                     case "2":
                         $(this).find("p")
                             .append('<div class="box jq-draggable-incontainer ui-draggable boxstyle" id="window'+idCount+'"' +
 							'style="position: absolute; left: '+ x + 'px; top: ' + y 
-							+'px;"><strong>2</strong></div><div style="height:100px;"></div>');
-                            SBS.UI.Views.Plumb.AddEndpoints("window"+idCount++, ["BottomCenter","BottomLeft"], ["TopCenter"]);
-							break;
+							+'px;"><strong>Test</strong></div><div style="height:100px;"></div>');
+                        SBS.UI.Views.Plumb.AddEndpoints("window"+idCount++, ["BottomCenter","BottomLeft"], ["TopCenter"]);
+                        
+                        require(["dojo/dom","dojo/dom-construct", "dijit/registry", "dijit/layout/TabContainer", 
+                                 "dijit/layout/ContentPane", "dojox/layout/ContentPane"], 
+                       		 function(dom, domConstruct,registry,TabContainer, ContentPane, xContentPane){
+	                       	 var tabContainer = registry.byId("bottomTabs");
+	                       	 var btab4 = registry.byId("btab4");
+	                       	 //domConstruct.destroy("btab4"); //TODO
+	                       	 if( btab4){
+	                       		 tabContainer.removeChild(btab4);
+	                       	 }
+                        });
+                        
+						break;
                     case "3":
                         $(this).find("p")
                             .after('<div class="box jq-draggable-incontainer ui-draggable boxstyle" id="window'+idCount+'"' +
 							'style="position: absolute; left: '+ x + 'px; top: ' + y 
-							+'px;"><strong>3</strong></div>');
-                            SBS.UI.Views.Plumb.AddEndpoints("window"+idCount++, [], ["TopCenter", "TopLeft"]);
-							break;
+							+'px;"><strong>HQ</strong></div>');
+                        SBS.UI.Views.Plumb.AddEndpoints("window"+idCount++, [], ["TopCenter", "TopLeft"]);
+                        
+                        require(["dojo/dom","dojo/dom-construct", "dijit/registry", "dijit/layout/TabContainer", 
+                                 "dijit/layout/ContentPane", "dojox/layout/ContentPane"], 
+                       		 function(dom, domConstruct,registry,TabContainer, ContentPane, xContentPane){
+                       	 
+                       	 var tabContainer = registry.byId("bottomTabs");
+                       	 var entryPane = new xContentPane({                        		 
+                       		 content : "Loading contents.html.",
+                    		 executescripts: true
+                       	 });
+                       	 entryPane.setHref("/haflow/hive");
+                       	 var pane = new ContentPane({
+                       		 content :  entryPane,
+                       		 style: "padding:10px",                        	
+                       		 title:"HQ Conf"
+                       	 });
+                       	 tabContainer.addChild(pane);
+                       	 tabContainer.selectChild(pane);
+                        });
+                        
+						break;
                 }
 				idCount++;
 				$(".box").draggable({containment: "#flowContent"});	

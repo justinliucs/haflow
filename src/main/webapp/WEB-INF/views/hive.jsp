@@ -12,11 +12,11 @@
 </head>
 <body>
 </c:if>
-		<div id="entryContent">
+		<div id="hiveContent">
 
-		<form:form id="form_entry" method="post" modelAttribute="entryBean" cssClass="cleanform">
+		<form:form id="form_hive" method="post" modelAttribute="hiveBean" cssClass="cleanform">
 			<div class="header">
-		  		<h2>Entry Recognition</h2>
+		  		<h2>Hive Query</h2>
 		  		<c:if test="${not empty message}">
 					<div id="message" class="success">${message}</div>	
 		  		</c:if>
@@ -28,25 +28,21 @@
 			</div>
 		  	<fieldset>
 		  		<legend>Configuration</legend>
+		  		
 		  		<form:label path="jarPath">
 		  			Jar Path <form:errors path="jarPath" cssClass="error" />
 		 		</form:label>
-		  		<form:input path="jarPath" />
+		  		<form:input path="jarPath" />	
 		  		
-		  		<form:label path="inPath">
-		  			Input Path <form:errors path="inPath" cssClass="error" />
+		  		<form:label path="hiveSql">
+		  			SQL <form:errors path="hiveSql" cssClass="error" />
 		 		</form:label>
-		  		<form:input path="inPath" />
+		  		<form:input path="hiveSql" />		  
 		  		
 		  		<form:label path="outPath">
 		  			Output Path <form:errors path="outPath" cssClass="error" />
 		 		</form:label>
-		  		<form:input path="outPath" />
-		  		
-		  		<form:label path="confPath">
-		  			Conf Path <form:errors path="confPath" cssClass="error" />
-		 		</form:label>
-		  		<form:input path="confPath" />
+		  		<form:input path="outPath" />		  	
 	
 		  	</fieldset>
 	
@@ -55,9 +51,9 @@
 		<script type="text/javascript">
 			
 			$(document).ready(function() {
-				$("#form_entry").submit(function() {  
+				$("#form_hive").submit(function() {  
 					$.post($(this).attr("action"), $(this).serialize(), function(html) {
-						$("#entryContent").replaceWith(html);
+						$("#hiveContent").replaceWith(html);
 						//$('html, body').animate({ scrollTop: $("#message").offset().top }, 500);					
 					});
 					return false;  
