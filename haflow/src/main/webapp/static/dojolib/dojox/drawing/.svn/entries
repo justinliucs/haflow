@@ -1,127 +1,0 @@
-8
-
-dir
-7131
-svn://133.133.133.108/mapreducegroup/lili/springDemo/src/main/webapp/static/dojolib/dojox/drawing
-svn://133.133.133.108
-
-
-
-2013-04-15T01:59:24.008611Z
-7131
-liqiyuan
-
-
-svn:special svn:externals svn:needs-lock
-
-plugins
-dir
-
-defaults.js
-file
-
-
-
-
-2013-04-12T03:33:40.269517Z
-0ee05f7e0030cd418362336d0760704c
-2013-04-15T01:59:24.008611Z
-7131
-liqiyuan
-
-_base.js
-file
-
-
-
-
-2013-04-12T03:33:40.428526Z
-3c30cea74e979195f35b74b1c3b7a118
-2013-04-15T01:59:24.008611Z
-7131
-liqiyuan
-
-Drawing.js.uncompressed.js
-file
-
-
-
-
-2013-04-12T03:33:40.272517Z
-b7a728a6e6568d22031e0f95c8e4b697
-2013-04-15T01:59:24.008611Z
-7131
-liqiyuan
-
-README
-file
-
-
-
-
-2013-04-12T03:33:40.352522Z
-7bf6c27db0def25337aa9f58bc7dc9b8
-2013-04-15T01:59:24.008611Z
-7131
-liqiyuan
-
-annotations
-dir
-
-tools
-dir
-
-stencil
-dir
-
-defaults.js.uncompressed.js
-file
-
-
-
-
-2013-04-12T03:33:40.270517Z
-d237e39f0ec8e42e6c151b344467c368
-2013-04-15T01:59:24.008611Z
-7131
-liqiyuan
-
-library
-dir
-
-_base.js.uncompressed.js
-file
-
-
-
-
-2013-04-12T03:33:40.429526Z
-e9b009ce7c59351a90bfc57ca09960f6
-2013-04-15T01:59:24.008611Z
-7131
-liqiyuan
-
-Drawing.js
-file
-
-
-
-
-2013-04-12T03:33:40.271517Z
-42bcb0a8c959d296ac4781c1d5fac265
-2013-04-15T01:59:24.008611Z
-7131
-liqiyuan
-
-resources
-dir
-
-manager
-dir
-
-ui
-dir
-
-util
-dir
-

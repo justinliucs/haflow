@@ -1,43 +1,0 @@
-8
-
-dir
-7131
-svn://133.133.133.108/mapreducegroup/lili/springDemo/src/main/webapp/static/dojolib/dojox/widget/Dialog
-svn://133.133.133.108
-
-
-
-2013-04-15T01:59:24.008611Z
-7131
-liqiyuan
-
-
-svn:special svn:externals svn:needs-lock
-
-Dialog.html
-file
-
-
-
-
-2013-04-12T03:33:48.355979Z
-61170601eab6046f8235a55fd9c7a94a
-2013-04-15T01:59:24.008611Z
-7131
-liqiyuan
-
-images
-dir
-
-Dialog.css
-file
-
-
-
-
-2013-04-12T03:33:48.354979Z
-e430b9eb52b6a05fcf1b97bcc854c0ae
-2013-04-15T01:59:24.008611Z
-7131
-liqiyuan
-

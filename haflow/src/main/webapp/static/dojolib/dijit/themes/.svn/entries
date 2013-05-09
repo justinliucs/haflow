@@ -1,55 +1,0 @@
-8
-
-dir
-7131
-svn://133.133.133.108/mapreducegroup/lili/springDemo/src/main/webapp/static/dojolib/dijit/themes
-svn://133.133.133.108
-
-
-
-2013-04-15T01:59:24.008611Z
-7131
-liqiyuan
-
-
-svn:special svn:externals svn:needs-lock
-
-claro
-dir
-
-nihilo
-dir
-
-dijit.css
-file
-
-
-
-
-2013-04-12T03:33:35.204227Z
-bd8583b79ab674a385bfa8cd15f7e909
-2013-04-15T01:59:24.008611Z
-7131
-liqiyuan
-
-a11y
-dir
-
-dijit_rtl.css
-file
-
-
-
-
-2013-04-12T03:33:35.205227Z
-0ba0ad2cf3e96aa079a026e3c788d930
-2013-04-15T01:59:24.008611Z
-7131
-liqiyuan
-
-soria
-dir
-
-tundra
-dir
-

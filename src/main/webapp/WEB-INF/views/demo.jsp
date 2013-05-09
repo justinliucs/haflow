@@ -15,7 +15,7 @@
 <script type="text/javascript" src="static/dojolib/dojo/dojo.js"
 		data-dojo-config="parseOnLoad: false, async:true"></script> 
 				
-<script type="text/javascript" src="static/js/src2.js"></script>
+<script type="text/javascript" src="static/js/src.js"></script>
 <link rel="stylesheet" href="static/css/demo.css"/>
 
 <!-- added by zhaowei -->
@@ -35,114 +35,77 @@
 	<!-- basic preloader: -->
 	<div id="loader"><div id="loaderInner" style="direction:ltr;white-space:nowrap;overflow:visible;">Loading ... </div></div>
 
-	<div data-dojo-type="dijit.Menu" id="submenu1" data-dojo-props='contextMenuForWindow:true, style:"display:none"' style="display: none;">
-		<div data-dojo-type="dijit.MenuItem">Enabled Item</div>
-		<div data-dojo-type="dijit.MenuItem" data-dojo-props="disabled:true">Disabled Item</div>
-		<div data-dojo-type="dijit.MenuSeparator"></div>
-		<div data-dojo-type="dijit.MenuItem" data-dojo-props="iconClass:'dijitIconCut'">Cut</div>
-		<div data-dojo-type="dijit.MenuItem" data-dojo-props="iconClass:'dijitIconCopy'">Copy</div>
-		<div data-dojo-type="dijit.MenuItem" data-dojo-props="iconClass:'dijitIconPaste'">Paste</div>
-		<div data-dojo-type="dijit.MenuSeparator"></div>
-		<div data-dojo-type="dijit.PopupMenuItem">
-			<span>Enabled Submenu</span>
-			<div data-dojo-type="dijit.Menu" id="submenu2">
-				<div data-dojo-type="dijit.MenuItem">Submenu Item One</div>
-				<div data-dojo-type="dijit.MenuItem">Submenu Item Two</div>
-				<div data-dojo-type="dijit.PopupMenuItem">
-					<span>Deeper Submenu</span>
-					<div data-dojo-type="dijit.Menu" id="submenu4">
-						<div data-dojo-type="dijit.MenuItem">Sub-sub-menu Item One</div>
-						<div data-dojo-type="dijit.MenuItem">Sub-sub-menu Item Two</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div data-dojo-type="dijit.PopupMenuItem" data-dojo-props="disabled:true">
-			<span>Disabled Submenu</span>
-			<div data-dojo-type="dijit.Menu" id="submenu3" style="display: none;">
-				<div data-dojo-type="dijit.MenuItem">Submenu Item One</div>
-				<div data-dojo-type="dijit.MenuItem">Submenu Item Two</div>
-			</div>
-		</div>
-		
-	</div>
-	<!-- end contextMenu -->
-
 	<div id="main" data-dojo-type="dijit.layout.BorderContainer" data-dojo-props="liveSplitters:false, design:'sidebar'">
-
-		<div id="header" data-dojo-type="dijit.MenuBar" data-dojo-props="region:'top'">
-			<div data-dojo-type="dijit.PopupMenuBarItem" id="edit">
-				<span>Edit</span>
-				<div data-dojo-type="dijit.Menu" id="editMenu">
-					<div data-dojo-type="dijit.MenuItem" id="cut" data-dojo-props="
-						iconClass:'dijitIconCut'
-					">Cut</div>
-					<div data-dojo-type="dijit.MenuItem" id="copy" data-dojo-props="
-						iconClass:'dijitIconCopy'
-					">Copy</div>
-					<div data-dojo-type="dijit.MenuItem" id="paste" data-dojo-props="iconClass:'dijitIconPaste'">Paste</div>
-					<div data-dojo-type="dijit.MenuSeparator" id="separator"></div>
-					<div data-dojo-type="dijit.MenuItem" id="undo" data-dojo-props="iconClass:'dijitIconUndo'">Undo</div>
-				</div>
-			</div>
-			
-	
-		
-		
-			<div data-dojo-type="dijit.PopupMenuBarItem" id="help">
-				<span>Help</span>
-				<div data-dojo-type="dijit.Menu" id="helpMenu">
-					<div data-dojo-type="dijit.MenuItem">Help Topics</div>
-					<div data-dojo-type="dijit.MenuItem">About Dijit</div>
-				</div>
-			</div>
-		
-		</div>
-
-		<div data-dojo-type="dijit.layout.AccordionContainer" data-dojo-props="region:'leading', splitter:true, minSize:20"
+	<div data-dojo-type="dijit.layout.AccordionContainer" data-dojo-props="region:'leading', splitter:true, minSize:20"
 			style="width: 300px;" id="leftAccordion">
 
 
 			<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Tree"'>
 				<!-- tree widget -->
-				<div data-dojo-type="dijit.Tree" 
-					data-dojo-props="model: continentModel, query:{ type:'continent'}, label:'Continents', openOnClick:true"
-				></div>
+		      <div dojoType="dojo.data.ItemFileWriteStore" url="/haflow/helloworld.json"  jsId="continentStore">
+				  <script type="dojo/connect" event="onNew" args="newItem">
+                 
+                      dojo.rawXhrPost({
+                        url: "/haflow/helloworld/newItem.json",
+                        postData: dojo.toJson({
+                            id: this.getValue(newItem,"id"),
+                            name: this.getValue(newItem,"name"),
+                            type: this.getValue(newItem,"type"),  
+                        }),
+                       handleAs: "json",
+                       headers: { "Content-Type": "application/json"},
+
+                        error: function(error) {
+                            alert(error.message);
+                        },
+                        load: function(response) {
+                            alert("新建成功");
+                        }
+                    });
+              
+                </script>
+                </div>
+                 <div dojoType="dijit.tree.ForestStoreModel" store="continentStore"
+                jsId="continentModel" rootLabel="我的工程"></div> 
+				
+				<div data-dojo-type="dijit.Tree"  id="menuTree"
+					data-dojo-props="model: continentModel, query:{ type:'process'}, label:'我的工程', openOnClick:false">
+					<script type="dojo/method" data-dojo-event="onClick" data-dojo-args="item">
+                      
+                     
+                      var tabid=dijit.byId(continentStore.getValue(item,"id"));
+                       
+       	             if(tabid)
+                      {
+                      
+                       dijit.byId('topTabs').selectChild(continentStore.getValue(item,"id"));
+                      }
+                     else{
+                      
+   	                     var tb = new dijit.layout.ContentPane({
+   		                  title:continentStore.getValue(item,"name"), 
+ 	                      style:"display:none; padding:10px;", 
+                          content: "We offer amazing food",
+                          closable:true,
+                          id:continentStore.getValue(item,"id")
+                         });
+   	  	                 if(tb)
+                           {
+                         
+                           dijit.byId("topTabs").addChild(tb);  
+                           }
+                       dijit.byId('topTabs').selectChild(continentStore.getValue(item,"id").toString());
+   	                  
+                     }
+               </script>
+				</div>
 			</div>
-
-			<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title:'Rootless Tree'">
-				<div id="rootlessTree" data-dojo-type="dijit.Tree" data-dojo-props="
-					model:continentModel,
-					query:{ type:'continent' },
-					showRoot: false,
-					openOnClick:true
-				"></div>
-			</div>
-
-		
-
 		</div>
+
 		<!-- end left AccordionContainer -->
+		
 			<div data-dojo-type="dijit.layout.AccordionContainer" data-dojo-props="region:'trailing', splitter:true, minSize:20"
 			style="width: 300px;" id="rightAccordion">
-
-
-			<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Tree"'>
-				<!-- tree widget -->
-				<div data-dojo-type="dijit.Tree" 
-					data-dojo-props="model: continentModel, query:{ type:'continent'}, label:'Continents', openOnClick:true"
-				></div>
-			</div>
-
-			<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title:'Rootless Tree'">
-				<div id="rootlessTree1" data-dojo-type="dijit.Tree" data-dojo-props="
-					model:continentModel,
-					query:{ type:'continent' },
-					showRoot: false,
-					openOnClick:true
-				"></div>
-			</div>
-			
 			<!-- added by zhaowei -->
 			<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='selected:true, title:"Modules List"'>
 				<div class="window boxstyle" id="1"> <strong>ER</strong></div>
@@ -174,35 +137,9 @@
 			</div>
 			<!-- end added by zhaowei -->
 			
-			<div id="editorTab" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Editor", style:"padding:10px;"'>
-				<p>Enabled:</p>
-				<!-- FIXME:
-					set height on this node to size the whole editor, but causes the tab to not scroll
-					until you select another tab and come back. alternative is no height: here, but that
-					causes editor to become VERY tall, and size to a normal height when selected (like the
-					dijit.form.TextArea in "Form Feel" Tab), but in reverse. refs #3980 and is maybe new bug?
-				-->
-				<div data-dojo-type="dijit.Editor" data-dojo-props="height:175, extraPlugins:['|', 'createLink', 'fontName'], styleSheets:'../../dijit/themes/claro/document.css'">
-					<ul>
-						<li>Lorem <a href="http://dojotoolkit.org">and a link</a>, what do you think?</li>
-						<li>This is the Editor with a Toolbar attached.</li>
-					</ul>
-				</div>
-				<p>Disabled:</p>
-				<div data-dojo-type="dijit.Editor" data-dojo-props="height:175, extraPlugins:['|', 'createLink', 'fontName'], styleSheets:'../../dijit/themes/claro/document.css', disabled:true">
-					<ul>
-						<li>Lorem <a href="http://dojotoolkit.org">and a link</a>, what do you think?</li>
-						<li>This is the Editor with a Toolbar attached.</li>
-					</ul>
-				</div>
-			</div><!-- end of Editor tab -->
+			
 
-
-		<div id="closableTab" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Closable", 
-				style:"display:none; padding:10px;", closable:true'>
-				This pane is closable, just for the icon ...
-			</div>
-		</div><!-- end of region="center" TabContainer -->
+	 <!-- end of region="center" TabContainer -->
 
 		<!-- bottom right tabs -->
 		<div data-dojo-type="dijit.layout.TabContainer" id="bottomTabs"
@@ -278,7 +215,53 @@
 
 	</div><!-- end of BorderContainer -->
 
-	<!-- dialog in body -->
-	
+	<!-- context menu in tree item -->
+	<ul id="menuTree_menu" data-dojo-type="dijit/Menu"
+                    data-dojo-props='style:"display: none;", targetNodeIds: ["menuTree"], selector: ".dijitTreeNode"'>
+            <li data-dojo-type="dijit/MenuItem" >
+                    <script type="dojo/connect" data-dojo-event="onClick">
+                          var boxId=(new Date()).getTime();
+    
+                            var tn = dijit.byNode(this.getParent().currentTarget);
+                      continentStore.newItem({
+                       id: boxId.toString(),
+                       name: "新建文件",
+                       type: "process", 
+                   });
+                   newTab(boxId);
+                    </script>
+                                                     新建
+            </li>
+             <li data-dojo-type="dijit/MenuItem">
+                    <script type="dojo/connect" data-dojo-event="onClick">
+                            // get a hold of the dijit.TreeNode that was the source of this open event
+                            var tn = dijit.byNode(this.getParent().currentTarget);
+                           
+                        
+                        dojo.rawXhrPost({
+                        url: "/haflow/helloworld/deleteItem.json",
+                        postData: dojo.toJson({
+                            id: continentStore.getValue(tn.item,"id"),
+                            name: continentStore.getValue(tn.item,"name"),
+                            type: continentStore.getValue(tn.item,"type"), 
+                        }),
+                       handleAs: "json",
+                       headers: { "Content-Type": "application/json"},
+
+                        error: function(error) {
+                            alert(error.message);
+                        },
+                        load: function(response) {
+                            alert("删除成功");
+                        }
+                    });
+                             continentStore.deleteItem(tn.item);
+                     
+                    </script>
+                                                                  删除
+            </li>
+            
+     </ul>
+	<!-- End--context menu in tree item -->
 </body>
 </html>
