@@ -137,7 +137,7 @@
 			</div>
 			<!-- end added by zhaowei -->
 			
-			
+			</div>
 
 	 <!-- end of region="center" TabContainer -->
 
@@ -214,7 +214,7 @@
 		</div><!-- end Bottom TabContainer -->
 
 	</div><!-- end of BorderContainer -->
-
+</div>
 	<!-- context menu in tree item -->
 	<ul id="menuTree_menu" data-dojo-type="dijit/Menu"
                     data-dojo-props='style:"display: none;", targetNodeIds: ["menuTree"], selector: ".dijitTreeNode"'>
@@ -255,6 +255,12 @@
                             alert("删除成功");
                         }
                     });
+                        var tabid=dijit.byId(continentStore.getValue(tn.item,"id"));
+                        if(tabid){
+                             
+                             dijit.byId("topTabs").removeChild(tabid);
+                           
+                            }
                              continentStore.deleteItem(tn.item);
                      
                     </script>
