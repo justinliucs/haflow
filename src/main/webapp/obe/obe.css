@@ -1,0 +1,24 @@
+html, body {
+  height: 100%; 
+  width: 100%;
+}
+
+#menu {
+  border: 1px solid black;
+  background-color: #D00000;
+}
+
+#navigator {
+  border: 1px solid black;  
+  background-color: #00D000;
+}
+
+#workspace {
+  border: 1px solid black;  
+  background-color: #A0A0D0;
+}
+
+#status {
+  border: 1px solid black;  
+  background-color: yellow;
+}

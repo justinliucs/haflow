@@ -1,0 +1,265 @@
+8
+
+dir
+7131
+svn://133.133.133.108/mapreducegroup/lili/springDemo/src/main/webapp/static/dojolib/dojo/cldr/nls
+svn://133.133.133.108
+
+
+
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+
+svn:special svn:externals svn:needs-lock
+
+da
+dir
+
+hebrew.js
+file
+
+
+
+
+2013-04-12T03:33:36.024274Z
+4579a7d7c57cf6e3947fcae2ba2470d6
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+sv
+dir
+
+de
+dir
+
+gregorian.js
+file
+
+
+
+
+2013-04-12T03:33:36.010273Z
+f71c1ca6b7910f86f81fefe0add4dbfb
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+ja
+dir
+
+he
+dir
+
+islamic.js
+file
+
+
+
+
+2013-04-12T03:33:36.050276Z
+d7fd61ccefcf044d44af1d43da1b7054
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+fi
+dir
+
+nb
+dir
+
+buddhist.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:35.845264Z
+f8984d2f8a072d594e632f06f5fae908
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+fr
+dir
+
+nl
+dir
+
+th
+dir
+
+pl
+dir
+
+hu
+dir
+
+ro
+dir
+
+buddhist.js
+file
+
+
+
+
+2013-04-12T03:33:35.835263Z
+bfaf0fa1649aa9b28cc52897f97352ea
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+zh-hk
+dir
+
+zh
+dir
+
+en-ca
+dir
+
+pt
+dir
+
+ca
+dir
+
+number.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:36.146281Z
+5fe9b9e35f2ebe389b90dfca14a8fbe2
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+tr
+dir
+
+ru
+dir
+
+currency.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:35.878266Z
+83d3a2786b067122de7b1723260ec787
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+en-gb
+dir
+
+fr-ch
+dir
+
+el
+dir
+
+en
+dir
+
+ar
+dir
+
+number.js
+file
+
+
+
+
+2013-04-12T03:33:36.144281Z
+b1263f8a647a42b887e292abe8a98e89
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+pt-pt
+dir
+
+en-au
+dir
+
+cs
+dir
+
+currency.js
+file
+
+
+
+
+2013-04-12T03:33:35.877266Z
+2b0e13868c535af2b7c32209994367c2
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+es
+dir
+
+hebrew.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:36.034275Z
+a0bd63432002f7213f99f5fc2b34d539
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+zh-hant
+dir
+
+ko
+dir
+
+zh-tw
+dir
+
+gregorian.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:36.011273Z
+b8a34be3401c19a849b4ecae5a4631af
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+it
+dir
+
+sk
+dir
+
+islamic.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:36.051276Z
+af9c8dcf9ca3583fc9022526ae8b327c
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+sl
+dir
+

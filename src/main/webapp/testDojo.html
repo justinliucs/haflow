@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Justa Cigar Wish List</title>
+
+<style type="text/css">
+   @import "static/dojolib/dojo/resources/dojo.css";
+   @import "static/dojolib/dijit/themes/tundra/tundra.css";
+   @import "static/dojolib/dojox/grid/_grid/tundraGrid.css";
+</style>
+<script type="text/javascript" src="static/dojolib/dojo/dojo.js"  
+    djConfig="parseOnLoad: true"></script>
+<script>
+    dojo.require("dojo.parser");
+    dojo.require("dojo.data.ItemFileReadStore"); 
+    dojo.require("dojox.grid.Grid");
+    
+</script>
+<style>
+
+#grid { 
+    border: 1px solid #333;
+    width: 550px;
+    margin: 10px;
+    height: 200px;
+    font-size: 0.9em;
+    font-family: Geneva, Arial, Helvetica, sans-serif;
+    
+}
+
+</style>
+
+</head>
+<body class="tundra">
+
+<h1>User test</h1>
+
+
+    
+    <div dojoType="dojo.data.ItemFileReadStore" 
+        jsId="wishStore" url="/haflow/UserTest">
+    </div>
+    
+
+    
+    <table id="grid" dojoType="dojox.grid.Grid" store="wishStore" 
+          >
+        <thead>
+           <tr>
+              <th field="name" >name</th> 
+              <th field="password">password</th> 
+              <th field="sex">sex</th> 
+             
+           </tr>
+        </thead>        
+    </table>
+    
+
+</body>
+</html>

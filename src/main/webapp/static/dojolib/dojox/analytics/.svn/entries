@@ -1,0 +1,85 @@
+8
+
+dir
+7131
+svn://133.133.133.108/mapreducegroup/lili/springDemo/src/main/webapp/static/dojolib/dojox/analytics
+svn://133.133.133.108
+
+
+
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+
+svn:special svn:externals svn:needs-lock
+
+logger
+dir
+
+plugins
+dir
+
+profiles
+dir
+
+Urchin.js
+file
+
+
+
+
+2013-04-12T03:33:38.182397Z
+80ff9e34f567cf981c3340239b0f2648
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+Urchin.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:38.187398Z
+c54f1bb0e015af3918369857e737c1f2
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+_base.js
+file
+
+
+
+
+2013-04-12T03:33:38.188398Z
+7ebf457b402808a404b02a02868d4984
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+_base.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:38.190398Z
+52677cff77688465c9be0e6172c0bb82
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+README
+file
+
+
+
+
+2013-04-12T03:33:38.180397Z
+e77f97e87cf8dd2349752d40ec12cd49
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
