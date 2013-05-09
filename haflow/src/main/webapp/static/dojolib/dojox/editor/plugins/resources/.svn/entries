@@ -1,0 +1,64 @@
+8
+
+dir
+7131
+svn://133.133.133.108/mapreducegroup/lili/springDemo/src/main/webapp/static/dojolib/dojox/editor/plugins/resources
+svn://133.133.133.108
+
+
+
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+
+svn:special svn:externals svn:needs-lock
+
+insertTable.html
+file
+
+
+
+
+2013-04-12T03:33:42.435641Z
+fc306ca07b3e857a2dcdbbc7cd089646
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+editorPlugins.css
+file
+
+
+
+
+2013-04-12T03:33:42.318634Z
+518cfee828dfe009f35e10b733b837e8
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+emoticons
+dir
+
+modifyTable.html
+file
+
+
+
+
+2013-04-12T03:33:42.436641Z
+05bde1116b6f696daacfd4b3f370e574
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+images
+dir
+
+css
+dir
+
+icons
+dir
+

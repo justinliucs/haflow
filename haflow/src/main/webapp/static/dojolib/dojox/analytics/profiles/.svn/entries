@@ -1,0 +1,64 @@
+8
+
+dir
+7131
+svn://133.133.133.108/mapreducegroup/lili/springDemo/src/main/webapp/static/dojolib/dojox/analytics/profiles
+svn://133.133.133.108
+
+
+
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+
+svn:special svn:externals svn:needs-lock
+
+analytics.profile.js
+file
+
+
+
+
+2013-04-12T03:33:38.163396Z
+dd3e6419f79332c6eaed576dcf6a94c7
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+analytics.profile.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:38.164396Z
+ac41114c53dd1540caf71cfc2bcb5063
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+analyticsInBase.profile.js
+file
+
+
+
+
+2013-04-12T03:33:38.165397Z
+0904e2c95a8203270fe56b10c0c44cb3
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+analyticsInBase.profile.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:38.167397Z
+495953d8b907e2e15c8eeb207d704bfd
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+

@@ -1,0 +1,55 @@
+8
+
+dir
+7131
+svn://133.133.133.108/mapreducegroup/lili/springDemo/src/main/webapp/static/dojolib/dojox/mobile/themes/iphone/dijit/compat
+svn://133.133.133.108
+
+
+
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+
+svn:special svn:externals svn:needs-lock
+
+calendar-year-bg.png
+file
+
+
+
+
+2013-04-12T03:33:46.632881Z
+1585dd4776db7101f224f6f4900c3ab1
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+has-props
+
+calendar-month-bg.png
+file
+
+
+
+
+2013-04-12T03:33:46.631881Z
+f07129cfdafe96b8d3c7446e7c579e66
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+has-props
+
+calendar-daylabel-bg.png
+file
+
+
+
+
+2013-04-12T03:33:46.631881Z
+167ea86815825055149127f957b75cb8
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+has-props
+

@@ -1,0 +1,68 @@
+8
+
+dir
+7131
+svn://133.133.133.108/mapreducegroup/lili/springDemo/src/main/webapp/static/dojolib/dojo/resources/images
+svn://133.133.133.108
+
+
+
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+
+svn:special svn:externals svn:needs-lock
+
+dndMove.png
+file
+
+
+
+
+2013-04-12T03:33:37.952384Z
+fa959bb51d8ddb15e9d012a8dd9e9d92
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+has-props
+
+dndNoCopy.png
+file
+
+
+
+
+2013-04-12T03:33:37.953384Z
+b410a55565487121b08d46a17d86a9d5
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+has-props
+
+dndCopy.png
+file
+
+
+
+
+2013-04-12T03:33:37.950384Z
+48447a05ea6c467c4d2336e7fdecc739
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+has-props
+
+dndNoMove.png
+file
+
+
+
+
+2013-04-12T03:33:37.954384Z
+1ecdfdfd544b0d51696e0f98de00bf1c
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+has-props
+

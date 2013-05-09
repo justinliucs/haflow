@@ -1,0 +1,124 @@
+8
+
+dir
+7131
+svn://133.133.133.108/mapreducegroup/lili/springDemo/src/main/webapp/static/dojolib/dojox/grid/enhanced
+svn://133.133.133.108
+
+
+
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+
+svn:special svn:externals svn:needs-lock
+
+_Events.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:44.603765Z
+e1c0b159d2813b2237a03a1b646229a1
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+plugins
+dir
+
+_PluginManager.js
+file
+
+
+
+
+2013-04-12T03:33:44.608765Z
+a85b74c8b3a231f1d8136601db1235e5
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+_FocusManager.js
+file
+
+
+
+
+2013-04-12T03:33:44.604765Z
+69cd86c6419b0f0b504f813b08cf9fbd
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+_PluginManager.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:44.609765Z
+af4646769b84b6dc6bf5254a38985967
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+_FocusManager.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:44.605765Z
+a6b87cf7457fa17d2d6c315b3fed3a0b
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+_Plugin.js
+file
+
+
+
+
+2013-04-12T03:33:44.606765Z
+6655b4694db1d579f4023e082302292c
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+_Plugin.js.uncompressed.js
+file
+
+
+
+
+2013-04-12T03:33:44.607765Z
+105c33afe8f3231a6f0d20cfe1c91606
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+resources
+dir
+
+nls
+dir
+
+templates
+dir
+
+_Events.js
+file
+
+
+
+
+2013-04-12T03:33:44.602765Z
+d399dd7882a897e7b287c0ef23a9f164
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+

@@ -1,0 +1,68 @@
+8
+
+dir
+7131
+svn://133.133.133.108/mapreducegroup/lili/springDemo/src/main/webapp/static/dojolib/dojox/drawing/resources
+svn://133.133.133.108
+
+
+
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+
+svn:special svn:externals svn:needs-lock
+
+CrazyTruck.jpg
+file
+
+
+
+
+2013-04-12T03:33:40.354522Z
+c519162f91729695a5eebaeff722769a
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+has-props
+
+drawing.css
+file
+
+
+
+
+2013-04-12T03:33:40.354522Z
+ea6054b7b78a21869329a2aebec143b2
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+GreekPalette.css
+file
+
+
+
+
+2013-04-12T03:33:40.355522Z
+dabdb78ad338df4b0e3e699f91ca9f60
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
+images
+dir
+
+toolbar.css
+file
+
+
+
+
+2013-04-12T03:33:40.359522Z
+b59b44fa79df02f6dd2da31728326e18
+2013-04-15T01:59:24.008611Z
+7131
+liqiyuan
+
