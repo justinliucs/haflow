@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<flowJson>
+    <erModules>
+        <erModule>
+            <id>123</id>
+            <name>ER</name>
+            <position>
+                <x>100.0</x>
+                <y>200.0</y>
+            </position>
+            <erProperties>
+                <confPath>conf</confPath>
+                <inputPath>input</inputPath>
+                <jarPath>jar</jarPath>
+                <outputPath>output</outputPath>
+            </erProperties>
+            <type>ER-MODULE</type>
+        </erModule>
+    </erModules>
+    <identifier>entryFlow</identifier>
+    <label>Entry Flow</label>
+</flowJson>

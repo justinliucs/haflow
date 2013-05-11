@@ -42,13 +42,82 @@ require([
 	    	  dijit.byId("topTabs").selectChild(boxId.toString());
 	    }
 	    
+	 runFlow=function(){
+		 dojo.rawXhrPost({
+             url: "/haflow/flow/run.json",
+             postData: dojo.toJson({            	 
+ 	            jarPath: dojo.query(".jarPath")[0].value,
+	            inPath: dojo.query(".inPath")[0].value,
+	            outPath: dojo.query(".outPath")[0].value,
+	            confPath: dojo.query(".confPath")[0].value,
+                console: "input"
+             }),
+            handleAs: "json",
+            headers: { "Content-Type": "application/json"},
 
-
+             error: function(error) {
+                 alert(error.message);
+             },
+             load: function(response) {
+                 alert(response.console);
+                 domConstruct.place(domConstruct.toDom("<li>" + response.console + "</li>"), 
+                		 dom.byId("btab0console"));
+                 dijit.byId("bottomTabs").selectChild("btab0");
+             }
+         });
+	 }
+	 
+	 saveFlow=function(){
+		 dojo.rawXhrPost({
+			 url: "/haflow/flow/save.json",
+             postData: dojo.toJson({            	            	 
+            	 identifier: "entryFlow",
+            	 label: "Entry Flow",
+            	 erModule: [{
+            	        id: moduleArray[0].id,
+            	        name: moduleArray[0].name,
+            	        type: moduleArray[0].type,
+            	        properties: [{
+            	            jarPath: dojo.query(".jarPath")[0].value,
+            	            inputPath: dojo.query(".inPath")[0].value,
+            	            outputPath: dojo.query(".outPath")[0].value,
+            	            confPath: dojo.query(".confPath")[0].value
+            	          }],
+            	        position:[{
+            	        	x:moduleArray[0].x,
+            	        	y:moduleArray[0].y
+            	        }]
+             		}]
+             }),
+            handleAs: "json",
+            headers: { "Content-Type": "application/json"},
+            error: function(error) {
+                 alert(error.message);
+            },
+            load: function(response) {
+                 alert(response.erModule[0].id);
+            }
+		 });
+	 }
+	 
+	 openFlow=function(){
+		 dojo.xhrGet({
+			 url: "/haflow/flow/open.json",
+            handleAs: "json",
+            headers: { "Content-Type": "application/json"},
+            error: function(error) {
+                 alert(error.message);
+            },
+            load: function(response) {
+                 alert(response.label);
+            }
+		 });
+	 }
+	 
 	ready(function(){
 		// Delay parsing until the dynamically injected theme <link>'s have had time to finish loading
 		setTimeout(function(){
 			    parser.parse();
-	         
 				dom.byId('loaderInner').innerHTML += " done.";
 				setTimeout(function hideLoader(){
 					fx.fadeOut({ 
@@ -59,15 +128,7 @@ require([
 						}
 					}).play();
 				}, 250);
-			
-
-
-
-			
-
 		});
-
-	
-});
+	});
 
 });

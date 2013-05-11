@@ -24,6 +24,9 @@
 	<script type="text/javascript" src="static/zjs/jquery.jsPlumb-1.3.16-all.js"></script>
 	<script type="text/javascript" src="static/zjs/jsPlumb_example.js"></script>
 	<script type="text/javascript" src="static/zjs/demo-helper-jquery.js"></script>
+	<script>
+		 var moduleArray = [];
+	</script>
 	
 	<link href="static/zcss/flowchartDemo.css" rel="stylesheet" type="text/css" />
 	<link href="static/zcss/perimeterAnchorsDemo.css" rel="stylesheet" type="text/css" />
@@ -36,6 +39,29 @@
 	<div id="loader"><div id="loaderInner" style="direction:ltr;white-space:nowrap;overflow:visible;">Loading ... </div></div>
 
 	<div id="main" data-dojo-type="dijit.layout.BorderContainer" data-dojo-props="liveSplitters:false, design:'sidebar'">
+	
+	<!--  added by zhaowei -->
+		<div id="header" data-dojo-type="dijit.MenuBar" data-dojo-props="region:'top'">
+			<div data-dojo-type="dijit.PopupMenuBarItem" id="flow">
+				<span>Flow</span>
+				<div data-dojo-type="dijit.Menu" id="editMenu">
+					<div data-dojo-type="dijit.MenuItem" id="stop" 
+						data-dojo-props="iconClass:'dijitIconOpen', onClick:openFlow">Open</div>
+					<div data-dojo-type="dijit.MenuItem" id="save" 
+						data-dojo-props="iconClass:'dijitIconSave', onClick:saveFlow" >Save</div>
+				</div>
+			</div>					
+		
+			<div data-dojo-type="dijit.PopupMenuBarItem" id="fun">
+				<span>Run</span>
+				<div data-dojo-type="dijit.Menu" id="helpMenu">
+					<div data-dojo-type="dijit.MenuItem" id="run" 
+						data-dojo-props="iconClass:'dijitIconUndo', onClick:runFlow" >Run</div>					
+				</div>
+			</div>
+		
+		</div><!-- end added by zhaowei -->
+		
 	<div data-dojo-type="dijit.layout.AccordionContainer" data-dojo-props="region:'leading', splitter:true, minSize:20"
 			style="width: 300px;" id="leftAccordion">
 
@@ -104,7 +130,7 @@
 
 		<!-- end left AccordionContainer -->
 		
-			<div data-dojo-type="dijit.layout.AccordionContainer" data-dojo-props="region:'trailing', splitter:true, minSize:20"
+		<div data-dojo-type="dijit.layout.AccordionContainer" data-dojo-props="region:'trailing', splitter:true, minSize:20"
 			style="width: 300px;" id="rightAccordion">
 			<!-- added by zhaowei -->
 			<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='selected:true, title:"Modules List"'>
@@ -147,6 +173,14 @@
 				tabPosition:'bottom', selectedchild:'btab1', region:'bottom',
 				splitter:true, tabStrip:true
 			">
+			
+			<div id="btab0" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Console", style:" padding:10px; "'>
+				Log Console : 
+				</br>
+				<ul id="btab0console">
+				</ul>
+			</div>
+			
 			<!-- btab 1 -->
 			<div id="btab1" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Info", style:" padding:10px; "'>
 				<p>You can explore this single page after applying a Theme

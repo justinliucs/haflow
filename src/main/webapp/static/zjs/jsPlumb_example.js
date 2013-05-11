@@ -12,7 +12,7 @@ $(function() {
 	$(".box").draggable({containment: "#flowContent"});	
 	//jsPlumb.draggable(".box");
    
-	var idCount = 1;
+	
 	$("#flowContent").droppable( {
        drop: function (event, ui) {
             //  debugger;
@@ -50,17 +50,15 @@ $(function() {
 					y = 964.85;
 				}
 				
+				var idCount = moduleArray.length;
                 switch (text) {
                     case "1":
                         $(this).find("p")
                             .append('<div class="box jq-draggable-incontainer ui-draggable boxstyle" id="window'+idCount+'"' +
 							'style="position: absolute; left: '+ x + 'px; top: ' + y 
 							+'px;"><strong>ER</strong></div><div style="height:100px;"></div>');
-                         SBS.UI.Views.Plumb.AddEndpoints("window"+idCount++, ["BottomCenter"], []);		
-                      //   boo.after("<div id=\"btab5\" data-dojo-type=\"dijit.layout.ContentPane\" data-dojo-props=\'title:\"Info5\", style:\" padding:10px; \"\'>" +							
-                      //  		 "<div id=\"entryContentPane5\" dojoType=\"dojox.layout.ContentPane\" href=\"<c:url value=\"/entry\" />\">" + 
-                       // 		 "	Loading contents.html." +
-                       // 		 "</div>" +  "</div>");
+                         SBS.UI.Views.Plumb.AddEndpoints("window"+idCount, ["BottomCenter"], []);		
+                         
                          require(["dojo/dom","dojo/dom-construct", "dijit/registry", "dijit/layout/TabContainer", 
                                   "dijit/layout/ContentPane", "dojox/layout/ContentPane"], 
                         		 function(dom, domConstruct,registry,TabContainer, ContentPane, xContentPane){
@@ -79,13 +77,14 @@ $(function() {
                         	 tabContainer.addChild(pane);
                         	 tabContainer.selectChild(pane);
                          });
+                         moduleArray[idCount] = {id:idCount, name:"ER-"+idCount, type:"ER-MODULE", x:x, y:y};
                          break;
                     case "2":
                         $(this).find("p")
                             .append('<div class="box jq-draggable-incontainer ui-draggable boxstyle" id="window'+idCount+'"' +
 							'style="position: absolute; left: '+ x + 'px; top: ' + y 
 							+'px;"><strong>Test</strong></div><div style="height:100px;"></div>');
-                        SBS.UI.Views.Plumb.AddEndpoints("window"+idCount++, ["BottomCenter","BottomLeft"], ["TopCenter"]);
+                        SBS.UI.Views.Plumb.AddEndpoints("window"+idCount, ["BottomCenter","BottomLeft"], ["TopCenter"]);
                         
                         require(["dojo/dom","dojo/dom-construct", "dijit/registry", "dijit/layout/TabContainer", 
                                  "dijit/layout/ContentPane", "dojox/layout/ContentPane"], 
@@ -104,7 +103,7 @@ $(function() {
                             .after('<div class="box jq-draggable-incontainer ui-draggable boxstyle" id="window'+idCount+'"' +
 							'style="position: absolute; left: '+ x + 'px; top: ' + y 
 							+'px;"><strong>HQ</strong></div>');
-                        SBS.UI.Views.Plumb.AddEndpoints("window"+idCount++, [], ["TopCenter", "TopLeft"]);
+                        SBS.UI.Views.Plumb.AddEndpoints("window"+idCount, [], ["TopCenter", "TopLeft"]);
                         
                         require(["dojo/dom","dojo/dom-construct", "dijit/registry", "dijit/layout/TabContainer", 
                                  "dijit/layout/ContentPane", "dojox/layout/ContentPane"], 
@@ -127,7 +126,6 @@ $(function() {
                         
 						break;
                 }
-				idCount++;
 				$(".box").draggable({containment: "#flowContent"});	
 				jsPlumb.repaintEverything();
             }
