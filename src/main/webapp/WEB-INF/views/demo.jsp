@@ -22,7 +22,7 @@
 	<script type="text/javascript" src="static/zjs/jquery-1.9.0.js"></script>
 	<script type="text/javascript" src="static/zjs/jquery-ui-1.10.0.custom.js"></script>
 	<script type="text/javascript" src="static/zjs/jquery.jsPlumb-1.3.16-all.js"></script>
-	<script type="text/javascript" src="static/zjs/jsPlumb_example.js"></script>
+	<script type="text/javascript" src="static/zjs/jsPlumbFlow.js"></script>
 	<script type="text/javascript" src="static/zjs/demo-helper-jquery.js"></script>
 	<script>
 		 var moduleArray = [];

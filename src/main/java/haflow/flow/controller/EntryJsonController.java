@@ -37,15 +37,16 @@ public class EntryJsonController {
 	public  @ResponseBody FlowJson saveFlow(@RequestBody FlowJson flow) {
 		System.out.println(flow.toString());
 		try {
-			URL url = ProcessController.class.getClassLoader()
+			URL url = EntryJsonController.class.getClassLoader()
 				.getResource("popo.xml"); 
 			
 			JAXBContext jc = JAXBContext.newInstance(flow.getClass());
 			Marshaller m = jc.createMarshaller();
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 			File file = new File(url.toURI().getRawPath());
-			String savePath = file.getParent() + "\\popo-" + flow.getErModule().get(0).getId() + ".xml";
+			String savePath = file.getParent() + "\\flow" + ".xml";
 			m.marshal(flow, new FileOutputStream(savePath));
+			System.out.println(savePath);
 		} catch (JAXBException e) {
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {
@@ -58,13 +59,14 @@ public class EntryJsonController {
 	
 	@RequestMapping(value = "/open", method = RequestMethod.GET)
 	public  @ResponseBody FlowJson getFlow() {
-		URL url = ProcessController.class.getClassLoader().getResource("flow.xml"); 
+		URL url = EntryJsonController.class.getClassLoader().getResource("flow.xml"); 
 		FlowJson flow = null;
 		try {
 			File file = new File(url.toURI().getPath());
 			JAXBContext jaxbContext = JAXBContext.newInstance(FlowJson.class);
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 			flow = (FlowJson) jaxbUnmarshaller.unmarshal(file);
+			System.out.println(file.getPath());
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
 		}catch (JAXBException e) {

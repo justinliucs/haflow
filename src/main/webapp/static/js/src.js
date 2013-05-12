@@ -22,9 +22,12 @@ require([
 	"dojo/_base/json", // dojo.toJson
 	"dijit/dijit-all", // dijit.*
 	"dojox/layout/ContentPane",
-	"dijit/layout/ContentPane"
-], function(require, array, config, dom, domClass, domConstruct, kernel, query, ready, win, fx, registry, MenuItem,
-		    locale, parser, ItemFileReadStore,ItemFileWriteStore, ForestStoreModel, xContentPane,ContentPane){
+	"dijit/layout/ContentPane", 
+	"dijit/layout/TabContainer",
+	"haflow/flow"
+	    ], function(require, array, config, dom, domClass, domConstruct, kernel, query, ready, win, fx, registry, MenuItem,
+			locale, parser, ItemFileReadStore,ItemFileWriteStore, ForestStoreModel, number, source, json, 
+		    all, xContentPane, ContentPane, TabContainer, flow){
 
 	 newTab=function(boxId)
 	    {
@@ -84,7 +87,7 @@ require([
             	            confPath: dojo.query(".confPath")[0].value
             	          }],
             	        position:[{
-            	        	x:moduleArray[0].x,
+            	        	x:moduleArray[0].x,//TODO
             	        	y:moduleArray[0].y
             	        }]
              		}]
@@ -109,7 +112,13 @@ require([
                  alert(error.message);
             },
             load: function(response) {
-                 alert(response.label);
+                 var ppp = $("#flowContent")[0];
+                 flow.createEmModule(ppp, response.erModule[0].position[0].x, 
+                		 response.erModule[0].position[0].y, response.erModule[0].id,
+                 response.erModule[0].properties[0].jarPath,
+                 response.erModule[0].properties[0].inputPath,
+                 response.erModule[0].properties[0].outputPath,
+                 response.erModule[0].properties[0].confPath);
             }
 		 });
 	 }
@@ -129,6 +138,7 @@ require([
 					}).play();
 				}, 250);
 		});
+		//alert(flow.name);
 	});
 
 });
