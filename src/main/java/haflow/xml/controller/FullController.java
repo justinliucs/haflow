@@ -1,6 +1,5 @@
 package haflow.xml.controller;
 
-import haflow.flow.controller.EntryJsonController;
 import haflow.util.xml.FlowType;
 import haflow.util.xml.Project;
 
@@ -49,7 +48,7 @@ public class FullController {
 	public  @ResponseBody Project saveFlow(@RequestBody Project project) {
 		System.out.println(project.toString());
 		try {
-			URL url = EntryJsonController.class.getClassLoader()
+			URL url = FullController.class.getClassLoader()
 				.getResource("popo.xml"); 
 			
 			JAXBContext jc = JAXBContext.newInstance(project.getClass());

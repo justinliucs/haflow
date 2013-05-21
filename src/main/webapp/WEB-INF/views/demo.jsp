@@ -58,10 +58,10 @@
 						data-dojo-props="iconClass:'dijitIconOpen', onClick:openFlow">Open</div>
  					<div data-dojo-type="dijit.MenuItem" id="openFlow2" 
 						data-dojo-props="iconClass:'dijitIconOpen', onClick:openFlow2">Open2</div> -->
-					<div data-dojo-type="dijit.MenuItem" id="save" 
-						data-dojo-props="iconClass:'dijitIconSave', onClick:saveFlow" >Save</div>
+<!-- 				<div data-dojo-type="dijit.MenuItem" id="save" 
+						data-dojo-props="iconClass:'dijitIconSave', onClick:saveFlow" >Save</div>  -->
 					<div data-dojo-type="dijit.MenuItem" id="save2" 
-						data-dojo-props="iconClass:'dijitIconSave', onClick:saveFlow2" >Save2</div>
+						data-dojo-props="iconClass:'dijitIconSave', onClick:saveFlow2" >Save Project</div>
 					<div data-dojo-type="dijit.MenuItem" id="newFlow" 
 						data-dojo-props="iconClass:'dijitIconUndo', onClick:rNewFlow" >New Flow</div>
 					<div data-dojo-type="dijit.MenuItem" id="newErModule" 
@@ -72,8 +72,8 @@
 			<div data-dojo-type="dijit.PopupMenuBarItem" id="fun">
 				<span>Run</span>
 				<div data-dojo-type="dijit.Menu" id="helpMenu">
-					<div data-dojo-type="dijit.MenuItem" id="run" 
-						data-dojo-props="iconClass:'dijitIconUndo', onClick:runFlow" >Run</div>	
+			<!-- 	<div data-dojo-type="dijit.MenuItem" id="run" 
+						data-dojo-props="iconClass:'dijitIconUndo', onClick:runFlow" >Run</div>	 -->
 					<div data-dojo-type="dijit.MenuItem" id="runCurrent" 
 						data-dojo-props="iconClass:'dijitIconUndo', onClick:runCurrentFlow" >Run Current</div>					
 				</div>
@@ -102,9 +102,7 @@
               
               <div data-dojo-type="dijit/tree/ForestStoreModel" data-dojo-id="continentModel"
     			data-dojo-props="store:continentStore, query:{type:'FLOW'},
-    				rootId:'continentModel', rootLabel:'Entry Flows'"></div>
-              
-            
+    				rootId:'continentModel', rootLabel:'Entry Flows'"></div>                         
 				
 			  <div data-dojo-type="dijit.Tree"  id="menuTree"
 					data-dojo-props="model: continentModel, label:'工程', openOnClick:false">
@@ -142,15 +140,15 @@
 		<div data-dojo-type="dijit.layout.TabContainer" data-dojo-props="region:'center', tabStrip:true" id="topTabs">
 
 
-			<!-- added by zhaowei -->
+			<!-- 
 			<div id="flowTab" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Flow Widgets", style:"padding:10px;display:none;"'>			
 				<div id="flowContentr" class="flowContent" >
 					<p></p>
 				</div>			
 			</div>
-			<!-- end added by zhaowei -->
+			-->
 			
-			</div>
+		</div>
 
 	 <!-- end of region="center" TabContainer -->
 
@@ -167,7 +165,7 @@
 				</ul>				
 			</div>
 			
-			<!-- btab 1 -->
+			<!-- 
 			<div id="btab1" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Info", style:" padding:10px; "'>
 				<p>You can explore this single page after applying a Theme
 				for use in creation of your own theme.</p>
@@ -187,7 +185,7 @@
 					
 				
 				</form>
-			</div><!-- end:info btab1 -->
+			</div>
 			<div id="btab2" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Info2", style:" padding:10px; "'>
 					<div>					
 						<form id="form11" method="GET" action="<c:url value="/run1" />">
@@ -229,7 +227,7 @@
 				<div id="hiveContentPane" dojoType="dojox.layout.ContentPane" href="<c:url value="/hive" />"> 
 			   		Loading contents.html. 
 				</div> 
-			</div>
+			</div> -->
 
 		</div><!-- end Bottom TabContainer -->
 
