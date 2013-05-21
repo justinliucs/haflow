@@ -1,16 +1,16 @@
-﻿
+
 .window { 
 	float:left;
 	margin-right:10px;
 	margin-bottom:10px;
 }
 	
-#flowContent{
+.flowContent{
 	width:1000px;
 	height:1000px;
 	background:#cff;
 }	
-#flowContent #content{
+.flowContent #content{
 	background-color:#FFFF33;
 }
 .box {

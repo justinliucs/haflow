@@ -1,11 +1,10 @@
 package haflow.web.controller;
 
-
+import haflow.web.model.ProcessJson;
+import haflow.web.model.ProcessParentItem;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 
@@ -15,53 +14,47 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import haflow.web.model.ProcessChildren;
-import haflow.web.model.ProcessJson;
-
-import haflow.web.model.ProcessParentItem;
-
 import org.springframework.stereotype.Controller;
-
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/helloworld")
 public class ProcessController {
 	ProcessJson processJson;
-	File file ;
+	File file;
+
 	public ProcessController() {
 
 		try {
-			   URL url = ProcessController.class.getClassLoader().getResource("config.xml"); 
-			   file=new File(url.toURI().getPath());
-				JAXBContext jaxbContext = JAXBContext
-						.newInstance(ProcessJson.class);
-				Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-				processJson = (ProcessJson) jaxbUnmarshaller.unmarshal(file);
-				System.out.println("ok");
-		 } 
-		catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
+			URL url = ProcessController.class.getClassLoader().getResource(
+					"config.xml");
+			file = new File(url.toURI().getPath());
+			JAXBContext jaxbContext = JAXBContext
+					.newInstance(ProcessJson.class);
+			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+			processJson = (ProcessJson) jaxbUnmarshaller.unmarshal(file);
+			System.out.println("ok");
+		} catch (URISyntaxException e) {
 			e.printStackTrace();
-		}
-		catch (JAXBException e) {
+		} catch (JAXBException e) {
 			e.printStackTrace();
 		}
 	}
-	
 
 	@RequestMapping(method = RequestMethod.GET)
-	public @ResponseBody ProcessJson getShopInJSON() {
+	public @ResponseBody
+	ProcessJson getShopInJSON() {
 
 		return processJson;
 
 	}
 
 	@RequestMapping(value = "/newItem", method = RequestMethod.POST)
-	public @ResponseBody ProcessJson saveNewItem(@RequestBody ProcessParentItem newItem) {
+	public @ResponseBody
+	ProcessJson saveNewItem(@RequestBody ProcessParentItem newItem) {
 		System.out.println("new ITEM *************");
 		if (processJson.addItem(newItem))
 			System.out.println("添加成功");
@@ -70,7 +63,8 @@ public class ProcessController {
 	}
 
 	@RequestMapping(value = "/deleteItem", method = RequestMethod.POST)
-	public @ResponseBody ProcessJson deleteItem(@RequestBody ProcessParentItem delItem) {
+	public @ResponseBody
+	ProcessJson deleteItem(@RequestBody ProcessParentItem delItem) {
 		System.out.println("delete ITEM *************" + delItem.getId());
 		if (processJson.removeItem(delItem))
 			System.out.println("删除成功");

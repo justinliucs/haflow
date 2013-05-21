@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+targetNamespace="http://www.xml.util.haflow"
+xmlns="http://www.xml.util.haflow"
+elementFormDefault="qualified">
+
+<xs:complexType name="erPropertiesType">
+	<xs:sequence>	
+		<xs:element name="jarPath" type="xs:string"/>
+		<xs:element name="inputPath" type="xs:string"/>
+		<xs:element name="outputPath" type="xs:string"/>
+		<xs:element name="confPath" type="xs:string"/>
+	</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="positionType">
+	<xs:sequence>	
+		<xs:element name="x" type="xs:double"/>
+		<xs:element name="y" type="xs:double"/>
+	</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="erModuleType">
+	<xs:sequence>
+		<xs:element name="id" type="xs:string"/>
+		<xs:element name="name" type="xs:string"/>
+		<xs:element name="_type" type="xs:string"/>
+		<xs:element name="mtype" type="xs:string"/>
+		<xs:element name="erProperties" type="erPropertiesType"/>
+		<xs:element name="position" type="positionType"/>
+	</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="flowType">
+	<xs:sequence>
+		<xs:element name="id" type="xs:string"/>
+		<xs:element name="name" type="xs:string"/>
+		<xs:element name="type" type="xs:string"/>
+		<xs:element name="parent" minOccurs="0" maxOccurs="1" type="xs:string"/>
+		<xs:element name="tabid" type="xs:string"/>
+		<xs:element name="erModule" minOccurs="0" maxOccurs="unbounded" type="erModuleType"/>
+	</xs:sequence>
+</xs:complexType>
+
+<xs:element name="project">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element name="identifier" type="xs:string"/>
+			<xs:element name="label" type="xs:string"/>
+			<xs:element name="items" maxOccurs="unbounded" type="flowType"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:element>
+
+</xs:schema>

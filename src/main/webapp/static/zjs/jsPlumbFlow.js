@@ -32,7 +32,8 @@ require([
 	ready(function(){
 			//all JavaScript that needs to be call onPageLoad can be put here.
 			//SBS.UI.Views.Plumb.init();
-			haflow.flow.pane.init();
+			haflow.flow.pane.init("flowContentr");
+			haflow.flow.view.init();
 		}
 	);
 });		

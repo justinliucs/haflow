@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<processJson>
+    <identifier>id</identifier>
+    <items>
+        <processParentItem>
+            <children/>
+            <id>pp1</id>
+            <name>A工程</name>
+            <type>process</type>
+        </processParentItem>
+        <processParentItem>
+            <children/>
+            <id>pp2</id>
+            <name>B工程</name>
+            <type>process</type>
+        </processParentItem>
+        <processParentItem>
+            <children/>
+            <id>cp1</id>
+            <name>c工程子文件</name>
+            <type>process</type>
+        </processParentItem>
+        <processParentItem>
+            <children/>
+            <id>cp2</id>
+            <name>d工程子文件</name>
+            <type>fprocess</type>
+        </processParentItem>
+        <processParentItem>
+            <children/>
+            <id>cp3</id>
+            <name>e工程子文件</name>
+            <type>fprocess</type>
+        </processParentItem>
+        <processParentItem>
+            <children/>
+            <id>1368010226444</id>
+            <name>新建文件</name>
+            <type>process</type>
+        </processParentItem>
+    </items>
+    <label>name</label>
+</processJson>

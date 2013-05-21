@@ -13,7 +13,7 @@
 <link rel="stylesheet" href="static/dojolib/dijit/themes/claro/document.css"/>
 <link rel="stylesheet" href="static/dojolib/dijit/themes/claro/claro.css"/>
 <script type="text/javascript" src="static/dojolib/dojo/dojo.js"
-		data-dojo-config="parseOnLoad: false, async:true"></script> 
+		data-dojo-config="parseOnLoad: false, async:false"></script> 
 				
 <script type="text/javascript" src="static/js/src.js"></script>
 <link rel="stylesheet" href="static/css/demo.css"/>
@@ -26,6 +26,15 @@
 	<script type="text/javascript" src="static/zjs/demo-helper-jquery.js"></script>
 	<script>
 		 var moduleArray = [];
+		 var fullJsona = { identifier: 'abbr',
+		  label: 'name',
+		  items: [
+		    { abbr:'ec', name:'Ecuador', capital:'Quito', type:"FLOW"},
+		    { abbr:'eg', name:'Egypt', capital:'Cairo', type:"FLOW" },
+		    { abbr:'sv', name:'El Salvador', capital:'San Salvador', type:"FLOW"}
+		]};
+		 var fullJson;
+		 loadJson();	
 	</script>
 	
 	<link href="static/zcss/flowchartDemo.css" rel="stylesheet" type="text/css" />
@@ -45,10 +54,18 @@
 			<div data-dojo-type="dijit.PopupMenuBarItem" id="flow">
 				<span>Flow</span>
 				<div data-dojo-type="dijit.Menu" id="editMenu">
-					<div data-dojo-type="dijit.MenuItem" id="stop" 
+<!--				<div data-dojo-type="dijit.MenuItem" id="openFlow" 
 						data-dojo-props="iconClass:'dijitIconOpen', onClick:openFlow">Open</div>
+ 					<div data-dojo-type="dijit.MenuItem" id="openFlow2" 
+						data-dojo-props="iconClass:'dijitIconOpen', onClick:openFlow2">Open2</div> -->
 					<div data-dojo-type="dijit.MenuItem" id="save" 
 						data-dojo-props="iconClass:'dijitIconSave', onClick:saveFlow" >Save</div>
+					<div data-dojo-type="dijit.MenuItem" id="save2" 
+						data-dojo-props="iconClass:'dijitIconSave', onClick:saveFlow2" >Save2</div>
+					<div data-dojo-type="dijit.MenuItem" id="newFlow" 
+						data-dojo-props="iconClass:'dijitIconUndo', onClick:rNewFlow" >New Flow</div>
+					<div data-dojo-type="dijit.MenuItem" id="newErModule" 
+						data-dojo-props="iconClass:'dijitIconUndo', onClick:rNewErModule" >New ER Module</div>
 				</div>
 			</div>					
 		
@@ -56,7 +73,9 @@
 				<span>Run</span>
 				<div data-dojo-type="dijit.Menu" id="helpMenu">
 					<div data-dojo-type="dijit.MenuItem" id="run" 
-						data-dojo-props="iconClass:'dijitIconUndo', onClick:runFlow" >Run</div>					
+						data-dojo-props="iconClass:'dijitIconUndo', onClick:runFlow" >Run</div>	
+					<div data-dojo-type="dijit.MenuItem" id="runCurrent" 
+						data-dojo-props="iconClass:'dijitIconUndo', onClick:runCurrentFlow" >Run Current</div>					
 				</div>
 			</div>
 		
@@ -68,63 +87,31 @@
 
 			<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Tree"'>
 				<!-- tree widget -->
-		      <div dojoType="dojo.data.ItemFileWriteStore" url="/haflow/helloworld.json"  jsId="continentStore">
-				  <script type="dojo/connect" event="onNew" args="newItem">
-                 
-                      dojo.rawXhrPost({
-                        url: "/haflow/helloworld/newItem.json",
-                        postData: dojo.toJson({
-                            id: this.getValue(newItem,"id"),
-                            name: this.getValue(newItem,"name"),
-                            type: this.getValue(newItem,"type"),  
-                        }),
-                       handleAs: "json",
-                       headers: { "Content-Type": "application/json"},
-
-                        error: function(error) {
-                            alert(error.message);
-                        },
-                        load: function(response) {
-                            alert("新建成功");
-                        }
-                    });
+		       
+		       <script>
+		       
+		       </script>
+		      <!--  <div dojoType="dojo.data.ItemFileReadStore" url="/haflow/full/get.json"  jsId="continentStore"> --> 
+		      <div dojoType="dojo.data.ItemFileWriteStore" data-dojo-props="data:fullJson"  jsId="continentStore"> 		      		     
+				<script type="dojo/connect" event="onNew" args="newItem">                 
+                      newStoreItemCallback(newItem);              
+                </script>             
+              </div>
               
-                </script>
-                </div>
-                 <div dojoType="dijit.tree.ForestStoreModel" store="continentStore"
-                jsId="continentModel" rootLabel="我的工程"></div> 
+             <!--  <div dojoType="dijit.tree.ForestStoreModel" store="continentStore" jsId="continentModel" rootLabel="我的工程"></div> --> 
+              
+              <div data-dojo-type="dijit/tree/ForestStoreModel" data-dojo-id="continentModel"
+    			data-dojo-props="store:continentStore, query:{type:'FLOW'},
+    				rootId:'continentModel', rootLabel:'Entry Flows'"></div>
+              
+            
 				
-				<div data-dojo-type="dijit.Tree"  id="menuTree"
-					data-dojo-props="model: continentModel, query:{ type:'process'}, label:'我的工程', openOnClick:false">
-					<script type="dojo/method" data-dojo-event="onClick" data-dojo-args="item">
-                      
-                     
-                      var tabid=dijit.byId(continentStore.getValue(item,"id"));
-                       
-       	             if(tabid)
-                      {
-                      
-                       dijit.byId('topTabs').selectChild(continentStore.getValue(item,"id"));
-                      }
-                     else{
-                      
-   	                     var tb = new dijit.layout.ContentPane({
-   		                  title:continentStore.getValue(item,"name"), 
- 	                      style:"display:none; padding:10px;", 
-                          content: "We offer amazing food",
-                          closable:true,
-                          id:continentStore.getValue(item,"id")
-                         });
-   	  	                 if(tb)
-                           {
-                         
-                           dijit.byId("topTabs").addChild(tb);  
-                           }
-                       dijit.byId('topTabs').selectChild(continentStore.getValue(item,"id").toString());
-   	                  
-                     }
-               </script>
-				</div>
+			  <div data-dojo-type="dijit.Tree"  id="menuTree"
+					data-dojo-props="model: continentModel, label:'工程', openOnClick:false">
+				<script type="dojo/method" data-dojo-event="onClick" data-dojo-args="item">                                           
+                      menuClicked(item);
+               	</script>
+			  </div>
 			</div>
 		</div>
 
@@ -157,7 +144,7 @@
 
 			<!-- added by zhaowei -->
 			<div id="flowTab" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Flow Widgets", style:"padding:10px;display:none;"'>			
-				<div id="flowContent" >
+				<div id="flowContentr" class="flowContent" >
 					<p></p>
 				</div>			
 			</div>
@@ -170,15 +157,14 @@
 		<!-- bottom right tabs -->
 		<div data-dojo-type="dijit.layout.TabContainer" id="bottomTabs"
 			data-dojo-props="
-				tabPosition:'bottom', selectedchild:'btab1', region:'bottom',
-				splitter:true, tabStrip:true
-			">
+				tabPosition:'top', selectedchild:'btab1', region:'bottom',
+				splitter:true, tabStrip:true">
 			
 			<div id="btab0" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Console", style:" padding:10px; "'>
 				Log Console : 
 				</br>
 				<ul id="btab0console">
-				</ul>
+				</ul>				
 			</div>
 			
 			<!-- btab 1 -->
@@ -249,56 +235,54 @@
 
 	</div><!-- end of BorderContainer -->
 </div>
+
+			<div class="dijitDialogPaneContentArea">
+	            <div data-dojo-type="dijit/Dialog" data-dojo-id="rNewFlowDialog" title="Name the Flow">
+				    <table class="dijitDialogPaneContentArea">
+				        <tr>
+				            <td><label for="rNewFlowName">Name:</label></td>
+				            <td><input data-dojo-type="dijit/form/TextBox" name="name" id="rNewFlowName"></td>
+				        </tr>
+				    </table>
+				
+				    <div class="dijitDialogPaneActionBar">
+				        <button data-dojo-type="dijit/form/Button" type="submit" id="ok" data-dojo-props="onClick:fNewFlowNameCallBack">OK</button>
+				        <button data-dojo-type="dijit/form/Button" type="button" data-dojo-props="onClick:function(){rNewFlowDialog.hide();}"
+				                id="cancel">Cancel</button>
+				    </div>
+				</div>
+				
+				<div data-dojo-type="dijit/Dialog" data-dojo-id="flowDeleteConfirmDialog" title="Delete Confirm">
+				    <div id="flowDeleteConfirmContent">Delete Flow?</div>
+				    <div class="dijitDialogPaneActionBar">
+				        <button data-dojo-type="dijit/form/Button" type="submit" onClick="flowDeleteConfirmCallback">Delete</button>
+				        <button data-dojo-type="dijit/form/Button" type="button" onClick="flowDeleteConfirmDialog.hide();">Cancel</button>
+				    </div>
+				</div>
+			</div>
 	<!-- context menu in tree item -->
+	
 	<ul id="menuTree_menu" data-dojo-type="dijit/Menu"
                     data-dojo-props='style:"display: none;", targetNodeIds: ["menuTree"], selector: ".dijitTreeNode"'>
-            <li data-dojo-type="dijit/MenuItem" >
-                    <script type="dojo/connect" data-dojo-event="onClick">
-                          var boxId=(new Date()).getTime();
-    
-                            var tn = dijit.byNode(this.getParent().currentTarget);
-                      continentStore.newItem({
-                       id: boxId.toString(),
-                       name: "新建文件",
-                       type: "process", 
-                   });
-                   newTab(boxId);
-                    </script>
-                                                     新建
+			<li data-dojo-type="dijit/MenuItem" >            
+                <script type="dojo/connect" data-dojo-event="onClick">rOpenFlow(this)</script>
+				打开
             </li>
-             <li data-dojo-type="dijit/MenuItem">
-                    <script type="dojo/connect" data-dojo-event="onClick">
-                            // get a hold of the dijit.TreeNode that was the source of this open event
-                            var tn = dijit.byNode(this.getParent().currentTarget);
-                           
-                        
-                        dojo.rawXhrPost({
-                        url: "/haflow/helloworld/deleteItem.json",
-                        postData: dojo.toJson({
-                            id: continentStore.getValue(tn.item,"id"),
-                            name: continentStore.getValue(tn.item,"name"),
-                            type: continentStore.getValue(tn.item,"type"), 
-                        }),
-                       handleAs: "json",
-                       headers: { "Content-Type": "application/json"},
-
-                        error: function(error) {
-                            alert(error.message);
-                        },
-                        load: function(response) {
-                            alert("删除成功");
-                        }
-                    });
-                        var tabid=dijit.byId(continentStore.getValue(tn.item,"id"));
-                        if(tabid){
-                             
-                             dijit.byId("topTabs").removeChild(tabid);
-                           
-                            }
-                             continentStore.deleteItem(tn.item);
-                     
-                    </script>
-                                                                  删除
+            <li data-dojo-type="dijit/MenuItem" >            
+                <script type="dojo/connect" data-dojo-event="onClick">rNewFlow()</script>
+                                            新建
+            </li>
+            <li data-dojo-type="dijit/MenuItem">
+				<script type="dojo/connect" data-dojo-event="onClick">rDeleteFlow(this);</script>
+                                          删除
+            </li>
+            <li data-dojo-type="dijit/MenuItem">
+				<script type="dojo/connect" data-dojo-event="onClick">rClearFlow(this);</script>
+                                          清空
+            </li>
+            <li data-dojo-type="dijit/MenuItem">
+				<script type="dojo/connect" data-dojo-event="onClick">rRunFlow(this);</script>
+                                          运行
             </li>
             
      </ul>
