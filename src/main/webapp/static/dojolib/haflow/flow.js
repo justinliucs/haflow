@@ -26,10 +26,11 @@ define(
 			// invoked when drag window from module list
 			haflow.flow.newEmModule = function(tab, x, y) {
 				// canvas = dijit.byId("topTabs").selectedChildWidget;
-				var item;
-				var erModules;
+				var item = null;
+				var erModules = null;
+				var flowId = null;
 				for ( var i = 0; i < fullJson.items.length; i++) {
-					var flowId = fullJson.items[i].id;
+					flowId = fullJson.items[i].id;
 					var a = getTabId(flowId);
 					var b = tab.id;
 					if (a == b) {
@@ -58,7 +59,7 @@ define(
 						"x" : x,
 						"y" : y
 					}
-				}
+				};
 				var canvas = dojo.byId(getCanvasId(flowId));
 				var p = canvas.children[0];
 				$(p)
@@ -85,12 +86,12 @@ define(
 					containment : "#" + getCanvasId(flowId)
 				});
 				jsPlumb.repaintEverything();
-			}
+			};
 
 			haflow.flow.clearPane = function(tab) {
-				var item;
-				var erModules;
-				var flowId;
+				var item = null;
+				var erModules = null;
+				var flowId = null;
 				for ( var i = 0; i < fullJson.items.length; i++) {
 					flowId = fullJson.items[i].id;
 					var a = getTabId(flowId);
@@ -101,24 +102,26 @@ define(
 						break;
 					}
 				}
-				var canvas = dojo.byId(getCanvasId(flowId));
-				var p = canvas.children[0];
+				// var canvas = dojo.byId(getCanvasId(flowId));
+				// var p = canvas.children[0];
 				for ( var i = 0; i < erModules.length; i++) {
 					var id = erModules[i].id;
-					var windowId = id;
+					// var windowId = id;
 					// var confPaneId = "conf_" + id + "_" + i;
 					// var confTabId = "conf_tab_" + item.id + "_" + i;
-					var confPaneId = haflow.flow.getConfPaneIdByModuleId(id);// "conf_"
-																				// + id
-																				// +
-																				// "_"
-																				// + i;
-					var confTabId = haflow.flow.getConfTabIdByModuleId(id);// "conf_tab_"
-																			// +
-																			// item.id
-																			// +
-																			// "_"
-																			// + i;
+					// var confPaneId =
+					// haflow.flow.getConfPaneIdByModuleId(id);// "conf_"
+					// + id
+					// +
+					// "_"
+					// + i;
+					// var confTabId = haflow.flow.getConfTabIdByModuleId(id);//
+					// "conf_tab_"
+					// +
+					// item.id
+					// +
+					// "_"
+					// + i;
 
 					var window = dojo.byId(id);
 					if (window) {
@@ -131,16 +134,15 @@ define(
 						// }
 					}
 				}
-
-			}
+			};
 
 			haflow.flow.getConfTabIdByModuleId = function(moduleId) {
 				return "conf_tab_" + moduleId;
-			}
+			};
 
 			haflow.flow.getConfPaneIdByModuleId = function(moduleId) {
 				return "conf_pane_" + moduleId;
-			}
+			};
 
 			inputBlur = function() {
 				// var a = query("#" + this.id);
@@ -148,20 +150,20 @@ define(
 				for ( var i = 0; i < fullJson.items.length; i++) {
 					var item = fullJson.items[i];
 					for ( var j = 0; j < item.erModule.length; j++) {
-						var window = item.erModule[j];
-						if (window.id == this.parent) {
+						var win = item.erModule[j];
+						if (win.id == this.parent) {
 							switch (this.class) {
 							case "jarPath":
-								window.erProperties.jarPath = this.value;
+								win.erProperties.jarPath = this.value;
 								break;
 							case "inPath":
-								window.erProperties.inputPath = this.value;
+								win.erProperties.inputPath = this.value;
 								break;
 							case "outPath":
-								window.erProperties.outputPath = this.value;
+								win.erProperties.outputPath = this.value;
 								break;
 							case "confPath":
-								window.erProperties.confPath = this.value;
+								win.erProperties.confPath = this.value;
 								break;
 							}
 							return true;
@@ -169,12 +171,13 @@ define(
 					}
 				}
 				return true;
-			}
+			};
+
 			haflow.flow.loadEmModule = function(tab) {
 				// canvas = dijit.byId("topTabs").selectedChildWidget;
-				var item;
-				var erModules;
-				var flowId;
+				var item = null;
+				var erModules = null;
+				var flowId = null;
 				for ( var i = 0; i < fullJson.items.length; i++) {
 					flowId = fullJson.items[i].id;
 					var a = getTabId(flowId);
@@ -188,7 +191,7 @@ define(
 
 				for ( var i = 0; i < erModules.length; i++) {
 					var id = erModules[i].id;
-					var name = erModules[i].name;
+					// var name = erModules[i].name;
 					var jarPath = erModules[i].erProperties.jarPath;
 					var inputPath = erModules[i].erProperties.inputPath;
 					var outputPath = erModules[i].erProperties.outputPath;
@@ -201,11 +204,11 @@ define(
 					// haflow.flow.getConfPaneIdByModuleId(id);//"conf_" + id +
 					// "_" + i;
 					var confTabId = haflow.flow.getConfTabIdByModuleId(id);// "conf_tab_"
-																			// +
-																			// item.id
-																			// +
-																			// "_"
-																			// + i;
+					// +
+					// item.id
+					// +
+					// "_"
+					// + i;
 
 					var canvas = dojo.byId(getCanvasId(flowId));
 					var p = canvas.children[0];
@@ -236,22 +239,22 @@ define(
 					containment : "#" + getCanvasId(flowId)
 				});
 				jsPlumb.repaintEverything();
-			}
+			};
 
 			createConfTabPane = function(windowId, jarPath, inputPath,
 					outputPath, confPath) {
 
 				var confPaneId = haflow.flow.getConfPaneIdByModuleId(windowId);// "conf_"
-																				// + id
-																				// +
-																				// "_"
-																				// + i;
+				// + id
+				// +
+				// "_"
+				// + i;
 				var confTabId = haflow.flow.getConfTabIdByModuleId(windowId);// "conf_tab_"
-																				// +
-																				// item.id
-																				// +
-																				// "_"
-																				// + i;
+				// +
+				// item.id
+				// +
+				// "_"
+				// + i;
 
 				var entryJSP = "<div id=\""
 						+ confPaneId
@@ -303,11 +306,11 @@ define(
 					id : confTabId
 				});
 				return pane;
-			}
+			};
 
 			haflow.flow.repaintEverything = function() {
 				jsPlumb.repaintEverything();
-			}
+			};
 
 			haflow.flow.pane = {
 				init : function(canvasId) {
@@ -331,10 +334,10 @@ define(
 											// debugger;
 											if (ui.draggable[0].className
 													.indexOf("ui-draggable") > 0) {
-												var text = ui.draggable[0].id
-												var x = event.pageX,
+												var text = ui.draggable[0].id;
+												var x = event.pageX;
 												// -event.target.offsetLeft
-												y = event.pageY // -event.target.offsetTop
+												var y = event.pageY; // -event.target.offsetTop
 												// var tt0 =
 												// event.target.offsetLeft;
 												// var tt1 =
@@ -371,15 +374,17 @@ define(
 													y = 964.85;
 												}
 												var idCount = 3;// moduleArray.length;
-												
-												var elementId=ui.helper.context.id;
-												for(var i=0;i<idCount;i++){
-													if(fullJson.items[i].erModule[0].id==elementId){
-														fullJson.items[i].erModule[0].position.x=x;
-														fullJson.items[i].erModule[0].position.y=y;
+
+												var elementId = ui.helper.context.id;
+												for ( var i = 0; i < fullJson.items.length; i++) {
+													for ( var j = 0; j < fullJson.items[i].erModule.length; j++) {
+														if (fullJson.items[i].erModule[0].id == elementId) {
+															fullJson.items[i].erModule[0].position.x = x;
+															fullJson.items[i].erModule[0].position.y = y;
+														}
 													}
 												}
-												
+
 												switch (text) {
 												case "1":
 													if (this.id == "flowContentr") {
@@ -481,13 +486,13 @@ define(
 									});
 
 				}
-			}
+			};
 
 			haflow.flow.view = {
 				init : function() {
 					SBS.UI.Views.Plumb.init();
 				}
-			}
+			};
 
 			var SBS = SBS || {};
 			SBS.UI = SBS.UI || {};
@@ -625,7 +630,7 @@ define(
 								}));
 					}
 				}
-			}
+			};
 
 			// canvas: jQuery object of the canvas div
 			// x,y: window position
@@ -648,7 +653,7 @@ define(
 				// SBS.UI.Views.Plumb.AddEndpoints("window" + idCount,
 				// ["BottomCenter"], []);
 
-				var btab4 = dom.byId("btab4");
+				// var btab4 = dom.byId("btab4");
 				var tabContainer = registry.byId("bottomTabs");
 				// var pane = createConfTabPane(confTabId, confPaneId, windowId,
 				// jarPath, inputPath, outputPath, confPath);
@@ -678,7 +683,7 @@ define(
 						+ "<td><label for=\"confPath\">Conf Path </label></td>"
 						+ "<td><input class=\"confPath\" value=\""
 						+ confPath
-						+ "\" /></td>" + "</tr>" + "</table>" + "</div>"
+						+ "\" /></td>" + "</tr>" + "</table>" + "</div>";
 				var entryPane = new xContentPane({
 					content : entryJSP,
 					executescripts : true
@@ -704,5 +709,5 @@ define(
 					containment : ".flowContent"
 				});
 				jsPlumb.repaintEverything();
-			}
+			};
 		});

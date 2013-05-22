@@ -36,20 +36,22 @@ require(
 						}
 					});
 				});
-			}
+			};
 
 			// get flow id from flow name
 			getFlowId = function(flowName) {
 				return flowName + "_id";
-			}
+			};
+
 			// get canvas id from flow id
 			getCanvasId = function(flowId) {
 				return "canvas_" + flowId;
-			}
+			};
+
 			// get tab id from flow id
 			getTabId = function(flowId) {
 				return "tab_" + flowId;
-			}
+			};
 
 			getFlowIdFromTabId = function(tabId) {
 				for ( var i = 0; i < fullJson.items.length; i++) {
@@ -58,32 +60,30 @@ require(
 					}
 				}
 				return null;
-			}
+			};
 
 			rNewErModule = function() {
 				var canvas = dijit.byId("topTabs").selectedChildWidget;
 				haflow.flow.newEmModule(canvas, 100, 200);
-			}
+			};
 
 			// callback function when tab shows
 			// triger by newFlowTab
 			// new Flow tab invoked by menuClicked and rNewFlow
 			flowTabOnShow = function() {
-
 				var flowId = getFlowIdFromTabId(this.id);
 
 				var tab = dijit.byId(getTabId(flowId));
 				haflow.flow.clearPane(tab);
 
 				repaintModules(flowId);
-
-			}
+			};
 
 			// callback function when tab shows
 			flowTabOnClose = function() {
 				// confirm() returns true or false, so return that.
 				var close = confirm("Do you really want to Close this?");
-				var item;
+				var item = null;
 				if (close) {
 					var tabId = this.id;
 					for ( var i = 0; i < fullJson.items.length; i++) {
@@ -94,7 +94,7 @@ require(
 						}
 					}
 					for ( var i = 0; i < item.erModule.length; i++) {
-						var window = item.erModule[i];
+						// var window = item.erModule[i];
 						var windowId = window.id;
 						var confTabId = haflow.flow
 								.getConfTabIdByModuleId(windowId);
@@ -110,7 +110,7 @@ require(
 					}
 				}
 				return close;
-			}
+			};
 
 			// invoked when the tree item was clicked.
 			menuClicked = function(item) {
@@ -128,15 +128,14 @@ require(
 					// invoke on the first load
 					// repaintModules(flowId);//paint flow modules
 				}
-
-			}
+			};
 
 			// invoked by menuClicked, paint flow modules on canvas only on the
 			// first time //openflow2
 			repaintModules = function(flowId) {
 				// clear the pane
 
-				var targetFlow;// get flow object
+				var targetFlow = null;// get flow object
 				for ( var i = 0; i < fullJson.items.length; i++) {
 					if (fullJson.items[i].id == flowId) {
 						targetFlow = fullJson.items[i];
@@ -144,19 +143,19 @@ require(
 					}
 				}
 				if (targetFlow && targetFlow.erModule.length > 0) {// paint
-																	// modules
+					// modules
 					// var ppp = $("#"+getContentPaneId(flowId))[0]; //ok
-					var ppp = document.getElementById(getCanvasId(flowId));
+					// var ppp = document.getElementById(getCanvasId(flowId));
 					var tab = dijit.byId(getTabId(flowId));
 					flow.loadEmModule(tab);// wrong
 				}
-			}
+			};
 
 			// invoke by open button click of context menu
 			rOpenFlow = function(targetItem) {
 				var item = dijit.byNode(targetItem.getParent().currentTarget).item;
 				menuClicked(item);// the same as single click on tree node
-			}
+			};
 
 			// invoke by clear button click of context menu
 			rClearFlow = function(targetItem) {
@@ -164,14 +163,14 @@ require(
 				var flowId = continentStore.getValue(item, "id");
 				var tab = dijit.byId(getTabId(flowId));
 				haflow.flow.clearPane(tab);
-			}
+			};
 
 			// invoke by run button click of context menu
 			rRunFlow = function(targetItem) {
 				var item = dijit.byNode(targetItem.getParent().currentTarget).item;
 				var flowId = continentStore.getValue(item, "id");
 				runFlowInline(flowId);
-			}
+			};
 
 			// run flow : flowId
 			runFlowInline = function(flowId) {
@@ -179,10 +178,9 @@ require(
 					url : "full/run/" + flowId + ".json",
 					postData : JSON.stringify(fullJson, function(key, val) {
 						if (key[0] == '_' && key != "_type") {
-							return            	       
-
+							return;
 						}
-						return val
+						return val;
 					}),
 					handleAs : "json",
 					headers : {
@@ -199,11 +197,11 @@ require(
 						dijit.byId("bottomTabs").selectChild("btab0");
 					}
 				});
-			}
+			};
 
 			// invoke by menu bar button run current
 			runCurrentFlow = function() {
-				var currentTab = dijit.byId("topTabs").selectedChildWidget
+				var currentTab = dijit.byId("topTabs").selectedChildWidget;
 				var tabId = currentTab.id;
 				for ( var i = 0; i < fullJson.items.length; i++) {
 					var item = fullJson.items[i];
@@ -213,12 +211,12 @@ require(
 						return;
 					}
 				}
-			}
+			};
 
 			// invoke by new button click of context menu
 			rNewFlow = function() {
 				rNewFlowDialog.show();
-			}
+			};
 
 			// callback function of rNewFlowDialog's ok button
 			fNewFlowNameCallBack = function() {
@@ -237,7 +235,7 @@ require(
 					rNewFlowDialog.hide();
 					alert("invalid name : " + name);
 				}
-			}
+			};
 
 			// invoked by fNewFlowNameCallBack
 			// create a new flow with flow name
@@ -254,22 +252,22 @@ require(
 					erModule : []
 				});
 				newFlowTab(newFlowName, getTabId(flowId), getCanvasId(flowId));// open
-																				// a
-																				// new
-																				// flow
-																				// tab
-			}
+				// a
+				// new
+				// flow
+				// tab
+			};
 
 			// invoked when new item function of store was invoked
 			newStoreItemCallback = function(newItem) {
 				// myStore.remove('entryFlow1');
 				alert("new item was added to store");
-			}
+			};
 
 			// invoke by newFlowInline
 			newFlowTab = function(name, tabId, canvasId) {
 				var ntp = new dijit.layout.ContentPane({// a new tab when create
-														// a new flow
+					// a new flow
 					title : name,
 					style : "display:none; padding:10px;",
 					content : "<div  id=\"" + canvasId
@@ -284,19 +282,20 @@ require(
 				dijit.byId("topTabs").addChild(ntp);
 				haflow.flow.pane.init(canvasId);
 				dijit.byId("topTabs").selectChild(ntp);
-			}
+			};
 
 			// invoke by new button click of context menu
 			// targetItem: context menu button "delete"
-			var currentTreeNode;
+			var currentTreeNode = null;
+
 			rDeleteFlow = function(targetItem) {
 				currentTreeNode = dijit
 						.byNode(targetItem.getParent().currentTarget);
 				dojo.byId("flowDeleteConfirmContent").innerHTML = "Are you sure to delete flow "
 						+ continentStore.getValue(currentTreeNode.item, "name");
 				flowDeleteConfirmDialog.show();// make sure that user want to
-												// delete flow
-			}
+				// delete flow
+			};
 
 			// call back function of delete confirm dialog
 			flowDeleteConfirmCallback = function() {
@@ -305,25 +304,24 @@ require(
 						currentTreeNode.item, "tabid"));
 				if (tabid) {
 					dijit.byId("topTabs").removeChild(tabid);// close the tab
-																// of this tree
-																// node
+					// of this tree
+					// node
 				}
 				continentStore.deleteItem(currentTreeNode.item);// remove the
-																// item from
-																// store
-			}
+				// item from
+				// store
+			};
 
 			// flow save2
 			saveFlow2 = function() {
-				var selected = dijit.byId("topTabs").selectedChildWidget;
+				// var selected = dijit.byId("topTabs").selectedChildWidget;
 				dojo.rawXhrPost({
 					url : "full/save.json",
 					postData : JSON.stringify(fullJson, function(key, val) {
 						if (key[0] == '_' && key != "_type") {
-							return            	       
-
+							return;
 						}
-						return val
+						return val;
 					}),
 					handleAs : "json",
 					headers : {
@@ -336,7 +334,7 @@ require(
 						alert(response.label);
 					}
 				});
-			}
+			};
 
 			// button run New Flow
 			newFlow = function() {
@@ -352,8 +350,7 @@ require(
 				dijit.byId("topTabs").addChild(ntp);
 				haflow.flow.pane.init();
 				dijit.byId("topTabs").selectChild("flowPane1");
-
-			}
+			};
 
 			// button run run
 			runFlow = function() {
@@ -381,7 +378,7 @@ require(
 						dijit.byId("bottomTabs").selectChild("btab0");
 					}
 				});
-			}
+			};
 
 			// button flow save
 			saveFlow = function() {
@@ -417,7 +414,7 @@ require(
 						alert(response.erModule[0].id);
 					}
 				});
-			}
+			};
 
 			// button flow open
 			openFlow = function() {
@@ -442,7 +439,7 @@ require(
 								response.erModule[0].properties[0].confPath);
 					}
 				});
-			}
+			};
 
 			ready(function() {
 
@@ -472,6 +469,6 @@ require(
 
 			myFunc = function() {
 				alert("OK2");
-			}
+			};
 
 		});
