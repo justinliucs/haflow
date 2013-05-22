@@ -34,7 +34,7 @@ require([
 	loadJson=function(){
 		require(["require","dojo/ready"], function(require){
 		  	 dojo.xhrGet({
-				    url: "/haflow/full/get.json",
+				    url: "full/get.json",
 				    handleAs: "json",
 				    headers: {
 				        "Content-Type": "application/json"
@@ -184,7 +184,7 @@ require([
 	//run flow : flowId
 	runFlowInline = function(flowId){
 		dojo.rawXhrPost({
-			url: "/haflow/full/run/" + flowId +".json",
+			url: "full/run/" + flowId +".json",
             postData: JSON.stringify(fullJson, function(key, val) {
            	   if (key[0] == '_' && key != "_type") {
            		   return            	       
@@ -306,7 +306,7 @@ require([
 	saveFlow2=function(){
 		 var selected = dijit.byId("topTabs").selectedChildWidget;
 		 dojo.rawXhrPost({
-			 url: "/haflow/full/save.json",
+			 url: "full/save.json",
              postData: JSON.stringify(fullJson, function(key, val) {
             	   if (key[0] == '_' && key != "_type") {
             		   return            	       
@@ -342,7 +342,7 @@ require([
 	//button run run
 	runFlow = function() {
 	    dojo.rawXhrPost({
-	        url: "/haflow/flow/run.json",
+	        url: "flow/run.json",
 	        postData: dojo.toJson({
 	            jarPath: dojo.query(".jarPath")[0].value,
 	            inPath: dojo.query(".inPath")[0].value,
@@ -368,7 +368,7 @@ require([
 	//button flow save
 	saveFlow = function() {
 	    dojo.rawXhrPost({
-	        url: "/haflow/flow/save.json",
+	        url: "flow/save.json",
 	        postData: dojo.toJson({
 	            identifier: "entryFlow",
 	            label: "Entry Flow",
@@ -404,7 +404,7 @@ require([
 	//button flow open
 	openFlow=function(){
 		 dojo.xhrGet({
-			url: "/haflow/flow/open.json",
+			url: "flow/open.json",
             handleAs: "json",
             headers: { "Content-Type": "application/json"},
             error: function(error) {
