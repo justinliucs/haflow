@@ -155,11 +155,6 @@ haflow.prototype.onComponentClicked = function(instance, componentId) {
 haflow.prototype.onConnectionCreated = function(instance, info) {
 	var source = parseInt(info.sourceId.replace("node_", ""));
 	var target = parseInt(info.targetId.replace("node_", ""));
-
-	if (source == NaN || target == NaN || source == target) {
-		instance.paint();
-		return;
-	}
 	var exist = false;
 	for ( var i = 0; i < instance.flow.edges.length; i++) {
 		if (instance.flow.edges[i].from == source
@@ -214,7 +209,6 @@ haflow.prototype.deleteConnection = function(instance, info) {
 			instance.flow.edges.splice(i, 1);
 		}
 	} while (needToDelete);
-
 	jsPlumb.detach(info);
 };
 
@@ -228,6 +222,7 @@ haflow.prototype.onDrop = function(instance, event, ui) {
 			instance.flow.nodes[i].position.y = newY;
 		}
 	}
+	jsPlumb.repaintEverything();
 };
 
 haflow.prototype.initJsPlumb = function() {

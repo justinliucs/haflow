@@ -22,19 +22,20 @@
 <link rel="stylesheet" href="static/css/demo.css" />
 
 <!-- added by zhaowei -->
-<script type="text/javascript" src="static/zjs/jquery-1.9.0.js"></script>
 <script type="text/javascript"
-	src="static/zjs/jquery-ui-1.10.0.custom.js"></script>
+	src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 <script type="text/javascript"
-	src="static/zjs/jquery.jsPlumb-1.3.16-all.js"></script>
-<script type="text/javascript" src="static/zjs/jsPlumbFlow.js"></script>
-<script type="text/javascript" src="static/zjs/demo-helper-jquery.js"></script>
+	src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<script type="text/javascript"
+	src="static/lib/jquery.jsPlumb-1.4.1-all.js"></script>
+<script type="text/javascript" src="static/js/jsPlumbFlow.js"></script>
+<script type="text/javascript" src="static/js/demo-helper-jquery.js"></script>
 <script>
 	var moduleArray = [];
 	var loadingError = false;
 	var fullJson;
 	loadJson();
-	while (fullJson != undefined || loadingError)
+	while (fullJson != undefined)
 		;
 </script>
 
@@ -189,7 +190,7 @@
 
 			<div id="btab0" data-dojo-type="dijit.layout.ContentPane"
 				data-dojo-props='title:"Console", style:" padding:10px; "'>
-				Log Console : </br>
+				Log Console : <br />
 				<ul id="btab0console">
 				</ul>
 			</div>
@@ -261,8 +262,6 @@
 		</div>
 		<!-- end Bottom TabContainer -->
 
-	</div>
-	<!-- end of BorderContainer -->
 	</div>
 
 	<div class="dijitDialogPaneContentArea">

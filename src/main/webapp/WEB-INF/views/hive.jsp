@@ -6,7 +6,7 @@
 <html>
 <head>
 	<title>forms | mvc-showcase</title>
-	<script type="text/javascript" src="static/zjs/jquery-1.9.0.js"></script>	
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>	
 	<link rel="stylesheet" href="static/zcss/form.css"/>
 	
 </head>
