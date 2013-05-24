@@ -1,46 +1,0 @@
-8
-
-dir
-7131
-svn://133.133.133.108/mapreducegroup/lili/springDemo/src/main/webapp/static/dojolib/dojox/drawing/plugins
-svn://133.133.133.108
-
-
-
-2013-04-15T01:59:24.008611Z
-7131
-liqiyuan
-
-
-svn:special svn:externals svn:needs-lock
-
-tools
-dir
-
-_Plugin.js
-file
-
-
-
-
-2013-04-12T03:33:40.350522Z
-817a49ee35c17db2c0cdee67e8e8e692
-2013-04-15T01:59:24.008611Z
-7131
-liqiyuan
-
-_Plugin.js.uncompressed.js
-file
-
-
-
-
-2013-04-12T03:33:40.351522Z
-de215d2683bdcb498b4f69651773eb2d
-2013-04-15T01:59:24.008611Z
-7131
-liqiyuan
-
-drawing
-dir
-

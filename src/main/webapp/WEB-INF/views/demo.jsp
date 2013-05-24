@@ -11,10 +11,11 @@
 <title>demo preview</title>
 
 <link rel="stylesheet"
-	href="static/dojolib/dijit/themes/claro/document.css" />
+	href="http://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dijit/themes/claro/document.css" />
 <link rel="stylesheet"
-	href="static/dojolib/dijit/themes/claro/claro.css" />
-<script type="text/javascript" src="static/dojolib/dojo/dojo.js"
+	href="http://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dijit/themes/claro/claro.css" />
+<script type="text/javascript"
+	src="http://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dojo/dojo.js"
 	data-dojo-config="parseOnLoad: false, async:false"></script>
 
 <script type="text/javascript" src="static/js/src.js"></script>
@@ -30,7 +31,7 @@
 <script type="text/javascript" src="static/zjs/demo-helper-jquery.js"></script>
 <script>
 	var moduleArray = [];
-	var loadingError=false;
+	var loadingError = false;
 	var fullJson;
 	loadJson();
 	while (fullJson != undefined || loadingError)
