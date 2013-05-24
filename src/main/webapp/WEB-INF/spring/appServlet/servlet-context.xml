@@ -40,7 +40,7 @@
         </property>
     </bean>
 	<!-- Forwards requests to the "/" resource to the "welcome" view -->
-	<mvc:view-controller path="/" view-name="demo"/>
+	<mvc:view-controller path="/" view-name="haflow"/>
 
 	<!-- Configures Handler Interceptors -->	
 	<mvc:interceptors>
