@@ -36,7 +36,7 @@
 		<jdk.version>1.6</jdk.version>
 
 		<!-- 项目属性 -->
-		
+
 
 		<jdbc.driver.groupId>mysql</jdbc.driver.groupId>
 		<jdbc.driver.artifactId>mysql-connector-java</jdbc.driver.artifactId>
@@ -45,12 +45,9 @@
 	</properties>
 
 	<repositories>
-		<!--
-			如有Nexus私服, 取消注释并指向正确的服务器地址. <repository> <id>nexus</id> <name>Team
-			Nexus Repository</name>
-			<url>http://localhost:8081/nexus/content/groups/public</url>
-			</repository>
-		-->
+		<!-- 如有Nexus私服, 取消注释并指向正确的服务器地址. <repository> <id>nexus</id> <name>Team 
+			Nexus Repository</name> <url>http://localhost:8081/nexus/content/groups/public</url> 
+			</repository> -->
 		<repository>
 			<id>central</id>
 			<name>Central Repository</name>
@@ -61,29 +58,24 @@
 		</repository>
 	</repositories>
 
-	<!--
-		设定插件仓库 如有Nexus私服, 取消注释并指向正确的服务器地址. <pluginRepositories>
-		<pluginRepository> <id>nexus</id> <name>Team Nexus Repository</name>
-		<url>http://localhost:8081/nexus/content/groups/public</url>
-		<snapshots> <enabled>false</enabled> </snapshots> </pluginRepository>
-		</pluginRepositories>
-	-->
+	<!-- 设定插件仓库 如有Nexus私服, 取消注释并指向正确的服务器地址. <pluginRepositories> <pluginRepository> 
+		<id>nexus</id> <name>Team Nexus Repository</name> <url>http://localhost:8081/nexus/content/groups/public</url> 
+		<snapshots> <enabled>false</enabled> </snapshots> </pluginRepository> </pluginRepositories> -->
 
 	<!-- 依赖项定义 -->
 	<dependencies>
-	    <!-- Jackson JSON Mapper -->
+		<!-- Jackson JSON Mapper -->
 		<dependency>
-	      <groupId>org.codehaus.jackson</groupId>
-	      <artifactId>jackson-mapper-asl</artifactId>
-	      <version>1.9.12</version>
-         </dependency>
-       <dependency>
-	 <groupId>org.codehaus.jackson</groupId>
-	   <artifactId>jackson-core-asl</artifactId>
-	   <version>1.9.12</version>
-     </dependency>
-            
-            
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.9.12</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-core-asl</artifactId>
+			<version>1.9.12</version>
+		</dependency>
+
 		<!-- spring data access -->
 		<dependency>
 			<groupId>org.springframework.data</groupId>
@@ -147,14 +139,14 @@
 			</exclusions>
 		</dependency>
 		<!-- WEB begin -->
-		
+
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 			<version>2.5</version>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
@@ -173,7 +165,7 @@
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
 		</dependency>
-		
+
 		<!-- added by zhaowei -->
 		<!-- JSR 303 with Hibernate Validator -->
 		<dependency>
@@ -187,7 +179,7 @@
 			<version>4.1.0.Final</version>
 		</dependency>
 		<!-- end added by zhaowei -->
-		
+
 		<!-- WEB end -->
 		<!-- GENERAL UTILS begin -->
 		<dependency>
@@ -195,7 +187,7 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>${commons-lang3.version}</version>
 		</dependency>
-         <!-- common-logging 实际调用slf4j -->
+		<!-- common-logging 实际调用slf4j -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
@@ -205,10 +197,10 @@
 		<!-- java.util.logging 实际调用slf4j -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
-	        <artifactId>jul-to-slf4j</artifactId>
-	        <version>${slf4j.version}</version>
-	        <scope>runtime</scope>
-	    </dependency>
+			<artifactId>jul-to-slf4j</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>runtime</scope>
+		</dependency>
 		<!-- GENERAL UTILS end -->
 	</dependencies>
 
