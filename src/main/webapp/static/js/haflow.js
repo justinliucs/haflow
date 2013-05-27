@@ -1,22 +1,84 @@
 function haflow(info) {
 	this.flow = info.flow;
 	this.components = info.components;
+	this.listPlace = info.listPlace;
 	this.flowPlace = info.flowPlace;
 	this.componentsPlace = info.componentsPlace;
 	this.consolePlace = info.consolePlace;
 }
 
-haflow.prototype.paint = function() {
-	this.paintComponents();
-	this.paintFlow();
+haflow.prototype.init = function() {
+	this.loadList();
+	this.loadComponents();
+};
+
+haflow.prototype.loadList = function() {
+	var _currentInstance = this;
+	$.ajax({
+		url : "flow",
+		type : "GET",
+		dataType : "json",
+		success : function(data, status) {
+			_currentInstance.list = data;
+			_currentInstance.paintList();
+		},
+		error : function(request, status, error) {
+			alert(error);
+		}
+	});
+};
+
+haflow.prototype.loadFlow = function(flowId) {
+	var _currentInstance = this;
+	$.ajax({
+		url : "flow/" + flowId,
+		type : "GET",
+		dataType : "json",
+		success : function(data, status) {
+			_currentInstance.flow = data;
+			_currentInstance.paintFlow();
+		},
+		error : function(request, status, error) {
+			alert(error);
+		}
+	});
+};
+
+haflow.prototype.loadComponents = function() {
+	var _currentInstance = this;
+	$.ajax({
+		url : "component",
+		type : "GET",
+		dataType : "json",
+		success : function(data, status) {
+			_currentInstance.components = data;
+			_currentInstance.paintComponents();
+		},
+		error : function(request, status, error) {
+			alert(error);
+		}
+	});
+};
+
+haflow.prototype.newFlow = function() {
+	// TODO
+};
+
+haflow.prototype.saveCurrentFlow = function() {
+	// TODO
+};
+
+haflow.prototype.removeCurrentFlow = function() {
+	// TODO
 };
 
 haflow.prototype.paintComponents = function() {
 	var text = "";
-	for ( var i = 0; i < this.components.components.length; i++) {
+	var i;
+	for (i = 0; i < this.components.components.length; i++) {
 		text += "<div class=\"component\" id=\"component_"
-				+ this.components.components[i].id + "\"><div>" + this.components.components[i].name
-				+ "</div></div>";
+				+ this.components.components[i].id + "\"><div>"
+				+ this.components.components[i].name + "</div></div>";
 	}
 	$("#" + this.componentsPlace).html(text);
 	var _currentInstance = this;
@@ -31,6 +93,32 @@ haflow.prototype.paintComponents = function() {
 			_currentInstance.onComponentAdded(_currentInstance, event, ui);
 		}
 	});
+};
+
+haflow.prototype.paintList = function() {
+	var text = "";
+	var i;
+	for (i = 0; i < this.list.flows.length; i++) {
+		text += "<div class=\"flowItem\" id=\"flow_" + this.list.flows[i].id
+				+ "\">" + this.list.flows[i].name + "</div>";
+	}
+	$("#" + this.listPlace).html(text);
+	var _currentInstance = this;
+	for (i = 0; i < this.list.flows.length; i++) {
+		var flowId = this.list.flows[i].id;
+		$("#flow_" + flowId).bind("click", function() {
+			_currentInstance.loadFlow(flowId);
+		});
+	}
+};
+
+haflow.prototype.paintFlow = function() {
+	this.initJsPlumb();
+	this.paintNodes();
+	this.initElements();
+	this.paintEdges();
+	this.bindFunctions();
+	this.initConsole();
 };
 
 haflow.prototype.onComponentAdded = function(instance, event, ui) {
@@ -63,7 +151,7 @@ haflow.prototype.getComponentById = function(componentId) {
 	return null;
 };
 
-haflow.prototype.putNodes = function() {
+haflow.prototype.paintNodes = function() {
 	var text = "";
 	for ( var i = 0; i < this.flow.nodes.length; i++) {
 		text += "<div class=\"node\" style=\"left:"
@@ -77,22 +165,13 @@ haflow.prototype.putNodes = function() {
 	$("#" + this.flowPlace).html(text);
 };
 
-haflow.prototype.putEdges = function() {
+haflow.prototype.paintEdges = function() {
 	for ( var i = 0; i < this.flow.edges.length; i++) {
 		jsPlumb.connect({
 			source : "node_" + this.flow.edges[i].sourceNodeId,
 			target : "node_" + this.flow.edges[i].targetNodeId
 		});
 	}
-};
-
-haflow.prototype.paintFlow = function() {
-	this.initJsPlumb();
-	this.putNodes();
-	this.initElements();
-	this.putEdges();
-	this.bindFunctions();
-	this.initConsole();
 };
 
 haflow.prototype.bindFunctions = function() {

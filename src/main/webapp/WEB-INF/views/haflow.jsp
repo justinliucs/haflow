@@ -10,18 +10,19 @@
 <body>
 	<div class="wrapper">
 		<div>
-			<button onClick="load();">Load Flow</button>
-			<button onClick="save();">Save Flow</button>
-		</div>
-		<div>
 			<div class="componentwrapper">
 				<span>Components</span>
 				<div id="components" class="componentcontainer"></div>
+			</div>
+			<div class="listwrapper">
+				<span>Flow List</span>
+				<div id="list" class="listcontainer"></div>
 			</div>
 			<div class="flowwrapper">
 				<span>Flow</span>
 				<div id="flow" class="flowcontainer"></div>
 			</div>
+
 		</div>
 		<div class="clear"></div>
 		<div class="consolewrapper">
@@ -40,6 +41,14 @@
 		src="static/lib/jquery.jsPlumb-1.4.1-all.js"></script>
 	<script type="text/javascript" src="static/js/util.js"></script>
 	<script type="text/javascript" src="static/js/haflow.js"></script>
-	<script type="text/javascript" src="static/js/flow.js"></script>
+	<script type="text/javascript">
+		var flow = new haflow({
+			flowPlace : "flow",
+			componentsPlace : "components",
+			consolePlace : "console",
+			listPlace : "list"
+		});
+		flow.init();
+	</script>
 </body>
 </html>
