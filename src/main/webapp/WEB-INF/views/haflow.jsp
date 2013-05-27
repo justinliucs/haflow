@@ -6,49 +6,24 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Flow Chart</title>
 <link rel="stylesheet" href="static/css/site.css">
-</head>
-<body>
-	<div class="wrapper">
-		<div>
-			<div class="componentwrapper">
-				<span>Components</span>
-				<div id="components" class="componentcontainer"></div>
-			</div>
-			<div class="listwrapper">
-				<span>Flow List</span>
-				<div id="list" class="listcontainer"></div>
-			</div>
-			<div class="flowwrapper">
-				<span>Flow</span>
-				<div id="flow" class="flowcontainer"></div>
-			</div>
+<link rel="stylesheet"
+	href="http://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dijit/themes/claro/claro.css">
+<script type="text/javascript"
+	src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+<script type="text/javascript"
+	src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<script type="text/javascript"
+	src="static/lib/jquery.ui.touch-punch.min.js"></script>
+<script type="text/javascript" src="static/lib/jsBezier-0.6-min.js"></script>
+<script type="text/javascript"
+	src="static/lib/jquery.jsPlumb-1.4.1-all-min.js"></script>
+<script type="text/javascript"
+	src="http://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dojo/dojo.js"></script>
+<script type="text/javascript" src="static/js/util.js"></script>
+<script type="text/javascript" src="static/js/haflow.js"></script>
 
-		</div>
-		<div class="clear"></div>
-		<div class="consolewrapper">
-			<span>Console</span>
-			<div id="console" class="consolecontainer"></div>
-		</div>
-	</div>
-	<script type="text/javascript"
-		src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
-	<script type="text/javascript"
-		src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-	<script type="text/javascript"
-		src="static/lib/jquery.ui.touch-punch.min.js"></script>
-	<script type="text/javascript" src="static/lib/jsBezier-0.6-min.js"></script>
-	<script type="text/javascript"
-		src="static/lib/jquery.jsPlumb-1.4.1-all.js"></script>
-	<script type="text/javascript" src="static/js/util.js"></script>
-	<script type="text/javascript" src="static/js/haflow.js"></script>
-	<script type="text/javascript">
-		var flow = new haflow({
-			flowPlace : "flow",
-			componentsPlace : "components",
-			consolePlace : "console",
-			listPlace : "list"
-		});
-		flow.init();
-	</script>
+</head>
+<body class="claro">
+
 </body>
 </html>

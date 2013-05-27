@@ -1,6 +1,19 @@
+dojo.require("dijit.TitlePane");
+dojo.require("dijit.layout.BorderContainer");
+dojo.require("dijit.layout.TabContainer");
+dojo.require("dijit.layout.ContentPane");
+
+dojo.ready(function() {
+	var flow = new haflow({
+		flowPlace : "flow",
+		componentsPlace : "component",
+		consolePlace : "console",
+		listPlace : "list"
+	});
+	flow.init();
+});
+
 function haflow(info) {
-	this.flow = info.flow;
-	this.components = info.components;
 	this.listPlace = info.listPlace;
 	this.flowPlace = info.flowPlace;
 	this.componentsPlace = info.componentsPlace;
@@ -8,8 +21,81 @@ function haflow(info) {
 }
 
 haflow.prototype.init = function() {
+	this.createUserInterface();
 	this.loadList();
 	this.loadComponents();
+};
+
+haflow.prototype.createUserInterface = function() {
+	dojo.create("div", {
+		id : "main"
+	}, dojo.body(), "first");
+	this.container = new dijit.layout.BorderContainer({
+		design : "headline",
+		style : "width: 100%;height:900px;",
+	}, "main");
+
+	var topContainer = new dijit.layout.ContentPane({
+		content : "Top",
+		region : "top"
+	}, dojo.create("div", {
+		id : "top",
+		style : "height:100px;"
+	}, "main"));
+	this.container.addChild(topContainer);
+
+	var bottomContainer = new dijit.layout.ContentPane({
+		content : "Bottom",
+		region : "bottom"
+	}, dojo.create("div", {
+		id : "console",
+		style : "height:200px;"
+	}, "main"));
+	this.container.addChild(bottomContainer);
+
+	var flowContainer = new dijit.layout.ContentPane({
+		region : "center",
+	// tabPosition : "top",
+	}, dojo.create("div", {
+		id : "flow",
+	}, "main"));
+	this.container.addChild(flowContainer);
+
+	var leadingContainer = new dijit.layout.ContentPane({
+		content : "Leading",
+		region : "leading"
+	}, dojo.create("div", {
+		id : "list",
+		style : "width:200px;"
+	}, "main"));
+	this.container.addChild(leadingContainer);
+
+	var trailingContainer = new dijit.layout.ContentPane({
+		content : "Trailing",
+		region : "trailing"
+	}, dojo.create("div", {
+		id : "component",
+		style : "width:200px;"
+	}, "main"));
+	this.container.addChild(trailingContainer);
+
+	// var otherPanel = new dijit.layout.ContentPane({
+	// content : "Hello World!",
+	// title : "Hello World!",
+	// closable : true
+	// });
+	// otherPanel.placeAt("flow");
+	// otherPanel.startup();
+	//
+	// var anotherPanel = new dijit.layout.ContentPane({
+	// content : "Hello World!",
+	// title : "Hello World!",
+	// closable : true
+	// });
+	// anotherPanel.placeAt("flow");
+	// anotherPanel.startup();
+
+	this.container.startup();
 };
 
 haflow.prototype.loadList = function() {

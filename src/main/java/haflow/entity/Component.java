@@ -1,11 +1,20 @@
-package haflow.flow.entity;
+package haflow.entity;
 
 import java.util.UUID;
 
-public class ComponentEntity {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "component")
+public class Component {
 	private UUID id;
 	private String name;
 
+	@Id
+	@Column(name = "id", length = 16)
 	public UUID getId() {
 		return id;
 	}
@@ -14,6 +23,7 @@ public class ComponentEntity {
 		this.id = id;
 	}
 
+	@Column(name = "name")
 	public String getName() {
 		return name;
 	}
