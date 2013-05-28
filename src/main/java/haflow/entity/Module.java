@@ -1,16 +1,20 @@
-package haflow.ui.model;
+package haflow.entity;
 
 import java.util.UUID;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-@XmlRootElement(name = "component")
-public class ComponentBriefModel {
+@Entity
+@Table(name = "module")
+public class Module {
 	private UUID id;
 	private String name;
 
-	@XmlElement
+	@Id
+	@Column(name = "id", length = 16)
 	public UUID getId() {
 		return id;
 	}
@@ -19,7 +23,7 @@ public class ComponentBriefModel {
 		this.id = id;
 	}
 
-	@XmlElement
+	@Column(name = "name")
 	public String getName() {
 		return name;
 	}
@@ -27,4 +31,5 @@ public class ComponentBriefModel {
 	public void setName(String name) {
 		this.name = name;
 	}
+
 }

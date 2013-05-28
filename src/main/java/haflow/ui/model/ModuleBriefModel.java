@@ -5,8 +5,8 @@ import java.util.UUID;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "component")
-public class ComponentModel {
+@XmlRootElement(name = "module")
+public class ModuleBriefModel {
 	private UUID id;
 	private String name;
 

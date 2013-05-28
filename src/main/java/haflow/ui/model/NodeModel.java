@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class NodeModel {
 	private UUID id;
 	private UUID flowId;
-	private UUID componentId;
+	private UUID moduleId;
 	private String name;
 	private PositionModel position;
 
@@ -32,12 +32,12 @@ public class NodeModel {
 	}
 
 	@XmlElement
-	public UUID getComponentId() {
-		return componentId;
+	public UUID getModuleId() {
+		return moduleId;
 	}
 
-	public void setComponentId(UUID componentId) {
-		this.componentId = componentId;
+	public void setModuleId(UUID moduleId) {
+		this.moduleId = moduleId;
 	}
 
 	@XmlElement

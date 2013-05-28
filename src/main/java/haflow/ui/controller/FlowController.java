@@ -47,7 +47,7 @@ public class FlowController {
 		flow1.setNodes(new ArrayList<NodeModel>());
 		flow1.setEdges(new ArrayList<EdgeModel>());
 		NodeModel node1 = new NodeModel();
-		node1.setComponentId(UUID
+		node1.setModuleId(UUID
 				.fromString("2f30e2a9-6d97-0d2f-4a10-a3250812ab8e"));
 		node1.setFlowId(flow1.getId());
 		node1.setId(UUID.randomUUID());
@@ -58,7 +58,7 @@ public class FlowController {
 		node1.setPosition(position1);
 		flow1.getNodes().add(node1);
 		NodeModel node2 = new NodeModel();
-		node2.setComponentId(UUID
+		node2.setModuleId(UUID
 				.fromString("2f30e2a9-6d97-0d2f-4a10-a3250812ab8e"));
 		node2.setFlowId(flow1.getId());
 		node2.setId(UUID.randomUUID());
@@ -80,7 +80,6 @@ public class FlowController {
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseBody
 	public ResultModel post(@RequestBody AddFlowModel model) {
-		System.out.println("delete");
 		ResultModel ret = new ResultModel();
 		ret.setSuccess(true);
 		return ret;
@@ -98,7 +97,6 @@ public class FlowController {
 	@RequestMapping(value = "/{flowId}", method = RequestMethod.DELETE)
 	@ResponseBody
 	public ResultModel delete(@PathVariable UUID flowId) {
-		System.out.println("delete");
 		ResultModel ret = new ResultModel();
 		ret.setSuccess(true);
 		return ret;

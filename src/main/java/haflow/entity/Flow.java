@@ -36,7 +36,7 @@ public class Flow {
 		this.name = name;
 	}
 
-	@OneToMany(mappedBy = "flow")
+	@OneToMany(mappedBy = "flow", orphanRemoval = true)
 	public List<Node> getNodes() {
 		return nodes;
 	}
@@ -45,7 +45,7 @@ public class Flow {
 		this.nodes = nodes;
 	}
 
-	@OneToMany(mappedBy = "flow")
+	@OneToMany(mappedBy = "flow", orphanRemoval = true)
 	public List<Edge> getEdges() {
 		return edges;
 	}
