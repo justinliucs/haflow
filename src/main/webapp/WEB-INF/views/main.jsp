@@ -28,9 +28,6 @@
 <script type="text/javascript" src="<%=basePath%>static/js/haflow.js"></script>
 </head>
 <body class="claro">
-	<button onClick="flow.newFlow();">New</button>
-	<button onClick="flow.mergeCurrentFlow();">Merge</button>
-	<button onClick="flow.removeCurrentFlow();">Remove</button>
 	<input type="hidden" value="<%=basePath%>" id="basePath" />
 </body>
 </html>

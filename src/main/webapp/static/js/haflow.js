@@ -2,6 +2,12 @@ dojo.require("dijit.TitlePane");
 dojo.require("dijit.layout.BorderContainer");
 dojo.require("dijit.layout.TabContainer");
 dojo.require("dijit.layout.ContentPane");
+dojo.require("dijit.Menu");
+dojo.require("dijit.MenuItem");
+dojo.require("dijit.MenuBar");
+dojo.require("dijit.MenuBarItem");
+dojo.require("dijit.PopupMenuBarItem");
+dojo.require("dojo.parser");
 
 var flow;
 
@@ -31,6 +37,10 @@ haflow.prototype.createUserInterface = function() {
 	this.moduleListPlace = "moduleList";
 	this.flowPlace = "flow";
 	this.consolePlace = "console";
+	this.topPlace = "top";
+	this.mainMenuPlace = "mainMenu";
+
+	var _currentInstance = this;
 
 	dojo.create("div", {
 		id : this.mainPlace
@@ -40,15 +50,6 @@ haflow.prototype.createUserInterface = function() {
 		design : "headline",
 		style : "width: 100%;height:900px;",
 	}, this.mainPlace);
-
-	var topContainer = new dijit.layout.ContentPane({
-		content : "Top",
-		region : "top"
-	}, dojo.create("div", {
-		id : "top",
-		style : "height:100px;"
-	}, this.mainPlace));
-	this.container.addChild(topContainer);
 
 	var bottomContainer = new dijit.layout.ContentPane({
 		content : "Bottom",
@@ -83,24 +84,52 @@ haflow.prototype.createUserInterface = function() {
 		style : "width:200px;"
 	}, this.mainPlace));
 	this.container.addChild(trailingContainer);
-
-	// var otherPanel = new dijit.layout.ContentPane({
-	// content : "Hello World!",
-	// title : "Hello World!",
-	// closable : true
-	// });
-	// otherPanel.placeAt("flow");
-	// otherPanel.startup();
-	//
-	// var anotherPanel = new dijit.layout.ContentPane({
-	// content : "Hello World!",
-	// title : "Hello World!",
-	// closable : true
-	// });
-	// anotherPanel.placeAt("flow");
-	// anotherPanel.startup();
-
 	this.container.startup();
+
+	var mainMenu = new dijit.MenuBar({
+		region : "top"
+	}, dojo.create("div", {
+		id : this.mainMenuPlace,
+	}, this.mainPlace));
+
+	var flowMenu = new dijit.Menu({
+		id : "flowMenu"
+	});
+	var newFlowMenuItem = new dijit.MenuItem({
+		id : "newFlowMenuItem",
+		label : "New Flow",
+	});
+	var saveFlowMenuItem = new dijit.MenuItem({
+		id : "saveFlowMenuItem",
+		label : "Save Flow"
+	});
+	var removeFlowMenuItem = new dijit.MenuItem({
+		id : "removeFlowMenuItem",
+		label : "Remove Flow"
+	});
+	dojo.connect(newFlowMenuItem, "onClick", function(event) {
+		_currentInstance.newFlow();
+	});
+	dojo.connect(saveFlowMenuItem, "onClick", function(event) {
+		_currentInstance.mergeCurrentFlow();
+	});
+	dojo.connect(removeFlowMenuItem, "onClick", function(event) {
+		_currentInstance.removeCurrentFlow();
+	});
+	flowMenu.addChild(newFlowMenuItem);
+	flowMenu.addChild(saveFlowMenuItem);
+	flowMenu.addChild(removeFlowMenuItem);
+
+	mainMenu.addChild(new dijit.PopupMenuBarItem({
+		id : "flowPopupMenuBarItem",
+		label : "Flow",
+		popup : flowMenu
+	}));
+
+	this.container.addChild(mainMenu);
+	this.container.startup();
+	mainMenu.startup();
+	flowMenu.startup();
 };
 
 haflow.prototype.loadFlowList = function() {

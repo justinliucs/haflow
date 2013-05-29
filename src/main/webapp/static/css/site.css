@@ -4,6 +4,10 @@ html {
 	font-family: "Microsoft YaHei"
 }
 
+body {
+	margin: 0px;
+}
+
 .node {
 	width: 8em;
 	padding: 1em;
