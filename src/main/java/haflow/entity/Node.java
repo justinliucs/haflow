@@ -1,7 +1,5 @@
 package haflow.entity;
 
-import haflow.profile.ui.NodeProfile;
-
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -9,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -19,8 +16,6 @@ public class Node {
 	private Flow flow;
 	private Module module;
 	private String name;
-
-	private NodeProfile nodeProfile;
 
 	@Id
 	@Column(name = "id", length = 16)
@@ -60,14 +55,4 @@ public class Node {
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	@OneToOne(mappedBy = "node", orphanRemoval = true)
-	public NodeProfile getNodeProfile() {
-		return nodeProfile;
-	}
-
-	public void setNodeProfile(NodeProfile nodeProfile) {
-		this.nodeProfile = nodeProfile;
-	}
-
 }

@@ -1,21 +1,17 @@
-package haflow.profile.ui;
-
-import haflow.entity.Node;
+package haflow.profile;
 
 import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "nodeProfile")
-public class NodeProfile {
+@Table(name = "nodeAppearanceProfile")
+public class NodeAppearanceProfile {
 	private UUID id;
-	private Node node;
+	private UUID nodeId;
 	private int positionLeft;
 	private int positionTop;
 
@@ -29,14 +25,13 @@ public class NodeProfile {
 		this.id = id;
 	}
 
-	@OneToOne
-	@JoinColumn(name = "nodeId")
-	public Node getNode() {
-		return node;
+	@Column(name = "nodeId", unique = true)
+	public UUID getNodeId() {
+		return nodeId;
 	}
 
-	public void setNode(Node node) {
-		this.node = node;
+	public void setNodeId(UUID nodeId) {
+		this.nodeId = nodeId;
 	}
 
 	@Column(name = "positionLeft")

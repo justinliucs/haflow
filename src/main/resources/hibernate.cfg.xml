@@ -20,6 +20,6 @@
 		<mapping class="haflow.entity.Module" />
 		<mapping class="haflow.entity.Node" />
 
-		<mapping class="haflow.profile.ui.NodeProfile" />
+		<mapping class="haflow.profile.NodeAppearanceProfile" />
 	</session-factory>
 </hibernate-configuration>

@@ -1,16 +1,16 @@
 package haflow.ui.model;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "addFlow")
-public class AddFlowModel {
+@XmlRootElement(name = "mergeFlow")
+public class MergeFlowModel {
 	private String name;
-	private List<NodeModel> nodes;
-	private List<EdgeModel> edges;
+	private Set<NodeModel> nodes;
+	private Set<EdgeModel> edges;
 
 	@XmlElement
 	public String getName() {
@@ -23,21 +23,21 @@ public class AddFlowModel {
 
 	@XmlElementWrapper(name = "nodes")
 	@XmlElement(name = "item")
-	public List<NodeModel> getNodes() {
+	public Set<NodeModel> getNodes() {
 		return nodes;
 	}
 
-	public void setNodes(List<NodeModel> nodes) {
+	public void setNodes(Set<NodeModel> nodes) {
 		this.nodes = nodes;
 	}
 
 	@XmlElementWrapper(name = "edges")
 	@XmlElement(name = "edge")
-	public List<EdgeModel> getEdges() {
+	public Set<EdgeModel> getEdges() {
 		return edges;
 	}
 
-	public void setEdges(List<EdgeModel> edges) {
+	public void setEdges(Set<EdgeModel> edges) {
 		this.edges = edges;
 	}
 
