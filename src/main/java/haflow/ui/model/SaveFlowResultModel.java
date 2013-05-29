@@ -5,8 +5,8 @@ import java.util.UUID;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "mergeFlowResult")
-public class MergeFlowResultModel {
+@XmlRootElement(name = "saveFlowResult")
+public class SaveFlowResultModel {
 	private boolean success;
 	private UUID flowId;
 	private String message;

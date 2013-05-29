@@ -1,10 +1,10 @@
 package haflow.ui.controller;
 
 import haflow.ui.helper.FlowHelper;
-import haflow.ui.model.MergeFlowModel;
+import haflow.ui.model.SaveFlowModel;
 import haflow.ui.model.FlowListModel;
 import haflow.ui.model.FlowModel;
-import haflow.ui.model.MergeFlowResultModel;
+import haflow.ui.model.SaveFlowResultModel;
 import haflow.ui.model.RemoveFlowModel;
 import haflow.ui.model.RemoveFlowResultModel;
 
@@ -46,17 +46,16 @@ public class FlowController {
 
 	@RequestMapping(value = "/{flowId}", method = RequestMethod.POST)
 	@ResponseBody
-	public MergeFlowResultModel post(@PathVariable UUID flowId,
-			@RequestBody MergeFlowModel model) {
-		System.out.println(model.getName());
-		return this.getFlowHelper().mergeFlow(flowId, model);
+	public SaveFlowResultModel post(@PathVariable UUID flowId,
+			@RequestBody SaveFlowModel model) {
+		return this.getFlowHelper().saveFlow(flowId, model);
 	}
 
 	@RequestMapping(value = "/{flowId}", method = RequestMethod.PUT)
 	@ResponseBody
-	public MergeFlowResultModel put(@PathVariable UUID flowId,
-			@RequestBody MergeFlowModel model) {
-		return this.getFlowHelper().mergeFlow(flowId, model);
+	public SaveFlowResultModel put(@PathVariable UUID flowId,
+			@RequestBody SaveFlowModel model) {
+		return this.getFlowHelper().saveFlow(flowId, model);
 	}
 
 	@RequestMapping(value = "/{flowId}", method = RequestMethod.DELETE)

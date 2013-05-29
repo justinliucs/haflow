@@ -7,8 +7,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "mergeFlow")
-public class MergeFlowModel {
+@XmlRootElement(name = "saveFlow")
+public class SaveFlowModel {
 	private UUID id;
 	private String name;
 	private Set<NodeModel> nodes;

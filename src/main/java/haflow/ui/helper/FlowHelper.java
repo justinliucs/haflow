@@ -21,8 +21,8 @@ import haflow.ui.model.EdgeModel;
 import haflow.ui.model.FlowBriefModel;
 import haflow.ui.model.FlowListModel;
 import haflow.ui.model.FlowModel;
-import haflow.ui.model.MergeFlowModel;
-import haflow.ui.model.MergeFlowResultModel;
+import haflow.ui.model.SaveFlowModel;
+import haflow.ui.model.SaveFlowResultModel;
 import haflow.ui.model.NodeModel;
 import haflow.ui.model.PositionModel;
 import haflow.ui.model.RemoveFlowModel;
@@ -113,9 +113,9 @@ public class FlowHelper {
 		return flowModel;
 	}
 
-	public MergeFlowResultModel mergeFlow(UUID flowId, MergeFlowModel model) {
-		boolean success = this.doMergeFlow(flowId, model);
-		MergeFlowResultModel result = new MergeFlowResultModel();
+	public SaveFlowResultModel saveFlow(UUID flowId, SaveFlowModel model) {
+		boolean success = this.doSaveFlow(flowId, model);
+		SaveFlowResultModel result = new SaveFlowResultModel();
 		result.setFlowId(flowId);
 		result.setSuccess(success);
 		if (success) {
@@ -126,7 +126,7 @@ public class FlowHelper {
 		return result;
 	}
 
-	public boolean doMergeFlow(UUID flowId, MergeFlowModel model) {
+	public boolean doSaveFlow(UUID flowId, SaveFlowModel model) {
 		Set<Node> nodes = new HashSet<Node>();
 		Set<Edge> edges = new HashSet<Edge>();
 		for (NodeModel nodeModel : model.getNodes()) {
@@ -163,7 +163,7 @@ public class FlowHelper {
 		}
 		boolean result = true;
 		result = result
-				&& this.getFlowService().mergeFlow(flowId, model.getName(),
+				&& this.getFlowService().saveFlow(flowId, model.getName(),
 						nodes, edges);
 		result = result
 				&& this.getNodeAppearanceProfileService()

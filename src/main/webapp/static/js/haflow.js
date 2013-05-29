@@ -2,12 +2,20 @@ dojo.require("dijit.TitlePane");
 dojo.require("dijit.layout.BorderContainer");
 dojo.require("dijit.layout.TabContainer");
 dojo.require("dijit.layout.ContentPane");
+
 dojo.require("dijit.Menu");
 dojo.require("dijit.MenuItem");
 dojo.require("dijit.MenuBar");
 dojo.require("dijit.MenuBarItem");
 dojo.require("dijit.PopupMenuBarItem");
 dojo.require("dojo.parser");
+
+dojo.require("dojo.dom");
+dojo.require("dojo.json");
+dojo.require("dojo.store.Memory");
+dojo.require("dijit.tree.ObjectStoreModel");
+dojo.require("dijit.Tree");
+dojo.require("dojo.store.Observable");
 
 var flow;
 
@@ -22,8 +30,20 @@ function haflow() {
 
 haflow.prototype.init = function() {
 	this.createUserInterface();
-	this.loadFlowList();
+	this.initFlowList();
 	this.loadModuleList();
+};
+
+haflow.prototype.initTree = function() {
+	var i;
+	for (i = 0; i < this.flowList.flows.length; i++) {
+		this.flowListStore.put({
+			id : this.flowList.flows[i].id,
+			name : this.flowList.flows[i].name,
+			node : true
+		});
+	}
+	this.container.layout();
 };
 
 haflow.prototype.refresh = function() {
@@ -47,50 +67,80 @@ haflow.prototype.createUserInterface = function() {
 	}, dojo.body());
 
 	this.container = new dijit.layout.BorderContainer({
-		design : "headline",
-		style : "width: 100%;height:900px;",
+		design : "headline"
 	}, this.mainPlace);
 
 	var bottomContainer = new dijit.layout.ContentPane({
 		content : "Bottom",
-		region : "bottom"
+		region : "bottom",
+		splitter : "true"
 	}, dojo.create("div", {
 		id : this.consolePlace,
-		style : "height:200px;"
+		style : "height:15%;"
 	}, this.mainPlace));
 	this.container.addChild(bottomContainer);
 
 	var flowContainer = new dijit.layout.ContentPane({
-		region : "center"
+		region : "center",
+		splitter : "true"
 	}, dojo.create("div", {
 		id : this.flowPlace,
 	}, this.mainPlace));
 	this.container.addChild(flowContainer);
 
-	var leadingContainer = new dijit.layout.ContentPane({
-		content : "Leading",
-		region : "leading"
+	this.flowListStore = new dojo.store.Observable(new dojo.store.Memory({
+		data : [ {
+			id : "root",
+			name : "Flow List",
+			node : false
+		} ],
+
+		getChildren : function(object) {
+			if (object.id == "root") {
+				return this.query({
+					node : true
+				});
+			}
+			return null;
+		}
+	}));
+
+	var tree = new dijit.Tree({
+		region : "leading",
+		splitter : "true",
+		model : new dijit.tree.ObjectStoreModel({
+			store : this.flowListStore,
+			query : {
+				id : "root"
+			},
+			mayHaveChildren : function(item) {
+				return !(item.node);
+			}
+		}),
+		onClick : function(item) {
+			_currentInstance.loadFlow(item.id);
+		}
 	}, dojo.create("div", {
 		id : this.flowListPlace,
 		style : "width:200px;"
 	}, this.mainPlace));
-	this.container.addChild(leadingContainer);
+	tree.startup();
+	this.container.addChild(tree);
 
 	var trailingContainer = new dijit.layout.ContentPane({
 		content : "Trailing",
-		region : "trailing"
+		region : "trailing",
+		splitter : "true"
 	}, dojo.create("div", {
 		id : this.moduleListPlace,
-		style : "width:200px;"
+		style : "width:20%;"
 	}, this.mainPlace));
 	this.container.addChild(trailingContainer);
 	this.container.startup();
 
 	var mainMenu = new dijit.MenuBar({
 		region : "top"
-	}, dojo.create("div", {
-		id : this.mainMenuPlace,
-	}, this.mainPlace));
+	});
 
 	var flowMenu = new dijit.Menu({
 		id : "flowMenu"
@@ -111,7 +161,7 @@ haflow.prototype.createUserInterface = function() {
 		_currentInstance.newFlow();
 	});
 	dojo.connect(saveFlowMenuItem, "onClick", function(event) {
-		_currentInstance.mergeCurrentFlow();
+		_currentInstance.saveCurrentFlow();
 	});
 	dojo.connect(removeFlowMenuItem, "onClick", function(event) {
 		_currentInstance.removeCurrentFlow();
@@ -140,7 +190,22 @@ haflow.prototype.loadFlowList = function() {
 		dataType : "json",
 		success : function(data, status) {
 			_currentInstance.flowList = data;
-			_currentInstance.paintFlowList();
+		},
+		error : function(request, status, error) {
+			alert(error);
+		}
+	});
+};
+
+haflow.prototype.initFlowList = function() {
+	var _currentInstance = this;
+	$.ajax({
+		url : this.basePath + "flow",
+		type : "GET",
+		dataType : "json",
+		success : function(data, status) {
+			_currentInstance.flowList = data;
+			_currentInstance.initTree();
 		},
 		error : function(request, status, error) {
 			alert(error);
@@ -186,11 +251,10 @@ haflow.prototype.newFlow = function() {
 	this.flow.name = "New Flow";
 	this.flow.nodes = new Array();
 	this.flow.edges = new Array();
-	this.mergeCurrentFlow();
 	this.paintCurrentFlow();
 };
 
-haflow.prototype.mergeCurrentFlow = function() {
+haflow.prototype.saveCurrentFlow = function() {
 	var _currentInstance = this;
 	$.ajax({
 		url : _currentInstance.basePath + "flow/" + _currentInstance.flow.id,
@@ -201,6 +265,11 @@ haflow.prototype.mergeCurrentFlow = function() {
 		success : function(data, status) {
 			alert("success");
 			_currentInstance.refresh();
+			_currentInstance.flowListStore.put({
+				id : _currentInstance.flow.id,
+				name : _currentInstance.flow.name,
+				node : true
+			});
 		},
 		error : function(request, status, error) {
 			alert(error);
@@ -219,6 +288,7 @@ haflow.prototype.removeCurrentFlow = function() {
 		success : function(data, status) {
 			alert("success");
 			_currentInstance.refresh();
+			_currentInstance.flowListStore.remove(_currentInstance.flow.id);
 		},
 		error : function(request, status, error) {
 			alert(error);
@@ -249,23 +319,23 @@ haflow.prototype.paintModuleList = function() {
 	});
 };
 
-haflow.prototype.paintFlowList = function() {
-	var text = "";
-	var i;
-	for (i = 0; i < this.flowList.flows.length; i++) {
-		text += "<div class=\"flowItem\" id=\"flow_"
-				+ this.flowList.flows[i].id + "\">"
-				+ this.flowList.flows[i].name + "</div>";
-	}
-	$("#" + this.flowListPlace).html(text);
-	var _currentInstance = this;
-	for (i = 0; i < this.flowList.flows.length; i++) {
-		$("#flow_" + this.flowList.flows[i].id).bind("click", function(event) {
-			var flowId = event.currentTarget.id.replace("flow_", "");
-			_currentInstance.loadFlow(flowId);
-		});
-	}
-};
+// haflow.prototype.paintFlowList = function() {
+// var text = "";
+// var i;
+// for (i = 0; i < this.flowList.flows.length; i++) {
+// text += "<div class=\"flowItem\" id=\"flow_"
+// + this.flowList.flows[i].id + "\">"
+// + this.flowList.flows[i].name + "</div>";
+// }
+// $("#" + this.flowListPlace).html(text);
+// var _currentInstance = this;
+// for (i = 0; i < this.flowList.flows.length; i++) {
+// $("#flow_" + this.flowList.flows[i].id).bind("click", function(event) {
+// var flowId = event.currentTarget.id.replace("flow_", "");
+// _currentInstance.loadFlow(flowId);
+// });
+// }
+// };
 
 haflow.prototype.paintCurrentFlow = function() {
 	this.initJsPlumb();

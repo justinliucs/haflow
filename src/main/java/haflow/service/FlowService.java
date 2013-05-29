@@ -29,7 +29,7 @@ public class FlowService {
 		this.sessionHelper = sessionHelper;
 	}
 
-	public boolean mergeFlow(UUID flowId, String name, Set<Node> nodes,
+	public boolean saveFlow(UUID flowId, String name, Set<Node> nodes,
 			Set<Edge> edges) {
 		Session session = this.getSessionHelper().openSession();
 		Transaction transaction = session.beginTransaction();
