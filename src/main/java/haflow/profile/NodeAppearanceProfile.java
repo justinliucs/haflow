@@ -25,7 +25,7 @@ public class NodeAppearanceProfile {
 		this.id = id;
 	}
 
-	@Column(name = "nodeId", unique = true)
+	@Column(name = "nodeId", length = 16, unique = true)
 	public UUID getNodeId() {
 		return nodeId;
 	}

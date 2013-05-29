@@ -55,7 +55,18 @@ public class NodeAppearanceProfileService {
 	}
 
 	public NodeAppearanceProfile getNodeAppearanceProfile(UUID nodeId) {
-		return null;
+		Session session = this.getSessionHelper().openSession();
+		try {
+			NodeAppearanceProfile nodeAppearanceProfile = (NodeAppearanceProfile) session
+					.createCriteria(NodeAppearanceProfile.class)
+					.add(Restrictions.eq("nodeId", nodeId)).uniqueResult();
+			session.close();
+			return nodeAppearanceProfile;
+		} catch (Exception e) {
+			e.printStackTrace();
+			session.close();
+			return null;
+		}
 	}
 
 	@SuppressWarnings("unchecked")
