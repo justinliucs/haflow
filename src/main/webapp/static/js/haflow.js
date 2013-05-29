@@ -3,17 +3,24 @@ dojo.require("dijit.layout.BorderContainer");
 dojo.require("dijit.layout.TabContainer");
 dojo.require("dijit.layout.ContentPane");
 
+var flow;
+
 dojo.ready(function() {
-	var flow = new haflow();
+	flow = new haflow();
 	flow.init();
 });
 
 function haflow() {
-
+	this.basePath = dojo.byId("basePath").value;
 }
 
 haflow.prototype.init = function() {
 	this.createUserInterface();
+	this.loadFlowList();
+	this.loadModuleList();
+};
+
+haflow.prototype.refresh = function() {
 	this.loadFlowList();
 	this.loadModuleList();
 };
@@ -27,7 +34,7 @@ haflow.prototype.createUserInterface = function() {
 
 	dojo.create("div", {
 		id : this.mainPlace
-	}, dojo.body(), "first");
+	}, dojo.body());
 
 	this.container = new dijit.layout.BorderContainer({
 		design : "headline",
@@ -99,7 +106,7 @@ haflow.prototype.createUserInterface = function() {
 haflow.prototype.loadFlowList = function() {
 	var _currentInstance = this;
 	$.ajax({
-		url : "flow",
+		url : this.basePath + "flow",
 		type : "GET",
 		dataType : "json",
 		success : function(data, status) {
@@ -115,12 +122,12 @@ haflow.prototype.loadFlowList = function() {
 haflow.prototype.loadFlow = function(flowId) {
 	var _currentInstance = this;
 	$.ajax({
-		url : "flow/" + flowId,
+		url : _currentInstance.basePath + "flow/" + flowId,
 		type : "GET",
 		dataType : "json",
 		success : function(data, status) {
 			_currentInstance.flow = data;
-			_currentInstance.paintFlow();
+			_currentInstance.paintCurrentFlow();
 		},
 		error : function(request, status, error) {
 			alert(error);
@@ -131,7 +138,7 @@ haflow.prototype.loadFlow = function(flowId) {
 haflow.prototype.loadModuleList = function() {
 	var _currentInstance = this;
 	$.ajax({
-		url : "module",
+		url : _currentInstance.basePath + "module",
 		type : "GET",
 		dataType : "json",
 		success : function(data, status) {
@@ -145,15 +152,49 @@ haflow.prototype.loadModuleList = function() {
 };
 
 haflow.prototype.newFlow = function() {
-	// TODO
+	this.flow = {};
+	this.flow.id = UUID.generate();
+	this.flow.name = "New Flow";
+	this.flow.nodes = new Array();
+	this.flow.edges = new Array();
+	this.mergeCurrentFlow();
+	this.paintCurrentFlow();
 };
 
-haflow.prototype.saveCurrentFlow = function() {
-	// TODO
+haflow.prototype.mergeCurrentFlow = function() {
+	var _currentInstance = this;
+	$.ajax({
+		url : _currentInstance.basePath + "flow/" + _currentInstance.flow.id,
+		type : "PUT",
+		dataType : "json",
+		contentType : "application/json",
+		data : JSON.stringify(_currentInstance.flow),
+		success : function(data, status) {
+			alert("success");
+			_currentInstance.refresh();
+		},
+		error : function(request, status, error) {
+			alert(error);
+		}
+	});
 };
 
 haflow.prototype.removeCurrentFlow = function() {
-	// TODO
+	var _currentInstance = this;
+	$.ajax({
+		url : _currentInstance.basePath + "flow/" + _currentInstance.flow.id,
+		type : "DELETE",
+		dataType : "json",
+		contentType : "application/json",
+		data : JSON.stringify({}),
+		success : function(data, status) {
+			alert("success");
+			_currentInstance.refresh();
+		},
+		error : function(request, status, error) {
+			alert(error);
+		}
+	});
 };
 
 haflow.prototype.paintModuleList = function() {
@@ -190,26 +231,27 @@ haflow.prototype.paintFlowList = function() {
 	$("#" + this.flowListPlace).html(text);
 	var _currentInstance = this;
 	for (i = 0; i < this.flowList.flows.length; i++) {
-		var flowId = this.flowList.flows[i].id;
-		$("#flow_" + flowId).bind("click", function() {
+		$("#flow_" + this.flowList.flows[i].id).bind("click", function(event) {
+			var flowId = event.currentTarget.id.replace("flow_", "");
 			_currentInstance.loadFlow(flowId);
 		});
 	}
 };
 
-haflow.prototype.paintFlow = function() {
+haflow.prototype.paintCurrentFlow = function() {
 	this.initJsPlumb();
 	this.paintNodes();
 	this.initElements();
 	this.paintEdges();
 	this.bindFunctions();
 	this.initConsole();
+	jsPlumb.repaintEverything();
 };
 
 haflow.prototype.onModuleAdded = function(instance, event, ui) {
 	var moduleId = ui.draggable.context.id.replace("module_", "");
 	this.doAddModule(instance, moduleId, ui.position.left, ui.position.top);
-	this.paintFlow();
+	this.paintCurrentFlow();
 };
 
 haflow.prototype.doAddModule = function(instance, moduleId, left, top) {
@@ -319,7 +361,7 @@ haflow.prototype.deleteNode = function(instance, nodeId) {
 			instance.flow.nodes.splice(i, 1);
 		}
 	} while (needToDelete);
-	instance.paintFlow();
+	instance.paintCurrentFlow();
 };
 
 haflow.prototype.onModuleClicked = function(instance, moduleId) {

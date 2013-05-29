@@ -48,6 +48,7 @@ public class FlowController {
 	@ResponseBody
 	public MergeFlowResultModel post(@PathVariable UUID flowId,
 			@RequestBody MergeFlowModel model) {
+		System.out.println(model.getName());
 		return this.getFlowHelper().mergeFlow(flowId, model);
 	}
 
