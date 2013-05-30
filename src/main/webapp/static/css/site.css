@@ -1,29 +1,5 @@
 @CHARSET "UTF-8";
 
-html {
-	font-family: "Microsoft YaHei";
-	height: 100%;
-	width: 100%;
-}
-
-body {
-	margin: 0px;
-	height: 100%;
-	width: 100%;
-}
-
-#main {
-	padding: 0px;
-	width: 100%;
-	height: 100%;
-}
-
-#container {
-	padding: 0px;
-	width: 100%;
-	height: 100%;
-}
-
 .node {
 	width: 8em;
 	padding: 1em;

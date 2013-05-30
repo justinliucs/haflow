@@ -10,8 +10,9 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>Flow Chart</title>
+<title>haflow</title>
 <link rel="stylesheet" href="<%=basePath%>static/css/site.css">
+<link rel="stylesheet" href="<%=basePath%>static/css/haflowui.css">
 <link rel="stylesheet"
 	href="http://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dijit/themes/claro/claro.css">
 <script type="text/javascript"
@@ -24,7 +25,8 @@
 	src="http://jsplumbtoolkit.com/js/jquery.jsPlumb-1.4.1-all-min.js"></script>
 <script type="text/javascript"
 	src="http://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dojo/dojo.js"></script>
-<script type="text/javascript" src="<%=basePath%>static/js/util.js"></script>
+	<script type="text/javascript" src="<%=basePath%>static/js/util.js"></script>
+<script type="text/javascript" src="<%=basePath%>static/js/haflowui.js"></script>
 <script type="text/javascript" src="<%=basePath%>static/js/haflow.js"></script>
 </head>
 <body class="claro">
