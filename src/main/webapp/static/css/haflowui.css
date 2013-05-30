@@ -1,7 +1,7 @@
 @CHARSET "UTF-8";
 
 html {
-	font-family: "Microsoft YaHei";
+	font-family: Myriad, Helvetica, Tahoma;
 	height: 100%;
 	width: 100%;
 }
@@ -9,7 +9,7 @@ html {
 body {
 	margin: 0px;
 	padding: 0px;
-	font-size: .85em;
+	font-size: .7em;
 	height: 100%;
 	width: 100%;
 }
