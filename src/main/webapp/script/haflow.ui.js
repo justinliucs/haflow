@@ -1,6 +1,5 @@
 dojo.require("dijit.layout.BorderContainer");
 dojo.require("dijit.layout.TabContainer");
-dojo.require("dijit.layout.ContentPane");
 dojo.require("dijit.layout.AccordionContainer");
 
 dojo.require("dijit.Menu");

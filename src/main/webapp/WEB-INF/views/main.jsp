@@ -13,9 +13,12 @@
 <title>HA Flow</title>
 <link rel="stylesheet"
 	href="http://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dijit/themes/claro/claro.css">
+<link rel="stylesheet"
+	href="http://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dojox/layout/resources/ScrollPane.css">
 <link rel="stylesheet" href="<%=basePath%>/style/haflow.css">
 <link rel="stylesheet" href="<%=basePath%>/style/haflow.ui.css">
 <link rel="stylesheet" href="<%=basePath%>/style/haflow.main.css">
+
 <script type="text/javascript"
 	src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 <script type="text/javascript"

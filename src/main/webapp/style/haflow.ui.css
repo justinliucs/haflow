@@ -4,6 +4,7 @@ html {
 	font-family: Myriad, Helvetica, Tahoma;
 	height: 100%;
 	width: 100%;
+	overflow: auto;
 }
 
 body {
