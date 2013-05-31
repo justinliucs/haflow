@@ -6,8 +6,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class HomeController {
-	@RequestMapping({ "/", "/home/index" })
-	public ModelAndView index() {
+	@RequestMapping({ "/", "/main" })
+	public ModelAndView main() {
 		return new ModelAndView("main");
+	}
+
+	@RequestMapping("/admin")
+	public ModelAndView admin() {
+		return new ModelAndView("admin");
 	}
 }

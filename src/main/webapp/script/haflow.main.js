@@ -28,22 +28,6 @@ HAFlow.Main = function(ui) {
 	this.ui = ui;
 };
 
-HAFlow.Main.prototype.generateUUID = function() {
-	var a = function(a) {
-		return 0 > a ? NaN : 30 >= a ? 0 | Math.random() * (1 << a)
-				: 53 >= a ? (0 | 1073741824 * Math.random()) + 1073741824
-						* (0 | Math.random() * (1 << a - 30)) : NaN;
-	};
-	var b = function(a, b) {
-		for ( var c = a.toString(16), d = b - c.length, e = "0"; 0 < d; d >>>= 1, e += e)
-			d & 1 && (c = e + c);
-		return c;
-	};
-
-	return b(a(32), 8) + "-" + b(a(16), 4) + "-" + b(16384 | a(12), 4) + "-"
-			+ b(32768 | a(14), 4) + "-" + b(a(48), 12);
-};
-
 HAFlow.Main.prototype.init = function() {
 	this.doInit();
 	this.initUserInterface();
@@ -52,37 +36,19 @@ HAFlow.Main.prototype.init = function() {
 	this.initFlowContainer();
 };
 
-HAFlow.Main.prototype.initFlowContainer = function() {
-	var _currentInstance = this;
-	this.ui.centerContainer.watch("selectedChildWidget", function(name, from,
-			to) {
-		var flowId = to.domNode.id.replace("flowContainer_", "");
-		_currentInstance.currentFlowId = flowId;
-		_currentInstance.setupDroppable(flowId);
-		_currentInstance.paintFlow(flowId);
-	});
-};
-
-HAFlow.Main.prototype.setupDroppable = function(flowId) {
-	$(".module").draggable({
-		appendTo : "#" + "flowContainer_" + flowId,
-		revert : "invalid",
-		helper : "clone"
-	});
-	var _currentInstance = this;
-	$("#" + "flowContainer_" + flowId).droppable(
-			{
-				accept : ".module",
-				drop : function(event, ui) {
-					_currentInstance.onModuleAdded(_currentInstance, flowId,
-							event, ui);
-				}
-			});
-};
-
 HAFlow.Main.prototype.doInit = function() {
 	this.flows = {};
 	this.jsPlumb = {};
+};
+
+HAFlow.Main.prototype.initUserInterface = function() {
+	this.ui.init();
+	this.initUserInterfaceId();
+	this.initMainMenu();
+	this.initBottomTabs();
+	this.initFlowList();
+	this.initModuleList();
+	this.ui.refresh();
 };
 
 HAFlow.Main.prototype.initUserInterfaceId = function() {
@@ -94,6 +60,11 @@ HAFlow.Main.prototype.initUserInterfaceId = function() {
 	this.consoleContainerId = "consoleContainer";
 	this.logContainerId = "logContainer";
 	this.configurationContainerId = "configurationContainer";
+};
+
+HAFlow.Main.prototype.initMainMenu = function() {
+	this.menu = {};
+	this.initFlowMenu();
 };
 
 HAFlow.Main.prototype.initFlowMenu = function() {
@@ -137,9 +108,43 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 	});
 };
 
-HAFlow.Main.prototype.initMainMenu = function() {
-	this.menu = {};
-	this.initFlowMenu();
+HAFlow.Main.prototype.initBottomTabs = function() {
+	this.initInformationTab();
+	this.initConfigurationTab();
+	this.initConsoleTab();
+	this.initLogTab();
+};
+
+HAFlow.Main.prototype.initInformationTab = function() {
+	var informationContentPane = (new dijit.layout.ContentPane({
+		id : this.informationContainerId,
+		title : "Information"
+	}));
+	this.ui.bottomContainer.addChild(informationContentPane);
+};
+
+HAFlow.Main.prototype.initConsoleTab = function() {
+	var consoleContentPane = new dijit.layout.ContentPane({
+		id : this.consoleContainerId,
+		title : "Console"
+	});
+	this.ui.bottomContainer.addChild(consoleContentPane);
+};
+
+HAFlow.Main.prototype.initLogTab = function() {
+	var logContentPane = new dijit.layout.ContentPane({
+		id : this.logContainerId,
+		title : "Log"
+	});
+	this.ui.bottomContainer.addChild(logContentPane);
+};
+
+HAFlow.Main.prototype.initConfigurationTab = function() {
+	var configurationContentPane = new dijit.layout.ContentPane({
+		id : this.configurationContainerId,
+		title : "Configuration"
+	});
+	this.ui.bottomContainer.addChild(configurationContentPane);
 };
 
 HAFlow.Main.prototype.initFlowList = function() {
@@ -150,33 +155,6 @@ HAFlow.Main.prototype.initFlowList = function() {
 	this.ui.leadingContainer.addChild(flowListContentPane);
 	this.initFlowListStore();
 	this.initFlowListTree();
-};
-
-HAFlow.Main.prototype.buildFlowListTree = function() {
-	var i;
-	for (i = 0; i < this.flowList.flows.length; i++) {
-		this.flowListStore.put({
-			id : this.flowList.flows[i].id,
-			name : this.flowList.flows[i].name,
-			node : true
-		});
-	}
-};
-
-HAFlow.Main.prototype.initFlowListData = function() {
-	var _currentInstance = this;
-	$.ajax({
-		url : this.basePath + "flow",
-		type : "GET",
-		dataType : "json",
-		success : function(data, status) {
-			_currentInstance.flowList = data;
-			_currentInstance.buildFlowListTree();
-		},
-		error : function(request, status, error) {
-			alert(error);
-		}
-	});
 };
 
 HAFlow.Main.prototype.initFlowListStore = function() {
@@ -229,60 +207,6 @@ HAFlow.Main.prototype.initFlowListTree = function() {
 	tree.startup();
 };
 
-HAFlow.Main.prototype.onFlowClicked = function(instance, flowId) {
-	var flow = {};
-	var i;
-	for (i = 0; i < instance.flowList.flows.length; i++) {
-		if (instance.flowList.flows[i].id == flowId) {
-			flow = instance.flowList.flows[i];
-			break;
-		}
-	}
-	var text = "";
-	text += "<div>Id: " + flow.id + "</div>";
-	text += "<div>Name: " + flow.name + "</div>";
-	$("#" + instance.informationContainerId).html(text);
-};
-
-HAFlow.Main.prototype.initInformationTab = function() {
-	var informationContentPane = (new dijit.layout.ContentPane({
-		id : this.informationContainerId,
-		title : "Information"
-	}));
-	this.ui.bottomContainer.addChild(informationContentPane);
-};
-
-HAFlow.Main.prototype.initConsoleTab = function() {
-	var consoleContentPane = new dijit.layout.ContentPane({
-		id : this.consoleContainerId,
-		title : "Console"
-	});
-	this.ui.bottomContainer.addChild(consoleContentPane);
-};
-
-HAFlow.Main.prototype.initLogTab = function() {
-	var logContentPane = new dijit.layout.ContentPane({
-		id : this.logContainerId,
-		title : "Log"
-	});
-	this.ui.bottomContainer.addChild(logContentPane);
-};
-
-HAFlow.Main.prototype.initConfigurationTab = function() {
-	var configurationContentPane = new dijit.layout.ContentPane({
-		id : this.configurationContainerId,
-		title : "Configuration"
-	});
-	this.ui.bottomContainer.addChild(configurationContentPane);
-};
-
-HAFlow.Main.prototype.initBottomTabs = function() {
-	this.initInformationTab();
-	this.initConfigurationTab();
-	this.initConsoleTab();
-	this.initLogTab();
-};
-
 HAFlow.Main.prototype.initModuleList = function() {
 	var moduleListPane = new dijit.layout.ContentPane({
 		id : this.moduleListContainerId,
@@ -291,14 +215,20 @@ HAFlow.Main.prototype.initModuleList = function() {
 	this.ui.trailingContainer.addChild(moduleListPane);
 };
 
-HAFlow.Main.prototype.initUserInterface = function() {
-	this.ui.init();
-	this.initUserInterfaceId();
-	this.initMainMenu();
-	this.initBottomTabs();
-	this.initFlowList();
-	this.initModuleList();
-	this.ui.refresh();
+HAFlow.Main.prototype.initFlowListData = function() {
+	var _currentInstance = this;
+	$.ajax({
+		url : this.basePath + "flow",
+		type : "GET",
+		dataType : "json",
+		success : function(data, status) {
+			_currentInstance.flowList = data;
+			_currentInstance.buildFlowListTree();
+		},
+		error : function(request, status, error) {
+			alert(error);
+		}
+	});
 };
 
 HAFlow.Main.prototype.initModuleListData = function() {
@@ -315,6 +245,60 @@ HAFlow.Main.prototype.initModuleListData = function() {
 			alert(error);
 		}
 	});
+};
+
+HAFlow.Main.prototype.initFlowContainer = function() {
+	var _currentInstance = this;
+	this.ui.centerContainer.watch("selectedChildWidget", function(name, from,
+			to) {
+		var flowId = to.domNode.id.replace("flowContainer_", "");
+		_currentInstance.currentFlowId = flowId;
+		_currentInstance.setupDroppable(flowId);
+		_currentInstance.paintFlow(flowId);
+	});
+};
+
+HAFlow.Main.prototype.setupDroppable = function(flowId) {
+	$(".module").draggable({
+		appendTo : "#" + "flowContainer_" + flowId,
+		revert : "invalid",
+		helper : "clone"
+	});
+	var _currentInstance = this;
+	$("#" + "flowContainer_" + flowId).droppable(
+			{
+				accept : ".module",
+				drop : function(event, ui) {
+					_currentInstance.onModuleAdded(_currentInstance, flowId,
+							event, ui);
+				}
+			});
+};
+
+HAFlow.Main.prototype.buildFlowListTree = function() {
+	var i;
+	for (i = 0; i < this.flowList.flows.length; i++) {
+		this.flowListStore.put({
+			id : this.flowList.flows[i].id,
+			name : this.flowList.flows[i].name,
+			node : true
+		});
+	}
+};
+
+HAFlow.Main.prototype.onFlowClicked = function(instance, flowId) {
+	var flow = {};
+	var i;
+	for (i = 0; i < instance.flowList.flows.length; i++) {
+		if (instance.flowList.flows[i].id == flowId) {
+			flow = instance.flowList.flows[i];
+			break;
+		}
+	}
+	var text = "";
+	text += "<div>Id: " + flow.id + "</div>";
+	text += "<div>Name: " + flow.name + "</div>";
+	$("#" + instance.informationContainerId).html(text);
 };
 
 HAFlow.Main.prototype.paintModuleList = function() {
@@ -338,7 +322,7 @@ HAFlow.Main.prototype.onModuleAdded = function(instance, flowId, event, ui) {
 HAFlow.Main.prototype.doAddModule = function(instance, flowId, moduleId, left,
 		top) {
 	var newNode = {};
-	var id = instance.generateUUID();
+	var id = HAFlow.generateUUID();
 	newNode["id"] = id;
 	newNode["flowId"] = flowId;
 	newNode["moduleId"] = moduleId;
@@ -487,7 +471,7 @@ HAFlow.Main.prototype.onConnectionCreated = function(instance, flowId, info) {
 	}
 	if (!exist) {
 		var newConnection = {};
-		newConnection["id"] = instance.generateUUID();
+		newConnection["id"] = HAFlow.generateUUID();
 		newConnection["flowId"] = instance.flows[flowId].id;
 		newConnection["sourceNodeId"] = source;
 		newConnection["targetNodeId"] = target;
@@ -693,7 +677,7 @@ HAFlow.Main.prototype.onCloseTab = function(instance) {
 };
 
 HAFlow.Main.prototype.newFlow = function() {
-	var newFlowId = this.generateUUID();
+	var newFlowId = HAFlow.generateUUID();
 	this.flows[newFlowId] = {};
 	this.flows[newFlowId].id = newFlowId;
 	this.flows[newFlowId].name = "New Flow";

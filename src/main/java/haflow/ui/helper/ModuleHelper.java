@@ -1,14 +1,5 @@
 package haflow.ui.helper;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import haflow.entity.Configuration;
 import haflow.entity.Module;
 import haflow.service.ModuleService;
@@ -18,10 +9,19 @@ import haflow.ui.model.ConfigurationModel;
 import haflow.ui.model.ModifyModuleModel;
 import haflow.ui.model.ModifyModuleResultModel;
 import haflow.ui.model.ModuleBriefModel;
-import haflow.ui.model.ModuleModel;
 import haflow.ui.model.ModuleListModel;
+import haflow.ui.model.ModuleModel;
 import haflow.ui.model.RemoveModuleModel;
 import haflow.ui.model.RemoveModuleResultModel;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Component
 public class ModuleHelper {
@@ -51,7 +51,6 @@ public class ModuleHelper {
 				model.setDisplayName(configuration.getDisplayName());
 				model.setId(configuration.getId());
 				model.setKey(configuration.getKey());
-				model.setModuleId(configuration.getModule().getId());
 				moduleBriefModel.getConfigurations().add(model);
 			}
 			moduleListModel.getModules().add(moduleBriefModel);
@@ -73,7 +72,6 @@ public class ModuleHelper {
 			model.setDisplayName(configuration.getDisplayName());
 			model.setId(configuration.getId());
 			model.setKey(configuration.getKey());
-			model.setModuleId(configuration.getModule().getId());
 			moduleModel.getConfigurations().add(model);
 		}
 		return moduleModel;
