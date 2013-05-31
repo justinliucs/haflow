@@ -251,7 +251,7 @@ HAFlow.Main.prototype.initFlowContainer = function() {
 	var _currentInstance = this;
 	this.ui.centerContainer.watch("selectedChildWidget", function(name, from,
 			to) {
-		var flowId = to.domNode.id.replace("flowContainer_", "");
+		var flowId = to.domNode.id.replace("flowContainerPane_", "");
 		_currentInstance.currentFlowId = flowId;
 		_currentInstance.setupDroppable(flowId);
 		_currentInstance.paintFlow(flowId);
@@ -685,8 +685,10 @@ HAFlow.Main.prototype.newFlow = function() {
 	this.flows[newFlowId].edges = new Array();
 	var _currentInstance = this;
 	var contentPane = new dijit.layout.ContentPane({
-		id : "flowContainer_" + newFlowId,
+		id : "flowContainerPane_" + newFlowId,
 		title : _currentInstance.flows[newFlowId].name,
+		content : "<div id=\"flowContainer_" + newFlowId
+				+ "\" class=\"flowcontainer\"></div>",
 		closable : true,
 		onClose : _currentInstance.onCloseTab(_currentInstance)
 	});
@@ -712,8 +714,10 @@ HAFlow.Main.prototype.loadFlow = function(flowId) {
 			success : function(data, status) {
 				_currentInstance.flows[data.id] = data;
 				var contentPane = new dijit.layout.ContentPane({
-					id : "flowContainer_" + flowId,
+					id : "flowContainerPane_" + flowId,
 					title : _currentInstance.flows[flowId].name,
+					content : "<div id=\"flowContainer_" + flowId
+							+ "\" class=\"flowcontainer\"></div>",
 					closable : true,
 					onClose : _currentInstance.onCloseTab(_currentInstance)
 				});
@@ -721,7 +725,7 @@ HAFlow.Main.prototype.loadFlow = function(flowId) {
 				_currentInstance.setupDroppable(flowId);
 				_currentInstance.paintFlow(flowId);
 				_currentInstance.ui.centerContainer.selectChild(dijit
-						.byId("flowContainer_" + flowId));
+						.byId("flowContainerPane_" + flowId));
 			},
 			error : function(request, status, error) {
 				alert(error);

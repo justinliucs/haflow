@@ -49,8 +49,10 @@
 	width: 1em;
 }
 
-.flow {
-	
+.flowcontainer {
+	position: relative;
+	width: 2000px;
+	height: 1500px;
 }
 
 ._jsPlumb_endpoint {
