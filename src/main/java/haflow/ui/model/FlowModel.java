@@ -33,7 +33,7 @@ public class FlowModel {
 	}
 
 	@XmlElementWrapper(name = "nodes")
-	@XmlElement(name = "item")
+	@XmlElement(name = "node")
 	public Set<NodeModel> getNodes() {
 		return nodes;
 	}

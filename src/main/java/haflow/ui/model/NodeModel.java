@@ -1,8 +1,10 @@
 package haflow.ui.model;
 
+import java.util.Set;
 import java.util.UUID;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "node")
@@ -12,6 +14,7 @@ public class NodeModel {
 	private UUID moduleId;
 	private String name;
 	private PositionModel position;
+	private Set<ConfigurationItemModel> configurations;
 
 	@XmlElement
 	public UUID getId() {
@@ -56,6 +59,16 @@ public class NodeModel {
 
 	public void setPosition(PositionModel position) {
 		this.position = position;
+	}
+
+	@XmlElementWrapper(name = "configurations")
+	@XmlElement(name = "configuration")
+	public Set<ConfigurationItemModel> getConfigurations() {
+		return configurations;
+	}
+
+	public void setConfigurations(Set<ConfigurationItemModel> configurations) {
+		this.configurations = configurations;
 	}
 
 }

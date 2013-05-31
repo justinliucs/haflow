@@ -1,9 +1,12 @@
 package haflow.service;
 
+import haflow.entity.Configuration;
 import haflow.entity.Module;
 import haflow.utility.SessionHelper;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.hibernate.Query;
@@ -25,13 +28,18 @@ public class ModuleService {
 		this.sessionHelper = sessionHelper;
 	}
 
-	public UUID addModule(String name) {
+	public UUID addModule(String name, Set<Configuration> configurations) {
 		Session session = this.getSessionHelper().openSession();
 		Transaction transaction = session.beginTransaction();
-		Module module = new Module();
-		module.setId(UUID.randomUUID());
-		module.setName(name);
 		try {
+			Module module = new Module();
+			module.setId(UUID.randomUUID());
+			module.setName(name);
+			module.setConfigurations(new HashSet<Configuration>());
+			for (Configuration configuration : configurations) {
+				configuration.setModule(module);
+				module.getConfigurations().add(configuration);
+			}
 			session.merge(module);
 			transaction.commit();
 			session.close();
@@ -44,7 +52,8 @@ public class ModuleService {
 		}
 	}
 
-	public boolean modifyModule(UUID moduleId, String newName) {
+	public boolean modifyModule(UUID moduleId, String newName,
+			Set<Configuration> newConfigurations) {
 		Session session = this.getSessionHelper().openSession();
 		Transaction transaction = session.beginTransaction();
 		Module module = (Module) session.get(Module.class, moduleId);
@@ -53,6 +62,11 @@ public class ModuleService {
 		}
 
 		module.setName(newName);
+		module.getConfigurations().clear();
+		for (Configuration configuration : newConfigurations) {
+			configuration.setModule(module);
+			module.getConfigurations().add(configuration);
+		}
 
 		try {
 			session.merge(module);

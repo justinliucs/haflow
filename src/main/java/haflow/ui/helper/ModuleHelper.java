@@ -1,16 +1,20 @@
 package haflow.ui.helper;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import haflow.entity.Configuration;
 import haflow.entity.Module;
 import haflow.service.ModuleService;
 import haflow.ui.model.AddModuleModel;
 import haflow.ui.model.AddModuleResultModel;
+import haflow.ui.model.ConfigurationModel;
 import haflow.ui.model.ModifyModuleModel;
 import haflow.ui.model.ModifyModuleResultModel;
 import haflow.ui.model.ModuleBriefModel;
@@ -40,6 +44,16 @@ public class ModuleHelper {
 			ModuleBriefModel moduleBriefModel = new ModuleBriefModel();
 			moduleBriefModel.setId(module.getId());
 			moduleBriefModel.setName(module.getName());
+			moduleBriefModel
+					.setConfigurations(new HashSet<ConfigurationModel>());
+			for (Configuration configuration : module.getConfigurations()) {
+				ConfigurationModel model = new ConfigurationModel();
+				model.setDisplayName(configuration.getDisplayName());
+				model.setId(configuration.getId());
+				model.setKey(configuration.getKey());
+				model.setModuleId(configuration.getModule().getId());
+				moduleBriefModel.getConfigurations().add(model);
+			}
 			moduleListModel.getModules().add(moduleBriefModel);
 		}
 		return moduleListModel;
@@ -53,11 +67,29 @@ public class ModuleHelper {
 		ModuleModel moduleModel = new ModuleModel();
 		moduleModel.setId(module.getId());
 		moduleModel.setName(module.getName());
+		moduleModel.setConfigurations(new HashSet<ConfigurationModel>());
+		for (Configuration configuration : module.getConfigurations()) {
+			ConfigurationModel model = new ConfigurationModel();
+			model.setDisplayName(configuration.getDisplayName());
+			model.setId(configuration.getId());
+			model.setKey(configuration.getKey());
+			model.setModuleId(configuration.getModule().getId());
+			moduleModel.getConfigurations().add(model);
+		}
 		return moduleModel;
 	}
 
 	public AddModuleResultModel addModule(AddModuleModel model) {
-		UUID moduleId = this.getModuleService().addModule(model.getName());
+		String name = model.getName();
+		Set<Configuration> configurations = new HashSet<Configuration>();
+		for (ConfigurationModel configurationModel : model.getConfigurations()) {
+			Configuration configuration = new Configuration();
+			configuration.setId(configurationModel.getId());
+			configuration.setDisplayName(configurationModel.getDisplayName());
+			configuration.setKey(configurationModel.getKey());
+			configurations.add(configuration);
+		}
+		UUID moduleId = this.getModuleService().addModule(name, configurations);
 		if (moduleId == null) {
 			AddModuleResultModel result = new AddModuleResultModel();
 			result.setMessage("fail");
@@ -75,8 +107,18 @@ public class ModuleHelper {
 
 	public ModifyModuleResultModel modifyModule(UUID moduleId,
 			ModifyModuleModel model) {
+		String newName = model.getNewName();
+		Set<Configuration> newConfigurations = new HashSet<Configuration>();
+		for (ConfigurationModel configurationModel : model
+				.getNewConfigurations()) {
+			Configuration configuration = new Configuration();
+			configuration.setId(configurationModel.getId());
+			configuration.setDisplayName(configurationModel.getDisplayName());
+			configuration.setKey(configurationModel.getKey());
+			newConfigurations.add(configuration);
+		}
 		boolean success = this.getModuleService().modifyModule(moduleId,
-				model.getNewName());
+				newName, newConfigurations);
 		ModifyModuleResultModel result = new ModifyModuleResultModel();
 		result.setModuleId(moduleId);
 		result.setSuccess(success);

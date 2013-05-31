@@ -14,9 +14,12 @@ import haflow.entity.Flow;
 import haflow.entity.Node;
 import haflow.entity.Module;
 import haflow.profile.NodeAppearanceProfile;
+import haflow.profile.NodeConfigurationProfile;
 import haflow.service.FlowService;
 import haflow.service.ModuleService;
 import haflow.service.NodeAppearanceProfileService;
+import haflow.service.NodeConfigurationProfileService;
+import haflow.ui.model.ConfigurationItemModel;
 import haflow.ui.model.EdgeModel;
 import haflow.ui.model.FlowBriefModel;
 import haflow.ui.model.FlowListModel;
@@ -34,6 +37,7 @@ public class FlowHelper {
 	private FlowService flowService;
 	private ModuleService moduleService;
 	private NodeAppearanceProfileService nodeAppearanceProfileService;
+	private NodeConfigurationProfileService nodeConfigurationProfileService;
 
 	public FlowService getFlowService() {
 		return flowService;
@@ -63,6 +67,16 @@ public class FlowHelper {
 		this.nodeAppearanceProfileService = nodeAppearanceProfileService;
 	}
 
+	public NodeConfigurationProfileService getNodeConfigurationProfileService() {
+		return nodeConfigurationProfileService;
+	}
+
+	@Autowired
+	public void setNodeConfigurationProfileService(
+			NodeConfigurationProfileService nodeConfigurationProfileService) {
+		this.nodeConfigurationProfileService = nodeConfigurationProfileService;
+	}
+
 	public FlowListModel getFlowList() {
 		List<Flow> flowList = this.getFlowService().getFlowList();
 		FlowListModel flowListModel = new FlowListModel();
@@ -90,6 +104,9 @@ public class FlowHelper {
 			NodeAppearanceProfile nodeAppearanceProfile = this
 					.getNodeAppearanceProfileService()
 					.getNodeAppearanceProfile(node.getId());
+			List<NodeConfigurationProfile> nodeConfigurationProfiles = this
+					.getNodeConfigurationProfileService()
+					.getNodeConfigurationProfile(node.getId());
 			nodeModel.setFlowId(node.getFlow().getId());
 			nodeModel.setId(node.getId());
 			nodeModel.setModuleId(node.getModule().getId());
@@ -99,6 +116,13 @@ public class FlowHelper {
 					nodeAppearanceProfile.getPositionLeft());
 			nodeModel.getPosition().setTop(
 					nodeAppearanceProfile.getPositionTop());
+			nodeModel.setConfigurations(new HashSet<ConfigurationItemModel>());
+			for (NodeConfigurationProfile profile : nodeConfigurationProfiles) {
+				ConfigurationItemModel model = new ConfigurationItemModel();
+				model.setKey(profile.getKey());
+				model.setValue(profile.getValue());
+				nodeModel.getConfigurations().add(model);
+			}
 			flowModel.getNodes().add(nodeModel);
 		}
 		flowModel.setEdges(new HashSet<EdgeModel>());
@@ -146,6 +170,15 @@ public class FlowHelper {
 			this.getNodeAppearanceProfileService().mergeNodeAppearanceProfile(
 					nodeModel.getId(), nodeModel.getPosition().getLeft(),
 					nodeModel.getPosition().getTop());
+			if (nodeModel.getConfigurations() != null) {
+				for (ConfigurationItemModel configurationItemModel : nodeModel
+						.getConfigurations()) {
+					this.getNodeConfigurationProfileService()
+							.mergeNodeConfigurationProfile(nodeModel.getId(),
+									configurationItemModel.getKey(),
+									configurationItemModel.getValue());
+				}
+			}
 			nodes.add(node);
 		}
 		for (EdgeModel edgeModel : model.getEdges()) {
@@ -168,11 +201,20 @@ public class FlowHelper {
 		result = result
 				&& this.getNodeAppearanceProfileService()
 						.cleanUpOrphanNodeAppearanceProfiles();
+		result = result
+				&& this.getNodeConfigurationProfileService()
+						.cleanUpOrphanNodeConfigurationProfiles();
 		return result;
 	}
 
 	public RemoveFlowResultModel removeFlow(UUID flowId, RemoveFlowModel model) {
 		boolean success = this.getFlowService().removeFlow(flowId);
+		success = success
+				&& this.getNodeAppearanceProfileService()
+						.cleanUpOrphanNodeAppearanceProfiles();
+		success = success
+				&& this.getNodeConfigurationProfileService()
+						.cleanUpOrphanNodeConfigurationProfiles();
 		RemoveFlowResultModel result = new RemoveFlowResultModel();
 		result.setFlowId(flowId);
 		result.setSuccess(success);
