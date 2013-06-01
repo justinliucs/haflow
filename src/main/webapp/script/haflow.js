@@ -1,3 +1,5 @@
+dojo.require("dijit.Dialog");
+
 function HAFlow() {
 
 };
@@ -16,4 +18,13 @@ HAFlow.generateUUID = function() {
 
 	return b(a(32), 8) + "-" + b(a(16), 4) + "-" + b(16384 | a(12), 4) + "-"
 			+ b(32768 | a(14), 4) + "-" + b(a(48), 12);
+};
+
+HAFlow.showDialog = function(title, content) {
+	var dialog = new dijit.Dialog({
+		title : title,
+		content : content,
+		style : "width:400px"
+	});
+	dialog.show();
 };

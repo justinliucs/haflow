@@ -89,7 +89,8 @@ HAFlow.Admin.prototype.loadModuleListData = function() {
 			_currentInstance.generateModuleList(_currentInstance);
 		},
 		error : function(request, status, error) {
-			alert(error);
+			HAFlow.showDialog("Error",
+					"An error occurred while loading module list: " + error);
 		}
 	});
 };
@@ -146,11 +147,17 @@ HAFlow.Admin.prototype.removeModule = function(instance, moduleId) {
 		data : JSON.stringify({}),
 		dataType : "json",
 		success : function(data, status) {
-			alert(data.success);
+			if (data.success) {
+				HAFlow.showDialog("Remove Module", "Module removed.");
+			} else {
+				HAFlow.showDialog("Remove Module",
+						"An error occurred while removing module.");
+			}
 			instance.loadModuleListData();
 		},
 		error : function(request, status, error) {
-			alert(error);
+			HAFlow.showDialog("Error",
+					"An error occurred while removing module: " + error);
 		}
 	});
 };
@@ -163,11 +170,17 @@ HAFlow.Admin.prototype.addModule = function(instance, module) {
 		data : JSON.stringify(module),
 		dataType : "json",
 		success : function(data, status) {
-			alert(data.success);
+			if (data.success) {
+				HAFlow.showDialog("Add Module", "Module added.");
+			} else {
+				HAFlow.showDialog("Add Module",
+						"An error occurred while adding module.");
+			}
 			instance.loadModuleListData();
 		},
 		error : function(request, status, error) {
-			alert(error);
+			HAFlow.showDialog("Error",
+					"An error occurred while adding module: " + error);
 		}
 	});
 };

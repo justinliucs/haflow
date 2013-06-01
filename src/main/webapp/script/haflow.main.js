@@ -49,12 +49,12 @@ HAFlow.Main.prototype.initFlowListData = function() {
 		dataType : "json",
 		success : function(data, status) {
 			_currentInstance.flowList = data;
-			_currentInstance.buildFlowListTree();
 
 			_currentInstance.initModuleListData();
 		},
 		error : function(request, status, error) {
-			alert(error);
+			HAFlow.showDialog("Error",
+					"An error occurred while loading flow list: " + error);
 		}
 	});
 };
@@ -68,12 +68,18 @@ HAFlow.Main.prototype.initModuleListData = function() {
 		dataType : "json",
 		success : function(data, status) {
 			_currentInstance.moduleList = data;
-			_currentInstance.paintModuleList();
+			_currentInstance.drawLists(_currentInstance);
 		},
 		error : function(request, status, error) {
-			alert(error);
+			HAFlow.showDialog("Error",
+					"An error occurred while loading module list: " + error);
 		}
 	});
+};
+
+HAFlow.Main.prototype.drawLists = function(instance) {
+	instance.paintModuleList();
+	instance.buildFlowListTree();
 };
 
 HAFlow.Main.prototype.doInit = function() {
@@ -326,7 +332,7 @@ HAFlow.Main.prototype.saveFlowName = function(instance, flowId) {
 		var value = $("#" + "flow_" + flowId + "_name").val();
 		instance.flows[flowId].name = value;
 		instance.getFlowBriefById(instance, flowId).name = value;
-		var pane=dijit.byId("flowContainerPane_" + flowId);
+		var pane = dijit.byId("flowContainerPane_" + flowId);
 		pane.title = value;
 		instance.ui.centerContainer.removeChild(pane);
 		instance.ui.centerContainer.addChild(pane);
@@ -339,7 +345,8 @@ HAFlow.Main.prototype.saveFlowName = function(instance, flowId) {
 		});
 
 	} else {
-		alert("Please load the flow first!");
+		HAFlow.showDialog("Error",
+				"Please load the flow before saving flow metadata!");
 	}
 };
 
@@ -726,7 +733,8 @@ HAFlow.Main.prototype.refreshFlowList = function() {
 			_currentInstance.flowList = data;
 		},
 		error : function(request, status, error) {
-			alert(error);
+			HAFlow.showDialog("Error",
+					"An error occurred while refreshing flow list: " + error);
 		}
 	});
 };
@@ -795,7 +803,8 @@ HAFlow.Main.prototype.loadFlow = function(flowId) {
 						.byId("flowContainerPane_" + flowId));
 			},
 			error : function(request, status, error) {
-				alert(error);
+				HAFlow.showDialog("Error",
+						"An error occurred while loading flow: " + error);
 			}
 		});
 	} else {
@@ -813,11 +822,12 @@ HAFlow.Main.prototype.saveFlow = function(flowId) {
 		contentType : "application/json",
 		data : JSON.stringify(_currentInstance.flows[flowId]),
 		success : function(data, status) {
-			alert("success");
+			HAFlow.showDialog("Save Flow", "Flow saved.");
 			_currentInstance.refreshFlowList();
 		},
 		error : function(request, status, error) {
-			alert(error);
+			HAFlow.showDialog("Error", "An error occurred while saving flow: "
+					+ error);
 		}
 	});
 };
@@ -831,15 +841,16 @@ HAFlow.Main.prototype.removeFlow = function(flowId) {
 		contentType : "application/json",
 		data : JSON.stringify({}),
 		success : function(data, status) {
-			alert("success");
+			HAFlow.showDialog("Remove Flow", "Flow removed.");
 			_currentInstance.ui.centerContainer.removeChild(dijit
-					.byId("flowContainer_" + flowId));
+					.byId("flowContainerPane_" + flowId));
 			_currentInstance.refreshFlowList();
 			_currentInstance.flowListStore
 					.remove(_currentInstance.flows[flowId].id);
 		},
 		error : function(request, status, error) {
-			alert(error);
+			HAFlow.showDialog("Error",
+					"An error occurred while removing flow: " + error);
 		}
 	});
 };
