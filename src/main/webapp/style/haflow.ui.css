@@ -15,6 +15,10 @@ body {
 	width: 100%;
 }
 
+.claro .dijitDialogUnderlay {
+	background: #000;
+}
+
 #main {
 	padding: 0px;
 	width: 100%;
