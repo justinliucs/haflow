@@ -9,6 +9,9 @@ dojo.require("dijit.MenuBar");
 dojo.require("dijit.MenuBarItem");
 dojo.require("dijit.PopupMenuBarItem");
 
+dojo.require("dijit.form.Button");
+dojo.require("dijit.form.TextBox");
+
 dojo.require("dojo.dom");
 dojo.require("dojo.json");
 dojo.require("dojo.store.Memory");
@@ -315,16 +318,28 @@ HAFlow.Main.prototype.onFlowClicked = function(instance, flowId) {
 	var text = "";
 	text += "<div>";
 	text += "<div><span>Id: " + flowBrief.id + "</span></div>";
-	text += "<span>Name: </span>";
-	text += "<input type=\"text\" value=\"" + flowBrief.name + "\" id=\"flow_"
-			+ flowBrief.id + "_name\"/>";
-	text += "<input id=\"save_flow_name_" + flowBrief.id
-			+ "\" type=\"button\" value=\"Save\" />";
+	text += "<div><span>Name: </span></div>";
+	text += "<div id=\"flow_name_text_box\"></div>";
+	text += "<div id=\"save_flow_name_button\"></div>";
 	text += "</div>";
 	$("#" + instance.informationContainerId).html(text);
-	$("#save_flow_name_" + flowBrief.id).bind("click", function() {
-		instance.saveFlowName(instance, flowBrief.id);
+	if (dijit.byId("flow_" + flowBrief.id + "_name") != null) {
+		dijit.registry.remove("flow_" + flowBrief.id + "_name");
+	}
+	var flowNameTextBox = new dijit.form.TextBox({
+		id : "flow_" + flowBrief.id + "_name",
+		value : flowBrief.name
 	});
+	flowNameTextBox.placeAt(dojo.byId("flow_name_text_box"));
+	flowNameTextBox.startup();
+	var button = new dijit.form.Button({
+		label : "Save",
+		onClick : function() {
+			instance.saveFlowName(instance, flowBrief.id);
+		}
+	});
+	button.placeAt(dojo.byId("save_flow_name_button"));
+	button.startup();
 };
 
 HAFlow.Main.prototype.saveFlowName = function(instance, flowId) {
@@ -536,17 +551,23 @@ HAFlow.Main.prototype.onConnectionCreated = function(instance, flowId, info) {
 HAFlow.Main.prototype.onConnectionClicked = function(instance, flowId, info) {
 	var source = info.sourceId.replace("node_", "");
 	var target = info.targetId.replace("node_", "");
+	var sourceNode = instance.getNodeById(instance, flowId, source);
+	var targetNode = instance.getNodeById(instance, flowId, target);
 
 	var text = "";
-	text += "<div><span>From: " + info.sourceId + ".</span><span>To: "
-			+ info.targetId + ".</span></div>";
+	text += "<div><span>From: " + sourceNode.name + ".</span><span>To: "
+			+ targetNode.name + ".</span></div>";
 	text += "<div>Delete?</div>";
-	text += "<div><button id=\"delete_connection_" + source + "_" + target
-			+ "\">Delete Connection</button></div>";
+	text += "<div id=\"delete_connection_button\"></div>";
 	$("#" + instance.informationContainerId).html(text);
-	$("#delete_connection_" + source + "_" + target).bind("click", function() {
-		instance.deleteConnection(instance, flowId, info);
+	var button = new dijit.form.Button({
+		label : "Delete Connection",
+		onClick : function() {
+			instance.deleteConnection(instance, flowId, info);
+		}
 	});
+	button.placeAt(dojo.byId("delete_connection_button"));
+	button.startup();
 };
 
 HAFlow.Main.prototype.deleteConnection = function(instance, flowId, info) {
@@ -593,45 +614,83 @@ HAFlow.Main.prototype.onNodeClicked = function(instance, flowId, nodeId) {
 	text += "<div><span>Module: " + module.name + "</span></div>";
 	text += "<div>";
 	text += "<span>Name: </span>";
-	text += "<input type=\"text\" value=\"" + node.name + "\" id=\"node_"
-			+ nodeId + "_name\"/>";
-	text += "<input id=\"save_node_name_" + node.id
-			+ "\" type=\"button\" value=\"Save\" />";
+	text += "<div id=\"node_name_text_box\"></div>";
+	text += "<div id=\"save_node_name_button\"></div>";
 	text += "</div>";
 	text += "<div>Delete?</div>";
-	text += "<div><button id=\"delete_node_" + nodeId
-			+ "\">Delete Node</button></div>";
+	text += "<div id=\"delete_node_button\"></div>";
 	text += "</div>";
 	$("#" + instance.informationContainerId).html(text);
-	$("#save_node_name_" + nodeId).bind("click", function() {
-		instance.saveNodeName(instance, flowId, nodeId);
+
+	if (dijit.byId("node_" + nodeId + "_name") != null) {
+		dijit.registry.remove("node_" + nodeId + "_name");
+	}
+	var nodeNameTextBox = new dijit.form.TextBox({
+		id : "node_" + nodeId + "_name",
+		value : node.name
 	});
-	$("#delete_node_" + nodeId).bind("click", function() {
-		instance.deleteNode(instance, flowId, nodeId);
+	nodeNameTextBox.placeAt(dojo.byId("node_name_text_box"));
+	nodeNameTextBox.startup();
+
+	var saveNodeNameButton = new dijit.form.Button({
+		label : "Save Node Name",
+		onClick : function() {
+			instance.saveNodeName(instance, flowId, nodeId);
+		}
 	});
+	saveNodeNameButton.placeAt(dojo.byId("save_node_name_button"));
+	saveNodeNameButton.startup();
+
+	var deleteNodeButton = new dijit.form.Button({
+		label : "DeleteNode",
+		onClick : function() {
+			instance.deleteNode(instance, flowId, nodeId);
+		}
+	});
+	deleteNodeButton.placeAt(dojo.byId("delete_node_button"));
+	deleteNodeButton.startup();
 
 	var form = "";
 	form += "<div>";
 	form += "<div>Configuration:</div>";
 	var i;
 	for (i = 0; i < module.configurations.length; i++) {
+		var textBoxId = "flow_" + flowId + "_node_" + nodeId + "_"
+				+ module.configurations[i].key;
+		var divId = textBoxId + "_container";
 		form += "<div>";
 		form += ("<span>" + module.configurations[i].displayName + "</span>");
-		form += ("<input type=\"text\" value=\""
-				+ instance.getConfigurationValue(instance, flowId, nodeId,
-						module.configurations[i].key) + "\" id=\"" + "flow_"
-				+ flowId + "_node_" + nodeId + "_"
-				+ module.configurations[i].key + "\" />");
+		form += "<div id=\"" + divId + "\"></div>";
 		form += "</div>";
 	}
-	form += "<input id=\"save_configuration_" + "flow_" + flowId + "_node_"
-			+ nodeId + "\" type=\"button\" value=\"Save\" />";
+	form += "<div id=\"save_configuration_button\"></div>";
 	form += "</div>";
 	$("#" + instance.configurationContainerId).html(form);
-	$("#save_configuration_" + "flow_" + flowId + "_node_" + nodeId).bind(
-			"click", function() {
-				instance.saveConfiguration(instance, flowId, nodeId);
-			});
+
+	for (i = 0; i < module.configurations.length; i++) {
+		var textBoxId = "flow_" + flowId + "_node_" + nodeId + "_"
+				+ module.configurations[i].key;
+		var divId = textBoxId + "_container";
+		if (dijit.byId(textBoxId) != null) {
+			dijit.registry.remove(textBoxId);
+		}
+		var configurationTextBox = new dijit.form.TextBox({
+			id : textBoxId,
+			value : instance.getConfigurationValue(instance, flowId, nodeId,
+					module.configurations[i].key)
+		});
+		configurationTextBox.placeAt(dojo.byId(divId));
+		configurationTextBox.startup();
+	}
+
+	var saveConfigurationButton = new dijit.form.Button({
+		label : "Save Configuration",
+		onClick : function() {
+			instance.saveConfiguration(instance, flowId, nodeId);
+		}
+	});
+	saveConfigurationButton.placeAt(dojo.byId("save_configuration_button"));
+	saveConfigurationButton.startup();
 };
 
 HAFlow.Main.prototype.saveNodeName = function(instance, flowId, nodeId) {
