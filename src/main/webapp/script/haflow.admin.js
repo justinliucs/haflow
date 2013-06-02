@@ -9,6 +9,10 @@ dojo.require("dijit.MenuBar");
 dojo.require("dijit.MenuBarItem");
 dojo.require("dijit.PopupMenuBarItem");
 
+dojo.require("dijit.form.Button");
+dojo.require("dijit.form.TextBox");
+dojo.require("dijit.form.SimpleTextarea");
+
 dojo.require("dojo.dom");
 dojo.require("dojo.json");
 dojo.require("dojo.store.Memory");
@@ -39,27 +43,49 @@ HAFlow.Admin.prototype.createAddModuleUserInterface = function() {
 	text += "<div>";
 	text += "<div>";
 	text += "<span>Name:</span>";
-	text += "<input type=\"text\" id=\"add_module_name\" />";
+	text += "<div id=\"add_module_name_container\"></div>";
 	text += "</div>";
 	text += "<div>";
 	text += "<div>Configurations: (displayName,key)</div>";
-	text += "<textarea id=\"add_module_configuration\" />";
+	text += "<div id=\"add_module_configuration_container\"></div>";
 	text += "</div>";
-	text += "<button id=\"add_module_button\">Add Module</button>";
+	text += "<div id=\"add_module_button\"></div>";
 	text += "</div>";
 	$("#" + this.addModuleContainerId).html(text);
 	var _currentInstance = this;
-	$("#" + "add_module_button").bind(
-			"click",
-			function() {
-				var module = {
-					name : $("#add_module_name").val(),
-					configurations : _currentInstance.extractConfiguration($(
-							"#add_module_configuration").val())
-				};
-				_currentInstance.addModule(_currentInstance, module);
-			});
+	if (dijit.byId("add_module_name") != null) {
+		dijit.registry.remove("add_module_name");
+	}
+	var moduleNameTextBox = new dijit.form.TextBox({
+		id : "add_module_name",
+	});
+	moduleNameTextBox.placeAt(dojo.byId("add_module_name_container"));
+	moduleNameTextBox.startup();
 
+	if (dijit.byId("add_module_configuration") != null) {
+		dijit.registry.remove("add_module_configuration");
+	}
+	var textarea = new dijit.form.SimpleTextarea({
+		id : "add_module_configuration",
+		rows : 5,
+		cols : 50
+	});
+	textarea.placeAt(dojo.byId("add_module_configuration_container"));
+	textarea.startup();
+
+	var button = new dijit.form.Button({
+		label : "Add Module",
+		onClick : function() {
+			var module = {
+				name : $("#add_module_name").val(),
+				configurations : _currentInstance.extractConfiguration($(
+						"#add_module_configuration").val())
+			};
+			_currentInstance.addModule(_currentInstance, module);
+		}
+	});
+	button.placeAt(dojo.byId("add_module_button"));
+	button.startup();
 };
 
 HAFlow.Admin.prototype.extractConfiguration = function(source) {
@@ -120,22 +146,26 @@ HAFlow.Admin.prototype.generateModuleList = function(instance) {
 			text += "</div>";
 			text += "<p/>";
 		}
-		text += "<button id=\"remove_module_" + this.moduleList.modules[i].id
-				+ "\">Remove Module</button>";
+		text += "<div id=\"remove_module_" + this.moduleList.modules[i].id
+				+ "\"></div>";
 		text += "<p/>";
 		text += "</div>";
 	}
 	text += "</div>";
 	$("#" + this.moduleListContainerId).html(text);
-	var _currentInstance = this;
 	for (i = 0; i < this.moduleList.modules.length; i++) {
-		$("#" + "remove_module_" + this.moduleList.modules[i].id).bind(
-				"click",
-				function() {
-					var moduleId = $(this).attr("id").replace("remove_module_",
-							"");
-					_currentInstance.removeModule(_currentInstance, moduleId);
-				});
+		var _currentInstance = this;
+		var button = new dijit.form.Button({
+			label : "Remove Module",
+			moduleId : this.moduleList.modules[i].id,
+			onClick : function() {
+				var moduleId = $(this).attr("moduleId");
+				_currentInstance.removeModule(_currentInstance, moduleId);
+			}
+		});
+		button.placeAt(dojo.byId("remove_module_"
+				+ this.moduleList.modules[i].id));
+		button.startup();
 	}
 };
 
