@@ -14,7 +14,7 @@ import javax.persistence.Table;
 public class Node {
 	private UUID id;
 	private Flow flow;
-	private Module module;
+	private UUID moduleId;
 	private String name;
 
 	@Id
@@ -37,14 +37,13 @@ public class Node {
 		this.flow = flow;
 	}
 
-	@ManyToOne
-	@JoinColumn(name = "moduleId")
-	public Module getModule() {
-		return module;
+	@Column(name = "moduleId")
+	public UUID getModuleId() {
+		return moduleId;
 	}
 
-	public void setModule(Module module) {
-		this.module = module;
+	public void setModuleId(UUID moduleId) {
+		this.moduleId = moduleId;
 	}
 
 	@Column(name = "name")
