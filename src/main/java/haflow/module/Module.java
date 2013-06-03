@@ -11,4 +11,6 @@ public @interface Module {
 	String id();
 
 	String name();
+
+	String category();
 }

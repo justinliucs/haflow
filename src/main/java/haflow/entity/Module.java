@@ -6,6 +6,7 @@ import java.util.UUID;
 public class Module {
 	private UUID id;
 	private String name;
+	private String category;
 	private Set<ModuleConfiguration> configurations;
 
 	public UUID getId() {
@@ -22,6 +23,14 @@ public class Module {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 	public Set<ModuleConfiguration> getConfigurations() {

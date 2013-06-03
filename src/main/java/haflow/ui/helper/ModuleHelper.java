@@ -36,6 +36,7 @@ public class ModuleHelper {
 			ModuleBriefModel moduleBriefModel = new ModuleBriefModel();
 			moduleBriefModel.setId(module.getId());
 			moduleBriefModel.setName(module.getName());
+			moduleBriefModel.setCategory(module.getCategory());
 			moduleBriefModel
 					.setConfigurations(new HashSet<ConfigurationModel>());
 			for (ModuleConfiguration configuration : module.getConfigurations()) {

@@ -1,4 +1,4 @@
-package haflow.module.basic;
+package haflow.module.general;
 
 import java.util.Map;
 
@@ -8,9 +8,9 @@ import haflow.module.Module;
 import haflow.module.ModuleConfiguration;
 import haflow.module.ModuleMetadata;
 
-@Module(id = "9208d7d2-a8ff-2493-64c2-36f50bc95752", name = "Start", category = "Basic")
-@ModuleConfiguration(configurationKeys = { "aaa" }, configurationDisplayNames = { "bbb" })
-public class StartModule implements ModuleMetadata {
+@Module(id = "5da600a8-aa63-968a-ca46-9085e0e0bd2e", name = "Java", category = "General")
+@ModuleConfiguration(configurationKeys = { "eee" }, configurationDisplayNames = { "fff" })
+public class JavaModule implements ModuleMetadata {
 
 	public Document generate(Map<String, String> configurations) {
 		// TODO Auto-generated method stub

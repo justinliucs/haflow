@@ -33,8 +33,7 @@ public class ModuleLoader {
 					"haflow", true);
 			for (String className : classNames) {
 				Class<?> moduleClass = Class.forName(className);
-				if (moduleClass
-						.isAnnotationPresent(haflow.module.Module.class)) {
+				if (moduleClass.isAnnotationPresent(haflow.module.Module.class)) {
 					Object obj = moduleClass.newInstance();
 					if (obj instanceof ModuleMetadata) {
 						ModuleMetadata metadata = (ModuleMetadata) obj;
@@ -43,6 +42,8 @@ public class ModuleLoader {
 								haflow.module.Module.class).id()));
 						module.setName(moduleClass.getAnnotation(
 								haflow.module.Module.class).name());
+						module.setCategory(moduleClass.getAnnotation(
+								haflow.module.Module.class).category());
 						module.setConfigurations(new HashSet<ModuleConfiguration>());
 						if (moduleClass
 								.isAnnotationPresent(haflow.module.ModuleConfiguration.class)) {

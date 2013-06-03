@@ -11,6 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class ModuleModel {
 	private UUID id;
 	private String name;
+	private String category;
 	private Set<ConfigurationModel> configurations;
 
 	@XmlElement
@@ -30,7 +31,16 @@ public class ModuleModel {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
+	@XmlElement
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
 	@XmlElementWrapper(name = "configurations")
 	@XmlElement(name = "configuration")
 	public Set<ConfigurationModel> getConfigurations() {
