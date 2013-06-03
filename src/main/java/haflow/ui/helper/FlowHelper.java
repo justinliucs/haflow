@@ -12,11 +12,9 @@ import org.springframework.stereotype.Component;
 import haflow.entity.Edge;
 import haflow.entity.Flow;
 import haflow.entity.Node;
-import haflow.entity.Module;
 import haflow.profile.NodeAppearanceProfile;
 import haflow.profile.NodeConfigurationProfile;
 import haflow.service.FlowService;
-import haflow.service.ModuleService;
 import haflow.service.NodeAppearanceProfileService;
 import haflow.service.NodeConfigurationProfileService;
 import haflow.ui.model.ConfigurationItemModel;
@@ -35,7 +33,6 @@ import haflow.ui.model.RemoveFlowResultModel;
 public class FlowHelper {
 
 	private FlowService flowService;
-	private ModuleService moduleService;
 	private NodeAppearanceProfileService nodeAppearanceProfileService;
 	private NodeConfigurationProfileService nodeConfigurationProfileService;
 
@@ -46,15 +43,6 @@ public class FlowHelper {
 	@Autowired
 	public void setFlowService(FlowService flowService) {
 		this.flowService = flowService;
-	}
-
-	public ModuleService getModuleService() {
-		return moduleService;
-	}
-
-	@Autowired
-	public void setModuleService(ModuleService moduleService) {
-		this.moduleService = moduleService;
 	}
 
 	public NodeAppearanceProfileService getNodeAppearanceProfileService() {
@@ -109,7 +97,7 @@ public class FlowHelper {
 					.getNodeConfigurationProfile(node.getId());
 			nodeModel.setFlowId(node.getFlow().getId());
 			nodeModel.setId(node.getId());
-			nodeModel.setModuleId(node.getModule().getId());
+			nodeModel.setModuleId(node.getModuleId());
 			nodeModel.setName(node.getName());
 			nodeModel.setPosition(new PositionModel());
 			nodeModel.getPosition().setLeft(
@@ -157,15 +145,10 @@ public class FlowHelper {
 			if (!nodeModel.getFlowId().equals(flowId)) {
 				return false;
 			}
-			Module module = this.getModuleService().getModule(
-					nodeModel.getModuleId());
-			if (module == null) {
-				return false;
-			}
 			Node node = new Node();
 			node.setFlow(null);
 			node.setId(nodeModel.getId());
-			node.setModule(module);
+			node.setModuleId(nodeModel.getModuleId());
 			node.setName(nodeModel.getName());
 			this.getNodeAppearanceProfileService().mergeNodeAppearanceProfile(
 					nodeModel.getId(), nodeModel.getPosition().getLeft(),
