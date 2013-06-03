@@ -1,4 +1,4 @@
-package haflow.module.annotation;
+package haflow.module;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

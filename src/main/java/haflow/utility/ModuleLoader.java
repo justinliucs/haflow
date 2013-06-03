@@ -1,4 +1,4 @@
-package haflow.module;
+package haflow.utility;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -8,7 +8,7 @@ import java.util.UUID;
 
 import haflow.entity.Module;
 import haflow.entity.ModuleConfiguration;
-import haflow.utility.ClassHelper;
+import haflow.module.ModuleMetadata;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -34,20 +34,20 @@ public class ModuleLoader {
 			for (String className : classNames) {
 				Class<?> moduleClass = Class.forName(className);
 				if (moduleClass
-						.isAnnotationPresent(haflow.module.annotation.Module.class)) {
+						.isAnnotationPresent(haflow.module.Module.class)) {
 					Object obj = moduleClass.newInstance();
 					if (obj instanceof ModuleMetadata) {
 						ModuleMetadata metadata = (ModuleMetadata) obj;
 						Module module = new Module();
 						module.setId(UUID.fromString(moduleClass.getAnnotation(
-								haflow.module.annotation.Module.class).id()));
+								haflow.module.Module.class).id()));
 						module.setName(moduleClass.getAnnotation(
-								haflow.module.annotation.Module.class).name());
+								haflow.module.Module.class).name());
 						module.setConfigurations(new HashSet<ModuleConfiguration>());
 						if (moduleClass
-								.isAnnotationPresent(haflow.module.annotation.ModuleConfiguration.class)) {
-							haflow.module.annotation.ModuleConfiguration configuration = moduleClass
-									.getAnnotation(haflow.module.annotation.ModuleConfiguration.class);
+								.isAnnotationPresent(haflow.module.ModuleConfiguration.class)) {
+							haflow.module.ModuleConfiguration configuration = moduleClass
+									.getAnnotation(haflow.module.ModuleConfiguration.class);
 							int i;
 							for (i = 0; i < configuration.configurationKeys().length; i++) {
 								ModuleConfiguration moduleConfiguration = new ModuleConfiguration();

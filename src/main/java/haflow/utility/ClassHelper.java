@@ -30,29 +30,13 @@ public class ClassHelper {
 				}
 			} else {
 				String classFilePath = classFile.getPath();
-				String base = Thread.currentThread().getContextClassLoader()
-						.getResource("").getPath();
-				classFilePath = classFilePath.replace(base, "");
 				if (classFilePath.endsWith(".class")) {
 					classFilePath = classFilePath.replace("\\", ".");
 					classFilePath = classFilePath.replace("/", ".");
-					classFilePath = classFilePath.substring(0,
+					classFilePath = classFilePath.substring(
+							classFilePath.indexOf(".classes") + 9,
 							classFilePath.lastIndexOf("."));
 
-					if (packageName.isEmpty()) {
-						while (true) {
-							try {
-								Class.forName(classFilePath);
-								break;
-							} catch (ClassNotFoundException ex) {
-								classFilePath = classFilePath
-										.substring(classFilePath.indexOf(".") + 1);
-							}
-						}
-					} else {
-						classFilePath = classFilePath.substring(classFilePath
-								.indexOf(packageName));
-					}
 					classNames.add(classFilePath);
 				}
 			}
