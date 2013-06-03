@@ -2,10 +2,10 @@ package haflow.ui.helper;
 
 import haflow.entity.ModuleConfiguration;
 import haflow.entity.Module;
-import haflow.module.ModuleLoader;
 import haflow.ui.model.ConfigurationModel;
 import haflow.ui.model.ModuleBriefModel;
 import haflow.ui.model.ModuleListModel;
+import haflow.utility.ModuleLoader;
 
 import java.util.ArrayList;
 import java.util.HashSet;
