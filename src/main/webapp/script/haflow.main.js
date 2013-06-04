@@ -130,9 +130,14 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 		id : "removeFlowMenuItem",
 		label : "Remove Flow"
 	});
+	this.menu.flowMenu.runFlowMenuItem = new dijit.MenuItem({
+		id : "runFlowMenuItem",
+		label : "Run Flow"
+	});
 	this.menu.flowMenu.addChild(this.menu.flowMenu.newFlowMenuItem);
 	this.menu.flowMenu.addChild(this.menu.flowMenu.saveFlowMenuItem);
 	this.menu.flowMenu.addChild(this.menu.flowMenu.removeFlowMenuItem);
+	this.menu.flowMenu.addChild(this.menu.flowMenu.runFlowMenuItem);
 	this.menu.flowMenu.startup();
 	this.ui.mainMenu.addChild(new dijit.PopupMenuBarItem({
 		id : "flowPopupMenuBarItem",
@@ -152,6 +157,10 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 	dojo.connect(this.menu.flowMenu.removeFlowMenuItem, "onClick", function(
 			event) {
 		_currentInstance.removeFlow(_currentInstance.currentFlowId);
+	});
+	dojo.connect(this.menu.flowMenu.runFlowMenuItem, "onClick", function(
+			event) {
+		_currentInstance.runFlow(_currentInstance.currentFlowId);
 	});
 };
 
@@ -912,6 +921,24 @@ HAFlow.Main.prototype.removeFlow = function(flowId) {
 		error : function(request, status, error) {
 			HAFlow.showDialog("Error",
 					"An error occurred while removing flow: " + error);
+		}
+	});
+};
+
+HAFlow.Main.prototype.runFlow = function(flowId) {
+	var _currentInstance = this;
+	$.ajax({
+		url : _currentInstance.basePath + "run/" + flowId,
+		type : "POST",
+		dataType : "json",
+		contentType : "application/json",
+		data : JSON.stringify({}),
+		success : function(data, status) {
+			HAFlow.showDialog("Run Flow", "Result: " + data.success);
+		},
+		error : function(request, status, error) {
+			HAFlow.showDialog("Error", "An error occurred while running flow: "
+					+ error);
 		}
 	});
 };
