@@ -8,6 +8,7 @@ import haflow.module.ModuleMetadata;
 import haflow.module.basic.StartModule;
 import haflow.profile.NodeConfigurationProfile;
 import haflow.ui.helper.ModuleHelper;
+import haflow.utility.ModuleLoader;
 import haflow.utility.SessionHelper;
 import haflow.utility.XmlHelper;
 
@@ -24,9 +25,11 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+@Component
 public class FlowExecuteService {
 
 	private SessionHelper sessionHelper;
@@ -39,20 +42,20 @@ public class FlowExecuteService {
 	public void setSessionHelper(SessionHelper sessionHelper) {
 		this.sessionHelper = sessionHelper;
 	}
-	
-	private ModuleHelper moduleHelper;
 
-	public ModuleHelper getModuleHelper() {
-		return moduleHelper;
+	private ModuleLoader moduleLoader;
+
+	public ModuleLoader getModuleLoader() {
+		return moduleLoader;
 	}
 
 	@Autowired
-	public void setModuleHelper(ModuleHelper moduleHelper) {
-		this.moduleHelper = moduleHelper;
+	public void setModuleLoader(ModuleLoader moduleLoader) {
+		this.moduleLoader = moduleLoader;
 	}
-	
+
 	private NodeConfigurationProfileService nodeConfigurationProfileService;
-	
+
 	public NodeConfigurationProfileService getNodeConfigurationProfileService() {
 		return nodeConfigurationProfileService;
 	}
@@ -62,9 +65,9 @@ public class FlowExecuteService {
 			NodeConfigurationProfileService nodeConfigurationProfileService) {
 		this.nodeConfigurationProfileService = nodeConfigurationProfileService;
 	}
-	
+
 	private XmlHelper xmlHelper;
-	
+
 	public XmlHelper getXmlHelper() {
 		return xmlHelper;
 	}
@@ -78,7 +81,8 @@ public class FlowExecuteService {
 		Session session = this.getSessionHelper().openSession();
 		Transaction transaction = session.beginTransaction();
 		Flow flow = (Flow) session.get(Flow.class, flowId);
-		Map<String, Class<?>> moduleClasses = this.moduleHelper.getModuleClasses();
+		Map<String, Class<?>> moduleClasses = this.getModuleLoader()
+				.searchForModuleClasses();
 		if (flow == null) {
 			return false;
 		}
@@ -90,42 +94,51 @@ public class FlowExecuteService {
 			Element root = newDoc.createElement("workflow-app");
 			root.setAttribute("xmlns", "uri:oozie:workflow:0.2");
 			root.setAttribute("name", "java-main-wf");
-			
+
 			Set<Node> nodes = flow.getNodes();
 			List<Node> startNodes = new ArrayList<Node>();
-			for(Node node : nodes){
-				if( moduleClasses.get(node.getModuleId()).equals(StartModule.class)){
+			for (Node node : nodes) {
+				Class<?> module = moduleClasses.get(node.getModuleId()
+						.toString());
+				if (module != null && module.equals(StartModule.class)) {
 					startNodes.add(node);
 				}
 			}
-			if(startNodes.size() != 1){
-				//Error: Wrong start node number
-			}else{
-				//topological sorting
-				//subgraph of start node
-				Digraph graph = new Digraph(flow.getEdges(), flow.getNodes(), startNodes.get(0));
+			if (startNodes.size() != 1) {
+				// Error: Wrong start node number
+			} else {
+				// topological sorting
+				// subgraph of start node
+				Digraph graph = new Digraph(flow.getEdges(), flow.getNodes(),
+						startNodes.get(0));
 				Topological topo = new Topological(graph);
 				List<Integer> sorted = topo.getOrder();
-				for( int i = 0; i < sorted.size(); i++ ){
-					Node node = graph.getNode(sorted.get(i));
-					Class<?> moduleClass = moduleClasses.get(node.getModuleId());
-					ModuleMetadata module = (ModuleMetadata) moduleClass.newInstance();
-					Map<String, String> configurations = new HashMap<String, String>();
-					List<NodeConfigurationProfile> ncps = this.nodeConfigurationProfileService.getNodeConfigurationProfile(node.getId());
-					for( NodeConfigurationProfile ncp : ncps){
-						String key = ncp.getKey();
-						String value = ncp.getValue();
-						configurations.put(key, value);
+				if (sorted != null) {
+					for (int i = 0; i < sorted.size(); i++) {
+						Node node = graph.getNode(sorted.get(i));
+						Class<?> moduleClass = moduleClasses.get(node
+								.getModuleId());
+						ModuleMetadata module = (ModuleMetadata) moduleClass
+								.newInstance();
+						Map<String, String> configurations = new HashMap<String, String>();
+						List<NodeConfigurationProfile> ncps = this
+								.getNodeConfigurationProfileService()
+								.getNodeConfigurationProfile(node.getId());
+						for (NodeConfigurationProfile ncp : ncps) {
+							String key = ncp.getKey();
+							String value = ncp.getValue();
+							configurations.put(key, value);
+						}
+						Document doc = module.generate(configurations);
+						root.appendChild(doc.getFirstChild());
+						// nodeDocs.put(node.getId(), doc);
+						this.xmlHelper.printDocument(doc);
 					}
-					Document doc = module.generate(configurations);
-					root.appendChild(doc.getFirstChild());
-//					nodeDocs.put(node.getId(), doc);
-					this.xmlHelper.printDocument(doc);
 				}
 			}
-			
+
 			newDoc.appendChild(root);
-			
+
 			session.close();
 			return true;
 		} catch (Exception e) {
@@ -135,9 +148,10 @@ public class FlowExecuteService {
 			return false;
 		}
 	}
-	
+
 	public static void main(String[] args) {
 		FlowExecuteService flowExecuteService = new FlowExecuteService();
-		flowExecuteService.runFlow(UUID.fromString("67f1811e-c2b3-4a32-b70a-32f486a0a947"));
+		flowExecuteService.runFlow(UUID
+				.fromString("67f1811e-c2b3-4a32-b70a-32f486a0a947"));
 	}
 }
