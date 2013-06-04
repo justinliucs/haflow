@@ -34,7 +34,7 @@ public class ClassHelper {
 					classFilePath = classFilePath.replace("\\", ".");
 					classFilePath = classFilePath.replace("/", ".");
 					classFilePath = classFilePath.substring(
-							classFilePath.indexOf(".classes") + 9,
+							classFilePath.indexOf("classes") + 8,
 							classFilePath.lastIndexOf("."));
 
 					classNames.add(classFilePath);
