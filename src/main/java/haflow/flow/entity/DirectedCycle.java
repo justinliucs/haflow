@@ -12,7 +12,7 @@ public class DirectedCycle {
 	public DirectedCycle(Digraph G){
 		marked = new boolean[G.getV()];
 		onStack = new boolean[G.getV()];
-		cycle = new Stack<Integer>();
+		edgeTo = new int[G.getV()];
 		dfs(G, G.getStartNode());
 	}
 	
