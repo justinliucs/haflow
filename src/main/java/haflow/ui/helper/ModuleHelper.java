@@ -9,6 +9,7 @@ import haflow.utility.ModuleLoader;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,5 +49,11 @@ public class ModuleHelper {
 			moduleListModel.getModules().add(moduleBriefModel);
 		}
 		return moduleListModel;
+	}
+	
+	public Map<String, Class<?>> getModuleClasses() {
+		Map<String, Class<?>>  moduleClasses = this.getModuleLoader().searchForModuleClasses();
+
+		return moduleClasses;
 	}
 }

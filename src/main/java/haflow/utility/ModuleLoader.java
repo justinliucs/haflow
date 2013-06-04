@@ -72,4 +72,27 @@ public class ModuleLoader {
 			return null;
 		}
 	}
+	
+	public Map<String, Class<?>> searchForModuleClasses() {
+		try {
+			Map<String, Class<?>> moduleClasses = new HashMap<String, Class<?>>();
+			List<String> classNames = this.getClassHelper().getClassNames(
+					"haflow", true);
+			for (String className : classNames) {
+				Class<?> moduleClass = Class.forName(className);
+				if (moduleClass.isAnnotationPresent(haflow.module.Module.class)) {
+					Object obj = moduleClass.newInstance();
+					if (obj instanceof ModuleMetadata) {
+						moduleClasses.put(moduleClass.getAnnotation(
+								haflow.module.Module.class).id(), moduleClass);
+						
+					}
+				}
+			}
+			return moduleClasses;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 }
