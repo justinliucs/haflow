@@ -928,16 +928,31 @@ HAFlow.Main.prototype.removeFlow = function(flowId) {
 HAFlow.Main.prototype.runFlow = function(flowId) {
 	var _currentInstance = this;
 	$.ajax({
-		url : _currentInstance.basePath + "run/" + flowId,
-		type : "POST",
+		url : _currentInstance.basePath + "flow/" + flowId,
+		type : "PUT",
 		dataType : "json",
 		contentType : "application/json",
-		data : JSON.stringify({}),
+		data : JSON.stringify(_currentInstance.flows[flowId]),
 		success : function(data, status) {
-			HAFlow.showDialog("Run Flow", "Result: " + data.success);
+			HAFlow.showDialog("Save Flow", "Flow saved.");
+			_currentInstance.refreshFlowList();
+			$.ajax({
+				url : _currentInstance.basePath + "run/" + flowId,
+				type : "POST",
+				dataType : "json",
+				contentType : "application/json",
+				data : JSON.stringify({}),
+				success : function(data, status) {
+					HAFlow.showDialog("Run Flow", " Commited: " + data.commited + "\n" + "Result: " + data.message);
+				},
+				error : function(request, status, error) {
+					HAFlow.showDialog("Error", "An error occurred while running flow: "
+							+ error);
+				}
+			});
 		},
 		error : function(request, status, error) {
-			HAFlow.showDialog("Error", "An error occurred while running flow: "
+			HAFlow.showDialog("Error", "An error occurred while saving flow: "
 					+ error);
 		}
 	});
