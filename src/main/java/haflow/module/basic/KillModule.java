@@ -16,14 +16,14 @@ import haflow.module.Module;
 import haflow.module.ModuleConfiguration;
 import haflow.module.ModuleMetadata;
 
-@Module(id = "70d027c3-a4bd-61b5-5063-134ff71f8122", name = "End", category = "Basic")
-@ModuleConfiguration(configurationKeys = { "ccc" }, configurationDisplayNames = { "ddd" })
-public class EndModule implements ModuleMetadata {
+@Module(id = "b0d027c3-a4bd-61b5-5063-134ff71f8123", name = "Kill", category = "Basic")
+@ModuleConfiguration(configurationKeys = { "mmm" }, configurationDisplayNames = { "message" })
+public class KillModule implements ModuleMetadata {
 
 	
 	public Document generate(Map<String, String> configurations) {
 		String name = configurations.get("name");
-		String xml = "<end name=\"" + name + "\"/>";	
+		String xml = "<kill name=\"" + name + "\"><message>Work flow failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message></kill>";	
 		
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		try {

@@ -5,9 +5,10 @@ import haflow.entity.Node;
 import haflow.flow.entity.Digraph;
 import haflow.flow.entity.Topological;
 import haflow.module.ModuleMetadata;
+import haflow.module.basic.EndModule;
 import haflow.module.basic.StartModule;
 import haflow.profile.NodeConfigurationProfile;
-import haflow.ui.helper.ModuleHelper;
+import haflow.ui.model.RunFlowResultModel;
 import haflow.utility.ModuleLoader;
 import haflow.utility.SessionHelper;
 import haflow.utility.XmlHelper;
@@ -19,15 +20,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 @Component
 public class FlowExecuteService {
@@ -77,24 +74,26 @@ public class FlowExecuteService {
 		this.xmlHelper = xmlHelper;
 	}
 
-	public boolean runFlow(UUID flowId) {
+	public RunFlowResultModel runFlow(UUID flowId) {
+		RunFlowResultModel model = new RunFlowResultModel();
+		model.setFlowId(flowId);
+		
+		StringBuilder messageBuilder = new StringBuilder();
+		messageBuilder.append("Running flow ...");
+		
 		Session session = this.getSessionHelper().openSession();
 		Transaction transaction = session.beginTransaction();
 		Flow flow = (Flow) session.get(Flow.class, flowId);
-		Map<String, Class<?>> moduleClasses = this.getModuleLoader()
-				.searchForModuleClasses();
+
 		if (flow == null) {
-			return false;
+			messageBuilder.append("Flow" + flowId + " not found!");
+			model.setCommited(false);
+			return model;
 		}
 
 		try {
-			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-			DocumentBuilder db = dbf.newDocumentBuilder();
-			Document newDoc = db.newDocument();
-			Element root = newDoc.createElement("workflow-app");
-			root.setAttribute("xmlns", "uri:oozie:workflow:0.2");
-			root.setAttribute("name", "java-main-wf");
-
+			Map<String, Class<?>> moduleClasses = this.getModuleLoader()
+					.searchForModuleClasses();
 			Set<Node> nodes = flow.getNodes();
 			List<Node> startNodes = new ArrayList<Node>();
 			for (Node node : nodes) {
@@ -105,7 +104,7 @@ public class FlowExecuteService {
 				}
 			}
 			if (startNodes.size() != 1) {
-				// Error: Wrong start node number
+				messageBuilder.append("Error: Wrong start node number " + startNodes.size());
 			} else {
 				// topological sorting
 				// subgraph of start node
@@ -113,14 +112,32 @@ public class FlowExecuteService {
 						startNodes.get(0));
 				Topological topo = new Topological(graph);
 				List<Integer> sorted = topo.getOrder();
-				if (sorted != null) {
+				StringBuilder sb = new StringBuilder();
+				sb.append("<workflow-app xmlns=\"uri:oozie:workflow:0.2\" name=\""
+						+ flow.getName() + "\">" + "\n");
+				if (sorted != null) {			
+					for (int i = 0; i < sorted.size(); i++) {//move end node to the end
+						int w = sorted.get(i);
+						Node node = graph.getNode(w);
+						Class<?> moduleClass = moduleClasses.get(node.getModuleId()
+								.toString());
+						if(moduleClass.equals(EndModule.class)){//what if we have more than one end?
+							for(int j = i+1; j < sorted.size(); j++){
+								sorted.set(j-1, sorted.get(j));
+							}
+							sorted.set(sorted.size()-1, w);
+							break;
+						}
+					}
 					for (int i = 0; i < sorted.size(); i++) {
-						Node node = graph.getNode(sorted.get(i));
+						int w = sorted.get(i);
+						Node node = graph.getNode(w);
 						Class<?> moduleClass = moduleClasses.get(node
-								.getModuleId());
+								.getModuleId().toString());
 						ModuleMetadata module = (ModuleMetadata) moduleClass
 								.newInstance();
 						Map<String, String> configurations = new HashMap<String, String>();
+						configurations.put("name", node.getId().toString());
 						List<NodeConfigurationProfile> ncps = this
 								.getNodeConfigurationProfileService()
 								.getNodeConfigurationProfile(node.getId());
@@ -129,23 +146,41 @@ public class FlowExecuteService {
 							String value = ncp.getValue();
 							configurations.put(key, value);
 						}
+						
+						List<Integer> adj = graph.getAdj(w);						
+						for( int v : adj){
+							if(sorted.contains(v)){
+								configurations.put("ok", graph.getNode(v).getId().toString());
+								break;//TODO
+							}
+						}
 						Document doc = module.generate(configurations);
-						root.appendChild(doc.getFirstChild());
-						// nodeDocs.put(node.getId(), doc);
-						this.xmlHelper.printDocument(doc);
+						String part = this.xmlHelper.getXmlString(doc);
+						sb.append(part + "\n");
 					}
+				}else{
+					messageBuilder.append("Error: Flow is has Circles!");
 				}
+//				sb.append("<kill name=\"fail\">" +
+//						"<message>Work flow failed, " +
+//						"error message[${wf:errorMessage(wf:lastErrorNode())}]</message>" +
+//						"</kill>" + "\n");			
+				sb.append("</workflow-app>" + "\n");
+				System.out.println(sb.toString());
+				messageBuilder.append("Generated xml : \n" + sb.toString());
 			}
 
-			newDoc.appendChild(root);
-
 			session.close();
-			return true;
+			model.setMessage(messageBuilder.toString());
+			model.setCommited(true);
+			return model;
 		} catch (Exception e) {
 			e.printStackTrace();
 			transaction.rollback();
 			session.close();
-			return false;
+			model.setMessage(messageBuilder.toString());
+			model.setCommited(false);
+			return model;
 		}
 	}
 

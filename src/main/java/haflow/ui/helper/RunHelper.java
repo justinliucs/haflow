@@ -23,9 +23,7 @@ public class RunHelper {
 	}
 
 	public RunFlowResultModel runFlow(UUID flowId, RunFlowModel model) {
-		RunFlowResultModel result = new RunFlowResultModel();
-		boolean success = this.getFlowExecuteService().runFlow(flowId);
-		result.setSuccess(success);
+		RunFlowResultModel result = this.getFlowExecuteService().runFlow(flowId);
 		return result;
 	}
 
