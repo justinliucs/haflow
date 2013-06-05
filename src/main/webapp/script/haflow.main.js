@@ -158,10 +158,10 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 			event) {
 		_currentInstance.removeFlow(_currentInstance.currentFlowId);
 	});
-	dojo.connect(this.menu.flowMenu.runFlowMenuItem, "onClick", function(
-			event) {
-		_currentInstance.runFlow(_currentInstance.currentFlowId);
-	});
+	dojo.connect(this.menu.flowMenu.runFlowMenuItem, "onClick",
+			function(event) {
+				_currentInstance.runFlow(_currentInstance.currentFlowId);
+			});
 };
 
 HAFlow.Main.prototype.initBottomTabs = function() {
@@ -401,12 +401,30 @@ HAFlow.Main.prototype.doAddModule = function(instance, flowId, moduleId, left,
 	newNode["id"] = id;
 	newNode["flowId"] = flowId;
 	newNode["moduleId"] = moduleId;
-	newNode["name"] = "New Node";
+	newNode["name"] = "New Node " + id;
 	newNode["position"] = {};
 	newNode.position["left"] = left;
 	newNode.position["top"] = top;
 	newNode["configurations"] = [];
 	instance.flows[flowId].nodes.push(newNode);
+};
+
+HAFlow.Main.prototype.checkNodeName = function(instance, flowId, oldName,
+		newName) {
+	var i;
+	if (oldName == newName) {
+		return true;
+	}
+	var regex = /^[a-zA-Z_][a-zA-Z_0-9]{0,38}$/;
+	if (!regex.test(newName)) {
+		return false;
+	}
+	for (i = 0; i < instance.flows[flowId].nodes.length; i++) {
+		if (newName == instance.flows[flowId].nodes[i].name) {
+			return false;
+		}
+	}
+	return true;
 };
 
 HAFlow.Main.prototype.paintFlow = function(flowId) {
@@ -707,8 +725,12 @@ HAFlow.Main.prototype.onNodeClicked = function(instance, flowId, nodeId) {
 HAFlow.Main.prototype.saveNodeName = function(instance, flowId, nodeId) {
 	var node = instance.getNodeById(instance, flowId, nodeId);
 	var value = $("#" + "node_" + nodeId + "_name").val();
-	node.name = value;
-	instance.paintFlow(flowId);
+	if (instance.checkNodeName(instance, flowId, node.name, value)) {
+		node.name = value;
+		instance.paintFlow(flowId);
+	} else {
+		HAFlow.showDialog("Error", "Invalid node name");
+	}
 };
 
 HAFlow.Main.prototype.getConfigurationValue = function(instance, flowId,
@@ -943,11 +965,12 @@ HAFlow.Main.prototype.runFlow = function(flowId) {
 				contentType : "application/json",
 				data : JSON.stringify({}),
 				success : function(data, status) {
-					HAFlow.showDialog("Run Flow", " Commited: " + data.commited + "\n" + "Result: " + data.message);
+					HAFlow.showDialog("Run Flow", " Commited: " + data.commited
+							+ "\n" + "Result: " + data.message);
 				},
 				error : function(request, status, error) {
-					HAFlow.showDialog("Error", "An error occurred while running flow: "
-							+ error);
+					HAFlow.showDialog("Error",
+							"An error occurred while running flow: " + error);
 				}
 			});
 		},
