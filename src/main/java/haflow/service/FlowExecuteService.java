@@ -7,12 +7,14 @@ import haflow.flow.entity.Topological;
 import haflow.module.ModuleMetadata;
 import haflow.module.basic.EndModule;
 import haflow.module.basic.StartModule;
+import haflow.module.general.JavaModule;
 import haflow.profile.NodeConfigurationProfile;
 import haflow.ui.model.RunFlowResultModel;
 import haflow.utility.ModuleLoader;
 import haflow.utility.SessionHelper;
 import haflow.utility.XmlHelper;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -72,6 +74,17 @@ public class FlowExecuteService {
 	@Autowired
 	public void setXmlHelper(XmlHelper xmlHelper) {
 		this.xmlHelper = xmlHelper;
+	}
+
+	private FlowDeployService flowDeployService;
+	
+	public FlowDeployService getFlowDeployService() {
+		return flowDeployService;
+	}
+	
+	@Autowired
+	public void setFlowDeployService(FlowDeployService flowDeployService) {
+		this.flowDeployService = flowDeployService;
 	}
 
 	public RunFlowResultModel runFlow(UUID flowId) {
@@ -168,6 +181,21 @@ public class FlowExecuteService {
 				sb.append("</workflow-app>" + "\n");
 				System.out.println(sb.toString());
 				messageBuilder.append("Generated xml : \n" + sb.toString());
+				
+				//deploy workflow
+				String flowName = flow.getName();
+				for (Node node : nodes) {
+					Class<?> module = moduleClasses.get(node.getModuleId()
+							.toString());
+					String path = JavaModule.class.getProtectionDomain().getCodeSource().getLocation().getFile();
+					if(path.endsWith(".jar")){
+						File jarFile = new File(path);
+						File dstPath = new File("D:/haflow/flows/" + flowName);
+						System.out.println(path);
+						this.flowDeployService.copyJarFile(jarFile, dstPath, jarFile.getName());
+					}
+				}
+				
 			}
 
 			session.close();

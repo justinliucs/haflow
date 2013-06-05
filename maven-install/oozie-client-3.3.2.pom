@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>3.3.2</modelVersion>  
+  <groupId>com.yahoo.oozie</groupId>  
+  <artifactId>oozie-client</artifactId>
+  <packaging>jar</packaging>
+  <name>oozie</name>  
+  <description>oozie client 3.3.2</description>  
+  <url>http://www.baidu.com</url>
+  <version>3.3.2</version>
+</project> 

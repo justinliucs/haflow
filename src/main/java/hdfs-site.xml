@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<!-- Put site-specific property overrides in this file. -->
+
+<configuration>
+<property>
+	<name>dfs.replication</name>
+	<value>3</value>
+	<description>default 3, can not be greater than the node count.</description>
+</property>
+ 
+<property>
+	<name>dfs.data.dir</name>
+	<value>${hadoop.tmp.dir}/dfs/data</value>
+</property>
+</configuration>
