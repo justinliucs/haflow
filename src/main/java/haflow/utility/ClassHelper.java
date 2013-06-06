@@ -25,7 +25,7 @@ public class ClassHelper {
 			for (URL url : urls) {
 				if (url.getProtocol().equals("file")) {
 					File file = new File(url.getFile());
-					String root = file.getPath();
+					String root = file.getPath().replace("\\", "/");
 					if (file.isDirectory()) {
 						classNames.addAll(this.getClassNamesFromDirectory(root,
 								packageName, searchInChildPackage, file, true));
@@ -48,10 +48,11 @@ public class ClassHelper {
 		List<String> classNames = new ArrayList<String>();
 		File[] files = directory.listFiles();
 		for (File file : files) {
+			String filePath = file.getPath().replace("\\", "/");
 			if (file.isDirectory()) {
 				if (searchInChildPackage || continueSearch) {
 					boolean needToContinue = continueSearch;
-					if (file.getPath().endsWith(packageName.replace(".", "/"))) {
+					if (filePath.endsWith(packageName.replace(".", "/"))) {
 						needToContinue = needToContinue & false;
 					}
 					classNames.addAll(this.getClassNamesFromDirectory(root,
@@ -59,9 +60,8 @@ public class ClassHelper {
 							needToContinue));
 				}
 			} else {
-				if (file.getPath().endsWith(".class")) {
-					String classFileName = file.getPath().replace(root + "/",
-							"");
+				if (filePath.endsWith(".class")) {
+					String classFileName = filePath.replace(root + "/", "");
 					if (classFileName.startsWith(packageName.replace(".", "/"))) {
 						String className = classFileName.substring(0,
 								classFileName.length() - ".class".length())
