@@ -7,16 +7,15 @@ import haflow.flow.entity.Topological;
 import haflow.module.ModuleMetadata;
 import haflow.module.basic.EndModule;
 import haflow.module.basic.StartModule;
-import haflow.module.general.JavaModule;
 import haflow.profile.NodeConfigurationProfile;
 import haflow.ui.model.RunFlowResultModel;
 import haflow.utility.ModuleLoader;
 import haflow.utility.SessionHelper;
 import haflow.utility.XmlHelper;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -125,8 +124,8 @@ public class FlowExecuteService {
 						startNodes.get(0));
 				Topological topo = new Topological(graph);
 				List<Integer> sorted = topo.getOrder();
-				StringBuilder sb = new StringBuilder();
-				sb.append("<workflow-app xmlns=\"uri:oozie:workflow:0.2\" name=\""
+				StringBuilder workflowXml = new StringBuilder();
+				workflowXml.append("<workflow-app xmlns=\"uri:oozie:workflow:0.2\" name=\""
 						+ flow.getName() + "\">" + "\n");
 				if (sorted != null) {			
 					for (int i = 0; i < sorted.size(); i++) {//move end node to the end
@@ -142,7 +141,13 @@ public class FlowExecuteService {
 							break;
 						}
 					}
-					for (int i = 0; i < sorted.size(); i++) {
+					for (int i = 0; i < sorted.size(); i++) {//generate xml
+						if( i == sorted.size()-1 ){
+							workflowXml.append("<kill name=\"fail\">" +
+							"<message>Work flow failed, " +
+							"error message[${wf:errorMessage(wf:lastErrorNode())}]</message>" +
+							"</kill>" + "\n");		
+						}
 						int w = sorted.get(i);
 						Node node = graph.getNode(w);
 						Class<?> moduleClass = moduleClasses.get(node
@@ -169,32 +174,24 @@ public class FlowExecuteService {
 						}
 						Document doc = module.generate(configurations);
 						String part = this.xmlHelper.getXmlString(doc);
-						sb.append(part + "\n");
+						workflowXml.append(part + "\n");
 					}
 				}else{
 					messageBuilder.append("Error: Flow is has Circles!");
-				}
-//				sb.append("<kill name=\"fail\">" +
-//						"<message>Work flow failed, " +
-//						"error message[${wf:errorMessage(wf:lastErrorNode())}]</message>" +
-//						"</kill>" + "\n");			
-				sb.append("</workflow-app>" + "\n");
-				System.out.println(sb.toString());
-				messageBuilder.append("Generated xml : \n" + sb.toString());
+				}	
+				workflowXml.append("</workflow-app>" + "\n");
+				System.out.println(workflowXml.toString());
+//				messageBuilder.append("Generated xml : \n" + workflowXml.toString());
 				
-				//deploy workflow
-				String flowName = flow.getName();
+				//deploy workflow				
+				Set<String> jarPaths = new HashSet<String>();
 				for (Node node : nodes) {
 					Class<?> module = moduleClasses.get(node.getModuleId()
 							.toString());
-					String path = JavaModule.class.getProtectionDomain().getCodeSource().getLocation().getFile();
-					if(path.endsWith(".jar")){
-						File jarFile = new File(path);
-						File dstPath = new File("D:/haflow/flows/" + flowName);
-						System.out.println(path);
-						this.flowDeployService.copyJarFile(jarFile, dstPath, jarFile.getName());
-					}
+					String path = module.getProtectionDomain().getCodeSource().getLocation().getFile();
+					jarPaths.add(path);
 				}
+//				this.flowDeployService.deployFlow(flow.getName(), workflowXml.toString(), jarPaths);
 				
 			}
 

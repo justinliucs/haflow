@@ -1,14 +1,14 @@
 package haflow.utility;
 
+import haflow.entity.Module;
+import haflow.entity.ModuleConfiguration;
+import haflow.module.ModuleMetadata;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import haflow.entity.Module;
-import haflow.entity.ModuleConfiguration;
-import haflow.module.ModuleMetadata;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -31,6 +31,7 @@ public class ModuleLoader {
 			Map<Module, ModuleMetadata> modules = new HashMap<Module, ModuleMetadata>();
 			List<String> classNames = this.getClassHelper().getClassNames(
 					"haflow", true);
+			classNames.addAll(this.getClassHelper().getClassNames("hmodule", true));
 			for (String className : classNames) {
 				Class<?> moduleClass = Class.forName(className);
 				if (moduleClass.isAnnotationPresent(haflow.module.Module.class)) {
@@ -78,6 +79,7 @@ public class ModuleLoader {
 			Map<String, Class<?>> moduleClasses = new HashMap<String, Class<?>>();
 			List<String> classNames = this.getClassHelper().getClassNames(
 					"haflow", true);
+			classNames.addAll(this.getClassHelper().getClassNames("hmodule", true));
 			for (String className : classNames) {
 				Class<?> moduleClass = Class.forName(className);
 				if (moduleClass.isAnnotationPresent(haflow.module.Module.class)) {

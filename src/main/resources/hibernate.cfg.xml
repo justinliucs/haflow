@@ -8,8 +8,8 @@
 		<property name="hibernate.connection.username">root </property>
 		<property name="hibernate.connection.password">123456 </property>
 		<property name="hibernate.connection.pool.size">20 </property>
-		<property name="hibernate.show_sql">true </property>
-		<property name="format_sql">true</property>
+		<property name="hibernate.show_sql">false </property>
+		<property name="format_sql">false</property>
 		<property name="Connection.useUnicode">true </property>
 		<property name="connection.characterEncoding">utf-8 </property>
 		<property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect </property>

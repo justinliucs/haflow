@@ -21,18 +21,20 @@ import org.apache.hadoop.util.Progressable;
 public class HdfsStaticHelper {
 
 	public static void main(String[] args) {
-		try {
-			uploadTohdfs();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		};
+//		try {
+//			uploadTohdfs();
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		};
+		
+		PutFile("D:/haflow/flows/NewFlow", "hdfs://m150:9000/ztest/test1");
 	}
 
 	public static void uploadTohdfs() throws FileNotFoundException, IOException {
-		String localSrc = "D://a.txt";
-		String dst = "hdfs://m150:9000/ztest/test/a.txt";
+		String localSrc = "D:/haflow/flows/NewFlow/workflow.xml";
+		String dst = "hdfs://m150:9000/ztest/test/newflow";
 		InputStream in = new BufferedInputStream(new FileInputStream(localSrc));
 		Configuration conf = new Configuration();
 		FileSystem fs = FileSystem.get(URI.create(dst), conf);
@@ -41,11 +43,26 @@ public class HdfsStaticHelper {
 				System.out.println(".");
 			}
 		});
-		System.out.println("上传文件成功");
+		System.out.println("finised uploading!");
 		IOUtils.copyBytes(in, out, 4096, true);
 	}
 
-	/** 从HDFS上读取文件 */
+	public static void PutFile( String srcFile, String dstFile) {
+		
+		FileSystem hdfs;
+		
+		Configuration conf = new Configuration();
+		try {
+			hdfs = FileSystem.get(conf);
+			Path srcPath = new Path(srcFile);
+			Path dstPath = new Path(dstFile);
+			hdfs.copyFromLocalFile(srcPath, dstPath);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+	
 	public static void readHdfs() throws FileNotFoundException, IOException {
 		String dst = "hdfs://192.168.1.11:9000/usr/yujing/test.txt";
 		Configuration conf = new Configuration();
@@ -60,15 +77,18 @@ public class HdfsStaticHelper {
 			out.write(ioBuffer, 0, readLen);
 			readLen = hdfsInStream.read(ioBuffer);
 		}
-		System.out.println("读文件成功");
+		System.out.println("finished reading!");
 		out.close();
 		hdfsInStream.close();
 		fs.close();
 	}
 
 	/**
-	 * 以append方式将内容添加到HDFS上文件的末尾;注意：文件更新，需要在hdfs-site.xml中添<property><name>dfs.
-	 * append.support</name><value>true</value></property>
+	 * 以append方式将内容添加到HDFS上文件的末尾;注意：文件更新，需要在hdfs-site.xml中添
+	 * <property>
+	 * <name>dfs.append.support</name>
+	 * <value>true</value>
+	 * </property>
 	 */
 	public static void appendToHdfs() throws FileNotFoundException, IOException {
 		String dst = "hdfs://192.168.1.11:9000/usr/yujing/test.txt";
@@ -85,7 +105,6 @@ public class HdfsStaticHelper {
 		fs.close();
 	}
 
-	/** 从HDFS上删除文件 */
 	public static void deleteFromHdfs() throws FileNotFoundException,
 			IOException {
 		String dst = "hdfs://192.168.1.11:9000/usr/yujing";

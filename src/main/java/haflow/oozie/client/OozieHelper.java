@@ -6,7 +6,7 @@ import org.apache.oozie.client.OozieClient;
 import org.apache.oozie.client.OozieClientException;
 import org.apache.oozie.client.WorkflowJob;
 
-public class JavaClient {
+public class OozieHelper {
 	public static void main(String[] args) throws OozieClientException,
 			InterruptedException {
 
@@ -41,5 +41,20 @@ public class JavaClient {
 		System.out.println("Workflow job completed ...");
 		System.out.println(wc.getJobInfo(jobId));
 
+	}
+	
+	// get a OozieClient for local Oozie
+	OozieClient wc = new OozieClient("http://m150:11000/oozie/");
+
+	// create a workflow job configuration
+	Properties conf = wc.createConfiguration();
+	
+	public OozieHelper(){
+		
+	}
+	
+	public String runJob(String flowName){
+		
+		return null;
 	}
 }
