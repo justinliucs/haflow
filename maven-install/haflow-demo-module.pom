@@ -3,10 +3,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>1.0</modelVersion>  
   <groupId>com.otcaix.haflow</groupId>  
-  <artifactId>java7-module</artifactId>
+  <artifactId>haflow-demo-module</artifactId>
   <packaging>jar</packaging>
-  <name>java7</name>  
-  <description>java7 module</description>  
-  <url>http://www.baidu.com</url>
+  <name>demo</name>  
+  <description>haflow-demo-module</description>  
   <version>1.0</version>
 </project> 

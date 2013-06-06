@@ -14,6 +14,7 @@ import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IOUtils;
+import org.springframework.stereotype.Component;
 
 /**
  * Read top 10 lines, from files on hadoop
@@ -21,6 +22,7 @@ import org.apache.hadoop.io.IOUtils;
  * @author ZhaoWei
  * 
  */
+@Component
 public class HdfsHelper {
 	public static final String filePath = "hdfs://m150:9000/ztest/split/part-r-00000";
 	public static final String newFile = "hdfs://m150:9000/ztest/test/part-r-00000";
@@ -29,14 +31,13 @@ public class HdfsHelper {
 	private FileSystem hdfs;
 	
 	public static void main(String[] args) throws IOException {
-		Configuration conf = new Configuration();
-
-		HdfsHelper reader = new HdfsHelper(conf);
+		HdfsHelper reader = new HdfsHelper();
 		reader.ReadFile(filePath);
 	}
-	
-	public HdfsHelper(Configuration conf){
+
+	public HdfsHelper(){
 		try {
+			Configuration conf = new Configuration();
 			hdfs = FileSystem.get(conf);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -94,7 +95,7 @@ public class HdfsHelper {
 		try {
 			Path srcPath = new Path(srcFile);
 			Path dstPath = new Path(dstFile);
-			hdfs.copyFromLocalFile(srcPath, dstPath);
+			hdfs.copyFromLocalFile(false, true, srcPath, dstPath);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
