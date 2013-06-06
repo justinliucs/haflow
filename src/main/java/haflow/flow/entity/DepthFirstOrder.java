@@ -15,7 +15,7 @@ public class DepthFirstOrder {
 		reversePost = new ArrayList<Integer>();
 		marked = new boolean[G.getV()];
 		
-		dfs(G, G.getStartNode());
+		dfs(G, G.getStartNode());// subgraph of start node
 		
 		reversePost.addAll(post);
 		java.util.Collections.reverse(reversePost);

@@ -4,9 +4,11 @@ import haflow.entity.Flow;
 import haflow.entity.Node;
 import haflow.flow.entity.Digraph;
 import haflow.flow.entity.Topological;
+import haflow.hdfs.client.HdfsHelper;
 import haflow.module.ModuleMetadata;
 import haflow.module.basic.EndModule;
 import haflow.module.basic.StartModule;
+import haflow.oozie.client.OozieHelper;
 import haflow.profile.NodeConfigurationProfile;
 import haflow.ui.model.RunFlowResultModel;
 import haflow.utility.ModuleLoader;
@@ -76,137 +78,233 @@ public class FlowExecuteService {
 	}
 
 	private FlowDeployService flowDeployService;
-	
+
 	public FlowDeployService getFlowDeployService() {
 		return flowDeployService;
 	}
-	
+
 	@Autowired
 	public void setFlowDeployService(FlowDeployService flowDeployService) {
 		this.flowDeployService = flowDeployService;
 	}
 
+	private HdfsHelper hdfsHelper;
+
+	public HdfsHelper getHdfsHelper() {
+		return hdfsHelper;
+	}
+
+	@Autowired
+	public void setHdfsHelper(HdfsHelper hdfsHelper) {
+		this.hdfsHelper = hdfsHelper;
+	}
+
+	private OozieHelper oozieHelper;
+
+	public OozieHelper getOozieHelper() {
+		return oozieHelper;
+	}
+
+	@Autowired
+	public void setOozieHelper(OozieHelper oozieHelper) {
+		this.oozieHelper = oozieHelper;
+	}
+
+	private final String workspace_local = "D:/haflow/flows/";
+	private final String workspace_hdfs = "hdfs://m150:9000/user/root/examples/apps/";
+
 	public RunFlowResultModel runFlow(UUID flowId) {
 		RunFlowResultModel model = new RunFlowResultModel();
 		model.setFlowId(flowId);
-		
+		model.setCommited(false);
 		StringBuilder messageBuilder = new StringBuilder();
-		messageBuilder.append("Running flow ...");
-		
+
 		Session session = this.getSessionHelper().openSession();
 		Transaction transaction = session.beginTransaction();
 		Flow flow = (Flow) session.get(Flow.class, flowId);
 
 		if (flow == null) {
-			messageBuilder.append("Flow" + flowId + " not found!");
-			model.setCommited(false);
+			messageBuilder.append("Flow " + flowId + " not found!");
+			model.setMessage(messageBuilder.toString());
 			return model;
 		}
 
 		try {
 			Map<String, Class<?>> moduleClasses = this.getModuleLoader()
 					.searchForModuleClasses();
+			
+//			Map<String, Class<?>> moduleClasses = new HashMap<String, Class<?>>();
+//			moduleClasses.put("9208d7d2-a8ff-2493-64c2-36f50bc95752", StartModule.class);
+//			moduleClasses.put("b0d027c3-a4bd-61b5-5063-134ff71f8123", KillModule.class);
+//			moduleClasses.put("70d027c3-a4bd-61b5-5063-134ff71f8122", EndModule.class);
+//			moduleClasses.put("5da600a8-aa63-968a-ca46-9085e0e0bd2e", JavaModule.class);
+			
 			Set<Node> nodes = flow.getNodes();
-			List<Node> startNodes = new ArrayList<Node>();
-			for (Node node : nodes) {
-				Class<?> module = moduleClasses.get(node.getModuleId()
-						.toString());
-				if (module != null && module.equals(StartModule.class)) {
-					startNodes.add(node);
-				}
-			}
+
+			messageBuilder.append("Start parsing flow ..." + "\n");
+			List<Node> startNodes = findStartNodes(nodes, moduleClasses);
 			if (startNodes.size() != 1) {
-				messageBuilder.append("Error: Wrong start node number " + startNodes.size());
+				messageBuilder.append("Error: Wrong start node number "
+						+ startNodes.size());
 			} else {
-				// topological sorting
-				// subgraph of start node
 				Digraph graph = new Digraph(flow.getEdges(), flow.getNodes(),
 						startNodes.get(0));
-				Topological topo = new Topological(graph);
-				List<Integer> sorted = topo.getOrder();
-				StringBuilder workflowXml = new StringBuilder();
-				workflowXml.append("<workflow-app xmlns=\"uri:oozie:workflow:0.2\" name=\""
-						+ flow.getName() + "\">" + "\n");
-				if (sorted != null) {			
-					for (int i = 0; i < sorted.size(); i++) {//move end node to the end
-						int w = sorted.get(i);
-						Node node = graph.getNode(w);
-						Class<?> moduleClass = moduleClasses.get(node.getModuleId()
-								.toString());
-						if(moduleClass.equals(EndModule.class)){//what if we have more than one end?
-							for(int j = i+1; j < sorted.size(); j++){
-								sorted.set(j-1, sorted.get(j));
-							}
-							sorted.set(sorted.size()-1, w);
-							break;
-						}
-					}
-					for (int i = 0; i < sorted.size(); i++) {//generate xml
-						if( i == sorted.size()-1 ){
-							workflowXml.append("<kill name=\"fail\">" +
-							"<message>Work flow failed, " +
-							"error message[${wf:errorMessage(wf:lastErrorNode())}]</message>" +
-							"</kill>" + "\n");		
-						}
-						int w = sorted.get(i);
-						Node node = graph.getNode(w);
-						Class<?> moduleClass = moduleClasses.get(node
-								.getModuleId().toString());
-						ModuleMetadata module = (ModuleMetadata) moduleClass
-								.newInstance();
-						Map<String, String> configurations = new HashMap<String, String>();
-						configurations.put("name", node.getId().toString());
-						List<NodeConfigurationProfile> ncps = this
-								.getNodeConfigurationProfileService()
-								.getNodeConfigurationProfile(node.getId());
-						for (NodeConfigurationProfile ncp : ncps) {
-							String key = ncp.getKey();
-							String value = ncp.getValue();
-							configurations.put(key, value);
+				List<Integer> sorted = new Topological(graph).getOrder();
+
+				if (sorted == null) {
+					messageBuilder.append("Error: Flow is has Circles!");
+				} else {
+					String flowName = flow.getName();
+					String workflowXml = genWorkflowXml(flowName, sorted,
+							moduleClasses, graph);
+
+					messageBuilder.append("Parsing flow ... Finised" + "\n");
+					messageBuilder.append("Start deploying flow ..." + "\n");
+
+					String localDeployPath = workspace_local + flowName;
+					boolean deloyedLocally = this.flowDeployService
+							.deployFlowLocal(localDeployPath, workflowXml,
+									getJarPaths(nodes, moduleClasses));
+					if (deloyedLocally) {
+						messageBuilder.append(flowName
+								+ " has been deployed locally!");
+						
+						String hdfsDeployPath = workspace_hdfs + flowName;
+//						System.out.println("hdfs deploy path " + hdfsDeployPath );
+						boolean deleted = this.hdfsHelper.deleteFolder(hdfsDeployPath);
+						if( deleted){
+							messageBuilder.append("Old folder deleted: " + hdfsDeployPath);
 						}
 						
-						List<Integer> adj = graph.getAdj(w);						
-						for( int v : adj){
-							if(sorted.contains(v)){
-								configurations.put("ok", graph.getNode(v).getId().toString());
-								break;//TODO
+						boolean deployedToHdfs = this.hdfsHelper.putFile(
+								localDeployPath, hdfsDeployPath);
+						if (deployedToHdfs) {
+							messageBuilder.append(flowName
+									+ " has been uploaded to hdfs!");
+							
+							String jobId = this.oozieHelper.runJob(flowName);
+							if (jobId == null) {
+								messageBuilder.append("Failed to commit job: "
+										+ flowName);
+							} else {
+								messageBuilder
+										.append("Job commited! Job id : " + jobId);
+								model.setCommited(true);
+								model.setJobId(jobId);
 							}
+						} else {
+							messageBuilder.append(flowName
+									+ " failed to be uploaded to hdfs!");
 						}
-						Document doc = module.generate(configurations);
-						String part = this.xmlHelper.getXmlString(doc);
-						workflowXml.append(part + "\n");
+					} else {
+						messageBuilder.append(flowName
+								+ " failed to be deployed locally!");
 					}
-				}else{
-					messageBuilder.append("Error: Flow is has Circles!");
-				}	
-				workflowXml.append("</workflow-app>" + "\n");
-				System.out.println(workflowXml.toString());
-//				messageBuilder.append("Generated xml : \n" + workflowXml.toString());
-				
-				//deploy workflow				
-				Set<String> jarPaths = new HashSet<String>();
-				for (Node node : nodes) {
-					Class<?> module = moduleClasses.get(node.getModuleId()
-							.toString());
-					String path = module.getProtectionDomain().getCodeSource().getLocation().getFile();
-					jarPaths.add(path);
 				}
-//				this.flowDeployService.deployFlow(flow.getName(), workflowXml.toString(), jarPaths);
-				
 			}
 
 			session.close();
-			model.setMessage(messageBuilder.toString());
-			model.setCommited(true);
-			return model;
 		} catch (Exception e) {
 			e.printStackTrace();
 			transaction.rollback();
 			session.close();
 			model.setMessage(messageBuilder.toString());
-			model.setCommited(false);
 			return model;
 		}
+
+		model.setMessage(messageBuilder.toString());
+		return model;
+	}
+
+	private Set<String> getJarPaths(Set<Node> nodes,
+			Map<String, Class<?>> moduleClasses) {
+		Set<String> jarPaths = new HashSet<String>();
+		for (Node node : nodes) {
+			Class<?> module = moduleClasses.get(node.getModuleId().toString());
+			String path = module.getProtectionDomain().getCodeSource()
+					.getLocation().getFile();
+			jarPaths.add(path);
+		}
+		return jarPaths;
+	}
+
+	private List<Node> findStartNodes(Set<Node> nodes,
+			Map<String, Class<?>> moduleClasses) {
+		List<Node> startNodes = new ArrayList<Node>();
+		for (Node node : nodes) {
+			Class<?> module = moduleClasses.get(node.getModuleId().toString());
+			if (module != null && module.equals(StartModule.class)) {
+				startNodes.add(node);
+			}
+		}
+		return startNodes;
+	}
+
+	private void replaceEndNode(List<Integer> sorted, Map<String, Class<?>> moduleClasses, Digraph graph){
+		for (int i = 0; i < sorted.size(); i++) {// move end node to the end
+			int w = sorted.get(i);
+			Node node = graph.getNode(w);
+			Class<?> moduleClass = moduleClasses.get(node.getModuleId()
+					.toString());
+			if (moduleClass.equals(EndModule.class)) {// what if we have more
+														// than one end?
+				for (int j = i + 1; j < sorted.size(); j++) {
+					sorted.set(j - 1, sorted.get(j));
+				}
+				sorted.set(sorted.size() - 1, w);
+				break;
+			}
+		}
+	}
+	
+	private String genWorkflowXml(String flowName, List<Integer> sorted,
+			Map<String, Class<?>> moduleClasses, Digraph graph)
+			throws InstantiationException, IllegalAccessException {
+		StringBuilder workflowXml = new StringBuilder();
+		workflowXml
+				.append("<workflow-app xmlns=\"uri:oozie:workflow:0.2\" name=\""
+						+ flowName + "\">" + "\n");
+
+		this.replaceEndNode(sorted, moduleClasses, graph);
+		
+		for (int i = 0; i < sorted.size(); i++) {// generate xml
+			if (i == sorted.size() - 1) {//inject kill node
+				workflowXml
+						.append("<kill name=\"fail\">"
+								+ "<message>Work flow failed, "
+								+ "error message[${wf:errorMessage(wf:lastErrorNode())}]</message>"
+								+ "</kill>" + "\n");
+			}
+			int w = sorted.get(i);
+			Node node = graph.getNode(w);
+			Class<?> moduleClass = moduleClasses.get(node.getModuleId()
+					.toString());
+			ModuleMetadata module = (ModuleMetadata) moduleClass.newInstance();
+			Map<String, String> configurations = new HashMap<String, String>();
+			configurations.put("name", node.getId().toString());
+			List<NodeConfigurationProfile> ncps = this
+					.getNodeConfigurationProfileService()
+					.getNodeConfigurationProfile(node.getId());
+			for (NodeConfigurationProfile ncp : ncps) {
+				String key = ncp.getKey();
+				String value = ncp.getValue();
+				configurations.put(key, value);
+			}
+
+			List<Integer> adj = graph.getAdj(w);
+			for (int v : adj) {
+				if (sorted.contains(v)) {
+					configurations.put("ok", graph.getNode(v).getId()
+							.toString());
+					break;// TODO
+				}
+			}
+			Document doc = module.generate(configurations);
+			String part = this.xmlHelper.getXmlString(doc);
+			workflowXml.append(part + "\n");
+		}
+		workflowXml.append("</workflow-app>" + "\n");
+		return workflowXml.toString();
 	}
 
 	public static void main(String[] args) {
