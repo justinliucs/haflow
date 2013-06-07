@@ -1,5 +1,6 @@
 package haflow.service;
 
+import haflow.configuration.helper.ConfigurationHelper;
 import haflow.entity.Flow;
 import haflow.entity.Node;
 import haflow.flow.entity.Digraph;
@@ -88,6 +89,17 @@ public class FlowExecuteService {
 		this.flowDeployService = flowDeployService;
 	}
 
+	private ConfigurationHelper clusterConfHelper;
+
+	public ConfigurationHelper getClusterConfHelper() {
+		return clusterConfHelper;
+	}
+
+	@Autowired
+	public void setClusterConfHelper(ConfigurationHelper clusterConfHelper) {
+		this.clusterConfHelper = clusterConfHelper;
+	}
+	
 	private HdfsHelper hdfsHelper;
 
 	public HdfsHelper getHdfsHelper() {
@@ -110,8 +122,9 @@ public class FlowExecuteService {
 		this.oozieHelper = oozieHelper;
 	}
 
-	private final String workspace_local = "D:/haflow/flows/";
-	private final String workspace_hdfs = "hdfs://m150:9000/user/root/examples/apps/";
+	// private final String workspace_local = "D:/haflow/flows/";
+	// private final String workspace_hdfs =
+	// "hdfs://m150:9000/user/root/examples/apps/";
 
 	public RunFlowResultModel runFlow(UUID flowId) {
 		RunFlowResultModel model = new RunFlowResultModel();
@@ -132,13 +145,7 @@ public class FlowExecuteService {
 		try {
 			Map<String, Class<?>> moduleClasses = this.getModuleLoader()
 					.searchForModuleClasses();
-			
-//			Map<String, Class<?>> moduleClasses = new HashMap<String, Class<?>>();
-//			moduleClasses.put("9208d7d2-a8ff-2493-64c2-36f50bc95752", StartModule.class);
-//			moduleClasses.put("b0d027c3-a4bd-61b5-5063-134ff71f8123", KillModule.class);
-//			moduleClasses.put("70d027c3-a4bd-61b5-5063-134ff71f8122", EndModule.class);
-//			moduleClasses.put("5da600a8-aa63-968a-ca46-9085e0e0bd2e", JavaModule.class);
-			
+
 			Set<Node> nodes = flow.getNodes();
 
 			messageBuilder.append("Start parsing flow ..." + "\n");
@@ -161,48 +168,54 @@ public class FlowExecuteService {
 					messageBuilder.append("Parsing flow ... Finised" + "\n");
 					messageBuilder.append("Start deploying flow ..." + "\n");
 
-					String localDeployPath = workspace_local + flowName;
+					String localDeployPath = this.clusterConfHelper
+							.getProperty(ConfigurationHelper.WORKSPACE_LOCAL)
+							+ flowName;
 					boolean deloyedLocally = this.flowDeployService
 							.deployFlowLocal(localDeployPath, workflowXml,
 									getJarPaths(nodes, moduleClasses));
 					if (deloyedLocally) {
 						messageBuilder.append(flowName
-								+ " has been deployed locally!");
-						
-						String hdfsDeployPath = workspace_hdfs + flowName;
-//						System.out.println("hdfs deploy path " + hdfsDeployPath );
-						boolean deleted = this.hdfsHelper.deleteFolder(hdfsDeployPath);
-						if( deleted){
-							messageBuilder.append("Old folder deleted: " + hdfsDeployPath);
+								+ " has been deployed locally!" + "\n");
+
+						String hdfsDeployPath = this.clusterConfHelper
+								.getProperty(ConfigurationHelper.WORKSPACE_HDFS)
+								+ flowName;
+						boolean deleted = this.hdfsHelper
+								.deleteFolder(hdfsDeployPath);
+						if (deleted) {
+							messageBuilder.append("Old folder deleted: "
+									+ hdfsDeployPath + "\n");
 						}
-						
+
 						boolean deployedToHdfs = this.hdfsHelper.putFile(
 								localDeployPath, hdfsDeployPath);
 						if (deployedToHdfs) {
 							messageBuilder.append(flowName
-									+ " has been uploaded to hdfs!");
-							
+									+ " has been uploaded to hdfs!" + "\n");
+
 							String jobId = this.oozieHelper.runJob(flowName);
 							if (jobId == null) {
 								messageBuilder.append("Failed to commit job: "
-										+ flowName);
+										+ flowName + "\n");
 							} else {
-								messageBuilder
-										.append("Job commited! Job id : " + jobId);
+								messageBuilder.append("Job commited! Job id : "
+										+ jobId + "\n");
 								model.setCommited(true);
 								model.setJobId(jobId);
 							}
 						} else {
 							messageBuilder.append(flowName
-									+ " failed to be uploaded to hdfs!");
+									+ " failed to be uploaded to hdfs!" + "\n");
 						}
 					} else {
 						messageBuilder.append(flowName
-								+ " failed to be deployed locally!");
+								+ " failed to be deployed locally!" + "\n");
 					}
 				}
 			}
 
+			System.out.println(messageBuilder.toString());
 			session.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -240,7 +253,8 @@ public class FlowExecuteService {
 		return startNodes;
 	}
 
-	private void replaceEndNode(List<Integer> sorted, Map<String, Class<?>> moduleClasses, Digraph graph){
+	private void replaceEndNode(List<Integer> sorted,
+			Map<String, Class<?>> moduleClasses, Digraph graph) {
 		for (int i = 0; i < sorted.size(); i++) {// move end node to the end
 			int w = sorted.get(i);
 			Node node = graph.getNode(w);
@@ -256,7 +270,7 @@ public class FlowExecuteService {
 			}
 		}
 	}
-	
+
 	private String genWorkflowXml(String flowName, List<Integer> sorted,
 			Map<String, Class<?>> moduleClasses, Digraph graph)
 			throws InstantiationException, IllegalAccessException {
@@ -266,9 +280,9 @@ public class FlowExecuteService {
 						+ flowName + "\">" + "\n");
 
 		this.replaceEndNode(sorted, moduleClasses, graph);
-		
+
 		for (int i = 0; i < sorted.size(); i++) {// generate xml
-			if (i == sorted.size() - 1) {//inject kill node
+			if (i == sorted.size() - 1) {// inject kill node
 				workflowXml
 						.append("<kill name=\"fail\">"
 								+ "<message>Work flow failed, "
@@ -281,7 +295,7 @@ public class FlowExecuteService {
 					.toString());
 			ModuleMetadata module = (ModuleMetadata) moduleClass.newInstance();
 			Map<String, String> configurations = new HashMap<String, String>();
-			configurations.put("name", node.getId().toString());
+			configurations.put("name", node.getName());
 			List<NodeConfigurationProfile> ncps = this
 					.getNodeConfigurationProfileService()
 					.getNodeConfigurationProfile(node.getId());
@@ -294,8 +308,7 @@ public class FlowExecuteService {
 			List<Integer> adj = graph.getAdj(w);
 			for (int v : adj) {
 				if (sorted.contains(v)) {
-					configurations.put("ok", graph.getNode(v).getId()
-							.toString());
+					configurations.put("ok", graph.getNode(v).getName());
 					break;// TODO
 				}
 			}
@@ -307,9 +320,4 @@ public class FlowExecuteService {
 		return workflowXml.toString();
 	}
 
-	public static void main(String[] args) {
-		FlowExecuteService flowExecuteService = new FlowExecuteService();
-		flowExecuteService.runFlow(UUID
-				.fromString("67f1811e-c2b3-4a32-b70a-32f486a0a947"));
-	}
 }
