@@ -16,7 +16,6 @@ import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -24,24 +23,18 @@ public class HdfsHelper {
 
 	private FileSystem hdfs;
 	private ConfigurationHelper clusterConfHelper;
-
-	private boolean init;
 	
 	public ConfigurationHelper getClusterConfHelper() {
 		return clusterConfHelper;
 	}
 
-	@Required
-	@Autowired
 	public void setClusterConfHelper(ConfigurationHelper clusterConfHelper) {
 		this.clusterConfHelper = clusterConfHelper;
 	}
 
-	public HdfsHelper() {
-		init = false;		
-	}
-
-	private void initHdfs(){
+	@Autowired
+	public HdfsHelper(ConfigurationHelper clusterConfHelper) {
+		this.clusterConfHelper = clusterConfHelper;
 		try {
 			Configuration conf = new Configuration();
 			conf.set(ConfigurationHelper.FS_DEFAULT_NAME,
@@ -49,15 +42,12 @@ public class HdfsHelper {
 							.getProperty(ConfigurationHelper.FS_DEFAULT_NAME));
 //			conf.set("fs.default.name", "hdfs://m150:9000");
 			hdfs = FileSystem.get(conf);
-			init = true;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
 	public boolean putFile(String srcFile, String dstFile) {
-		System.out.println(this.clusterConfHelper);
-		if( init == false ) this.initHdfs();
 		try {
 			Path srcPath = new Path(srcFile);
 			Path dstPath = new Path(dstFile);
@@ -70,7 +60,6 @@ public class HdfsHelper {
 	}
 
 	public boolean deleteFolder(String dir) {
-		if( init == false ) this.initHdfs();
 		Path folderPath = new Path(dir);
 		try {
 			hdfs.delete(folderPath, true);
@@ -82,7 +71,6 @@ public class HdfsHelper {
 	}
 
 	public void readFile(String filePath) {
-		if( init == false ) this.initHdfs();
 		try {
 			FSDataInputStream stream = hdfs.open(new Path(filePath));
 			BufferedReader br = new BufferedReader(new InputStreamReader(
@@ -98,7 +86,6 @@ public class HdfsHelper {
 	}
 
 	public FSDataOutputStream createFile(String FileName) {
-		if( init == false ) this.initHdfs();
 		try {
 			Path path = new Path(FileName);
 			FSDataOutputStream outputStream = hdfs.create(path);
@@ -110,7 +97,6 @@ public class HdfsHelper {
 	}
 
 	public List<String[]> getFileBolckHost(String FileName) {
-		if( init == false ) this.initHdfs();
 		try {
 			List<String[]> list = new ArrayList<String[]>();
 			Path path = new Path(FileName);
@@ -141,10 +127,10 @@ public class HdfsHelper {
 	}
 
 	public static void main(String[] args) throws IOException {
-		final String filePath = "hdfs://m150:9000/ztest/split/part-r-00000";
+//		final String filePath = "hdfs://m150:9000/ztest/split/part-r-00000";
 		// final String newFile = "hdfs://m150:9000/ztest/test/part-r-00000";
-
-		HdfsHelper reader = new HdfsHelper();
-		reader.readFile(filePath);
+//
+//		HdfsHelper reader = new HdfsHelper();
+//		reader.readFile(filePath);
 	}
 }
