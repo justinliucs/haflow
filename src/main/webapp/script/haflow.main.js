@@ -344,20 +344,23 @@ HAFlow.Main.prototype.onFlowClicked = function(instance, flowId) {
 HAFlow.Main.prototype.saveFlowName = function(instance, flowId) {
 	if (instance.flows[flowId]) {
 		var value = $("#" + "flow_" + flowId + "_name").val();
-		instance.flows[flowId].name = value;
-		instance.getFlowBriefById(instance, flowId).name = value;
-		var pane = dijit.byId("flowContainerPane_" + flowId);
-		pane.title = value;
-		instance.ui.centerContainer.removeChild(pane);
-		instance.ui.centerContainer.addChild(pane);
-		instance.ui.centerContainer.selectChild(pane);
-		instance.flowListStore.remove(flowId);
-		instance.flowListStore.put({
-			id : instance.flows[flowId].id,
-			name : instance.flows[flowId].name,
-			node : true
-		});
-
+		if (this.checkFlowName(instance, instance.flows[flowId].name, value)) {
+			instance.flows[flowId].name = value;
+			instance.getFlowBriefById(instance, flowId).name = value;
+			var pane = dijit.byId("flowContainerPane_" + flowId);
+			pane.title = value;
+			instance.ui.centerContainer.removeChild(pane);
+			instance.ui.centerContainer.addChild(pane);
+			instance.ui.centerContainer.selectChild(pane);
+			instance.flowListStore.remove(flowId);
+			instance.flowListStore.put({
+				id : instance.flows[flowId].id,
+				name : instance.flows[flowId].name,
+				node : true
+			});
+		} else {
+			HAFlow.showDialog("Error", "Invalid flow name");
+		}
 	} else {
 		HAFlow.showDialog("Error",
 				"Please load the flow before saving flow metadata!");
@@ -401,7 +404,7 @@ HAFlow.Main.prototype.doAddModule = function(instance, flowId, moduleId, left,
 	newNode["id"] = id;
 	newNode["flowId"] = flowId;
 	newNode["moduleId"] = moduleId;
-	newNode["name"] = "NewNode-" + id;
+	newNode["name"] = "Node-" + id;
 	newNode["position"] = {};
 	newNode.position["left"] = left;
 	newNode.position["top"] = top;
@@ -421,6 +424,23 @@ HAFlow.Main.prototype.checkNodeName = function(instance, flowId, oldName,
 	}
 	for (i = 0; i < instance.flows[flowId].nodes.length; i++) {
 		if (newName == instance.flows[flowId].nodes[i].name) {
+			return false;
+		}
+	}
+	return true;
+};
+
+HAFlow.Main.prototype.checkFlowName = function(instance, oldName, newName) {
+	var i;
+	if (oldName == newName) {
+		return true;
+	}
+	var regex = /^[a-zA-Z_][a-zA-Z_0-9]{0,38}$/;
+	if (!regex.test(newName)) {
+		return false;
+	}
+	for (i = 0; i < instance.flows.length; i++) {
+		if (newName == instance.flows[i].name) {
 			return false;
 		}
 	}
@@ -846,7 +866,7 @@ HAFlow.Main.prototype.newFlow = function() {
 	var newFlowId = HAFlow.generateUUID();
 	this.flows[newFlowId] = {};
 	this.flows[newFlowId].id = newFlowId;
-	this.flows[newFlowId].name = "New Flow";
+	this.flows[newFlowId].name = "NewFlow";
 	this.flows[newFlowId].nodes = new Array();
 	this.flows[newFlowId].edges = new Array();
 	var _currentInstance = this;
