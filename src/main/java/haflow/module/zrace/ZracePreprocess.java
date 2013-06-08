@@ -25,7 +25,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-@Module(id = "9208d7d2-a8ff-2493-64c2-36f50bc95754", name = "Preprocess", category = "zrace")
+@Module(id = "a208d7d2-a8ff-2493-64c2-36f50bc95754", name = "Preprocess", category = "zrace")
 @ModuleConfiguration(configurationKeys = { "input_path", "output_path" }, configurationDisplayNames = { "input path", "output path" })
 public class ZracePreprocess  implements ModuleMetadata{
 	public static void main(String[] args) {

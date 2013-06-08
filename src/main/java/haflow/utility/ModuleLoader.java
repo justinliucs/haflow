@@ -31,7 +31,7 @@ public class ModuleLoader {
 			Map<Module, ModuleMetadata> modules = new HashMap<Module, ModuleMetadata>();
 			List<String> classNames = this.getClassHelper().getClassNames(
 					"haflow", true);
-//			classNames.addAll(this.getClassHelper().getClassNames("hmodule", true));
+			classNames.addAll(this.getClassHelper().getClassNames("hmodule", true));
 			for (String className : classNames) {
 				Class<?> moduleClass = Class.forName(className);
 				if (moduleClass.isAnnotationPresent(haflow.module.Module.class)) {
@@ -79,7 +79,7 @@ public class ModuleLoader {
 			Map<String, Class<?>> moduleClasses = new HashMap<String, Class<?>>();
 			List<String> classNames = this.getClassHelper().getClassNames(
 					"haflow", true);
-//			classNames.addAll(this.getClassHelper().getClassNames("hmodule", true));
+			classNames.addAll(this.getClassHelper().getClassNames("hmodule", true));
 			for (String className : classNames) {
 				Class<?> moduleClass = Class.forName(className);
 				if (moduleClass.isAnnotationPresent(haflow.module.Module.class)) {

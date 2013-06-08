@@ -1,5 +1,7 @@
 package haflow.hdfs.client;
 
+import haflow.configuration.helper.ConfigurationHelper;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -13,23 +15,38 @@ import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class HdfsHelper {
 
 	private FileSystem hdfs;
+	private ConfigurationHelper clusterConfHelper;
+	
+	public ConfigurationHelper getClusterConfHelper() {
+		return clusterConfHelper;
+	}
 
-	public HdfsHelper() {
+	public void setClusterConfHelper(ConfigurationHelper clusterConfHelper) {
+		this.clusterConfHelper = clusterConfHelper;
+	}
+
+	@Autowired
+	public HdfsHelper(ConfigurationHelper clusterConfHelper) {
+		this.clusterConfHelper = clusterConfHelper;
 		try {
 			Configuration conf = new Configuration();
-			conf.set("fs.default.name", "hdfs://m150:9000");
+			conf.set(ConfigurationHelper.FS_DEFAULT_NAME,
+					this.clusterConfHelper
+							.getProperty(ConfigurationHelper.FS_DEFAULT_NAME));
+//			conf.set("fs.default.name", "hdfs://m150:9000");
 			hdfs = FileSystem.get(conf);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-
+	
 	public boolean putFile(String srcFile, String dstFile) {
 		try {
 			Path srcPath = new Path(srcFile);
@@ -110,10 +127,10 @@ public class HdfsHelper {
 	}
 
 	public static void main(String[] args) throws IOException {
-		final String filePath = "hdfs://m150:9000/ztest/split/part-r-00000";
+//		final String filePath = "hdfs://m150:9000/ztest/split/part-r-00000";
 		// final String newFile = "hdfs://m150:9000/ztest/test/part-r-00000";
-
-		HdfsHelper reader = new HdfsHelper();
-		reader.readFile(filePath);
+//
+//		HdfsHelper reader = new HdfsHelper();
+//		reader.readFile(filePath);
 	}
 }

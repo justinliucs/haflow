@@ -16,7 +16,7 @@ import haflow.module.Module;
 import haflow.module.ModuleConfiguration;
 import haflow.module.ModuleMetadata;
 
-@Module(id = "70d027c3-a4bd-61b5-5063-134ff71f8122", name = "End", category = "Basic")
+@Module(id = "a0d027c3-a4bd-61b5-5063-134ff71f8122", name = "End", category = "Basic")
 @ModuleConfiguration(configurationKeys = { "ccc" }, configurationDisplayNames = { "ddd" })
 public class EndModule implements ModuleMetadata {
 
