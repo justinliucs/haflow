@@ -119,7 +119,9 @@ public class FlowHelper {
 			edgeModel.setFlowId(edge.getFlow().getId());
 			edgeModel.setId(edge.getId());
 			edgeModel.setSourceNodeId(edge.getSourceNode().getId());
+			edgeModel.setSourceEndpoint(edge.getSourceEndpoint());
 			edgeModel.setTargetNodeId(edge.getTargetNode().getId());
+			edgeModel.setTargetEndpoint(edge.getTargetEndpoint());
 			flowModel.getEdges().add(edgeModel);
 		}
 		return flowModel;
@@ -173,8 +175,10 @@ public class FlowHelper {
 			edge.setId(edgeModel.getId());
 			edge.setSourceNode(new Node());
 			edge.getSourceNode().setId(edgeModel.getSourceNodeId());
+			edge.setSourceEndpoint(edgeModel.getSourceEndpoint());
 			edge.setTargetNode(new Node());
 			edge.getTargetNode().setId(edgeModel.getTargetNodeId());
+			edge.setTargetEndpoint(edgeModel.getTargetEndpoint());
 			edges.add(edge);
 		}
 		boolean result = true;
