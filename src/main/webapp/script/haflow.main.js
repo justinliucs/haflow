@@ -526,14 +526,9 @@ HAFlow.Main.prototype.initNodes = function(flowId) {
 
 		var connectorPaintStyle = {
 			lineWidth : 4,
-			strokeStyle : "#deea18",
-			joinstyle : "round",
-			outlineColor : "#EAEDEF",
-			outlineWidth : 2
 		};
 		var connectorHoverStyle = {
 			lineWidth : 4,
-			strokeStyle : "#2e2aF8"
 		};
 		var endpointHoverStyle = {
 			fillStyle : "#2e2aF8"

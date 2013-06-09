@@ -94,11 +94,6 @@
 			<version>3.3.2</version>
 		</dependency>
 		<dependency>
-			<groupId>com.otcaix.haflow</groupId>  
-  			<artifactId>haflow-demo-module</artifactId>
-  			<version>1.0</version>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.hadoop</groupId>
 			<artifactId>hadoop-examples</artifactId>
 			<version>1.1.2</version>

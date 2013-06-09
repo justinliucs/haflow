@@ -14,17 +14,24 @@ import org.xml.sax.SAXException;
 
 import haflow.module.Module;
 import haflow.module.ModuleConfiguration;
+import haflow.module.ModuleEndpoint;
 import haflow.module.ModuleMetadata;
 
-@Module(id = "b0d027c3-a4bd-61b5-5063-134ff71f8123", name = "Kill", category = "Basic")
-@ModuleConfiguration(configurationKeys = { "mmm" }, configurationDisplayNames = { "message" })
+@Module(id = "b0d027c3-a4bd-61b5-5063-134ff71f8123", name = "Kill", category = "Basic", configurations = {
+		@ModuleConfiguration(key = "eee", displayName = "fff"),
+		@ModuleConfiguration(key = "ggg", displayName = "hhh") }, inputs = {
+		@ModuleEndpoint(name = "iii", minNumber = 1, maxNumber = 1),
+		@ModuleEndpoint(name = "jjj", minNumber = 1, maxNumber = 1) }, outputs = {
+		@ModuleEndpoint(name = "kkk", minNumber = 1, maxNumber = 1),
+		@ModuleEndpoint(name = "lll", minNumber = 1, maxNumber = 1) })
 public class KillModule implements ModuleMetadata {
 
-	
 	public Document generate(Map<String, String> configurations) {
 		String name = configurations.get("name");
-		String xml = "<kill name=\"" + name + "\"><message>Work flow failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message></kill>";	
-		
+		String xml = "<kill name=\""
+				+ name
+				+ "\"><message>Work flow failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message></kill>";
+
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		try {
 			DocumentBuilder db = dbf.newDocumentBuilder();

@@ -3,8 +3,8 @@ package haflow.ui.model;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "configuration")
-public class ConfigurationModel {
+@XmlRootElement(name = "moduleConfiguration")
+public class ModuleConfigurationModel {
 	private String key;
 	private String displayName;
 
