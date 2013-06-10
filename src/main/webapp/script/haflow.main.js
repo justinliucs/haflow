@@ -461,18 +461,17 @@ HAFlow.Main.prototype.initJsPlumb = function(flowId) {
 	this.jsPlumb[flowId] = jsPlumb.getInstance();
 	this.jsPlumb[flowId].reset();
 	this.jsPlumb[flowId].importDefaults({
-		Endpoint : [ "Dot", {
-			radius : 10
-		} ],
-		HoverPaintStyle : {
-			strokeStyle : "#42a62c",
-			lineWidth : 3
+		DragOptions : {
+			cursor : 'pointer',
+			zIndex : 2000
 		},
+		Endpoints : [ [ "Dot", {
+			radius : 8
+		} ], [ "Dot", {
+			radius : 8
+		} ] ],
 		ConnectionOverlays : [ [ "Arrow", {
-			location : 1,
-			id : "arrow",
-			length : 14,
-			foldback : 0.8
+			location : -40
 		} ] ]
 	});
 };
@@ -493,7 +492,7 @@ HAFlow.Main.prototype.paintNodes = function(flowId) {
 				+ this
 						.getModuleById(this,
 								this.flows[flowId].nodes[i].moduleId).name
-				+ ")</div>" + "<div class=\"handle\"></div></div>";
+				+ ")</div>" + "</div>";
 	}
 	$("#" + "flowContainer_" + flowId).html(text);
 };
@@ -519,23 +518,61 @@ HAFlow.Main.prototype.initNodes = function(flowId) {
 	var i;
 	for (i = 0; i < this.flows[flowId].nodes.length; i++) {
 		var nodeId = "node_" + this.flows[flowId].nodes[i].id;
-		this.jsPlumb[flowId].makeSource($("#" + nodeId), {
-			filter : ".handle",
+		var sourceEndpoint = {
+			endpoint : "Dot",
 			anchor : "Continuous",
-			connectorStyle : {
-				strokeStyle : "rgb(0,0,0)",
-				lineWidth : 3
+			paintStyle : {
+				strokeStyle : "#225588",
+				fillStyle : "transparent",
+				radius : 7,
+				lineWidth : 2
 			},
+			isSource : true,
 			connector : [ "StateMachine", {
 				curviness : 20
 			} ]
-		});
-		this.jsPlumb[flowId].makeTarget($("#" + nodeId), {
-			dropOptions : {
-				hoverClass : "dragHover"
-			},
-			anchor : "Continuous"
-		});
+		};
+		var targetEndpoint = {
+			anchor : "Continuous",
+			endpoint : "Dot",
+			isTarget : true,
+			maxConnections : -1,
+		};
+
+		this.jsPlumb[flowId].allSourceEndpoints = [];
+		this.jsPlumb[flowId].allTargetEndpoints = [];
+		var node = this.getNodeById(this, flowId,
+				this.flows[flowId].nodes[i].id);
+		var module = this.getModuleById(this, node.moduleId);
+
+		_addEndpoints = function(instance, flowId, nodeId, module) {
+			for ( var i = 0; i < module.outputs.length; i++) {
+				var sourceId = nodeId + "_" + module.outputs[i].name;
+				instance.jsPlumb[flowId].allSourceEndpoints
+						.push(instance.jsPlumb[flowId].addEndpoint(nodeId,
+								sourceEndpoint, {
+									uuid : sourceId,
+									overlays : [ [ "Label", {
+										location : [ 0.5, -0.5 ],
+										label : module.outputs[i].name
+									} ] ]
+								}));
+			}
+			for ( var j = 0; j < module.inputs.length; j++) {
+				var targetId = nodeId + "_" + module.inputs[j].name;
+				instance.jsPlumb[flowId].allTargetEndpoints
+						.push(instance.jsPlumb[flowId].addEndpoint(nodeId,
+								targetEndpoint, {
+									uuid : targetId,
+									overlays : [ [ "Label", {
+										location : [ 0.5, -0.5 ],
+										label : module.inputs[j].name
+									} ] ]
+								}));
+			}
+		};
+
+		_addEndpoints(this, flowId, nodeId, module);
 	}
 };
 
@@ -549,14 +586,18 @@ HAFlow.Main.prototype.onDropNode = function(instance, flowId, event, ui) {
 			instance.flows[flowId].nodes[i].position.top = newTop;
 		}
 	}
-	this.jsPlumb[flowId].repaintEverything();
+	instance.jsPlumb[flowId].repaintEverything();
 };
 
 HAFlow.Main.prototype.paintEdges = function(flowId) {
 	for ( var i = 0; i < this.flows[flowId].edges.length; i++) {
 		this.jsPlumb[flowId].connect({
-			source : "node_" + this.flows[flowId].edges[i].sourceNodeId,
-			target : "node_" + this.flows[flowId].edges[i].targetNodeId
+			uuids : [
+					"node_" + this.flows[flowId].edges[i].sourceNodeId + "_"
+							+ this.flows[flowId].edges[i].sourceEndpoint,
+					"node_" + this.flows[flowId].edges[i].targetNodeId + "_"
+							+ this.flows[flowId].edges[i].targetEndpoint ],
+			editable : true
 		});
 	}
 };
@@ -569,15 +610,20 @@ HAFlow.Main.prototype.bindJsPlumbEvents = function(flowId) {
 	this.jsPlumb[flowId].bind("connection", function(info) {
 		_currentInstance.onConnectionCreated(_currentInstance, flowId, info);
 	});
+
 };
 
 HAFlow.Main.prototype.onConnectionCreated = function(instance, flowId, info) {
 	var source = info.sourceId.replace("node_", "");
+	var sourceEndpoint = info.sourceEndpoint.overlays[0].getLabel();
 	var target = info.targetId.replace("node_", "");
+	var targetEndpoint = info.targetEndpoint.overlays[0].getLabel();
 	var exist = false;
 	for ( var i = 0; i < instance.flows[flowId].edges.length; i++) {
 		if (instance.flows[flowId].edges[i].sourceNodeId == source
-				&& instance.flows[flowId].edges[i].targetNodeId == target) {
+				&& instance.flows[flowId].edges[i].sourceEndpoint == sourceEndpoint
+				&& instance.flows[flowId].edges[i].targetNodeId == target
+				&& instance.flows[flowId].edges[i].targetEndpoint == targetEndpoint) {
 			exist = true;
 			break;
 		}
@@ -587,7 +633,9 @@ HAFlow.Main.prototype.onConnectionCreated = function(instance, flowId, info) {
 		newConnection["id"] = HAFlow.generateUUID();
 		newConnection["flowId"] = instance.flows[flowId].id;
 		newConnection["sourceNodeId"] = source;
+		newConnection["sourceEndpoint"] = sourceEndpoint;
 		newConnection["targetNodeId"] = target;
+		newConnection["targetEndpoint"] = targetEndpoint;
 		instance.flows[flowId].edges.push(newConnection);
 		info.connection.setPaintStyle({
 			strokeStyle : "rgb(0,0,0)"
@@ -599,13 +647,16 @@ HAFlow.Main.prototype.onConnectionCreated = function(instance, flowId, info) {
 
 HAFlow.Main.prototype.onConnectionClicked = function(instance, flowId, info) {
 	var source = info.sourceId.replace("node_", "");
+	var sourceEndpoint = info.endpoints[0].overlays[0].getLabel();
 	var target = info.targetId.replace("node_", "");
+	var targetEndpoint = info.endpoints[1].overlays[0].getLabel();
 	var sourceNode = instance.getNodeById(instance, flowId, source);
 	var targetNode = instance.getNodeById(instance, flowId, target);
 
 	var text = "";
-	text += "<div><span>From: " + sourceNode.name + ".</span><span>To: "
-			+ targetNode.name + ".</span></div>";
+	text += "<div><span>From: " + sourceNode.name + "." + sourceEndpoint
+			+ "</span><span>To: " + targetNode.name + "." + targetEndpoint
+			+ "</span></div>";
 	text += "<div>Delete?</div>";
 	text += "<div id=\"delete_connection_button\"></div>";
 	$("#" + instance.informationContainerId).html(text);
@@ -748,6 +799,7 @@ HAFlow.Main.prototype.saveNodeName = function(instance, flowId, nodeId) {
 	if (instance.checkNodeName(instance, flowId, node.name, value)) {
 		node.name = value;
 		instance.paintFlow(flowId);
+		instance.jsPlumb[flowId].repaintEverything();
 	} else {
 		HAFlow.showDialog("Error", "Invalid node name");
 	}

@@ -13,4 +13,10 @@ public @interface Module {
 	String name();
 
 	String category();
+
+	ModuleConfiguration[] configurations();
+
+	ModuleEndpoint[] inputs();
+
+	ModuleEndpoint[] outputs();
 }
