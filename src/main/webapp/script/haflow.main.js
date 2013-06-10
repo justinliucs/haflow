@@ -610,15 +610,7 @@ HAFlow.Main.prototype.bindJsPlumbEvents = function(flowId) {
 	this.jsPlumb[flowId].bind("connection", function(info) {
 		_currentInstance.onConnectionCreated(_currentInstance, flowId, info);
 	});
-	this.jsPlumb[flowId].bind("connectionDrag", function(connection) {
-		console.log("connection " + connection.id
-				+ " is being dragged. suspendedElement is ",
-				connection.suspendedElement, " of type ",
-				connection.suspendedElementType);
-	});
-	this.jsPlumb[flowId].bind("connectionDragStop", function(connection) {
-		console.log("connection " + connection.id + " was dragged");
-	});
+
 };
 
 HAFlow.Main.prototype.onConnectionCreated = function(instance, flowId, info) {
@@ -655,13 +647,16 @@ HAFlow.Main.prototype.onConnectionCreated = function(instance, flowId, info) {
 
 HAFlow.Main.prototype.onConnectionClicked = function(instance, flowId, info) {
 	var source = info.sourceId.replace("node_", "");
+	var sourceEndpoint = info.endpoints[0].overlays[0].getLabel();
 	var target = info.targetId.replace("node_", "");
+	var targetEndpoint = info.endpoints[1].overlays[0].getLabel();
 	var sourceNode = instance.getNodeById(instance, flowId, source);
 	var targetNode = instance.getNodeById(instance, flowId, target);
 
 	var text = "";
-	text += "<div><span>From: " + sourceNode.name + ".</span><span>To: "
-			+ targetNode.name + ".</span></div>";
+	text += "<div><span>From: " + sourceNode.name + "." + sourceEndpoint
+			+ "</span><span>To: " + targetNode.name + "." + targetEndpoint
+			+ "</span></div>";
 	text += "<div>Delete?</div>";
 	text += "<div id=\"delete_connection_button\"></div>";
 	$("#" + instance.informationContainerId).html(text);
