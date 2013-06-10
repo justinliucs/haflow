@@ -12,7 +12,9 @@ public class ModuleBriefModel {
 	private UUID id;
 	private String name;
 	private String category;
-	private Set<ConfigurationModel> configurations;
+	private Set<ModuleConfigurationModel> configurations;
+	private Set<ModuleEndpointModel> inputs;
+	private Set<ModuleEndpointModel> outputs;
 
 	@XmlElement
 	public UUID getId() {
@@ -43,11 +45,31 @@ public class ModuleBriefModel {
 
 	@XmlElementWrapper(name = "configurations")
 	@XmlElement(name = "configuration")
-	public Set<ConfigurationModel> getConfigurations() {
+	public Set<ModuleConfigurationModel> getConfigurations() {
 		return configurations;
 	}
 
-	public void setConfigurations(Set<ConfigurationModel> configurations) {
+	public void setConfigurations(Set<ModuleConfigurationModel> configurations) {
 		this.configurations = configurations;
 	}
+
+	@XmlElementWrapper(name = "inputs")
+	@XmlElement(name = "input")
+	public Set<ModuleEndpointModel> getInputs() {
+		return inputs;
+	}
+
+	public void setInputs(Set<ModuleEndpointModel> inputs) {
+		this.inputs = inputs;
+	}
+
+	@XmlElementWrapper(name = "outputs")
+	@XmlElement(name = "output")
+	public Set<ModuleEndpointModel> getOutputs() {
+		return outputs;
+	}
+
+	public void setOutputs(Set<ModuleEndpointModel> outputs) {
+		this.outputs = outputs;
+	}	
 }

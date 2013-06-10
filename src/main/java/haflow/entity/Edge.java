@@ -15,7 +15,9 @@ public class Edge {
 	private UUID id;
 	private Flow flow;
 	private Node sourceNode;
+	private String sourceEndpoint;
 	private Node targetNode;
+	private String targetEndpoint;
 
 	@Id
 	@Column(name = "id", length = 16)
@@ -47,6 +49,15 @@ public class Edge {
 		this.sourceNode = sourceNode;
 	}
 
+	@Column(name = "sourceEndpoint")
+	public String getSourceEndpoint() {
+		return sourceEndpoint;
+	}
+
+	public void setSourceEndpoint(String sourceEndpoint) {
+		this.sourceEndpoint = sourceEndpoint;
+	}
+
 	@ManyToOne
 	@JoinColumn(name = "targetNodeId")
 	public Node getTargetNode() {
@@ -55,6 +66,15 @@ public class Edge {
 
 	public void setTargetNode(Node targetNode) {
 		this.targetNode = targetNode;
+	}
+
+	@Column(name = "targetEndpoint")
+	public String getTargetEndpoint() {
+		return targetEndpoint;
+	}
+
+	public void setTargetEndpoint(String targetEndpoint) {
+		this.targetEndpoint = targetEndpoint;
 	}
 
 }

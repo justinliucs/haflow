@@ -10,7 +10,9 @@ public class EdgeModel {
 	private UUID id;
 	private UUID flowId;
 	private UUID sourceNodeId;
+	private String sourceEndpoint;
 	private UUID targetNodeId;
+	private String targetEndpoint;
 
 	@XmlElement
 	public UUID getId() {
@@ -40,12 +42,30 @@ public class EdgeModel {
 	}
 
 	@XmlElement
+	public String getSourceEndpoint() {
+		return sourceEndpoint;
+	}
+
+	public void setSourceEndpoint(String sourceEndpoint) {
+		this.sourceEndpoint = sourceEndpoint;
+	}
+
+	@XmlElement
 	public UUID getTargetNodeId() {
 		return targetNodeId;
 	}
 
 	public void setTargetNodeId(UUID targetNodeId) {
 		this.targetNodeId = targetNodeId;
+	}
+
+	@XmlElement
+	public String getTargetEndpoint() {
+		return targetEndpoint;
+	}
+
+	public void setTargetEndpoint(String targetEndpoint) {
+		this.targetEndpoint = targetEndpoint;
 	}
 
 }

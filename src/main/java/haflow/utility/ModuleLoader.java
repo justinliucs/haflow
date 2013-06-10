@@ -2,6 +2,7 @@ package haflow.utility;
 
 import haflow.entity.Module;
 import haflow.entity.ModuleConfiguration;
+import haflow.entity.ModuleEndpoint;
 import haflow.module.ModuleMetadata;
 
 import java.util.HashMap;
@@ -31,7 +32,6 @@ public class ModuleLoader {
 			Map<Module, ModuleMetadata> modules = new HashMap<Module, ModuleMetadata>();
 			List<String> classNames = this.getClassHelper().getClassNames(
 					"haflow", true);
-			classNames.addAll(this.getClassHelper().getClassNames("hmodule", true));
 			for (String className : classNames) {
 				Class<?> moduleClass = Class.forName(className);
 				if (moduleClass.isAnnotationPresent(haflow.module.Module.class)) {
@@ -46,48 +46,64 @@ public class ModuleLoader {
 						module.setCategory(moduleClass.getAnnotation(
 								haflow.module.Module.class).category());
 						module.setConfigurations(new HashSet<ModuleConfiguration>());
-						if (moduleClass
-								.isAnnotationPresent(haflow.module.ModuleConfiguration.class)) {
-							haflow.module.ModuleConfiguration configuration = moduleClass
-									.getAnnotation(haflow.module.ModuleConfiguration.class);
-							int i;
-							for (i = 0; i < configuration.configurationKeys().length; i++) {
-								ModuleConfiguration moduleConfiguration = new ModuleConfiguration();
-								moduleConfiguration.setKey(configuration
-										.configurationKeys()[i]);
-								moduleConfiguration
-										.setDisplayName(configuration
-												.configurationDisplayNames()[i]);
-								module.getConfigurations().add(
-										moduleConfiguration);
-							}
+						module.setInputs(new HashSet<ModuleEndpoint>());
+						module.setOutputs(new HashSet<ModuleEndpoint>());
+						haflow.module.ModuleConfiguration configurations[] = moduleClass
+								.getAnnotation(haflow.module.Module.class)
+								.configurations();
+						haflow.module.ModuleEndpoint inputs[] = moduleClass
+								.getAnnotation(haflow.module.Module.class)
+								.inputs();
+						haflow.module.ModuleEndpoint outputs[] = moduleClass
+								.getAnnotation(haflow.module.Module.class)
+								.outputs();
+						for (haflow.module.ModuleConfiguration configuration : configurations) {
+							ModuleConfiguration moduleConfiguration = new ModuleConfiguration();
+							moduleConfiguration.setKey(configuration.key());
+							moduleConfiguration.setDisplayName(configuration
+									.displayName());
+							module.getConfigurations().add(moduleConfiguration);
+						}
+						for (haflow.module.ModuleEndpoint input : inputs) {
+							ModuleEndpoint moduleEndpoint = new ModuleEndpoint();
+							moduleEndpoint.setMaxNumber(input.maxNumber());
+							moduleEndpoint.setMinNumber(input.minNumber());
+							moduleEndpoint.setName(input.name());
+							module.getInputs().add(moduleEndpoint);
+						}
+						for (haflow.module.ModuleEndpoint output : outputs) {
+							ModuleEndpoint moduleEndpoint = new ModuleEndpoint();
+							moduleEndpoint.setMaxNumber(output.maxNumber());
+							moduleEndpoint.setMinNumber(output.minNumber());
+							moduleEndpoint.setName(output.name());
+							module.getOutputs().add(moduleEndpoint);
 						}
 						modules.put(module, metadata);
 					}
 				}
 			}
-
 			return modules;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
-	
+
 	public Map<String, Class<?>> searchForModuleClasses() {
 		try {
 			Map<String, Class<?>> moduleClasses = new HashMap<String, Class<?>>();
 			List<String> classNames = this.getClassHelper().getClassNames(
 					"haflow", true);
-			classNames.addAll(this.getClassHelper().getClassNames("hmodule", true));
 			for (String className : classNames) {
 				Class<?> moduleClass = Class.forName(className);
 				if (moduleClass.isAnnotationPresent(haflow.module.Module.class)) {
 					Object obj = moduleClass.newInstance();
 					if (obj instanceof ModuleMetadata) {
-						moduleClasses.put(moduleClass.getAnnotation(
-								haflow.module.Module.class).id(), moduleClass);
-						
+						moduleClasses.put(
+								moduleClass.getAnnotation(
+										haflow.module.Module.class).id(),
+								moduleClass);
+
 					}
 				}
 			}

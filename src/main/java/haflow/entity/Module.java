@@ -8,6 +8,8 @@ public class Module {
 	private String name;
 	private String category;
 	private Set<ModuleConfiguration> configurations;
+	private Set<ModuleEndpoint> inputs;
+	private Set<ModuleEndpoint> outputs;
 
 	public UUID getId() {
 		return id;
@@ -39,6 +41,22 @@ public class Module {
 
 	public void setConfigurations(Set<ModuleConfiguration> configurations) {
 		this.configurations = configurations;
+	}
+
+	public Set<ModuleEndpoint> getInputs() {
+		return inputs;
+	}
+
+	public void setInputs(Set<ModuleEndpoint> inputs) {
+		this.inputs = inputs;
+	}
+
+	public Set<ModuleEndpoint> getOutputs() {
+		return outputs;
+	}
+
+	public void setOutputs(Set<ModuleEndpoint> outputs) {
+		this.outputs = outputs;
 	}
 
 }

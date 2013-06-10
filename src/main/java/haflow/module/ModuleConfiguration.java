@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ModuleConfiguration {
-	String[] configurationKeys();
+	String key();
 
-	String[] configurationDisplayNames();
+	String displayName();
 }
