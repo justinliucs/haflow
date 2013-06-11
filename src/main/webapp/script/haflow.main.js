@@ -519,13 +519,10 @@ HAFlow.Main.prototype.initNodes = function(flowId) {
 	for (i = 0; i < this.flows[flowId].nodes.length; i++) {
 		var nodeId = "node_" + this.flows[flowId].nodes[i].id;
 		var sourceEndpoint = {
-			endpoint : "Dot",
-			anchor : "Continuous",
 			paintStyle : {
 				strokeStyle : "#225588",
 				fillStyle : "transparent",
 				radius : 7,
-				lineWidth : 2
 			},
 			isSource : true,
 			connector : [ "StateMachine", {
@@ -533,7 +530,6 @@ HAFlow.Main.prototype.initNodes = function(flowId) {
 			} ]
 		};
 		var targetEndpoint = {
-			anchor : "Continuous",
 			endpoint : "Dot",
 			isTarget : true,
 			maxConnections : -1,
@@ -546,11 +542,20 @@ HAFlow.Main.prototype.initNodes = function(flowId) {
 		var module = this.getModuleById(this, node.moduleId);
 
 		_addEndpoints = function(instance, flowId, nodeId, module) {
-			for ( var i = 0; i < module.outputs.length; i++) {
+			var anchors = [];
+			anchors = [ [ 0, 0.5, 1, 0 ] // Left
+			, [ 1, 0.5, 1, 0 ] // Right
+			, [ 0.5, 1, 0, 1 ] // Bottom
+			, [ 0.5, 0, 0, -1 ] // Top
+			];
+
+			var k = 0;
+			for ( var i = 0; i < module.outputs.length; i++, k++) {
 				var sourceId = nodeId + "_" + module.outputs[i].name;
 				instance.jsPlumb[flowId].allSourceEndpoints
 						.push(instance.jsPlumb[flowId].addEndpoint(nodeId,
 								sourceEndpoint, {
+									anchor : anchors[k % anchors.length],
 									uuid : sourceId,
 									overlays : [ [ "Label", {
 										location : [ 0.5, -0.5 ],
@@ -558,11 +563,12 @@ HAFlow.Main.prototype.initNodes = function(flowId) {
 									} ] ]
 								}));
 			}
-			for ( var j = 0; j < module.inputs.length; j++) {
+			for ( var j = 0; j < module.inputs.length; j++, k++) {
 				var targetId = nodeId + "_" + module.inputs[j].name;
 				instance.jsPlumb[flowId].allTargetEndpoints
 						.push(instance.jsPlumb[flowId].addEndpoint(nodeId,
 								targetEndpoint, {
+									anchor : anchors[k % anchors.length],
 									uuid : targetId,
 									overlays : [ [ "Label", {
 										location : [ 0.5, -0.5 ],
@@ -619,6 +625,7 @@ HAFlow.Main.prototype.onConnectionCreated = function(instance, flowId, info) {
 	var target = info.targetId.replace("node_", "");
 	var targetEndpoint = info.targetEndpoint.overlays[0].getLabel();
 	var exist = false;
+	var illegal = false;
 	for ( var i = 0; i < instance.flows[flowId].edges.length; i++) {
 		if (instance.flows[flowId].edges[i].sourceNodeId == source
 				&& instance.flows[flowId].edges[i].sourceEndpoint == sourceEndpoint
@@ -628,7 +635,10 @@ HAFlow.Main.prototype.onConnectionCreated = function(instance, flowId, info) {
 			break;
 		}
 	}
-	if (!exist) {
+	if (source == target) {
+		illegal = true;
+	}
+	if (!exist && !illegal) {
 		var newConnection = {};
 		newConnection["id"] = HAFlow.generateUUID();
 		newConnection["flowId"] = instance.flows[flowId].id;
