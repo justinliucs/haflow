@@ -19,15 +19,11 @@ import haflow.module.ModuleEndpoint;
 import haflow.module.ModuleMetadata;
 
 @Module(id = "b0d027c3-a4bd-61b5-5063-134ff71f8123", name = "Kill", category = "Basic", configurations = {
-		@ModuleConfiguration(key = "eee", displayName = "fff"),
-		@ModuleConfiguration(key = "ggg", displayName = "hhh") }, inputs = {
-		@ModuleEndpoint(name = "iii", minNumber = 1, maxNumber = 1),
-		@ModuleEndpoint(name = "jjj", minNumber = 1, maxNumber = 1) }, outputs = {
-		@ModuleEndpoint(name = "kkk", minNumber = 1, maxNumber = 1),
-		@ModuleEndpoint(name = "lll", minNumber = 1, maxNumber = 1) })
+		@ModuleConfiguration(key = "name", displayName = "Name"),
+		@ModuleConfiguration(key = "message", displayName = "Message") }, inputs = { @ModuleEndpoint(name = "from", minNumber = 1, maxNumber = 1) }, outputs = {})
 public class KillModule implements ModuleMetadata {
 
-	//TODO: Fix it
+	// TODO: Fix it
 	public Document generate(Map<String, String> configurations,
 			Map<String, Node> inputs, Map<String, Node> outputs) {
 		String name = configurations.get("name");

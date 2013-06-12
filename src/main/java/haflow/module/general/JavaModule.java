@@ -19,9 +19,20 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 @Module(id = "ada600a8-aa63-968a-ca46-9085e0e0bd2e", name = "Java", category = "General", configurations = {
-		@ModuleConfiguration(key = "name", displayName = "Name"),
-		@ModuleConfiguration(key = "mainClass", displayName = "Main Class"),
-		@ModuleConfiguration(key = "arg", displayName = "Argument") }, inputs = { @ModuleEndpoint(name = "from", minNumber = 1, maxNumber = 1) }, outputs = { @ModuleEndpoint(name = "to", minNumber = 1, maxNumber = 1) })
+		@ModuleConfiguration(key = "job-tracker", displayName = "Job Tracker"),
+		@ModuleConfiguration(key = "name-node", displayName = "Name Node"),
+		@ModuleConfiguration(key = "prepare.mkdir", displayName = "Prepare: Make Directory"),
+		@ModuleConfiguration(key = "prepare.delete", displayName = "Prepare: Delete"),
+		@ModuleConfiguration(key = "job-xml", displayName = "Job Xml"),
+		@ModuleConfiguration(key = "configuration", displayName = "Configuration"),
+		@ModuleConfiguration(key = "main-class", displayName = "Main Class"),
+		@ModuleConfiguration(key = "java-opts", displayName = "Java Options"),
+		@ModuleConfiguration(key = "arg", displayName = "Arguments"),
+		@ModuleConfiguration(key = "file", displayName = "File"),
+		@ModuleConfiguration(key = "archive", displayName = "Archive"),
+		@ModuleConfiguration(key = "capture-output", displayName = "Capture Output") }, inputs = { @ModuleEndpoint(name = "from", minNumber = 1, maxNumber = 1) }, outputs = {
+		@ModuleEndpoint(name = "to", minNumber = 1, maxNumber = 1),
+		@ModuleEndpoint(name = "error", minNumber = 1, maxNumber = 1) })
 public class JavaModule implements ModuleMetadata {
 	// TODO: Fix it
 	public Document generate(Map<String, String> configurations,

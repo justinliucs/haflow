@@ -18,14 +18,10 @@ import haflow.module.ModuleConfiguration;
 import haflow.module.ModuleEndpoint;
 import haflow.module.ModuleMetadata;
 
-@Module(id = "a0d027c3-a4bd-61b5-5063-134ff71f8122", name = "End", category = "Basic", configurations = {
-		@ModuleConfiguration(key = "aaa", displayName = "bbb"),
-		@ModuleConfiguration(key = "ccc", displayName = "ddd") }, inputs = { @ModuleEndpoint(name = "from", minNumber = 1, maxNumber = 1) }, outputs = {
-		@ModuleEndpoint(name = "ccc", minNumber = 1, maxNumber = 1),
-		@ModuleEndpoint(name = "ddd", minNumber = 1, maxNumber = 1) })
+@Module(id = "a0d027c3-a4bd-61b5-5063-134ff71f8122", name = "End", category = "Basic", configurations = { @ModuleConfiguration(key = "name", displayName = "Name") }, inputs = { @ModuleEndpoint(name = "from", minNumber = 1, maxNumber = 1) }, outputs = {})
 public class EndModule implements ModuleMetadata {
 
-	//TODO: Fix it
+	// TODO: Fix it
 	public Document generate(Map<String, String> configurations,
 			Map<String, Node> inputs, Map<String, Node> outputs) {
 		String name = configurations.get("name");
