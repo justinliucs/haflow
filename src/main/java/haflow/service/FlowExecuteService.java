@@ -99,7 +99,7 @@ public class FlowExecuteService {
 	public void setClusterConfHelper(ConfigurationHelper clusterConfHelper) {
 		this.clusterConfHelper = clusterConfHelper;
 	}
-	
+
 	private HdfsHelper hdfsHelper;
 
 	public HdfsHelper getHdfsHelper() {
@@ -312,7 +312,8 @@ public class FlowExecuteService {
 					break;// TODO
 				}
 			}
-			Document doc = module.generate(configurations);
+			// TODO: Fix it
+			Document doc = null;// module.generate(configurations);
 			String part = this.xmlHelper.getXmlString(doc);
 			workflowXml.append(part + "\n");
 		}

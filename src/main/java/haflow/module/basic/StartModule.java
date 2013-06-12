@@ -1,7 +1,9 @@
 package haflow.module.basic;
 
+import haflow.entity.Node;
 import haflow.module.Module;
 import haflow.module.ModuleConfiguration;
+import haflow.module.ModuleEndpoint;
 import haflow.module.ModuleMetadata;
 import haflow.utility.XmlHelper;
 
@@ -19,25 +21,18 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
-@Module(id = "a208d7d2-a8ff-2493-64c2-36f50bc95752", name = "Start", category = "Basic", configurations = { @ModuleConfiguration(key = "aaa", displayName = "bbb") }, inputs = {}, outputs = {})
+@Module(id = "a208d7d2-a8ff-2493-64c2-36f50bc95752", name = "Start", category = "Basic", configurations = {}, inputs = {}, outputs = { @ModuleEndpoint(name = "to", maxNumber = 1, minNumber = 1) })
 public class StartModule implements ModuleMetadata {
 
 	private XmlHelper xmlHelper = XmlHelper.getInstance();
-
-	public Document generate(Map<String, String> configurations) {
-		// <start to="java-node"/>
-		String ok = configurations.get("ok");
-
-		String xml = "<start to=\"" + ok + "\"/>";
-		return this.xmlHelper.getDocument(xml);
-	}
 
 	public static void main(String[] args) {
 		StartModule z = new StartModule();
 		Map<String, String> configurations = new HashMap<String, String>();
 		configurations.put("input_path", "asdfasdfa");
 		configurations.put("output_path", "ddddddddddd");
-		Document doc = z.generate(configurations);
+		// TODO: Fix it
+		Document doc = null;// z.generate(configurations);
 		System.out.println(doc.toString());
 
 		NodeList nodes = doc.getChildNodes();
@@ -59,6 +54,16 @@ public class StartModule implements ModuleMetadata {
 		} catch (TransformerException e) {
 			e.printStackTrace();
 		}
+	}
+
+	// TODO: Fix it
+	public Document generate(Map<String, String> configurations,
+			Map<String, Node> inputs, Map<String, Node> outputs) {
+		// <start to="java-node"/>
+		String ok = configurations.get("ok");
+
+		String xml = "<start to=\"" + ok + "\"/>";
+		return this.xmlHelper.getDocument(xml);
 	}
 
 }
