@@ -1,5 +1,6 @@
 package haflow.module.zrace;
 
+import haflow.entity.Node;
 import haflow.module.Module;
 import haflow.module.ModuleConfiguration;
 import haflow.module.ModuleMetadata;
@@ -34,7 +35,8 @@ public class ZracePreprocess implements ModuleMetadata {
 		Map<String, String> configurations = new HashMap<String, String>();
 		configurations.put("input_path", "asdfasdfa");
 		configurations.put("output_path", "ddddddddddd");
-		Document doc = z.generate(configurations);
+		// TODO: Fix it
+		Document doc = null;// z.generate(configurations);
 		System.out.println(doc.toString());
 
 		NodeList nodes = doc.getChildNodes();
@@ -62,7 +64,9 @@ public class ZracePreprocess implements ModuleMetadata {
 		// System.out.println(this.getClass().getName());
 	}
 
-	public Document generate(Map<String, String> configurations) {
+	// TODO: Fix it
+	public Document generate(Map<String, String> configurations,
+			Map<String, Node> inputs, Map<String, Node> outputs) {
 		String inputPath = configurations.get("input_path");
 		String outputPath = configurations.get("output_path");
 
@@ -102,4 +106,5 @@ public class ZracePreprocess implements ModuleMetadata {
 
 		return null;
 	}
+
 }

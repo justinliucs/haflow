@@ -12,6 +12,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import haflow.entity.Node;
 import haflow.module.Module;
 import haflow.module.ModuleConfiguration;
 import haflow.module.ModuleEndpoint;
@@ -26,7 +27,9 @@ import haflow.module.ModuleMetadata;
 		@ModuleEndpoint(name = "lll", minNumber = 1, maxNumber = 1) })
 public class KillModule implements ModuleMetadata {
 
-	public Document generate(Map<String, String> configurations) {
+	//TODO: Fix it
+	public Document generate(Map<String, String> configurations,
+			Map<String, Node> inputs, Map<String, Node> outputs) {
 		String name = configurations.get("name");
 		String xml = "<kill name=\""
 				+ name
