@@ -1,5 +1,6 @@
 package haflow.module.zrace;
 
+import haflow.entity.Node;
 import haflow.module.Module;
 import haflow.module.ModuleConfiguration;
 import haflow.module.ModuleMetadata;
@@ -25,7 +26,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-@Module(id = "a208d7d2-a8ff-2493-64c2-36f50bc95754", name = "Preprocess", category = "zrace", configurations = {
+@Module(id = "6e744dc4-edc6-eca2-07d5-28ff55a75b2d", name = "Preprocess", category = "zrace", configurations = {
 		@ModuleConfiguration(key = "input_path", displayName = "input path"),
 		@ModuleConfiguration(key = "output_path", displayName = "output path") }, inputs = {}, outputs = {})
 public class ZracePreprocess implements ModuleMetadata {
@@ -34,7 +35,8 @@ public class ZracePreprocess implements ModuleMetadata {
 		Map<String, String> configurations = new HashMap<String, String>();
 		configurations.put("input_path", "asdfasdfa");
 		configurations.put("output_path", "ddddddddddd");
-		Document doc = z.generate(configurations);
+		// TODO: Fix it
+		Document doc = null;// z.generate(configurations);
 		System.out.println(doc.toString());
 
 		NodeList nodes = doc.getChildNodes();
@@ -62,7 +64,9 @@ public class ZracePreprocess implements ModuleMetadata {
 		// System.out.println(this.getClass().getName());
 	}
 
-	public Document generate(Map<String, String> configurations) {
+	// TODO: Fix it
+	public Document generate(Map<String, String> configurations,
+			Map<String, Node> inputs, Map<String, Node> outputs) {
 		String inputPath = configurations.get("input_path");
 		String outputPath = configurations.get("output_path");
 
@@ -102,4 +106,5 @@ public class ZracePreprocess implements ModuleMetadata {
 
 		return null;
 	}
+
 }
