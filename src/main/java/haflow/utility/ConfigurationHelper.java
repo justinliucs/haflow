@@ -1,4 +1,4 @@
-package haflow.configuration.helper;
+package haflow.utility;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

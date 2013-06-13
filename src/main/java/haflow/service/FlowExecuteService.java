@@ -1,6 +1,5 @@
 package haflow.service;
 
-import haflow.configuration.helper.ConfigurationHelper;
 import haflow.entity.Flow;
 import haflow.entity.Node;
 import haflow.flow.entity.Digraph;
@@ -12,6 +11,7 @@ import haflow.module.basic.StartModule;
 import haflow.oozie.client.OozieHelper;
 import haflow.profile.NodeConfigurationProfile;
 import haflow.ui.model.RunFlowResultModel;
+import haflow.utility.ConfigurationHelper;
 import haflow.utility.ModuleLoader;
 import haflow.utility.SessionHelper;
 import haflow.utility.XmlHelper;

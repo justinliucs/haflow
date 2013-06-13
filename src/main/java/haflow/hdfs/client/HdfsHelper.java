@@ -1,6 +1,6 @@
 package haflow.hdfs.client;
 
-import haflow.configuration.helper.ConfigurationHelper;
+import haflow.utility.ConfigurationHelper;
 
 import java.io.BufferedReader;
 import java.io.IOException;
