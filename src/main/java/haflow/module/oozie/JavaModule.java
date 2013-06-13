@@ -1,4 +1,4 @@
-package haflow.module.general;
+package haflow.module.oozie;
 
 import haflow.entity.Node;
 import haflow.module.Module;
@@ -18,7 +18,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-@Module(id = "ada600a8-aa63-968a-ca46-9085e0e0bd2e", name = "Java", category = "General", configurations = {
+@Module(id = "ada600a8-aa63-968a-ca46-9085e0e0bd2e", name = "Java", category = "Oozie", configurations = {
 		@ModuleConfiguration(key = "job-tracker", displayName = "Job Tracker"),
 		@ModuleConfiguration(key = "name-node", displayName = "Name Node"),
 		@ModuleConfiguration(key = "prepare.mkdir", displayName = "Prepare: Make Directory"),

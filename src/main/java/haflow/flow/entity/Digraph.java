@@ -61,8 +61,4 @@ public class Digraph {
 		assert(index.containsKey(n));
 		return index.get(n);
 	}
-	
-	public static void main(String[] args) {
-		
-	}
 }
