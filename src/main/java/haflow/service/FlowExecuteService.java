@@ -4,14 +4,13 @@ import haflow.entity.Flow;
 import haflow.entity.Node;
 import haflow.flow.entity.Digraph;
 import haflow.flow.entity.Topological;
-import haflow.hdfs.client.HdfsHelper;
 import haflow.module.ModuleMetadata;
-import haflow.module.basic.EndModule;
-import haflow.module.basic.StartModule;
+import haflow.module.oozie.EndModule;
+import haflow.module.oozie.StartModule;
 import haflow.oozie.client.OozieHelper;
 import haflow.profile.NodeConfigurationProfile;
 import haflow.ui.model.RunFlowResultModel;
-import haflow.utility.ConfigurationHelper;
+import haflow.utility.ClusterConfiguration;
 import haflow.utility.ModuleLoader;
 import haflow.utility.SessionHelper;
 import haflow.utility.XmlHelper;
@@ -89,26 +88,26 @@ public class FlowExecuteService {
 		this.flowDeployService = flowDeployService;
 	}
 
-	private ConfigurationHelper clusterConfHelper;
+	private ClusterConfiguration clusterConfHelper;
 
-	public ConfigurationHelper getClusterConfHelper() {
+	public ClusterConfiguration getClusterConfHelper() {
 		return clusterConfHelper;
 	}
 
 	@Autowired
-	public void setClusterConfHelper(ConfigurationHelper clusterConfHelper) {
+	public void setClusterConfHelper(ClusterConfiguration clusterConfHelper) {
 		this.clusterConfHelper = clusterConfHelper;
 	}
 
-	private HdfsHelper hdfsHelper;
+	private HdfsService hdfsService;
 
-	public HdfsHelper getHdfsHelper() {
-		return hdfsHelper;
+	public HdfsService getHdfsService() {
+		return hdfsService;
 	}
 
 	@Autowired
-	public void setHdfsHelper(HdfsHelper hdfsHelper) {
-		this.hdfsHelper = hdfsHelper;
+	public void setHdfsService(HdfsService hdfsService) {
+		this.hdfsService = hdfsService;
 	}
 
 	private OozieHelper oozieHelper;
@@ -169,7 +168,7 @@ public class FlowExecuteService {
 					messageBuilder.append("Start deploying flow ..." + "\n");
 
 					String localDeployPath = this.clusterConfHelper
-							.getProperty(ConfigurationHelper.WORKSPACE_LOCAL)
+							.getProperty(ClusterConfiguration.WORKSPACE_LOCAL)
 							+ flowName;
 					boolean deloyedLocally = this.flowDeployService
 							.deployFlowLocal(localDeployPath, workflowXml,
@@ -179,17 +178,17 @@ public class FlowExecuteService {
 								+ " has been deployed locally!" + "\n");
 
 						String hdfsDeployPath = this.clusterConfHelper
-								.getProperty(ConfigurationHelper.WORKSPACE_HDFS)
+								.getProperty(ClusterConfiguration.WORKSPACE_HDFS)
 								+ flowName;
-						boolean deleted = this.hdfsHelper
-								.deleteFolder(hdfsDeployPath);
+						boolean deleted = this.getHdfsService()
+								.deleteDirectory(hdfsDeployPath);
 						if (deleted) {
 							messageBuilder.append("Old folder deleted: "
 									+ hdfsDeployPath + "\n");
 						}
 
-						boolean deployedToHdfs = this.hdfsHelper.putFile(
-								localDeployPath, hdfsDeployPath);
+						boolean deployedToHdfs = this.getHdfsService()
+								.uploadFile(localDeployPath, hdfsDeployPath);
 						if (deployedToHdfs) {
 							messageBuilder.append(flowName
 									+ " has been uploaded to hdfs!" + "\n");

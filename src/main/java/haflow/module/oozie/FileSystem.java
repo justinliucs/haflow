@@ -1,4 +1,4 @@
-package haflow.module.general;
+package haflow.module.oozie;
 
 import java.util.Map;
 
@@ -10,7 +10,7 @@ import haflow.module.ModuleConfiguration;
 import haflow.module.ModuleEndpoint;
 import haflow.module.ModuleMetadata;
 
-@Module(id = "a966ef60-f825-4ed9-146b-deef78805088", name = "FileSystem", category = "General", configurations = {
+@Module(id = "a966ef60-f825-4ed9-146b-deef78805088", name = "FileSystem", category = "Oozie", configurations = {
 		@ModuleConfiguration(key = "delete", displayName = "Delete"),
 		@ModuleConfiguration(key = "mkdir", displayName = "Make Directory"),
 		@ModuleConfiguration(key = "move", displayName = "Move"),
