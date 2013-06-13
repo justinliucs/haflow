@@ -5,24 +5,15 @@ import haflow.module.Module;
 import haflow.module.ModuleConfiguration;
 import haflow.module.ModuleMetadata;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -30,39 +21,6 @@ import org.xml.sax.SAXException;
 		@ModuleConfiguration(key = "input_path", displayName = "input path"),
 		@ModuleConfiguration(key = "output_path", displayName = "output path") }, inputs = {}, outputs = {})
 public class ZracePreprocess implements ModuleMetadata {
-	public static void main(String[] args) {
-		ZracePreprocess z = new ZracePreprocess();
-		Map<String, String> configurations = new HashMap<String, String>();
-		configurations.put("input_path", "asdfasdfa");
-		configurations.put("output_path", "ddddddddddd");
-		// TODO: Fix it
-		Document doc = null;// z.generate(configurations);
-		System.out.println(doc.toString());
-
-		NodeList nodes = doc.getChildNodes();
-		for (int i = 0; i < nodes.getLength(); i++) {
-			System.out.println(nodes.item(i).getNodeName());
-		}
-
-		TransformerFactory tf = TransformerFactory.newInstance();
-		Transformer t;
-		try {
-			t = tf.newTransformer();
-			t.setOutputProperty("encoding", "UTF-8");// 解决中文问题，试过用GBK不行，GB23121
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			t.transform(new DOMSource(doc), new StreamResult(bos));
-			String xmlStr = bos.toString();
-			System.out.println(xmlStr);
-		} catch (TransformerConfigurationException e) {
-			e.printStackTrace();
-		} catch (TransformerException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public ZracePreprocess() {
-		// System.out.println(this.getClass().getName());
-	}
 
 	// TODO: Fix it
 	public Document generate(Map<String, String> configurations,

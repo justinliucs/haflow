@@ -1,4 +1,4 @@
-package haflow.module.general;
+package haflow.module.oozie;
 
 import java.util.Map;
 
@@ -10,7 +10,7 @@ import haflow.module.ModuleConfiguration;
 import haflow.module.ModuleEndpoint;
 import haflow.module.ModuleMetadata;
 
-@Module(id = "35267c79-5221-3a0e-d485-605fa8e4b191", name = "MapReduce", category = "General", configurations = {
+@Module(id = "35267c79-5221-3a0e-d485-605fa8e4b191", name = "MapReduce", category = "Oozie", configurations = {
 		@ModuleConfiguration(key = "job-tracker", displayName = "Job Tracker"),
 		@ModuleConfiguration(key = "name-node", displayName = "Name Node"),
 		@ModuleConfiguration(key = "prepare.delete", displayName = "Prepare:Delete"),

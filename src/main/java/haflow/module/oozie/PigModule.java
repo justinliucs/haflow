@@ -1,4 +1,4 @@
-package haflow.module.general;
+package haflow.module.oozie;
 
 import java.util.Map;
 
@@ -10,7 +10,7 @@ import haflow.module.ModuleConfiguration;
 import haflow.module.ModuleEndpoint;
 import haflow.module.ModuleMetadata;
 
-@Module(id = "1c32fa2b-a5ec-4db7-6f29-0bd4e969af67", name = "Pig", category = "General", configurations = {
+@Module(id = "1c32fa2b-a5ec-4db7-6f29-0bd4e969af67", name = "Pig", category = "Oozie", configurations = {
 		@ModuleConfiguration(key = "job-tracker", displayName = "Job Tracker"),
 		@ModuleConfiguration(key = "name-node", displayName = "Name Node"),
 		@ModuleConfiguration(key = "prepare.mkdir", displayName = "Prepare: Make Directory"),
