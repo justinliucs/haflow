@@ -8,6 +8,7 @@ dojo.require("dijit.MenuItem");
 dojo.require("dijit.MenuBar");
 dojo.require("dijit.MenuBarItem");
 dojo.require("dijit.PopupMenuBarItem");
+dojo.require("dijit.Toolbar");
 
 dojo.require("dijit.form.Button");
 dojo.require("dijit.form.TextBox");
@@ -93,9 +94,60 @@ HAFlow.Main.prototype.initUserInterface = function() {
 	this.ui.init();
 	this.initUserInterfaceId();
 	this.initMainMenu();
+	this.initToolbar();
 	this.initBottomTabs();
 	this.initFlowList();
 	this.ui.refresh();
+};
+
+HAFlow.Main.prototype.initToolbar = function() {
+	this.toolbar = {};
+	this.toolbar.toolbar = new dijit.Toolbar({
+		id : "toolbar"
+	});
+	this.toolbar.newFlowButton = new dijit.form.Button({
+		id : "toolbar_newFlow",
+		label : "New Flow",
+		showLabel : false,
+		iconClass : "dijitEditorIcon dijitEditorIconNewPage"
+	});
+	this.toolbar.saveFlowButton = new dijit.form.Button({
+		id : "toolbar_saveFlow",
+		label : "Save Flow",
+		showLabel : false,
+		iconClass : "dijitEditorIcon dijitEditorIconSave"
+	});
+	this.toolbar.removeFlowButton = new dijit.form.Button({
+		id : "toolbar_removeFlow",
+		label : "Remove Flow",
+		showLabel : false,
+		iconClass : "dijitEditorIcon dijitEditorIconDelete"
+	});
+	this.toolbar.runFlowButton = new dijit.form.Button({
+		id : "toolbar_runFlow",
+		label : "Run Flow",
+		showLabel : false,
+		iconClass : "dijitEditorIcon dijitEditorIconTabIndent"
+	});
+	this.toolbar.toolbar.addChild(this.toolbar.newFlowButton);
+	this.toolbar.toolbar.addChild(this.toolbar.saveFlowButton);
+	this.toolbar.toolbar.addChild(this.toolbar.removeFlowButton);
+	this.toolbar.toolbar.addChild(this.toolbar.runFlowButton);
+	var _currentInstance = this;
+	dojo.connect(this.toolbar.newFlowButton, "onClick", function(event) {
+		_currentInstance.newFlow();
+	});
+	dojo.connect(this.toolbar.saveFlowButton, "onClick", function(event) {
+		_currentInstance.saveFlow(_currentInstance.currentFlowId);
+	});
+	dojo.connect(this.toolbar.removeFlowButton, "onClick", function(event) {
+		_currentInstance.removeFlow(_currentInstance.currentFlowId);
+	});
+	dojo.connect(this.toolbar.runFlowButton, "onClick", function(event) {
+		_currentInstance.runFlow(_currentInstance.currentFlowId);
+	});
+
+	this.ui.mainMenu.addChild(this.toolbar.toolbar);
 };
 
 HAFlow.Main.prototype.initUserInterfaceId = function() {
@@ -602,8 +654,7 @@ HAFlow.Main.prototype.paintEdges = function(flowId) {
 					"node_" + this.flows[flowId].edges[i].sourceNodeId + "_"
 							+ this.flows[flowId].edges[i].sourceEndpoint,
 					"node_" + this.flows[flowId].edges[i].targetNodeId + "_"
-							+ this.flows[flowId].edges[i].targetEndpoint ],
-			editable : true
+							+ this.flows[flowId].edges[i].targetEndpoint ]
 		});
 	}
 };
