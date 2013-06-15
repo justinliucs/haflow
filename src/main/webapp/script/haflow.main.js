@@ -30,9 +30,11 @@ dojo.ready(function() {
 HAFlow.Main = function(ui) {
 	this.basePath = dojo.byId("basePath").value;
 	this.ui = ui;
+	this.rootPath = "hdfs://m150:9000/user/root/examples/apps";
 };
 
 HAFlow.Main.prototype.getHdfsFileList = function(path) {
+	var _currentInstance = this;
 	$.ajax({
 		url : this.basePath + "hdfs/list",
 		type : "GET",
@@ -41,13 +43,28 @@ HAFlow.Main.prototype.getHdfsFileList = function(path) {
 			path : path
 		},
 		success : function(data, status) {
-			HAFlow.showDialog("Success", data.files.length);
+			_currentInstance.refreshHdfsFileList(_currentInstance, path, data);
 		},
 		error : function(request, status, error) {
 			HAFlow.showDialog("Error",
 					"An error occurred while loading flow list: " + error);
 		}
 	});
+};
+
+HAFlow.Main.prototype.refreshHdfsFileList = function(instance, parentPath, data) {
+	var i;
+	for (i = 0; i < data.files.length; i++) {
+		this.hdfsFileListStore.put({
+			name : data.files[i].name,
+			isDirectory : data.files[i].directory,
+			path : parentPath + "/" + data.files[i].name,
+			parentPath : parentPath
+		});
+		if (data.files[i].directory) {
+			instance.getHdfsFileList(parentPath + "/" + data.files[i].name);
+		}
+	}
 };
 
 HAFlow.Main.prototype.getHdfsFile = function(path, fileName) {
@@ -60,7 +77,7 @@ HAFlow.Main.prototype.getHdfsFile = function(path, fileName) {
 			fileName : fileName
 		},
 		success : function(data, status) {
-			HAFlow.showDialog("Success", data.content);
+			alert(data.content);
 		},
 		error : function(request, status, error) {
 			HAFlow.showDialog("Error",
@@ -74,13 +91,11 @@ HAFlow.Main.prototype.init = function() {
 	this.initUserInterface();
 	this.initFlowContainer();
 	this.initData();
-	this.getHdfsFileList("hdfs://m150:9000/user/root/examples/apps/bundle");
-	this.getHdfsFile("hdfs://m150:9000/user/root/examples/apps/bundle",
-			"bundle.xml");
 };
 
 HAFlow.Main.prototype.initData = function() {
 	this.initFlowListData();
+	this.getHdfsFileList(this.rootPath);
 };
 
 HAFlow.Main.prototype.initFlowListData = function() {
@@ -136,6 +151,7 @@ HAFlow.Main.prototype.initUserInterface = function() {
 	this.initToolbar();
 	this.initBottomTabs();
 	this.initFlowList();
+	this.initHdfsFileList();
 	this.ui.refresh();
 };
 
@@ -192,6 +208,8 @@ HAFlow.Main.prototype.initToolbar = function() {
 HAFlow.Main.prototype.initUserInterfaceId = function() {
 	this.flowListContainerId = "flowListTreeContainer";
 	this.flowListTreeId = "flowListTree";
+	this.hdfsFileListContainerId = "hdfsFileListContainer";
+	this.hdfsFileListTreeId = "hdfsFileListTree";
 	this.moduleListContainerId = "moduleListContainer";
 	this.flowContainerId = "flowContainer";
 	this.informationContainerId = "informationContainer";
@@ -302,6 +320,65 @@ HAFlow.Main.prototype.initFlowList = function() {
 	this.ui.leadingContainer.addChild(flowListContentPane);
 	this.initFlowListStore();
 	this.initFlowListTree();
+};
+
+HAFlow.Main.prototype.initHdfsFileList = function() {
+	var hdfsFileListContentPane = new dijit.layout.ContentPane({
+		id : this.hdfsFileListContainerId,
+		title : "HDFS"
+	});
+	this.ui.leadingContainer.addChild(hdfsFileListContentPane);
+	this.initHdfsFileListStore();
+	this.initHdfsFileListTree();
+};
+
+HAFlow.Main.prototype.initHdfsFileListStore = function() {
+	this.hdfsFileListStore = new dojo.store.Observable(new dojo.store.Memory({
+		data : [ {
+			id : "root",
+			name : "Root",
+			isDirectory : true,
+			path : this.rootPath
+		} ],
+		getChildren : function(object) {
+			return this.query({
+				parentPath : object.path
+			});
+		}
+	}));
+};
+
+HAFlow.Main.prototype.initHdfsFileListTree = function() {
+	var treeModel = new dijit.tree.ObjectStoreModel({
+		store : this.hdfsFileListStore,
+		query : {
+			id : "root"
+		},
+		mayHaveChildren : function(item) {
+			return item.isDirectory;
+		}
+	});
+	var tree = new dijit.Tree({
+		model : treeModel
+	}, dojo.create("div", {
+		id : this.hdfsFileListTreeId,
+	}, this.hdfsFileListContainerId));
+
+	var _currentInstance = this;
+	tree.on("click", function(item) {
+		if (item.directory == true) {
+			// _currentInstance.onFlowClicked(_currentInstance, item.id);
+		}
+	}, true);
+	tree.on("dblclick", function(item) {
+		if (item.isDirectory == true) {
+			// _currentInstance.loadFlow(item.id);
+		} else {
+			_currentInstance.getHdfsFile(item.parentPath, item.name);
+		}
+	}, true);
+
+	tree.startup();
 };
 
 HAFlow.Main.prototype.initFlowListStore = function() {
