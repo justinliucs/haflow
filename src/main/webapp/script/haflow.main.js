@@ -32,12 +32,51 @@ HAFlow.Main = function(ui) {
 	this.ui = ui;
 };
 
+HAFlow.Main.prototype.getHdfsFileList = function(path) {
+	$.ajax({
+		url : this.basePath + "hdfs/list",
+		type : "GET",
+		dataType : "json",
+		data : {
+			path : path
+		},
+		success : function(data, status) {
+			HAFlow.showDialog("Success", data.files.length);
+		},
+		error : function(request, status, error) {
+			HAFlow.showDialog("Error",
+					"An error occurred while loading flow list: " + error);
+		}
+	});
+};
+
+HAFlow.Main.prototype.getHdfsFile = function(path, fileName) {
+	$.ajax({
+		url : this.basePath + "hdfs/file",
+		type : "GET",
+		dataType : "json",
+		data : {
+			path : path,
+			fileName : fileName
+		},
+		success : function(data, status) {
+			HAFlow.showDialog("Success", data.content);
+		},
+		error : function(request, status, error) {
+			HAFlow.showDialog("Error",
+					"An error occurred while loading flow list: " + error);
+		}
+	});
+};
+
 HAFlow.Main.prototype.init = function() {
 	this.doInit();
 	this.initUserInterface();
 	this.initFlowContainer();
 	this.initData();
-
+	this.getHdfsFileList("hdfs://m150:9000/user/root/examples/apps/bundle");
+	this.getHdfsFile("hdfs://m150:9000/user/root/examples/apps/bundle",
+			"bundle.xml");
 };
 
 HAFlow.Main.prototype.initData = function() {

@@ -4,6 +4,7 @@ import haflow.utility.ClusterConfiguration;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -32,7 +33,7 @@ public class HdfsService {
 		this.clusterConfiguration = clusterConfiguration;
 	}
 
-	private Configuration getDefaultConfiguration() {
+	private FileSystem getFileSystem() throws IOException {
 		Configuration conf = new Configuration();
 		this.getClusterConfiguration();
 		this.getClusterConfiguration();
@@ -40,12 +41,12 @@ public class HdfsService {
 				ClusterConfiguration.FS_DEFAULT_NAME,
 				this.getClusterConfiguration().getProperty(
 						ClusterConfiguration.FS_DEFAULT_NAME));
-		return conf;
+		return FileSystem.get(conf);
 	}
 
 	public boolean uploadFile(String localPath, String remotePath) {
 		try {
-			FileSystem fs = FileSystem.get(this.getDefaultConfiguration());
+			FileSystem fs = this.getFileSystem();
 			fs.copyFromLocalFile(new Path(localPath), new Path(remotePath));
 			return true;
 		} catch (Exception e) {
@@ -58,7 +59,7 @@ public class HdfsService {
 		try {
 			InputStream in = new BufferedInputStream(new StringInputStream(
 					content));
-			FileSystem fs = FileSystem.get(this.getDefaultConfiguration());
+			FileSystem fs = this.getFileSystem();
 			OutputStream out = fs.create(new Path(remotePath));
 			IOUtils.copyBytes(in, out, 4096, true);
 			return true;
@@ -70,9 +71,8 @@ public class HdfsService {
 
 	public boolean downloadFile(String localPath, String remotePath) {
 		try {
-			FileSystem fs = FileSystem.get(this.getDefaultConfiguration());
+			FileSystem fs = this.getFileSystem();
 			fs.copyToLocalFile(new Path(remotePath), new Path(localPath));
-			fs.close();
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -82,7 +82,7 @@ public class HdfsService {
 
 	public String readFile(String remotePath) {
 		try {
-			FileSystem fs = FileSystem.get(this.getDefaultConfiguration());
+			FileSystem fs = this.getFileSystem();
 			FSDataInputStream hdfsInStream = fs.open(new Path(remotePath));
 			OutputStream out = new ByteArrayOutputStream();
 			byte[] ioBuffer = new byte[1024];
@@ -94,7 +94,6 @@ public class HdfsService {
 			out.close();
 			String ret = out.toString();
 			hdfsInStream.close();
-			fs.close();
 			return ret;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -104,14 +103,13 @@ public class HdfsService {
 
 	public boolean appendFile(String content, String remotePath) {
 		try {
-			FileSystem fs = FileSystem.get(this.getDefaultConfiguration());
+			FileSystem fs = this.getFileSystem();
 			FSDataOutputStream out = fs.append(new Path(remotePath));
 			int readLen = content.getBytes().length;
 			while (-1 != readLen) {
 				out.write(content.getBytes(), 0, readLen);
 			}
 			out.close();
-			fs.close();
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -121,10 +119,8 @@ public class HdfsService {
 
 	public boolean deleteFile(String remotePath) {
 		try {
-			FileSystem fs = FileSystem.get(this.getDefaultConfiguration());
-			fs.delete(new Path(remotePath), false);
-			fs.close();
-			return true;
+			FileSystem fs = this.getFileSystem();
+			return fs.delete(new Path(remotePath), false);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -133,10 +129,8 @@ public class HdfsService {
 
 	public boolean deleteDirectory(String remotePath) {
 		try {
-			FileSystem fs = FileSystem.get(this.getDefaultConfiguration());
-			fs.delete(new Path(remotePath), true);
-			fs.close();
-			return true;
+			FileSystem fs = this.getFileSystem();
+			return fs.delete(new Path(remotePath), true);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -145,7 +139,7 @@ public class HdfsService {
 
 	public boolean renameFile(String fromPath, String toPath) {
 		try {
-			FileSystem fs = FileSystem.get(this.getDefaultConfiguration());
+			FileSystem fs = this.getFileSystem();
 			return fs.rename(new Path(fromPath), new Path(toPath));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -155,9 +149,8 @@ public class HdfsService {
 
 	public FileStatus[] listFile(String remotePath) {
 		try {
-			FileSystem fs = FileSystem.get(this.getDefaultConfiguration());
+			FileSystem fs = this.getFileSystem();
 			FileStatus[] fileList = fs.listStatus(new Path(remotePath));
-			fs.close();
 			return fileList;
 		} catch (Exception e) {
 			e.printStackTrace();
