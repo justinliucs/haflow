@@ -30,7 +30,7 @@ dojo.ready(function() {
 HAFlow.Main = function(ui) {
 	this.basePath = dojo.byId("basePath").value;
 	this.ui = ui;
-	this.rootPath = "hdfs://m150:9000/user/root/examples/apps";
+	this.rootPath = "hdfs://m150:9000/user/root";
 };
 
 HAFlow.Main.prototype.getHdfsFileList = function(path) {
@@ -336,7 +336,7 @@ HAFlow.Main.prototype.initHdfsFileListStore = function() {
 	this.hdfsFileListStore = new dojo.store.Observable(new dojo.store.Memory({
 		data : [ {
 			id : "root",
-			name : "Root",
+			name : "Root(" + this.rootPath + ")",
 			isDirectory : true,
 			path : this.rootPath
 		} ],
