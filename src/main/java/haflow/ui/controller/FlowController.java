@@ -23,12 +23,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class FlowController {
 	private FlowHelper flowHelper;
 
-	public FlowHelper getFlowHelper() {
+	private FlowHelper getFlowHelper() {
 		return flowHelper;
 	}
 
 	@Autowired
-	public void setFlowHelper(FlowHelper flowHelper) {
+	private void setFlowHelper(FlowHelper flowHelper) {
 		this.flowHelper = flowHelper;
 	}
 

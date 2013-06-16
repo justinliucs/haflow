@@ -1,7 +1,7 @@
 package haflow.service;
 
 import haflow.entity.Node;
-import haflow.profile.NodeConfigurationProfile;
+import haflow.profile.NodeConfiguration;
 import haflow.utility.SessionHelper;
 
 import java.util.List;
@@ -14,29 +14,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class NodeConfigurationProfileService {
+public class NodeConfigurationService {
 	private SessionHelper sessionHelper;
 
-	public SessionHelper getSessionHelper() {
+	private SessionHelper getSessionHelper() {
 		return sessionHelper;
 	}
 
 	@Autowired
-	public void setSessionHelper(SessionHelper sessionHelper) {
+	private void setSessionHelper(SessionHelper sessionHelper) {
 		this.sessionHelper = sessionHelper;
 	}
 
-	public boolean mergeNodeConfigurationProfile(UUID nodeId, String key,
-			String value) {
+	public boolean mergeNodeConfiguration(UUID nodeId, String key, String value) {
 		Session session = this.getSessionHelper().openSession();
 		Transaction transaction = session.beginTransaction();
 		try {
-			NodeConfigurationProfile nodeConfigurationProfile = (NodeConfigurationProfile) session
-					.createCriteria(NodeConfigurationProfile.class)
+			NodeConfiguration nodeConfigurationProfile = (NodeConfiguration) session
+					.createCriteria(NodeConfiguration.class)
 					.add(Restrictions.eq("nodeId", nodeId))
 					.add(Restrictions.eq("key", key)).uniqueResult();
 			if (nodeConfigurationProfile == null) {
-				nodeConfigurationProfile = new NodeConfigurationProfile();
+				nodeConfigurationProfile = new NodeConfiguration();
 				nodeConfigurationProfile.setId(UUID.randomUUID());
 			}
 			nodeConfigurationProfile.setNodeId(nodeId);
@@ -54,12 +53,12 @@ public class NodeConfigurationProfileService {
 		}
 	}
 
-	public boolean removeNodeConfigurationProfile(UUID nodeId, String key) {
+	public boolean removeNodeConfiguration(UUID nodeId, String key) {
 		Session session = this.getSessionHelper().openSession();
 		Transaction transaction = session.beginTransaction();
 		try {
-			NodeConfigurationProfile nodeConfigurationProfile = (NodeConfigurationProfile) session
-					.createCriteria(NodeConfigurationProfile.class)
+			NodeConfiguration nodeConfigurationProfile = (NodeConfiguration) session
+					.createCriteria(NodeConfiguration.class)
 					.add(Restrictions.eq("nodeId", nodeId))
 					.add(Restrictions.eq("key", key)).uniqueResult();
 			if (nodeConfigurationProfile == null) {
@@ -78,12 +77,11 @@ public class NodeConfigurationProfileService {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<NodeConfigurationProfile> getNodeConfigurationProfile(
-			UUID nodeId) {
+	public List<NodeConfiguration> getNodeConfiguration(UUID nodeId) {
 		Session session = this.getSessionHelper().openSession();
 		try {
-			List<NodeConfigurationProfile> nodeConfigurationProfiles = (List<NodeConfigurationProfile>) session
-					.createCriteria(NodeConfigurationProfile.class)
+			List<NodeConfiguration> nodeConfigurationProfiles = (List<NodeConfiguration>) session
+					.createCriteria(NodeConfiguration.class)
 					.add(Restrictions.eq("nodeId", nodeId)).list();
 			session.close();
 			return nodeConfigurationProfiles;
@@ -95,13 +93,13 @@ public class NodeConfigurationProfileService {
 	}
 
 	@SuppressWarnings("unchecked")
-	public boolean cleanUpOrphanNodeConfigurationProfiles() {
+	public boolean cleanUpOrphanNodeConfiguration() {
 		Session session = this.getSessionHelper().openSession();
 		Transaction transaction = session.beginTransaction();
 		try {
-			List<NodeConfigurationProfile> list = (List<NodeConfigurationProfile>) session
-					.createCriteria(NodeConfigurationProfile.class).list();
-			for (NodeConfigurationProfile profile : list) {
+			List<NodeConfiguration> list = (List<NodeConfiguration>) session
+					.createCriteria(NodeConfiguration.class).list();
+			for (NodeConfiguration profile : list) {
 				Node node = (Node) session.get(Node.class, profile.getNodeId());
 				if (node == null) {
 					session.delete(profile);

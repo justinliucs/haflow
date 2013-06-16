@@ -12,11 +12,11 @@ import org.springframework.stereotype.Component;
 import haflow.entity.Edge;
 import haflow.entity.Flow;
 import haflow.entity.Node;
-import haflow.profile.NodeAppearanceProfile;
-import haflow.profile.NodeConfigurationProfile;
+import haflow.profile.NodeAppearance;
+import haflow.profile.NodeConfiguration;
 import haflow.service.FlowService;
-import haflow.service.NodeAppearanceProfileService;
-import haflow.service.NodeConfigurationProfileService;
+import haflow.service.NodeAppearanceService;
+import haflow.service.NodeConfigurationService;
 import haflow.ui.model.ConfigurationItemModel;
 import haflow.ui.model.EdgeModel;
 import haflow.ui.model.FlowBriefModel;
@@ -33,35 +33,35 @@ import haflow.ui.model.RemoveFlowResultModel;
 public class FlowHelper {
 
 	private FlowService flowService;
-	private NodeAppearanceProfileService nodeAppearanceProfileService;
-	private NodeConfigurationProfileService nodeConfigurationProfileService;
+	private NodeAppearanceService nodeAppearanceService;
+	private NodeConfigurationService nodeConfigurationProfileService;
 
-	public FlowService getFlowService() {
+	private FlowService getFlowService() {
 		return flowService;
 	}
 
 	@Autowired
-	public void setFlowService(FlowService flowService) {
+	private void setFlowService(FlowService flowService) {
 		this.flowService = flowService;
 	}
 
-	public NodeAppearanceProfileService getNodeAppearanceProfileService() {
-		return nodeAppearanceProfileService;
+	private NodeAppearanceService getNodeAppearanceService() {
+		return nodeAppearanceService;
 	}
 
 	@Autowired
-	public void setNodeAppearanceProfileService(
-			NodeAppearanceProfileService nodeAppearanceProfileService) {
-		this.nodeAppearanceProfileService = nodeAppearanceProfileService;
+	private void setNodeAppearanceService(
+			NodeAppearanceService nodeAppearanceService) {
+		this.nodeAppearanceService = nodeAppearanceService;
 	}
 
-	public NodeConfigurationProfileService getNodeConfigurationProfileService() {
+	private NodeConfigurationService getNodeConfigurationProfileService() {
 		return nodeConfigurationProfileService;
 	}
 
 	@Autowired
-	public void setNodeConfigurationProfileService(
-			NodeConfigurationProfileService nodeConfigurationProfileService) {
+	private void setNodeConfigurationProfileService(
+			NodeConfigurationService nodeConfigurationProfileService) {
 		this.nodeConfigurationProfileService = nodeConfigurationProfileService;
 	}
 
@@ -89,12 +89,12 @@ public class FlowHelper {
 		flowModel.setNodes(new HashSet<NodeModel>());
 		for (Node node : flow.getNodes()) {
 			NodeModel nodeModel = new NodeModel();
-			NodeAppearanceProfile nodeAppearanceProfile = this
-					.getNodeAppearanceProfileService()
-					.getNodeAppearanceProfile(node.getId());
-			List<NodeConfigurationProfile> nodeConfigurationProfiles = this
+			NodeAppearance nodeAppearanceProfile = this
+					.getNodeAppearanceService().getNodeAppearance(
+							node.getId());
+			List<NodeConfiguration> nodeConfigurationProfiles = this
 					.getNodeConfigurationProfileService()
-					.getNodeConfigurationProfile(node.getId());
+					.getNodeConfiguration(node.getId());
 			nodeModel.setFlowId(node.getFlow().getId());
 			nodeModel.setId(node.getId());
 			nodeModel.setModuleId(node.getModuleId());
@@ -105,7 +105,7 @@ public class FlowHelper {
 			nodeModel.getPosition().setTop(
 					nodeAppearanceProfile.getPositionTop());
 			nodeModel.setConfigurations(new HashSet<ConfigurationItemModel>());
-			for (NodeConfigurationProfile profile : nodeConfigurationProfiles) {
+			for (NodeConfiguration profile : nodeConfigurationProfiles) {
 				ConfigurationItemModel model = new ConfigurationItemModel();
 				model.setKey(profile.getKey());
 				model.setValue(profile.getValue());
@@ -152,14 +152,14 @@ public class FlowHelper {
 			node.setId(nodeModel.getId());
 			node.setModuleId(nodeModel.getModuleId());
 			node.setName(nodeModel.getName());
-			this.getNodeAppearanceProfileService().mergeNodeAppearanceProfile(
+			this.getNodeAppearanceService().mergeNodeAppearance(
 					nodeModel.getId(), nodeModel.getPosition().getLeft(),
 					nodeModel.getPosition().getTop());
 			if (nodeModel.getConfigurations() != null) {
 				for (ConfigurationItemModel configurationItemModel : nodeModel
 						.getConfigurations()) {
 					this.getNodeConfigurationProfileService()
-							.mergeNodeConfigurationProfile(nodeModel.getId(),
+							.mergeNodeConfiguration(nodeModel.getId(),
 									configurationItemModel.getKey(),
 									configurationItemModel.getValue());
 				}
@@ -186,22 +186,22 @@ public class FlowHelper {
 				&& this.getFlowService().saveFlow(flowId, model.getName(),
 						nodes, edges);
 		result = result
-				&& this.getNodeAppearanceProfileService()
-						.cleanUpOrphanNodeAppearanceProfiles();
+				&& this.getNodeAppearanceService()
+						.cleanUpOrphanNodeAppearance();
 		result = result
 				&& this.getNodeConfigurationProfileService()
-						.cleanUpOrphanNodeConfigurationProfiles();
+						.cleanUpOrphanNodeConfiguration();
 		return result;
 	}
 
 	public RemoveFlowResultModel removeFlow(UUID flowId, RemoveFlowModel model) {
 		boolean success = this.getFlowService().removeFlow(flowId);
 		success = success
-				&& this.getNodeAppearanceProfileService()
-						.cleanUpOrphanNodeAppearanceProfiles();
+				&& this.getNodeAppearanceService()
+						.cleanUpOrphanNodeAppearance();
 		success = success
 				&& this.getNodeConfigurationProfileService()
-						.cleanUpOrphanNodeConfigurationProfiles();
+						.cleanUpOrphanNodeConfiguration();
 		RemoveFlowResultModel result = new RemoveFlowResultModel();
 		result.setFlowId(flowId);
 		result.setSuccess(success);

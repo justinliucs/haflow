@@ -20,12 +20,12 @@ import org.springframework.stereotype.Component;
 public class FlowService {
 	private SessionHelper sessionHelper;
 
-	public SessionHelper getSessionHelper() {
+	private SessionHelper getSessionHelper() {
 		return sessionHelper;
 	}
 
 	@Autowired
-	public void setSessionHelper(SessionHelper sessionHelper) {
+	private void setSessionHelper(SessionHelper sessionHelper) {
 		this.sessionHelper = sessionHelper;
 	}
 

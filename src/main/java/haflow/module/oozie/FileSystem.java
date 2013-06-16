@@ -2,8 +2,6 @@ package haflow.module.oozie;
 
 import java.util.Map;
 
-import org.w3c.dom.Document;
-
 import haflow.entity.Node;
 import haflow.module.Module;
 import haflow.module.ModuleConfiguration;
@@ -19,7 +17,7 @@ import haflow.module.ModuleMetadata;
 		@ModuleEndpoint(name = "error", minNumber = 1, maxNumber = 1) })
 public class FileSystem implements ModuleMetadata {
 
-	public Document generate(Map<String, String> configurations,
+	public String generate(Map<String, String> configurations,
 			Map<String, Node> inputs, Map<String, Node> outputs) {
 		// TODO Auto-generated method stub
 		return null;

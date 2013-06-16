@@ -5,17 +5,7 @@ import haflow.module.Module;
 import haflow.module.ModuleConfiguration;
 import haflow.module.ModuleMetadata;
 
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.Map;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 @Module(id = "6e744dc4-edc6-eca2-07d5-28ff55a75b2d", name = "Preprocess", category = "zrace", configurations = {
 		@ModuleConfiguration(key = "input_path", displayName = "input path"),
@@ -23,7 +13,7 @@ import org.xml.sax.SAXException;
 public class ZracePreprocess implements ModuleMetadata {
 
 	// TODO: Fix it
-	public Document generate(Map<String, String> configurations,
+	public String generate(Map<String, String> configurations,
 			Map<String, Node> inputs, Map<String, Node> outputs) {
 		String inputPath = configurations.get("input_path");
 		String outputPath = configurations.get("output_path");
@@ -45,24 +35,7 @@ public class ZracePreprocess implements ModuleMetadata {
 				+ "\n" + "</java>" + "\n" +
 				// "<ok to=\"end\"/>" + "\n" + //TODO
 				"<error to=\"fail\"/>" + "\n" + "</action>";
-
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-
-		try {
-			DocumentBuilder db = dbf.newDocumentBuilder();
-			StringReader sr = new StringReader(actionXML);
-			InputSource is = new InputSource(sr);
-			Document doc = db.parse(is);
-			return doc;
-		} catch (SAXException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-		}
-
-		return null;
+		return actionXML;
 	}
 
 }

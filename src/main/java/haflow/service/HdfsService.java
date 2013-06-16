@@ -23,20 +23,18 @@ import org.springframework.stereotype.Component;
 public class HdfsService {
 	private ClusterConfiguration clusterConfiguration;
 
-	public ClusterConfiguration getClusterConfiguration() {
+	private ClusterConfiguration getClusterConfiguration() {
 		return clusterConfiguration;
 	}
 
 	@Autowired
-	public void setClusterConfiguration(
+	private void setClusterConfiguration(
 			ClusterConfiguration clusterConfiguration) {
 		this.clusterConfiguration = clusterConfiguration;
 	}
 
 	private FileSystem getFileSystem() throws IOException {
 		Configuration conf = new Configuration();
-		this.getClusterConfiguration();
-		this.getClusterConfiguration();
 		conf.set(
 				ClusterConfiguration.FS_DEFAULT_NAME,
 				this.getClusterConfiguration().getProperty(
