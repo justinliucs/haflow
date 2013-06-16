@@ -12,7 +12,6 @@ import haflow.ui.model.RunFlowResultModel;
 import haflow.utility.ClusterConfiguration;
 import haflow.utility.ModuleLoader;
 import haflow.utility.SessionHelper;
-import haflow.utility.XmlHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,17 +62,6 @@ public class FlowExecuteService {
 	public void setNodeConfigurationProfileService(
 			NodeConfigurationProfileService nodeConfigurationProfileService) {
 		this.nodeConfigurationProfileService = nodeConfigurationProfileService;
-	}
-
-	private XmlHelper xmlHelper;
-
-	public XmlHelper getXmlHelper() {
-		return xmlHelper;
-	}
-
-	@Autowired
-	public void setXmlHelper(XmlHelper xmlHelper) {
-		this.xmlHelper = xmlHelper;
 	}
 
 	private FlowDeployService flowDeployService;
@@ -311,8 +299,7 @@ public class FlowExecuteService {
 				}
 			}
 			// TODO: Fix it
-			Document doc = null;// module.generate(configurations);
-			String part = this.xmlHelper.getXmlString(doc);
+			String part = null;// module.generate(configurations);
 			workflowXml.append(part + "\n");
 		}
 		workflowXml.append("</workflow-app>" + "\n");
