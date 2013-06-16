@@ -35,8 +35,6 @@ public class HdfsService {
 
 	private FileSystem getFileSystem() throws IOException {
 		Configuration conf = new Configuration();
-		this.getClusterConfiguration();
-		this.getClusterConfiguration();
 		conf.set(
 				ClusterConfiguration.FS_DEFAULT_NAME,
 				this.getClusterConfiguration().getProperty(

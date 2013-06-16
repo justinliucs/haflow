@@ -7,7 +7,6 @@ import haflow.flow.entity.Topological;
 import haflow.module.ModuleMetadata;
 import haflow.module.oozie.EndModule;
 import haflow.module.oozie.StartModule;
-import haflow.oozie.client.OozieHelper;
 import haflow.profile.NodeConfigurationProfile;
 import haflow.ui.model.RunFlowResultModel;
 import haflow.utility.ClusterConfiguration;
@@ -110,14 +109,14 @@ public class FlowExecuteService {
 		this.hdfsService = hdfsService;
 	}
 
-	private OozieHelper oozieHelper;
+	private OozieService oozieHelper;
 
-	public OozieHelper getOozieHelper() {
+	public OozieService getOozieHelper() {
 		return oozieHelper;
 	}
 
 	@Autowired
-	public void setOozieHelper(OozieHelper oozieHelper) {
+	public void setOozieHelper(OozieService oozieHelper) {
 		this.oozieHelper = oozieHelper;
 	}
 

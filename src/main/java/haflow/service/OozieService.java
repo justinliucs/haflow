@@ -1,4 +1,4 @@
-package haflow.oozie.client;
+package haflow.service;
 
 import java.util.Properties;
 
@@ -8,12 +8,12 @@ import org.apache.oozie.client.WorkflowJob;
 import org.springframework.stereotype.Component;
 
 @Component
-public class OozieHelper {
-	
+public class OozieService {
+
 	private final String APP_PATH = "hdfs://m150:9000/user/root/examples/apps/";
 	private OozieClient wc;
 
-	public OozieHelper() {
+	public OozieService() {
 		wc = new OozieClient("http://m150:11000/oozie/");
 	}
 
@@ -29,7 +29,7 @@ public class OozieHelper {
 		String jobId = null;
 		try {
 			jobId = wc.run(conf);
-//			System.out.println("Workflow job submitted! Id:" + jobId);
+			// System.out.println("Workflow job submitted! Id:" + jobId);
 		} catch (OozieClientException e) {
 			e.printStackTrace();
 		}
