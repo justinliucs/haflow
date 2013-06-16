@@ -15,12 +15,12 @@ import org.springframework.stereotype.Component;
 public class HdfsHelper {
 	private HdfsService hdfsService;
 
-	public HdfsService getHdfsService() {
+	private HdfsService getHdfsService() {
 		return hdfsService;
 	}
 
 	@Autowired
-	public void setHdfsService(HdfsService hdfsService) {
+	private void setHdfsService(HdfsService hdfsService) {
 		this.hdfsService = hdfsService;
 	}
 

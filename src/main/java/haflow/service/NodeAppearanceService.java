@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import haflow.entity.Node;
-import haflow.profile.NodeAppearanceProfile;
+import haflow.profile.NodeAppearance;
 import haflow.utility.SessionHelper;
 
 import org.hibernate.Session;
@@ -14,28 +14,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class NodeAppearanceProfileService {
+public class NodeAppearanceService {
 	private SessionHelper sessionHelper;
 
-	public SessionHelper getSessionHelper() {
+	private SessionHelper getSessionHelper() {
 		return sessionHelper;
 	}
 
 	@Autowired
-	public void setSessionHelper(SessionHelper sessionHelper) {
+	private void setSessionHelper(SessionHelper sessionHelper) {
 		this.sessionHelper = sessionHelper;
 	}
 
-	public boolean mergeNodeAppearanceProfile(UUID nodeId, int positionLeft,
+	public boolean mergeNodeAppearance(UUID nodeId, int positionLeft,
 			int positionTop) {
 		Session session = this.getSessionHelper().openSession();
 		Transaction transaction = session.beginTransaction();
 		try {
-			NodeAppearanceProfile nodeAppearanceProfile = (NodeAppearanceProfile) session
-					.createCriteria(NodeAppearanceProfile.class)
+			NodeAppearance nodeAppearanceProfile = (NodeAppearance) session
+					.createCriteria(NodeAppearance.class)
 					.add(Restrictions.eq("nodeId", nodeId)).uniqueResult();
 			if (nodeAppearanceProfile == null) {
-				nodeAppearanceProfile = new NodeAppearanceProfile();
+				nodeAppearanceProfile = new NodeAppearance();
 				nodeAppearanceProfile.setId(UUID.randomUUID());
 			}
 			nodeAppearanceProfile.setNodeId(nodeId);
@@ -54,11 +54,11 @@ public class NodeAppearanceProfileService {
 		}
 	}
 
-	public NodeAppearanceProfile getNodeAppearanceProfile(UUID nodeId) {
+	public NodeAppearance getNodeAppearance(UUID nodeId) {
 		Session session = this.getSessionHelper().openSession();
 		try {
-			NodeAppearanceProfile nodeAppearanceProfile = (NodeAppearanceProfile) session
-					.createCriteria(NodeAppearanceProfile.class)
+			NodeAppearance nodeAppearanceProfile = (NodeAppearance) session
+					.createCriteria(NodeAppearance.class)
 					.add(Restrictions.eq("nodeId", nodeId)).uniqueResult();
 			session.close();
 			return nodeAppearanceProfile;
@@ -70,13 +70,13 @@ public class NodeAppearanceProfileService {
 	}
 
 	@SuppressWarnings("unchecked")
-	public boolean cleanUpOrphanNodeAppearanceProfiles() {
+	public boolean cleanUpOrphanNodeAppearance() {
 		Session session = this.getSessionHelper().openSession();
 		Transaction transaction = session.beginTransaction();
 		try {
-			List<NodeAppearanceProfile> list = (List<NodeAppearanceProfile>) session
-					.createCriteria(NodeAppearanceProfile.class).list();
-			for (NodeAppearanceProfile profile : list) {
+			List<NodeAppearance> list = (List<NodeAppearance>) session
+					.createCriteria(NodeAppearance.class).list();
+			for (NodeAppearance profile : list) {
 				Node node = (Node) session.get(Node.class, profile.getNodeId());
 				if (node == null) {
 					session.delete(profile);

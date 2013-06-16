@@ -19,12 +19,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class RunController {
 	private RunHelper runHelper;
 
-	public RunHelper getRunHelper() {
+	private RunHelper getRunHelper() {
 		return runHelper;
 	}
 
 	@Autowired
-	public void setRunHelper(RunHelper runHelper) {
+	private void setRunHelper(RunHelper runHelper) {
 		this.runHelper = runHelper;
 	}
 
