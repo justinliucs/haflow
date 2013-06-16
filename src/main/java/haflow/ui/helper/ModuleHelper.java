@@ -1,8 +1,8 @@
 package haflow.ui.helper;
 
-import haflow.entity.ModuleConfiguration;
-import haflow.entity.Module;
-import haflow.entity.ModuleEndpoint;
+import haflow.module.Module;
+import haflow.module.ModuleConfiguration;
+import haflow.module.ModuleEndpoint;
 import haflow.ui.model.ModuleConfigurationModel;
 import haflow.ui.model.ModuleBriefModel;
 import haflow.ui.model.ModuleEndpointModel;
@@ -12,6 +12,7 @@ import haflow.utility.ModuleLoader;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -36,31 +37,31 @@ public class ModuleHelper {
 		moduleListModel.setModules(new ArrayList<ModuleBriefModel>());
 		for (Module module : moduleList) {
 			ModuleBriefModel moduleBriefModel = new ModuleBriefModel();
-			moduleBriefModel.setId(module.getId());
-			moduleBriefModel.setName(module.getName());
-			moduleBriefModel.setCategory(module.getCategory());
+			moduleBriefModel.setId(UUID.fromString(module.id()));
+			moduleBriefModel.setName(module.name());
+			moduleBriefModel.setCategory(module.category());
 			moduleBriefModel
 					.setConfigurations(new HashSet<ModuleConfigurationModel>());
 			moduleBriefModel.setInputs(new HashSet<ModuleEndpointModel>());
 			moduleBriefModel.setOutputs(new HashSet<ModuleEndpointModel>());
-			for (ModuleConfiguration configuration : module.getConfigurations()) {
+			for (ModuleConfiguration configuration : module.configurations()) {
 				ModuleConfigurationModel model = new ModuleConfigurationModel();
-				model.setDisplayName(configuration.getDisplayName());
-				model.setKey(configuration.getKey());
+				model.setDisplayName(configuration.displayName());
+				model.setKey(configuration.key());
 				moduleBriefModel.getConfigurations().add(model);
 			}
-			for (ModuleEndpoint input : module.getInputs()) {
+			for (ModuleEndpoint input : module.inputs()) {
 				ModuleEndpointModel model = new ModuleEndpointModel();
-				model.setMaxNumber(input.getMaxNumber());
-				model.setMinNumber(input.getMinNumber());
-				model.setName(input.getName());
+				model.setMaxNumber(input.maxNumber());
+				model.setMinNumber(input.minNumber());
+				model.setName(input.name());
 				moduleBriefModel.getInputs().add(model);
 			}
-			for (ModuleEndpoint output : module.getOutputs()) {
+			for (ModuleEndpoint output : module.outputs()) {
 				ModuleEndpointModel model = new ModuleEndpointModel();
-				model.setMaxNumber(output.getMaxNumber());
-				model.setMinNumber(output.getMinNumber());
-				model.setName(output.getName());
+				model.setMaxNumber(output.maxNumber());
+				model.setMinNumber(output.minNumber());
+				model.setName(output.name());
 				moduleBriefModel.getOutputs().add(model);
 			}
 			moduleListModel.getModules().add(moduleBriefModel);
