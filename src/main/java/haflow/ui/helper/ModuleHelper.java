@@ -21,12 +21,12 @@ import org.springframework.stereotype.Component;
 public class ModuleHelper {
 	private ModuleLoader moduleLoader;
 
-	public ModuleLoader getModuleLoader() {
+	private ModuleLoader getModuleLoader() {
 		return moduleLoader;
 	}
 
 	@Autowired
-	public void setModuleLoader(ModuleLoader moduleLoader) {
+	private void setModuleLoader(ModuleLoader moduleLoader) {
 		this.moduleLoader = moduleLoader;
 	}
 

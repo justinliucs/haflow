@@ -14,20 +14,20 @@ import org.springframework.stereotype.Component;
 public class ModuleLoader {
 	private ClassHelper classHelper;
 
-	public ClassHelper getClassHelper() {
+	private ClassHelper getClassHelper() {
 		return classHelper;
 	}
 
 	@Autowired
-	public void setClassHelper(ClassHelper classHelper) {
+	private void setClassHelper(ClassHelper classHelper) {
 		this.classHelper = classHelper;
 	}
 
-	public Map<Module, ModuleMetadata> searchForModules() {
+	public Map<Module, ModuleMetadata> searchForModules(String packageName) {
 		try {
 			Map<Module, ModuleMetadata> modules = new HashMap<Module, ModuleMetadata>();
 			List<String> classNames = this.getClassHelper().getClassNames(
-					"haflow", true);
+					packageName, true);
 			for (String className : classNames) {
 				Class<?> moduleClass = Class.forName(className);
 				if (moduleClass.isAnnotationPresent(Module.class)) {
@@ -46,19 +46,18 @@ public class ModuleLoader {
 		}
 	}
 
-	public Map<String, Class<?>> searchForModuleClasses() {
+	public Map<String, Class<?>> searchForModuleClasses(String packageName) {
 		try {
 			Map<String, Class<?>> moduleClasses = new HashMap<String, Class<?>>();
 			List<String> classNames = this.getClassHelper().getClassNames(
-					"haflow", true);
+					packageName, true);
 			for (String className : classNames) {
 				Class<?> moduleClass = Class.forName(className);
-				if (moduleClass.isAnnotationPresent(haflow.module.Module.class)) {
+				if (moduleClass.isAnnotationPresent(Module.class)) {
 					Object obj = moduleClass.newInstance();
 					if (obj instanceof ModuleMetadata) {
 						moduleClasses.put(
-								moduleClass.getAnnotation(
-										haflow.module.Module.class).id(),
+								moduleClass.getAnnotation(Module.class).id(),
 								moduleClass);
 
 					}
@@ -69,5 +68,13 @@ public class ModuleLoader {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	public Map<Module, ModuleMetadata> searchForModules() {
+		return this.searchForModules("haflow");
+	}
+
+	public Map<String, Class<?>> searchForModuleClasses() {
+		return this.searchForModuleClasses("haflow");
 	}
 }

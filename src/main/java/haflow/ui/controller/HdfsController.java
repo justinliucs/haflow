@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class HdfsController {
 	private HdfsHelper hdfsHelper;
 
-	public HdfsHelper getHdfsHelper() {
+	private HdfsHelper getHdfsHelper() {
 		return hdfsHelper;
 	}
 
 	@Autowired
-	public void setHdfsHelper(HdfsHelper hdfsHelper) {
+	private void setHdfsHelper(HdfsHelper hdfsHelper) {
 		this.hdfsHelper = hdfsHelper;
 	}
 

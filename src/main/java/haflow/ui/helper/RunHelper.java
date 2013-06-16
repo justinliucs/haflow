@@ -13,17 +13,18 @@ import org.springframework.stereotype.Component;
 public class RunHelper {
 	private FlowExecuteService flowExecuteService;
 
-	public FlowExecuteService getFlowExecuteService() {
+	private FlowExecuteService getFlowExecuteService() {
 		return flowExecuteService;
 	}
 
 	@Autowired
-	public void setFlowExecuteService(FlowExecuteService flowExecuteService) {
+	private void setFlowExecuteService(FlowExecuteService flowExecuteService) {
 		this.flowExecuteService = flowExecuteService;
 	}
 
 	public RunFlowResultModel runFlow(UUID flowId, RunFlowModel model) {
-		RunFlowResultModel result = this.getFlowExecuteService().runFlow(flowId);
+		RunFlowResultModel result = this.getFlowExecuteService()
+				.runFlow(flowId);
 		return result;
 	}
 

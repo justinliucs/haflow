@@ -8,12 +8,12 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "nodeConfigurationProfile")
-public class NodeConfigurationProfile {
+@Table(name = "nodeAppearance")
+public class NodeAppearance {
 	private UUID id;
 	private UUID nodeId;
-	private String key;
-	private String value;
+	private int positionLeft;
+	private int positionTop;
 
 	@Id
 	@Column(name = "id", length = 16)
@@ -25,7 +25,7 @@ public class NodeConfigurationProfile {
 		this.id = id;
 	}
 
-	@Column(name = "nodeId", length = 16)
+	@Column(name = "nodeId", length = 16, unique = true)
 	public UUID getNodeId() {
 		return nodeId;
 	}
@@ -34,22 +34,22 @@ public class NodeConfigurationProfile {
 		this.nodeId = nodeId;
 	}
 
-	@Column(name = "configurationKey")
-	public String getKey() {
-		return key;
+	@Column(name = "positionLeft")
+	public int getPositionLeft() {
+		return positionLeft;
 	}
 
-	public void setKey(String key) {
-		this.key = key;
+	public void setPositionLeft(int positionLeft) {
+		this.positionLeft = positionLeft;
 	}
 
-	@Column(name = "configurationValue")
-	public String getValue() {
-		return value;
+	@Column(name = "positionTop")
+	public int getPositionTop() {
+		return positionTop;
 	}
 
-	public void setValue(String value) {
-		this.value = value;
+	public void setPositionTop(int positionTop) {
+		this.positionTop = positionTop;
 	}
 
 }

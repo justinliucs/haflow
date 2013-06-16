@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class ModuleController {
 	private ModuleHelper moduleHelper;
 
-	public ModuleHelper getModuleHelper() {
+	private ModuleHelper getModuleHelper() {
 		return moduleHelper;
 	}
 
 	@Autowired
-	public void setModuleHelper(ModuleHelper moduleHelper) {
+	private void setModuleHelper(ModuleHelper moduleHelper) {
 		this.moduleHelper = moduleHelper;
 	}
 
