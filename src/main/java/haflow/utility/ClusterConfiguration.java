@@ -24,10 +24,6 @@ public class ClusterConfiguration {
 	}
 
 	public ClusterConfiguration() {
-		this.loadClusterConf();
-	}
-
-	private void loadClusterConf() {
 		ClassLoader loader = ClusterConfiguration.class.getClassLoader();
 		URL url = loader.getResource(ClusterConfiguration.PROERTIES_FILE_NAME);
 		this.setProperties(new Properties());

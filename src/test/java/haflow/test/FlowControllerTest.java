@@ -4,6 +4,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
 @ContextConfiguration(locations = "classpath:servlet-context.xml")
-public class ModuleServiceTest extends AbstractJUnit4SpringContextTests {
+public class FlowControllerTest extends AbstractJUnit4SpringContextTests {
 
 }
