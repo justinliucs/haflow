@@ -1,5 +1,9 @@
 package haflow.test;
 
-public class FlowHelperTest {
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+
+@ContextConfiguration(locations = "classpath:servlet-context.xml")
+public class FlowHelperTest extends AbstractJUnit4SpringContextTests {
 
 }

@@ -19,7 +19,7 @@
 		<mapping class="haflow.entity.Flow" />
 		<mapping class="haflow.entity.Node" />
 
-		<mapping class="haflow.profile.NodeAppearanceProfile" />
-		<mapping class="haflow.profile.NodeConfigurationProfile" />
+		<mapping class="haflow.profile.NodeAppearance" />
+		<mapping class="haflow.profile.NodeConfiguration" />
 	</session-factory>
 </hibernate-configuration>
