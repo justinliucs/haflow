@@ -85,7 +85,7 @@ public class ClassHelper {
 				JarEntry jarEntry = jarEntries.nextElement();
 				String entryName = jarEntry.getName();
 				if (entryName.endsWith(".class")) {
-					String packagePath = packageName.replace(".", "/") + "/";
+					String packagePath = packageName.replace(".", "/");
 					if (searchInChildPackage) {
 						if (entryName.startsWith(packagePath)) {
 							entryName = entryName.replace("/", ".").substring(
