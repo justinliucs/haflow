@@ -114,7 +114,7 @@ public class FlowExecuteService {
 		}
 
 		try {
-			Map<String, Class<?>> moduleClasses = this.getModuleLoader()
+			Map<UUID, Class<?>> moduleClasses = this.getModuleLoader()
 					.searchForModuleClasses();
 
 			Set<Node> nodes = flow.getNodes();
@@ -199,10 +199,10 @@ public class FlowExecuteService {
 	}
 
 	private Set<String> getJarPaths(Set<Node> nodes,
-			Map<String, Class<?>> moduleClasses) {
+			Map<UUID, Class<?>> moduleClasses) {
 		Set<String> jarPaths = new HashSet<String>();
 		for (Node node : nodes) {
-			Class<?> module = moduleClasses.get(node.getModuleId().toString());
+			Class<?> module = moduleClasses.get(node.getModuleId());
 			String path = module.getProtectionDomain().getCodeSource()
 					.getLocation().getFile();
 			jarPaths.add(path);
@@ -211,10 +211,10 @@ public class FlowExecuteService {
 	}
 
 	private List<Node> findStartNodes(Set<Node> nodes,
-			Map<String, Class<?>> moduleClasses) {
+			Map<UUID, Class<?>> moduleClasses) {
 		List<Node> startNodes = new ArrayList<Node>();
 		for (Node node : nodes) {
-			Class<?> module = moduleClasses.get(node.getModuleId().toString());
+			Class<?> module = moduleClasses.get(node.getModuleId());
 			if (module != null && module.equals(StartModule.class)) {
 				startNodes.add(node);
 			}
@@ -223,12 +223,11 @@ public class FlowExecuteService {
 	}
 
 	private void replaceEndNode(List<Integer> sorted,
-			Map<String, Class<?>> moduleClasses, DirectedGraph graph) {
+			Map<UUID, Class<?>> moduleClasses, DirectedGraph graph) {
 		for (int i = 0; i < sorted.size(); i++) {// move end node to the end
 			int w = sorted.get(i);
 			Node node = graph.getNode(w);
-			Class<?> moduleClass = moduleClasses.get(node.getModuleId()
-					.toString());
+			Class<?> moduleClass = moduleClasses.get(node.getModuleId());
 			if (moduleClass.equals(EndModule.class)) {// what if we have more
 														// than one end?
 				for (int j = i + 1; j < sorted.size(); j++) {
@@ -241,7 +240,7 @@ public class FlowExecuteService {
 	}
 
 	private String genWorkflowXml(String flowName, List<Integer> sorted,
-			Map<String, Class<?>> moduleClasses, DirectedGraph graph)
+			Map<UUID, Class<?>> moduleClasses, DirectedGraph graph)
 			throws InstantiationException, IllegalAccessException {
 		StringBuilder workflowXml = new StringBuilder();
 		workflowXml
@@ -260,8 +259,7 @@ public class FlowExecuteService {
 			}
 			int w = sorted.get(i);
 			Node node = graph.getNode(w);
-			Class<?> moduleClass = moduleClasses.get(node.getModuleId()
-					.toString());
+			Class<?> moduleClass = moduleClasses.get(node.getModuleId());
 			ModuleMetadata module = (ModuleMetadata) moduleClass.newInstance();
 			Map<String, String> configurations = new HashMap<String, String>();
 			configurations.put("name", node.getName());
