@@ -6,6 +6,7 @@ import haflow.module.ModuleMetadata;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -46,9 +47,9 @@ public class ModuleLoader {
 		}
 	}
 
-	public Map<String, Class<?>> searchForModuleClasses(String packageName) {
+	public Map<UUID, Class<?>> searchForModuleClasses(String packageName) {
 		try {
-			Map<String, Class<?>> moduleClasses = new HashMap<String, Class<?>>();
+			Map<UUID, Class<?>> moduleClasses = new HashMap<UUID, Class<?>>();
 			List<String> classNames = this.getClassHelper().getClassNames(
 					packageName, true);
 			for (String className : classNames) {
@@ -57,8 +58,8 @@ public class ModuleLoader {
 					Object obj = moduleClass.newInstance();
 					if (obj instanceof ModuleMetadata) {
 						moduleClasses.put(
-								moduleClass.getAnnotation(Module.class).id(),
-								moduleClass);
+								UUID.fromString(moduleClass.getAnnotation(
+										Module.class).id()), moduleClass);
 
 					}
 				}
@@ -71,10 +72,10 @@ public class ModuleLoader {
 	}
 
 	public Map<Module, ModuleMetadata> searchForModules() {
-		return this.searchForModules("haflow");
+		return this.searchForModules("haflow.module");
 	}
 
-	public Map<String, Class<?>> searchForModuleClasses() {
-		return this.searchForModuleClasses("haflow");
+	public Map<UUID, Class<?>> searchForModuleClasses() {
+		return this.searchForModuleClasses("haflow.module");
 	}
 }
