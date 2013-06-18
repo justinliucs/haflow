@@ -693,9 +693,7 @@ HAFlow.Main.prototype.initNodes = function(flowId) {
 				radius : 7,
 			},
 			isSource : true,
-			connector : [ "StateMachine", {
-				curviness : 20
-			} ]
+			connector : [ "Flowchart", {} ]
 		};
 		var targetEndpoint = {
 			endpoint : "Dot",
@@ -711,10 +709,10 @@ HAFlow.Main.prototype.initNodes = function(flowId) {
 
 		_addEndpoints = function(instance, flowId, nodeId, module) {
 			var anchors = [];
-			anchors = [ [ 0, 0.5, 1, 0 ] // Left
+			anchors = [ [ 0.5, 0, 0, -1 ] // Top
 			, [ 1, 0.5, 1, 0 ] // Right
+			, [ 0, 0.5, -1, 0 ] // Left
 			, [ 0.5, 1, 0, 1 ] // Bottom
-			, [ 0.5, 0, 0, -1 ] // Top
 			];
 
 			var k = 0;
@@ -815,7 +813,7 @@ HAFlow.Main.prototype.onConnectionCreated = function(instance, flowId, info) {
 		newConnection["targetEndpoint"] = targetEndpoint;
 		instance.flows[flowId].edges.push(newConnection);
 		info.connection.setPaintStyle({
-			strokeStyle : "rgb(0,0,0)"
+			strokeStyle : "rgb(22,55,88)"
 		});
 	} else {
 		instance.jsPlumb[flowId].detach(info);
