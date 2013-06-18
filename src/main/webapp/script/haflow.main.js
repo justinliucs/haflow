@@ -693,7 +693,11 @@ HAFlow.Main.prototype.initNodes = function(flowId) {
 				radius : 7,
 			},
 			isSource : true,
-			connector : [ "Flowchart", {} ]
+			connector : [ "Flowchart", {} ],
+			connectorStyle : {
+				strokeStyle : "#225588",
+				lineWidth : 3
+			}
 		};
 		var targetEndpoint = {
 			endpoint : "Dot",
@@ -708,12 +712,12 @@ HAFlow.Main.prototype.initNodes = function(flowId) {
 		var module = this.getModuleById(this, node.moduleId);
 
 		_addEndpoints = function(instance, flowId, nodeId, module) {
-			var anchors = [];
-			anchors = [ [ 0.5, 0, 0, -1 ] // Top
-			, [ 1, 0.5, 1, 0 ] // Right
-			, [ 0, 0.5, -1, 0 ] // Left
-			, [ 0.5, 1, 0, 1 ] // Bottom
-			];
+			var inputAnchors = new Array();
+			var outputAnchors = new Array();
+			inputAnchors = [ [ 0, 0.5, -1, 0 ], [ 0, 0.25, -1, 0 ],
+					[ 0, 0.75, -1, 0 ] ];
+			outputAnchors = [ [ 1, 0.5, 1, 0 ], [ 1, 0.25, 1, 0 ],
+					[ 1, 0.75, 1, 0 ] ];
 
 			var k = 0;
 			for ( var i = 0; i < module.outputs.length; i++, k++) {
@@ -721,7 +725,8 @@ HAFlow.Main.prototype.initNodes = function(flowId) {
 				instance.jsPlumb[flowId].allSourceEndpoints
 						.push(instance.jsPlumb[flowId].addEndpoint(nodeId,
 								sourceEndpoint, {
-									anchor : anchors[k % anchors.length],
+									anchor : outputAnchors[k
+											% outputAnchors.length],
 									uuid : sourceId,
 									overlays : [ [ "Label", {
 										location : [ 0.5, -0.5 ],
@@ -729,12 +734,14 @@ HAFlow.Main.prototype.initNodes = function(flowId) {
 									} ] ]
 								}));
 			}
+			k = 0;
 			for ( var j = 0; j < module.inputs.length; j++, k++) {
 				var targetId = nodeId + "_" + module.inputs[j].name;
 				instance.jsPlumb[flowId].allTargetEndpoints
 						.push(instance.jsPlumb[flowId].addEndpoint(nodeId,
 								targetEndpoint, {
-									anchor : anchors[k % anchors.length],
+									anchor : inputAnchors[k
+											% inputAnchors.length],
 									uuid : targetId,
 									overlays : [ [ "Label", {
 										location : [ 0.5, -0.5 ],
