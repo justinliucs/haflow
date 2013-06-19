@@ -367,12 +367,12 @@ HAFlow.Main.prototype.initHdfsFileListTree = function() {
 	var _currentInstance = this;
 	tree.on("click", function(item) {
 		if (item.directory == true) {
-			// _currentInstance.onFlowClicked(_currentInstance, item.id);
+
 		}
 	}, true);
 	tree.on("dblclick", function(item) {
 		if (item.isDirectory == true) {
-			// _currentInstance.loadFlow(item.id);
+
 		} else {
 			_currentInstance.getHdfsFile(item.parentPath, item.name);
 		}
@@ -567,12 +567,25 @@ HAFlow.Main.prototype.onModuleAdded = function(instance, flowId, event, ui) {
 
 HAFlow.Main.prototype.doAddModule = function(instance, flowId, moduleId, left,
 		top) {
+	instance.flows[flowId].currentNewNodeNumber = -1;
+	var i;
+	var j;
+	for (i = 0; i < instance.flows[flowId].nodes.length; i++) {
+		var pattern = /^NewNode(\d+)$/;
+		var matches = pattern.exec(instance.flows[flowId].nodes[i].name);
+		for (j = 0; j < matches.length; j++) {
+			if (parseInt(matches[j]) > instance.flows[flowId].currentNewNodeNumber) {
+				instance.flows[flowId].currentNewNodeNumber = parseInt(matches[j]);
+			}
+		}
+	}
+	instance.flows[flowId].currentNewNodeNumber++;
 	var newNode = {};
 	var id = HAFlow.generateUUID();
 	newNode["id"] = id;
 	newNode["flowId"] = flowId;
 	newNode["moduleId"] = moduleId;
-	newNode["name"] = "Node-" + id;
+	newNode["name"] = "NewNode" + instance.flows[flowId].currentNewNodeNumber;
 	newNode["position"] = {};
 	newNode.position["left"] = left;
 	newNode.position["top"] = top;
@@ -714,10 +727,10 @@ HAFlow.Main.prototype.initNodes = function(flowId) {
 		_addEndpoints = function(instance, flowId, nodeId, module) {
 			var inputAnchors = new Array();
 			var outputAnchors = new Array();
-			inputAnchors = [ [ 0, 0.5, -1, 0 ], [ 0, 0.25, -1, 0 ],
-					[ 0, 0.75, -1, 0 ] ];
-			outputAnchors = [ [ 1, 0.5, 1, 0 ], [ 1, 0.25, 1, 0 ],
-					[ 1, 0.75, 1, 0 ] ];
+			inputAnchors = [ [ 0, 0.5, -1, 0 ], [ 0, 0.1, -1, 0 ],
+					[ 0, 0.9, -1, 0 ] ];
+			outputAnchors = [ [ 1, 0.5, 1, 0 ], [ 1, 0.1, 1, 0 ],
+					[ 1, 0.9, 1, 0 ] ];
 
 			var k = 0;
 			for ( var i = 0; i < module.outputs.length; i++, k++) {
