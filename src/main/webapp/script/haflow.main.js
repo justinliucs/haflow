@@ -567,25 +567,25 @@ HAFlow.Main.prototype.onModuleAdded = function(instance, flowId, event, ui) {
 
 HAFlow.Main.prototype.doAddModule = function(instance, flowId, moduleId, left,
 		top) {
-	instance.flows[flowId].currentNewNodeNumber = -1;
+	var currentNewNodeNumber = -1;
 	var i;
 	var j;
 	for (i = 0; i < instance.flows[flowId].nodes.length; i++) {
 		var pattern = /^NewNode(\d+)$/;
 		var matches = pattern.exec(instance.flows[flowId].nodes[i].name);
 		for (j = 0; j < matches.length; j++) {
-			if (parseInt(matches[j]) > instance.flows[flowId].currentNewNodeNumber) {
-				instance.flows[flowId].currentNewNodeNumber = parseInt(matches[j]);
+			if (parseInt(matches[j]) > currentNewNodeNumber) {
+				currentNewNodeNumber = parseInt(matches[j]);
 			}
 		}
 	}
-	instance.flows[flowId].currentNewNodeNumber++;
+	currentNewNodeNumber++;
 	var newNode = {};
 	var id = HAFlow.generateUUID();
 	newNode["id"] = id;
 	newNode["flowId"] = flowId;
 	newNode["moduleId"] = moduleId;
-	newNode["name"] = "NewNode" + instance.flows[flowId].currentNewNodeNumber;
+	newNode["name"] = "NewNode" + currentNewNodeNumber;
 	newNode["position"] = {};
 	newNode.position["left"] = left;
 	newNode.position["top"] = top;
@@ -724,47 +724,44 @@ HAFlow.Main.prototype.initNodes = function(flowId) {
 				this.flows[flowId].nodes[i].id);
 		var module = this.getModuleById(this, node.moduleId);
 
-		_addEndpoints = function(instance, flowId, nodeId, module) {
-			var inputAnchors = new Array();
-			var outputAnchors = new Array();
-			inputAnchors = [ [ 0, 0.5, -1, 0 ], [ 0, 0.1, -1, 0 ],
-					[ 0, 0.9, -1, 0 ] ];
-			outputAnchors = [ [ 1, 0.5, 1, 0 ], [ 1, 0.1, 1, 0 ],
-					[ 1, 0.9, 1, 0 ] ];
+		this.addEndpoints(this, flowId, nodeId, module, sourceEndpoint,
+				targetEndpoint);
+	}
+};
 
-			var k = 0;
-			for ( var i = 0; i < module.outputs.length; i++, k++) {
-				var sourceId = nodeId + "_" + module.outputs[i].name;
-				instance.jsPlumb[flowId].allSourceEndpoints
-						.push(instance.jsPlumb[flowId].addEndpoint(nodeId,
-								sourceEndpoint, {
-									anchor : outputAnchors[k
-											% outputAnchors.length],
-									uuid : sourceId,
-									overlays : [ [ "Label", {
-										location : [ 0.5, -0.5 ],
-										label : module.outputs[i].name
-									} ] ]
-								}));
-			}
-			k = 0;
-			for ( var j = 0; j < module.inputs.length; j++, k++) {
-				var targetId = nodeId + "_" + module.inputs[j].name;
-				instance.jsPlumb[flowId].allTargetEndpoints
-						.push(instance.jsPlumb[flowId].addEndpoint(nodeId,
-								targetEndpoint, {
-									anchor : inputAnchors[k
-											% inputAnchors.length],
-									uuid : targetId,
-									overlays : [ [ "Label", {
-										location : [ 0.5, -0.5 ],
-										label : module.inputs[j].name
-									} ] ]
-								}));
-			}
-		};
-
-		_addEndpoints(this, flowId, nodeId, module);
+HAFlow.Main.prototype.addEndpoints = function(instance, flowId, nodeId, module,
+		sourceEndpoint, targetEndpoint) {
+	var k = 0;
+	for ( var i = 0; i < module.outputs.length; i++, k++) {
+		var sourceId = nodeId + "_" + module.outputs[i].name;
+		instance.jsPlumb[flowId].allSourceEndpoints
+				.push(instance.jsPlumb[flowId].addEndpoint(nodeId,
+						sourceEndpoint, {
+							anchor : [ 1,
+									1 / (module.outputs.length + 1) * (i + 1),
+									1, 0 ],
+							uuid : sourceId,
+							overlays : [ [ "Label", {
+								location : [ 0.5, -0.5 ],
+								label : module.outputs[i].name
+							} ] ]
+						}));
+	}
+	k = 0;
+	for ( var j = 0; j < module.inputs.length; j++, k++) {
+		var targetId = nodeId + "_" + module.inputs[j].name;
+		instance.jsPlumb[flowId].allTargetEndpoints
+				.push(instance.jsPlumb[flowId].addEndpoint(nodeId,
+						targetEndpoint, {
+							anchor : [ 0,
+									1 / (module.inputs.length + 1) * (j + 1),
+									-1, 0 ],
+							uuid : targetId,
+							overlays : [ [ "Label", {
+								location : [ 0.5, -0.5 ],
+								label : module.inputs[j].name
+							} ] ]
+						}));
 	}
 };
 
