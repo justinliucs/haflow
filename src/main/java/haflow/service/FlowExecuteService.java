@@ -4,9 +4,8 @@ import haflow.entity.Flow;
 import haflow.entity.Node;
 import haflow.flow.DirectedGraph;
 import haflow.flow.TopologicalSort;
-import haflow.module.ModuleMetadata;
-import haflow.module.oozie.EndModule;
-import haflow.module.oozie.StartModule;
+import haflow.module.basic.EndModule;
+import haflow.module.basic.StartModule;
 import haflow.profile.NodeConfiguration;
 import haflow.ui.model.RunFlowResultModel;
 import haflow.utility.ClusterConfiguration;
@@ -259,8 +258,10 @@ public class FlowExecuteService {
 			}
 			int w = sorted.get(i);
 			Node node = graph.getNode(w);
-			Class<?> moduleClass = moduleClasses.get(node.getModuleId());
-			ModuleMetadata module = (ModuleMetadata) moduleClass.newInstance();
+			// TODO
+			// Class<?> moduleClass = moduleClasses.get(node.getModuleId());
+			// AbstractModule module = (AbstractModule)
+			// moduleClass.newInstance();
 			Map<String, String> configurations = new HashMap<String, String>();
 			configurations.put("name", node.getName());
 			List<NodeConfiguration> ncps = this.getNodeConfigurationService()
@@ -278,9 +279,10 @@ public class FlowExecuteService {
 					break;// TODO
 				}
 			}
-			String part = module.generate(configurations,
-					graph.getInputs(node), graph.getOutputs(node));
-			workflowXml.append(part + "\n");
+			// TODO
+			// String part = module.generate(configurations,
+			// graph.getInputs(node), graph.getOutputs(node));
+			// workflowXml.append(part + "\n");
 		}
 		workflowXml.append("</workflow-app>" + "\n");
 		return workflowXml.toString();
