@@ -1,4 +1,4 @@
-package haflow.module;
+package haflow.engine;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,12 +7,6 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ModuleEndpoint {
+public @interface Engine {
 	String name();
-
-	int minNumber();
-
-	int maxNumber();
-
-	DataType dataType();
 }

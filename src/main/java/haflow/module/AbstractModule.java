@@ -4,7 +4,7 @@ import haflow.entity.Node;
 
 import java.util.Map;
 
-public interface ModuleMetadata {
-	public String generate(Map<String, String> configurations,
+public abstract class AbstractModule {
+	public abstract boolean validate(Map<String, String> configurations,
 			Map<String, Node> inputs, Map<String, Node> outputs);
 }

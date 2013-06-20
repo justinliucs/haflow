@@ -8,6 +8,7 @@ public class ModuleEndpointModel {
 	private String name;
 	private int minNumber;
 	private int maxNumber;
+	private String dataType;
 
 	@XmlElement
 	public String getName() {
@@ -35,4 +36,14 @@ public class ModuleEndpointModel {
 	public void setMaxNumber(int maxNumber) {
 		this.maxNumber = maxNumber;
 	}
+
+	@XmlElement
+	public String getDataType() {
+		return dataType;
+	}
+
+	public void setDataType(String dataType) {
+		this.dataType = dataType;
+	}
+
 }
