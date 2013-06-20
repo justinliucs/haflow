@@ -55,6 +55,7 @@ public class ModuleHelper {
 				model.setMaxNumber(input.maxNumber());
 				model.setMinNumber(input.minNumber());
 				model.setName(input.name());
+				model.setDataType(input.dataType().toString());
 				moduleBriefModel.getInputs().add(model);
 			}
 			for (ModuleEndpoint output : module.outputs()) {
@@ -62,6 +63,7 @@ public class ModuleHelper {
 				model.setMaxNumber(output.maxNumber());
 				model.setMinNumber(output.minNumber());
 				model.setName(output.name());
+				model.setDataType(output.dataType().toString());
 				moduleBriefModel.getOutputs().add(model);
 			}
 			moduleListModel.getModules().add(moduleBriefModel);

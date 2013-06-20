@@ -1,7 +1,7 @@
 package haflow.utility;
 
 import haflow.module.Module;
-import haflow.module.ModuleMetadata;
+import haflow.module.AbstractModule;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,17 +24,17 @@ public class ModuleLoader {
 		this.classHelper = classHelper;
 	}
 
-	public Map<Module, ModuleMetadata> searchForModules(String packageName) {
+	public Map<Module, AbstractModule> searchForModules(String packageName) {
 		try {
-			Map<Module, ModuleMetadata> modules = new HashMap<Module, ModuleMetadata>();
+			Map<Module, AbstractModule> modules = new HashMap<Module, AbstractModule>();
 			List<String> classNames = this.getClassHelper().getClassNames(
 					packageName, true);
 			for (String className : classNames) {
 				Class<?> moduleClass = Class.forName(className);
 				if (moduleClass.isAnnotationPresent(Module.class)) {
 					Object obj = moduleClass.newInstance();
-					if (obj instanceof ModuleMetadata) {
-						ModuleMetadata metadata = (ModuleMetadata) obj;
+					if (obj instanceof AbstractModule) {
+						AbstractModule metadata = (AbstractModule) obj;
 						Module module = moduleClass.getAnnotation(Module.class);
 						modules.put(module, metadata);
 					}
@@ -56,7 +56,7 @@ public class ModuleLoader {
 				Class<?> moduleClass = Class.forName(className);
 				if (moduleClass.isAnnotationPresent(Module.class)) {
 					Object obj = moduleClass.newInstance();
-					if (obj instanceof ModuleMetadata) {
+					if (obj instanceof AbstractModule) {
 						moduleClasses.put(
 								UUID.fromString(moduleClass.getAnnotation(
 										Module.class).id()), moduleClass);
@@ -71,7 +71,7 @@ public class ModuleLoader {
 		}
 	}
 
-	public Map<Module, ModuleMetadata> searchForModules() {
+	public Map<Module, AbstractModule> searchForModules() {
 		return this.searchForModules("haflow.module");
 	}
 

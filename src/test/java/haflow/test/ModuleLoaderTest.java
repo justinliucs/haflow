@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import haflow.module.Module;
-import haflow.module.ModuleMetadata;
+import haflow.module.AbstractModule;
 import haflow.utility.ModuleLoader;
 
 import org.junit.Assert;
@@ -28,7 +28,7 @@ public class ModuleLoaderTest extends AbstractJUnit4SpringContextTests {
 
 	@Test
 	public void testSearchForModule() {
-		Map<Module, ModuleMetadata> map = this.getModuleLoader()
+		Map<Module, AbstractModule> map = this.getModuleLoader()
 				.searchForModules();
 		Assert.assertNotNull(map);
 		Assert.assertTrue(map.keySet().size() > 0);
@@ -44,12 +44,12 @@ public class ModuleLoaderTest extends AbstractJUnit4SpringContextTests {
 
 	@Test
 	public void testSearchForModuleInAnotherPackage() {
-		Map<Module, ModuleMetadata> map = this.getModuleLoader()
+		Map<Module, AbstractModule> map = this.getModuleLoader()
 				.searchForModules("haflow.test");
 		Assert.assertNotNull(map);
 		Assert.assertTrue(map.keySet().size() > 0);
 		boolean contains = false;
-		ModuleMetadata metadata = null;
+		AbstractModule metadata = null;
 		for (Module module : map.keySet()) {
 			if (module.name().equals("TestModule")) {
 				contains = true;
@@ -59,7 +59,6 @@ public class ModuleLoaderTest extends AbstractJUnit4SpringContextTests {
 		}
 		Assert.assertTrue(contains);
 		Assert.assertNotNull(metadata);
-		Assert.assertEquals("Test", metadata.generate(null, null, null));
 	}
 
 	@Test

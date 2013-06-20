@@ -1,14 +1,15 @@
-package haflow.module.oozie;
+package haflow.module.basic;
 
 import java.util.Map;
 
 import haflow.entity.Node;
+import haflow.module.DataType;
 import haflow.module.Module;
 import haflow.module.ModuleConfiguration;
 import haflow.module.ModuleEndpoint;
-import haflow.module.ModuleMetadata;
+import haflow.module.AbstractModule;
 
-@Module(id = "35267c79-5221-3a0e-d485-605fa8e4b191", name = "MapReduce", category = "Oozie", configurations = {
+@Module(id = "35267c79-5221-3a0e-d485-605fa8e4b191", name = "MapReduce", category = "Basic", configurations = {
 		@ModuleConfiguration(key = "job-tracker", displayName = "Job Tracker"),
 		@ModuleConfiguration(key = "name-node", displayName = "Name Node"),
 		@ModuleConfiguration(key = "prepare.delete", displayName = "Prepare:Delete"),
@@ -17,15 +18,16 @@ import haflow.module.ModuleMetadata;
 		@ModuleConfiguration(key = "streaming.reducer", displayName = "Streaming:Reducer"),
 		@ModuleConfiguration(key = "streaming.record-reader", displayName = "Streaming:Record Reader"),
 		@ModuleConfiguration(key = "streaming.record-reader-mapping", displayName = "Streaming:Record Reader Mapping"),
-		@ModuleConfiguration(key = "streaming.env", displayName = "Streaming:Environment") }, inputs = { @ModuleEndpoint(name = "from", minNumber = 1, maxNumber = 1) }, outputs = {
-		@ModuleEndpoint(name = "to", minNumber = 1, maxNumber = 1),
-		@ModuleEndpoint(name = "error", minNumber = 1, maxNumber = 1) })
-public class MapReduceModule implements ModuleMetadata {
+		@ModuleConfiguration(key = "streaming.env", displayName = "Streaming:Environment") }, inputs = { @ModuleEndpoint(name = "from", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText) }, outputs = {
+		@ModuleEndpoint(name = "to", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText),
+		@ModuleEndpoint(name = "error", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText) })
+public class MapReduceModule extends AbstractModule {
 
-	public String generate(Map<String, String> configurations,
+	@Override
+	public boolean validate(Map<String, String> configurations,
 			Map<String, Node> inputs, Map<String, Node> outputs) {
 		// TODO Auto-generated method stub
-		return null;
+		return false;
 	}
 
 }
