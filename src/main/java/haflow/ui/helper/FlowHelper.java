@@ -9,11 +9,11 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import haflow.entity.Edge;
-import haflow.entity.Flow;
-import haflow.entity.Node;
-import haflow.profile.NodeAppearance;
-import haflow.profile.NodeConfiguration;
+import haflow.dto.entity.Edge;
+import haflow.dto.entity.Flow;
+import haflow.dto.entity.Node;
+import haflow.dto.profile.NodeAppearance;
+import haflow.dto.profile.NodeConfiguration;
 import haflow.service.FlowService;
 import haflow.service.NodeAppearanceService;
 import haflow.service.NodeConfigurationService;

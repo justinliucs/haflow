@@ -1,6 +1,6 @@
 package haflow.engine;
 
-import haflow.entity.Flow;
+import haflow.dto.entity.Flow;
 
 public abstract class AbstractEngine {
 	public abstract ValidateFlowResult validateFlow(Flow flow);

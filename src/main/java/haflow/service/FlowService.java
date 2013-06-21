@@ -1,8 +1,8 @@
 package haflow.service;
 
-import haflow.entity.Edge;
-import haflow.entity.Flow;
-import haflow.entity.Node;
+import haflow.dto.entity.Edge;
+import haflow.dto.entity.Flow;
+import haflow.dto.entity.Node;
 import haflow.utility.SessionHelper;
 
 import java.util.HashSet;

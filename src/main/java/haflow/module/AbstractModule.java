@@ -1,6 +1,6 @@
 package haflow.module;
 
-import haflow.entity.Node;
+import haflow.dto.entity.Node;
 
 import java.util.Map;
 

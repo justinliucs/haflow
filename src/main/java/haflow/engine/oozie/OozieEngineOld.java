@@ -4,13 +4,13 @@ import haflow.dto.entity.Flow;
 import haflow.dto.entity.Node;
 import haflow.dto.profile.NodeConfiguration;
 import haflow.engin.model.Action;
-import haflow.engin.model.AdjMatrixNode;
 import haflow.engin.model.DirectedGraph;
 import haflow.engin.model.TopologicalSort;
 import haflow.engine.AbstractEngine;
 import haflow.engine.Engine;
 import haflow.engine.RunFlowResult;
 import haflow.engine.ValidateFlowResult;
+import haflow.module.AbstractModule;
 import haflow.module.Module;
 import haflow.module.basic.EndModule;
 import haflow.module.basic.StartModule;
@@ -28,12 +28,9 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.w3c.dom.Document;
 
 @Engine(name = "Oozie")
-@Component
-public class OozieEngine extends AbstractEngine {
+public class OozieEngineOld extends AbstractEngine {
 
 	private ModuleLoader moduleLoader;
 	private NodeConfigurationService nodeConfigurationService;
@@ -248,10 +245,24 @@ public class OozieEngine extends AbstractEngine {
 
 		this.replaceEndNode(sorted, moduleClasses, graph);
 
+		Map<Module, AbstractModule> modules = this.getModuleLoader()
+				.searchForModules();
 		for (int i = 0; i < sorted.size(); i++) {// generate xml
+//			if (i == sorted.size() - 1) {// inject kill node
+//				workflowXml
+//						.append("<kill name=\"fail\">"
+//								+ "<message>Work flow failed, "
+//								+ "error message[${wf:errorMessage(wf:lastErrorNode())}]</message>"
+//								+ "</kill>" + "\n");
+//			}
 			int w = sorted.get(i);
 			Action node = graph.getNode(w);
-			
+			// TODO
+			Class<?> moduleClass = moduleClasses.get(node.getModuleId());
+			Module moduleProtype = moduleClass.getAnnotation(Module.class);
+			List<NodeConfiguration> nodeConfs = this.nodeConfigurationService
+					.getNodeConfiguration(node.getId());
+
 			Map<String, String> configurations = new HashMap<String, String>();
 			configurations.put("name", node.getName());
 			List<NodeConfiguration> ncps = this.getNodeConfigurationService()
@@ -262,52 +273,17 @@ public class OozieEngine extends AbstractEngine {
 				configurations.put(key, value);
 			}
 
-			Map<String, Node> outputs = new HashMap<String, Node>();
-			List<AdjMatrixNode> adj = graph.getAdjacent(w);
-			for (AdjMatrixNode v : adj) {
+			List<Integer> adj = graph.getAdjacentNodeIndex(w);
+			for (int v : adj) {
 				if (sorted.contains(v)) {
-					Action action = graph.getNode(v.getIndex());
-					outputs.put(v.getPath().getSourceEndPoint(), //"ok"
-							action.getNode());
-					break;
+					configurations.put("ok", graph.getNode(v).getName());
+					break;// TODO
 				}
 			}
-			
-			Class<?> moduleClass = moduleClasses.get(node.getModuleId());
-			Module moduleProtype = moduleClass.getAnnotation(Module.class);
-			
-			OozieXmlGenerator gen = null;
-			switch(moduleProtype.type()) {
-			
-			case START:
-				gen = new StartModuleGenerator();				
-				break;
-			case END:
-				gen = new EndModuleGenerator();				
-				break;
-			case KILL:
-				gen = new KillModuleGenerator();
-				break;
-			case JAVA:
-				gen = new JavaModuleGenerator();
-				break;
-				
-			case DECISION:
-			case FORK:
-			case JOIN:
-			case MAP_REDUCE:
-			case PIG:
-			case SUB_WORKFLOW:
-			case FS:			
-			case OTHER:
-			default:
-				System.out.println("Unsupoorted Module Type!");
-				break;
-			}
-			if( gen != null){
-				Document doc = gen.generate(configurations, null, outputs);
-				workflowXml.append(doc.toString());//TODO
-			}
+			// TODO
+			// String part = module.generate(configurations,
+			// graph.getInputs(node), graph.getOutputs(node));
+			// workflowXml.append(part + "\n");
 			
 		}
 		workflowXml.append("</workflow-app>" + "\n");

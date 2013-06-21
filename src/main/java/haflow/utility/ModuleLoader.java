@@ -1,7 +1,7 @@
 package haflow.utility;
 
-import haflow.module.Module;
 import haflow.module.AbstractModule;
+import haflow.module.Module;
 
 import java.util.HashMap;
 import java.util.List;
@@ -70,6 +70,35 @@ public class ModuleLoader {
 			return null;
 		}
 	}
+	
+	public Map<UUID, Module> searchForModuleProtypes(String packageName){
+		try {
+			Map<UUID, Module> modules = new HashMap<UUID, Module>();
+			List<String> classNames = this.getClassHelper().getClassNames(
+					packageName, true);
+			for (String className : classNames) {
+				Class<?> moduleClass = Class.forName(className);
+				if (moduleClass.isAnnotationPresent(Module.class)) {
+					if (memberOf( moduleClass.getClasses(), moduleClass)) {
+						Module module = moduleClass.getAnnotation(Module.class);
+						modules.put(UUID.fromString(module.id()), module);
+					}
+				}
+			}
+			return modules;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	private boolean memberOf(Class<?>[] superClasses, Class<?> klass){
+		for( Class<?> kls : superClasses){
+			if( kls.equals(klass))
+				return true;
+		}
+		return false;
+	}
 
 	public Map<Module, AbstractModule> searchForModules() {
 		return this.searchForModules("haflow.module");
@@ -77,5 +106,9 @@ public class ModuleLoader {
 
 	public Map<UUID, Class<?>> searchForModuleClasses() {
 		return this.searchForModuleClasses("haflow.module");
+	}
+	
+	public Map<UUID, Module> searchForModuleProtypes(){
+		return this.searchForModuleProtypes("haflow.module");
 	}
 }

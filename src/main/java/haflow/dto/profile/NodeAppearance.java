@@ -1,4 +1,4 @@
-package haflow.profile;
+package haflow.dto.profile;
 
 import java.util.UUID;
 

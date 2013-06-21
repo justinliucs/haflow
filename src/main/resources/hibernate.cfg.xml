@@ -15,11 +15,11 @@
 		<property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect </property>
 		<property name="hibernate.hbm2ddl.auto">update</property>
 
-		<mapping class="haflow.entity.Edge" />
-		<mapping class="haflow.entity.Flow" />
-		<mapping class="haflow.entity.Node" />
+		<mapping class="haflow.dto.entity.Edge" />
+		<mapping class="haflow.dto.entity.Flow" />
+		<mapping class="haflow.dto.entity.Node" />
 
-		<mapping class="haflow.profile.NodeAppearance" />
-		<mapping class="haflow.profile.NodeConfiguration" />
+		<mapping class="haflow.dto.profile.NodeAppearance" />
+		<mapping class="haflow.dto.profile.NodeConfiguration" />
 	</session-factory>
 </hibernate-configuration>

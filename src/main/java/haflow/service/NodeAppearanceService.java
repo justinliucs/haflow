@@ -3,8 +3,8 @@ package haflow.service;
 import java.util.List;
 import java.util.UUID;
 
-import haflow.entity.Node;
-import haflow.profile.NodeAppearance;
+import haflow.dto.entity.Node;
+import haflow.dto.profile.NodeAppearance;
 import haflow.utility.SessionHelper;
 
 import org.hibernate.Session;

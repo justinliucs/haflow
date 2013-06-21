@@ -1,4 +1,4 @@
-package haflow.entity;
+package haflow.dto.entity;
 
 import java.util.Set;
 import java.util.UUID;

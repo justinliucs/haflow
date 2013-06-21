@@ -1,4 +1,4 @@
-package haflow.service;
+package haflow.engine.oozie;
 
 import java.io.File;
 import java.io.FileInputStream;
