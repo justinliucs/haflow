@@ -1,24 +1,21 @@
-dojo.require("dijit.TitlePane");
+dojo.require("dojo.dom");
+dojo.require("dojo.json");
+dojo.require("dojo.store.Memory");
+dojo.require("dojo.store.Observable");
+dojo.require("dijit.form.Button");
+dojo.require("dijit.form.TextBox");
 dojo.require("dijit.layout.BorderContainer");
 dojo.require("dijit.layout.TabContainer");
 dojo.require("dijit.layout.ContentPane");
-
+dojo.require("dijit.tree.ObjectStoreModel");
 dojo.require("dijit.Menu");
 dojo.require("dijit.MenuItem");
 dojo.require("dijit.MenuBar");
 dojo.require("dijit.MenuBarItem");
 dojo.require("dijit.PopupMenuBarItem");
+dojo.require("dijit.TitlePane");
 dojo.require("dijit.Toolbar");
-
-dojo.require("dijit.form.Button");
-dojo.require("dijit.form.TextBox");
-
-dojo.require("dojo.dom");
-dojo.require("dojo.json");
-dojo.require("dojo.store.Memory");
-dojo.require("dijit.tree.ObjectStoreModel");
 dojo.require("dijit.Tree");
-dojo.require("dojo.store.Observable");
 
 var flow;
 
@@ -31,6 +28,380 @@ HAFlow.Main = function(ui) {
 	this.basePath = dojo.byId("basePath").value;
 	this.ui = ui;
 	this.rootPath = "hdfs://m150:9000/user/root";
+};
+
+// Flow
+HAFlow.Main.prototype.newFlow = function() {
+	var newFlowId = HAFlow.generateUUID();
+	this.flows[newFlowId] = {};
+	this.flows[newFlowId].id = newFlowId;
+	this.flows[newFlowId].name = "NewFlow";
+	this.flows[newFlowId].nodes = new Array();
+	this.flows[newFlowId].edges = new Array();
+	var _currentInstance = this;
+	var contentPane = new dijit.layout.ContentPane({
+		id : "flowContainerPane_" + newFlowId,
+		title : _currentInstance.flows[newFlowId].name,
+		content : "<div id=\"flowContainer_" + newFlowId
+				+ "\" class=\"flowcontainer\"></div>",
+		closable : true,
+		onClose : _currentInstance.onCloseTab(_currentInstance)
+	});
+	this.ui.centerContainer.addChild(contentPane);
+	this.ui.centerContainer.selectChild(contentPane);
+	this.setupDroppable(newFlowId);
+	this.paintFlow(newFlowId);
+	this.saveFlow(newFlowId);
+	this.flowListStore.put({
+		id : this.flows[newFlowId].id,
+		name : this.flows[newFlowId].name,
+		node : true
+	});
+};
+
+HAFlow.Main.prototype.loadFlow = function(flowId) {
+	if (dojo.byId("flowContainer_" + flowId) == null) {
+		var _currentInstance = this;
+		$.ajax({
+			url : _currentInstance.basePath + "flow/" + flowId,
+			type : "GET",
+			cache : false,
+			dataType : "json",
+			success : function(data, status) {
+				_currentInstance.flows[data.id] = data;
+				var contentPane = new dijit.layout.ContentPane({
+					id : "flowContainerPane_" + flowId,
+					title : _currentInstance.flows[flowId].name,
+					content : "<div id=\"flowContainer_" + flowId
+							+ "\" class=\"flowcontainer\"></div>",
+					closable : true,
+					onClose : _currentInstance.onCloseTab(_currentInstance)
+				});
+				_currentInstance.ui.centerContainer.addChild(contentPane);
+				_currentInstance.setupDroppable(flowId);
+				_currentInstance.paintFlow(flowId);
+				_currentInstance.ui.centerContainer.selectChild(dijit
+						.byId("flowContainerPane_" + flowId));
+			},
+			error : function(request, status, error) {
+				HAFlow.showDialog("Error",
+						"An error occurred while loading flow: " + error);
+			}
+		});
+	} else {
+		this.ui.centerContainer.selectChild(dijit.byId("flowContainerPane_"
+				+ flowId));
+	}
+};
+
+HAFlow.Main.prototype.saveFlow = function(flowId) {
+	var _currentInstance = this;
+	$.ajax({
+		url : _currentInstance.basePath + "flow/" + flowId,
+		type : "PUT",
+		dataType : "json",
+		contentType : "application/json",
+		data : JSON.stringify(_currentInstance.flows[flowId]),
+		success : function(data, status) {
+			HAFlow.showDialog("Save Flow", "Flow saved.");
+			_currentInstance.refreshFlowList();
+		},
+		error : function(request, status, error) {
+			HAFlow.showDialog("Error", "An error occurred while saving flow: "
+					+ error);
+		}
+	});
+};
+
+HAFlow.Main.prototype.removeFlow = function(flowId) {
+	var _currentInstance = this;
+	$.ajax({
+		url : _currentInstance.basePath + "flow/" + flowId,
+		type : "DELETE",
+		dataType : "json",
+		contentType : "application/json",
+		data : JSON.stringify({}),
+		success : function(data, status) {
+			HAFlow.showDialog("Remove Flow", "Flow removed.");
+			_currentInstance.ui.centerContainer.removeChild(dijit
+					.byId("flowContainerPane_" + flowId));
+			_currentInstance.refreshFlowList();
+			_currentInstance.flowListStore
+					.remove(_currentInstance.flows[flowId].id);
+		},
+		error : function(request, status, error) {
+			HAFlow.showDialog("Error",
+					"An error occurred while removing flow: " + error);
+		}
+	});
+};
+
+HAFlow.Main.prototype.runFlow = function(flowId) {
+	var _currentInstance = this;
+	$.ajax({
+		url : _currentInstance.basePath + "flow/" + flowId,
+		type : "PUT",
+		dataType : "json",
+		contentType : "application/json",
+		data : JSON.stringify(_currentInstance.flows[flowId]),
+		success : function(data, status) {
+			HAFlow.showDialog("Save Flow", "Flow saved.");
+			_currentInstance.refreshFlowList();
+			$.ajax({
+				url : _currentInstance.basePath + "run/" + flowId,
+				type : "POST",
+				dataType : "json",
+				contentType : "application/json",
+				data : JSON.stringify({}),
+				success : function(data, status) {
+					HAFlow.showDialog("Run Flow", " Commited: " + data.commited
+							+ "\n" + "Result: " + data.message);
+				},
+				error : function(request, status, error) {
+					HAFlow.showDialog("Error",
+							"An error occurred while running flow: " + error);
+				}
+			});
+		},
+		error : function(request, status, error) {
+			HAFlow.showDialog("Error", "An error occurred while saving flow: "
+					+ error);
+		}
+	});
+};
+
+// Flow Helper
+HAFlow.Main.prototype.refreshFlowList = function() {
+	var _currentInstance = this;
+	$.ajax({
+		url : this.basePath + "flow",
+		type : "GET",
+		cache : false,
+		dataType : "json",
+		success : function(data, status) {
+			_currentInstance.flowList = data;
+		},
+		error : function(request, status, error) {
+			HAFlow.showDialog("Error",
+					"An error occurred while refreshing flow list: " + error);
+		}
+	});
+};
+
+HAFlow.Main.prototype.getFlowBriefById = function(instance, flowId) {
+	var i;
+	for (i = 0; i < instance.flowList.flows.length; i++) {
+		if (instance.flowList.flows[i].id == flowId) {
+			return instance.flowList.flows[i];
+		}
+	}
+	return null;
+};
+
+HAFlow.Main.prototype.getNodeById = function(instance, flowId, nodeId) {
+	var i;
+	for (i = 0; i < instance.flows[flowId].nodes.length; i++) {
+		if (instance.flows[flowId].nodes[i].id == nodeId) {
+			return instance.flows[flowId].nodes[i];
+		}
+	}
+	return null;
+};
+
+HAFlow.Main.prototype.getModuleById = function(instance, moduleId) {
+	var i;
+	for (i = 0; i < instance.moduleList.modules.length; i++) {
+		if (instance.moduleList.modules[i].id == moduleId) {
+			return instance.moduleList.modules[i];
+		}
+	}
+	return null;
+};
+
+HAFlow.Main.prototype.getConfigurationValue = function(instance, flowId,
+		nodeId, key) {
+	var node = instance.getNodeById(instance, flowId, nodeId);
+	var i;
+	for (i = 0; i < node.configurations.length; i++) {
+		if (node.configurations[i].key == key) {
+			return node.configurations[i].value;
+		}
+	}
+	return "";
+};
+
+HAFlow.Main.prototype.checkNodeName = function(instance, flowId, oldName,
+		newName) {
+	var i;
+	if (oldName == newName) {
+		return true;
+	}
+	var regex = /^[a-zA-Z_][a-zA-Z_0-9]{0,38}$/;
+	if (!regex.test(newName)) {
+		return false;
+	}
+	for (i = 0; i < instance.flows[flowId].nodes.length; i++) {
+		if (newName == instance.flows[flowId].nodes[i].name) {
+			return false;
+		}
+	}
+	return true;
+};
+
+HAFlow.Main.prototype.checkFlowName = function(instance, oldName, newName) {
+	var i;
+	if (oldName == newName) {
+		return true;
+	}
+	var regex = /^[a-zA-Z_][a-zA-Z_0-9]{0,38}$/;
+	if (!regex.test(newName)) {
+		return false;
+	}
+	for (i = 0; i < instance.flows.length; i++) {
+		if (newName == instance.flows[i].name) {
+			return false;
+		}
+	}
+	return true;
+};
+
+HAFlow.Main.prototype.saveNodeName = function(instance, flowId, nodeId) {
+	var node = instance.getNodeById(instance, flowId, nodeId);
+	var value = $("#" + "node_" + nodeId + "_name").val();
+	if (instance.checkNodeName(instance, flowId, node.name, value)) {
+		node.name = value;
+		instance.paintFlow(flowId);
+		instance.jsPlumb[flowId].repaintEverything();
+	} else {
+		HAFlow.showDialog("Error", "Invalid node name");
+	}
+};
+
+HAFlow.Main.prototype.saveConfiguration = function(instance, flowId, nodeId) {
+	var node = instance.getNodeById(instance, flowId, nodeId);
+	var module = instance.getModuleById(instance, node.moduleId);
+	var i;
+	node.configurations = [];
+	for (i = 0; i < module.configurations.length; i++) {
+		node.configurations.push({
+			key : module.configurations[i].key,
+			value : $(
+					"#" + "flow_" + flowId + "_node_" + nodeId + "_"
+							+ module.configurations[i].key).val()
+		});
+	}
+};
+
+HAFlow.Main.prototype.newConnection = function(flowId, source, sourceEndpoint,
+		target, targetEndpoint) {
+	var newConnection = {};
+	newConnection["id"] = HAFlow.generateUUID();
+	newConnection["flowId"] = flowId;
+	newConnection["sourceNodeId"] = source;
+	newConnection["sourceEndpoint"] = sourceEndpoint;
+	newConnection["targetNodeId"] = target;
+	newConnection["targetEndpoint"] = targetEndpoint;
+	return newConnection;
+};
+
+HAFlow.Main.prototype.deleteConnection = function(instance, flowId, info) {
+	var source = info.sourceId.replace("node_", "");
+	var target = info.targetId.replace("node_", "");
+	var i;
+	var needToDelete = false;
+	do {
+		needToDelete = false;
+		for (i = 0; i < instance.flows[flowId].edges.length; i++) {
+			if (instance.flows[flowId].edges[i].sourceNodeId == source
+					&& instance.flows[flowId].edges[i].targetNodeId == target) {
+				needToDelete = true;
+				break;
+			}
+		}
+		if (needToDelete) {
+			instance.flows[flowId].edges.splice(i, 1);
+		}
+	} while (needToDelete);
+	instance.jsPlumb[flowId].detach(info);
+};
+
+HAFlow.Main.prototype.deleteNode = function(instance, flowId, nodeId) {
+	var i;
+	var needToDelete = false;
+	do {
+		needToDelete = false;
+		for (i = 0; i < instance.flows[flowId].edges.length; i++) {
+			if (instance.flows[flowId].edges[i].sourceNodeId == nodeId
+					|| instance.flows[flowId].edges[i].targetNodeId == nodeId) {
+				needToDelete = true;
+				break;
+			}
+		}
+		if (needToDelete) {
+			instance.flows[flowId].edges.splice(i, 1);
+		}
+	} while (needToDelete);
+	do {
+		needToDelete = false;
+		for (i = 0; i < instance.flows[flowId].nodes.length; i++) {
+			if (instance.flows[flowId].nodes[i].id == nodeId) {
+				needToDelete = true;
+				break;
+			}
+		}
+		if (needToDelete) {
+			instance.flows[flowId].nodes.splice(i, 1);
+		}
+	} while (needToDelete);
+	instance.paintFlow(flowId);
+};
+
+HAFlow.Main.prototype.doAddModule = function(instance, flowId, moduleId, left,
+		top) {
+	var currentNewNodeNumber = -1;
+	var i;
+	var j;
+	for (i = 0; i < instance.flows[flowId].nodes.length; i++) {
+		var pattern = /^NewNode(\d+)$/;
+		var matches = pattern.exec(instance.flows[flowId].nodes[i].name);
+		for (j = 0; j < matches.length; j++) {
+			if (parseInt(matches[j]) > currentNewNodeNumber) {
+				currentNewNodeNumber = parseInt(matches[j]);
+			}
+		}
+	}
+	currentNewNodeNumber++;
+	var newNode = {};
+	var id = HAFlow.generateUUID();
+	newNode["id"] = id;
+	newNode["flowId"] = flowId;
+	newNode["moduleId"] = moduleId;
+	newNode["name"] = "NewNode" + currentNewNodeNumber;
+	newNode["position"] = {};
+	newNode.position["left"] = left;
+	newNode.position["top"] = top;
+	newNode["configurations"] = [];
+	instance.flows[flowId].nodes.push(newNode);
+};
+
+// HDFS
+HAFlow.Main.prototype.getHdfsFile = function(path, fileName) {
+	$.ajax({
+		url : this.basePath + "hdfs/file",
+		type : "GET",
+		dataType : "json",
+		data : {
+			path : path,
+			fileName : fileName
+		},
+		success : function(data, status) {
+			alert(data.content);
+		},
+		error : function(request, status, error) {
+			HAFlow.showDialog("Error",
+					"An error occurred while loading flow list: " + error);
+		}
+	});
 };
 
 HAFlow.Main.prototype.getHdfsFileList = function(path) {
@@ -67,30 +438,92 @@ HAFlow.Main.prototype.refreshHdfsFileList = function(instance, parentPath, data)
 	}
 };
 
-HAFlow.Main.prototype.getHdfsFile = function(path, fileName) {
-	$.ajax({
-		url : this.basePath + "hdfs/file",
-		type : "GET",
-		dataType : "json",
-		data : {
-			path : path,
-			fileName : fileName
-		},
-		success : function(data, status) {
-			alert(data.content);
-		},
-		error : function(request, status, error) {
-			HAFlow.showDialog("Error",
-					"An error occurred while loading flow list: " + error);
-		}
-	});
+// Paint Helper
+HAFlow.Main.prototype.addEndpoints = function(instance, flowId, nodeId, module,
+		sourceEndpoint, targetEndpoint) {
+	var k = 0;
+	for ( var i = 0; i < module.outputs.length; i++, k++) {
+		var sourceId = nodeId + "_" + module.outputs[i].name;
+		instance.jsPlumb[flowId].allSourceEndpoints
+				.push(instance.jsPlumb[flowId].addEndpoint(nodeId,
+						sourceEndpoint, {
+							anchor : [ 1,
+									1 / (module.outputs.length + 1) * (i + 1),
+									1, 0 ],
+							uuid : sourceId,
+							overlays : [ [ "Label", {
+								location : [ 0.5, -0.5 ],
+								label : module.outputs[i].name
+							} ] ]
+						}));
+	}
+	k = 0;
+	for ( var j = 0; j < module.inputs.length; j++, k++) {
+		var targetId = nodeId + "_" + module.inputs[j].name;
+		instance.jsPlumb[flowId].allTargetEndpoints
+				.push(instance.jsPlumb[flowId].addEndpoint(nodeId,
+						targetEndpoint, {
+							anchor : [ 0,
+									1 / (module.inputs.length + 1) * (j + 1),
+									-1, 0 ],
+							uuid : targetId,
+							overlays : [ [ "Label", {
+								location : [ 0.5, -0.5 ],
+								label : module.inputs[j].name
+							} ] ]
+						}));
+	}
 };
 
+// Initialize
 HAFlow.Main.prototype.init = function() {
-	this.doInit();
+	this.flows = {};
+	this.jsPlumb = {};
+
 	this.initUserInterface();
 	this.initFlowContainer();
 	this.initData();
+};
+
+HAFlow.Main.prototype.initNodes = function(flowId) {
+	var _currentInstance = this;
+	this.jsPlumb[flowId].draggable($(".node"), {
+		containment : "#" + "flowContainer_" + flowId,
+		stop : function(event, ui) {
+			_currentInstance.onDropNode(_currentInstance, flowId, event, ui);
+		}
+	});
+	var i;
+	for (i = 0; i < this.flows[flowId].nodes.length; i++) {
+		var nodeId = "node_" + this.flows[flowId].nodes[i].id;
+		var sourceEndpoint = {
+			paintStyle : {
+				strokeStyle : "#225588",
+				fillStyle : "transparent",
+				radius : 7,
+			},
+			isSource : true,
+			connector : [ "Flowchart", {} ],
+			connectorStyle : {
+				strokeStyle : "#225588",
+				lineWidth : 3
+			}
+		};
+		var targetEndpoint = {
+			endpoint : "Dot",
+			isTarget : true,
+			maxConnections : -1,
+		};
+
+		this.jsPlumb[flowId].allSourceEndpoints = [];
+		this.jsPlumb[flowId].allTargetEndpoints = [];
+		var node = this.getNodeById(this, flowId,
+				this.flows[flowId].nodes[i].id);
+		var module = this.getModuleById(this, node.moduleId);
+
+		this.addEndpoints(this, flowId, nodeId, module, sourceEndpoint,
+				targetEndpoint);
+	}
 };
 
 HAFlow.Main.prototype.initData = function() {
@@ -132,16 +565,6 @@ HAFlow.Main.prototype.initModuleListData = function() {
 					"An error occurred while loading module list: " + error);
 		}
 	});
-};
-
-HAFlow.Main.prototype.drawLists = function(instance) {
-	instance.paintModuleList();
-	instance.buildFlowListTree();
-};
-
-HAFlow.Main.prototype.doInit = function() {
-	this.flows = {};
-	this.jsPlumb = {};
 };
 
 HAFlow.Main.prototype.initUserInterface = function() {
@@ -442,6 +865,25 @@ HAFlow.Main.prototype.initFlowContainer = function() {
 	});
 };
 
+HAFlow.Main.prototype.initJsPlumb = function(flowId) {
+	this.jsPlumb[flowId] = jsPlumb.getInstance();
+	this.jsPlumb[flowId].reset();
+	this.jsPlumb[flowId].importDefaults({
+		DragOptions : {
+			cursor : 'pointer',
+			zIndex : 2000
+		},
+		Endpoints : [ [ "Dot", {
+			radius : 8
+		} ], [ "Dot", {
+			radius : 8
+		} ] ],
+		ConnectionOverlays : [ [ "Arrow", {
+			location : -40
+		} ] ]
+	});
+};
+
 HAFlow.Main.prototype.setupDroppable = function(flowId) {
 	$(".module").draggable({
 		appendTo : "#" + "flowContainer_" + flowId,
@@ -470,43 +912,9 @@ HAFlow.Main.prototype.buildFlowListTree = function() {
 	}
 };
 
-HAFlow.Main.prototype.getFlowBriefById = function(instance, flowId) {
-	var i;
-	for (i = 0; i < instance.flowList.flows.length; i++) {
-		if (instance.flowList.flows[i].id == flowId) {
-			return instance.flowList.flows[i];
-		}
-	}
-	return null;
-};
-
-HAFlow.Main.prototype.onFlowClicked = function(instance, flowId) {
-	var flowBrief = instance.getFlowBriefById(instance, flowId);
-	var text = "";
-	text += "<div>";
-	text += "<div><span>Id: " + flowBrief.id + "</span></div>";
-	text += "<div><span>Name: </span></div>";
-	text += "<div id=\"flow_name_text_box\"></div>";
-	text += "<div id=\"save_flow_name_button\"></div>";
-	text += "</div>";
-	$("#" + instance.informationContainerId).html(text);
-	if (dijit.byId("flow_" + flowBrief.id + "_name") != null) {
-		dijit.registry.remove("flow_" + flowBrief.id + "_name");
-	}
-	var flowNameTextBox = new dijit.form.TextBox({
-		id : "flow_" + flowBrief.id + "_name",
-		value : flowBrief.name
-	});
-	flowNameTextBox.placeAt(dojo.byId("flow_name_text_box"));
-	flowNameTextBox.startup();
-	var button = new dijit.form.Button({
-		label : "Save",
-		onClick : function() {
-			instance.saveFlowName(instance, flowBrief.id);
-		}
-	});
-	button.placeAt(dojo.byId("save_flow_name_button"));
-	button.startup();
+HAFlow.Main.prototype.drawLists = function(instance) {
+	instance.paintModuleList();
+	instance.buildFlowListTree();
 };
 
 HAFlow.Main.prototype.saveFlowName = function(instance, flowId) {
@@ -558,76 +966,6 @@ HAFlow.Main.prototype.paintModuleList = function() {
 
 };
 
-HAFlow.Main.prototype.onModuleAdded = function(instance, flowId, event, ui) {
-	var moduleId = ui.draggable.context.id.replace("module_", "");
-	instance.doAddModule(instance, flowId, moduleId, ui.position.left,
-			ui.position.top);
-	instance.paintFlow(flowId);
-};
-
-HAFlow.Main.prototype.doAddModule = function(instance, flowId, moduleId, left,
-		top) {
-	var currentNewNodeNumber = -1;
-	var i;
-	var j;
-	for (i = 0; i < instance.flows[flowId].nodes.length; i++) {
-		var pattern = /^NewNode(\d+)$/;
-		var matches = pattern.exec(instance.flows[flowId].nodes[i].name);
-		for (j = 0; j < matches.length; j++) {
-			if (parseInt(matches[j]) > currentNewNodeNumber) {
-				currentNewNodeNumber = parseInt(matches[j]);
-			}
-		}
-	}
-	currentNewNodeNumber++;
-	var newNode = {};
-	var id = HAFlow.generateUUID();
-	newNode["id"] = id;
-	newNode["flowId"] = flowId;
-	newNode["moduleId"] = moduleId;
-	newNode["name"] = "NewNode" + currentNewNodeNumber;
-	newNode["position"] = {};
-	newNode.position["left"] = left;
-	newNode.position["top"] = top;
-	newNode["configurations"] = [];
-	instance.flows[flowId].nodes.push(newNode);
-};
-
-HAFlow.Main.prototype.checkNodeName = function(instance, flowId, oldName,
-		newName) {
-	var i;
-	if (oldName == newName) {
-		return true;
-	}
-	var regex = /^[a-zA-Z_][a-zA-Z_0-9]{0,38}$/;
-	if (!regex.test(newName)) {
-		return false;
-	}
-	for (i = 0; i < instance.flows[flowId].nodes.length; i++) {
-		if (newName == instance.flows[flowId].nodes[i].name) {
-			return false;
-		}
-	}
-	return true;
-};
-
-HAFlow.Main.prototype.checkFlowName = function(instance, oldName, newName) {
-	var i;
-	if (oldName == newName) {
-		return true;
-	}
-	var regex = /^[a-zA-Z_][a-zA-Z_0-9]{0,38}$/;
-	if (!regex.test(newName)) {
-		return false;
-	}
-	for (i = 0; i < instance.flows.length; i++) {
-		if (newName == instance.flows[i].name) {
-			return false;
-		}
-	}
-	return true;
-};
-
 HAFlow.Main.prototype.paintFlow = function(flowId) {
 	this.initJsPlumb(flowId);
 	this.paintNodes(flowId);
@@ -636,25 +974,6 @@ HAFlow.Main.prototype.paintFlow = function(flowId) {
 	this.bindJsPlumbEvents(flowId);
 	this.bindFunctions(flowId);
 	this.jsPlumb[flowId].repaintEverything();
-};
-
-HAFlow.Main.prototype.initJsPlumb = function(flowId) {
-	this.jsPlumb[flowId] = jsPlumb.getInstance();
-	this.jsPlumb[flowId].reset();
-	this.jsPlumb[flowId].importDefaults({
-		DragOptions : {
-			cursor : 'pointer',
-			zIndex : 2000
-		},
-		Endpoints : [ [ "Dot", {
-			radius : 8
-		} ], [ "Dot", {
-			radius : 8
-		} ] ],
-		ConnectionOverlays : [ [ "Arrow", {
-			location : -40
-		} ] ]
-	});
 };
 
 HAFlow.Main.prototype.paintNodes = function(flowId) {
@@ -678,106 +997,6 @@ HAFlow.Main.prototype.paintNodes = function(flowId) {
 	$("#" + "flowContainer_" + flowId).html(text);
 };
 
-HAFlow.Main.prototype.getModuleById = function(instance, moduleId) {
-	var i;
-	for (i = 0; i < instance.moduleList.modules.length; i++) {
-		if (instance.moduleList.modules[i].id == moduleId) {
-			return instance.moduleList.modules[i];
-		}
-	}
-	return null;
-};
-
-HAFlow.Main.prototype.initNodes = function(flowId) {
-	var _currentInstance = this;
-	this.jsPlumb[flowId].draggable($(".node"), {
-		containment : "#" + "flowContainer_" + flowId,
-		stop : function(event, ui) {
-			_currentInstance.onDropNode(_currentInstance, flowId, event, ui);
-		}
-	});
-	var i;
-	for (i = 0; i < this.flows[flowId].nodes.length; i++) {
-		var nodeId = "node_" + this.flows[flowId].nodes[i].id;
-		var sourceEndpoint = {
-			paintStyle : {
-				strokeStyle : "#225588",
-				fillStyle : "transparent",
-				radius : 7,
-			},
-			isSource : true,
-			connector : [ "Flowchart", {} ],
-			connectorStyle : {
-				strokeStyle : "#225588",
-				lineWidth : 3
-			}
-		};
-		var targetEndpoint = {
-			endpoint : "Dot",
-			isTarget : true,
-			maxConnections : -1,
-		};
-
-		this.jsPlumb[flowId].allSourceEndpoints = [];
-		this.jsPlumb[flowId].allTargetEndpoints = [];
-		var node = this.getNodeById(this, flowId,
-				this.flows[flowId].nodes[i].id);
-		var module = this.getModuleById(this, node.moduleId);
-
-		this.addEndpoints(this, flowId, nodeId, module, sourceEndpoint,
-				targetEndpoint);
-	}
-};
-
-HAFlow.Main.prototype.addEndpoints = function(instance, flowId, nodeId, module,
-		sourceEndpoint, targetEndpoint) {
-	var k = 0;
-	for ( var i = 0; i < module.outputs.length; i++, k++) {
-		var sourceId = nodeId + "_" + module.outputs[i].name;
-		instance.jsPlumb[flowId].allSourceEndpoints
-				.push(instance.jsPlumb[flowId].addEndpoint(nodeId,
-						sourceEndpoint, {
-							anchor : [ 1,
-									1 / (module.outputs.length + 1) * (i + 1),
-									1, 0 ],
-							uuid : sourceId,
-							overlays : [ [ "Label", {
-								location : [ 0.5, -0.5 ],
-								label : module.outputs[i].name
-							} ] ]
-						}));
-	}
-	k = 0;
-	for ( var j = 0; j < module.inputs.length; j++, k++) {
-		var targetId = nodeId + "_" + module.inputs[j].name;
-		instance.jsPlumb[flowId].allTargetEndpoints
-				.push(instance.jsPlumb[flowId].addEndpoint(nodeId,
-						targetEndpoint, {
-							anchor : [ 0,
-									1 / (module.inputs.length + 1) * (j + 1),
-									-1, 0 ],
-							uuid : targetId,
-							overlays : [ [ "Label", {
-								location : [ 0.5, -0.5 ],
-								label : module.inputs[j].name
-							} ] ]
-						}));
-	}
-};
-
-HAFlow.Main.prototype.onDropNode = function(instance, flowId, event, ui) {
-	var newLeft = ui.position.left;
-	var newTop = ui.position.top;
-	var nodeId = ui.helper.context.id.replace("node_", "");
-	for ( var i = 0; i < instance.flows[flowId].nodes.length; i++) {
-		if (instance.flows[flowId].nodes[i].id == nodeId) {
-			instance.flows[flowId].nodes[i].position.left = newLeft;
-			instance.flows[flowId].nodes[i].position.top = newTop;
-		}
-	}
-	instance.jsPlumb[flowId].repaintEverything();
-};
-
 HAFlow.Main.prototype.paintEdges = function(flowId) {
 	for ( var i = 0; i < this.flows[flowId].edges.length; i++) {
 		this.jsPlumb[flowId].connect({
@@ -785,7 +1004,8 @@ HAFlow.Main.prototype.paintEdges = function(flowId) {
 					"node_" + this.flows[flowId].edges[i].sourceNodeId + "_"
 							+ this.flows[flowId].edges[i].sourceEndpoint,
 					"node_" + this.flows[flowId].edges[i].targetNodeId + "_"
-							+ this.flows[flowId].edges[i].targetEndpoint ]
+							+ this.flows[flowId].edges[i].targetEndpoint ],
+			detachable : false
 		});
 	}
 };
@@ -801,88 +1021,6 @@ HAFlow.Main.prototype.bindJsPlumbEvents = function(flowId) {
 
 };
 
-HAFlow.Main.prototype.onConnectionCreated = function(instance, flowId, info) {
-	var source = info.sourceId.replace("node_", "");
-	var sourceEndpoint = info.sourceEndpoint.overlays[0].getLabel();
-	var target = info.targetId.replace("node_", "");
-	var targetEndpoint = info.targetEndpoint.overlays[0].getLabel();
-	var exist = false;
-	var illegal = false;
-	for ( var i = 0; i < instance.flows[flowId].edges.length; i++) {
-		if (instance.flows[flowId].edges[i].sourceNodeId == source
-				&& instance.flows[flowId].edges[i].sourceEndpoint == sourceEndpoint
-				&& instance.flows[flowId].edges[i].targetNodeId == target
-				&& instance.flows[flowId].edges[i].targetEndpoint == targetEndpoint) {
-			exist = true;
-			break;
-		}
-	}
-	if (source == target) {
-		illegal = true;
-	}
-	if (!exist && !illegal) {
-		var newConnection = {};
-		newConnection["id"] = HAFlow.generateUUID();
-		newConnection["flowId"] = instance.flows[flowId].id;
-		newConnection["sourceNodeId"] = source;
-		newConnection["sourceEndpoint"] = sourceEndpoint;
-		newConnection["targetNodeId"] = target;
-		newConnection["targetEndpoint"] = targetEndpoint;
-		instance.flows[flowId].edges.push(newConnection);
-		info.connection.setPaintStyle({
-			strokeStyle : "rgb(22,55,88)"
-		});
-	} else {
-		instance.jsPlumb[flowId].detach(info);
-	}
-};
-
-HAFlow.Main.prototype.onConnectionClicked = function(instance, flowId, info) {
-	var source = info.sourceId.replace("node_", "");
-	var sourceEndpoint = info.endpoints[0].overlays[0].getLabel();
-	var target = info.targetId.replace("node_", "");
-	var targetEndpoint = info.endpoints[1].overlays[0].getLabel();
-	var sourceNode = instance.getNodeById(instance, flowId, source);
-	var targetNode = instance.getNodeById(instance, flowId, target);
-
-	var text = "";
-	text += "<div><span>From: " + sourceNode.name + "." + sourceEndpoint
-			+ "</span><span>To: " + targetNode.name + "." + targetEndpoint
-			+ "</span></div>";
-	text += "<div>Delete?</div>";
-	text += "<div id=\"delete_connection_button\"></div>";
-	$("#" + instance.informationContainerId).html(text);
-	var button = new dijit.form.Button({
-		label : "Delete Connection",
-		onClick : function() {
-			instance.deleteConnection(instance, flowId, info);
-		}
-	});
-	button.placeAt(dojo.byId("delete_connection_button"));
-	button.startup();
-};
-
-HAFlow.Main.prototype.deleteConnection = function(instance, flowId, info) {
-	var source = info.sourceId.replace("node_", "");
-	var target = info.targetId.replace("node_", "");
-	var i;
-	var needToDelete = false;
-	do {
-		needToDelete = false;
-		for (i = 0; i < instance.flows[flowId].edges.length; i++) {
-			if (instance.flows[flowId].edges[i].sourceNodeId == source
-					&& instance.flows[flowId].edges[i].targetNodeId == target) {
-				needToDelete = true;
-				break;
-			}
-		}
-		if (needToDelete) {
-			instance.flows[flowId].edges.splice(i, 1);
-		}
-	} while (needToDelete);
-	instance.jsPlumb[flowId].detach(info);
-};
-
 HAFlow.Main.prototype.bindFunctions = function(flowId) {
 	var _currentInstance = this;
 	$(".node").bind("click", function() {
@@ -893,6 +1031,49 @@ HAFlow.Main.prototype.bindFunctions = function(flowId) {
 		var moduleId = $(this).attr("id").replace("module_", "");
 		_currentInstance.onModuleClicked(_currentInstance, flowId, moduleId);
 	});
+};
+
+// Event Handler
+HAFlow.Main.prototype.onFlowClicked = function(instance, flowId) {
+	var flowBrief = instance.getFlowBriefById(instance, flowId);
+	var text = "";
+	text += "<div>";
+	text += "<div><span>Id: " + flowBrief.id + "</span></div>";
+	text += "<div><span>Name: </span></div>";
+	text += "<div id=\"flow_name_text_box\"></div>";
+	text += "<div id=\"save_flow_name_button\"></div>";
+	text += "</div>";
+	$("#" + instance.informationContainerId).html(text);
+	if (dijit.byId("flow_" + flowBrief.id + "_name") != null) {
+		dijit.registry.remove("flow_" + flowBrief.id + "_name");
+	}
+	var flowNameTextBox = new dijit.form.TextBox({
+		id : "flow_" + flowBrief.id + "_name",
+		value : flowBrief.name
+	});
+	flowNameTextBox.placeAt(dojo.byId("flow_name_text_box"));
+	flowNameTextBox.startup();
+	var button = new dijit.form.Button({
+		label : "Save",
+		onClick : function() {
+			instance.saveFlowName(instance, flowBrief.id);
+		}
+	});
+	button.placeAt(dojo.byId("save_flow_name_button"));
+	button.startup();
+};
+
+HAFlow.Main.prototype.onModuleClicked = function(instance, flowId, moduleId) {
+	var text = "";
+	var i;
+	for (i = 0; i < instance.moduleList.modules.length; i++) {
+		if (moduleId == instance.moduleList.modules[i].id) {
+			break;
+		}
+	}
+	text += "<div><span>Name: " + instance.moduleList.modules[i].name
+			+ ".</span></div>";
+	$("#" + instance.informationContainerId).html(text);
 };
 
 HAFlow.Main.prototype.onNodeClicked = function(instance, flowId, nodeId) {
@@ -985,114 +1166,74 @@ HAFlow.Main.prototype.onNodeClicked = function(instance, flowId, nodeId) {
 	saveConfigurationButton.startup();
 };
 
-HAFlow.Main.prototype.saveNodeName = function(instance, flowId, nodeId) {
-	var node = instance.getNodeById(instance, flowId, nodeId);
-	var value = $("#" + "node_" + nodeId + "_name").val();
-	if (instance.checkNodeName(instance, flowId, node.name, value)) {
-		node.name = value;
-		instance.paintFlow(flowId);
-		instance.jsPlumb[flowId].repaintEverything();
-	} else {
-		HAFlow.showDialog("Error", "Invalid node name");
-	}
-};
+HAFlow.Main.prototype.onConnectionClicked = function(instance, flowId, info) {
+	var source = info.sourceId.replace("node_", "");
+	var sourceEndpoint = info.endpoints[0].overlays[0].getLabel();
+	var target = info.targetId.replace("node_", "");
+	var targetEndpoint = info.endpoints[1].overlays[0].getLabel();
+	var sourceNode = instance.getNodeById(instance, flowId, source);
+	var targetNode = instance.getNodeById(instance, flowId, target);
 
-HAFlow.Main.prototype.getConfigurationValue = function(instance, flowId,
-		nodeId, key) {
-	var node = instance.getNodeById(instance, flowId, nodeId);
-	var i;
-	for (i = 0; i < node.configurations.length; i++) {
-		if (node.configurations[i].key == key) {
-			return node.configurations[i].value;
-		}
-	}
-	return "";
-};
-
-HAFlow.Main.prototype.saveConfiguration = function(instance, flowId, nodeId) {
-	var node = instance.getNodeById(instance, flowId, nodeId);
-	var module = instance.getModuleById(instance, node.moduleId);
-	var i;
-	node.configurations = [];
-	for (i = 0; i < module.configurations.length; i++) {
-		node.configurations.push({
-			key : module.configurations[i].key,
-			value : $(
-					"#" + "flow_" + flowId + "_node_" + nodeId + "_"
-							+ module.configurations[i].key).val()
-		});
-	}
-};
-
-HAFlow.Main.prototype.getNodeById = function(instance, flowId, nodeId) {
-	var i;
-	for (i = 0; i < instance.flows[flowId].nodes.length; i++) {
-		if (instance.flows[flowId].nodes[i].id == nodeId) {
-			return instance.flows[flowId].nodes[i];
-		}
-	}
-	return null;
-};
-
-HAFlow.Main.prototype.deleteNode = function(instance, flowId, nodeId) {
-	var i;
-	var needToDelete = false;
-	do {
-		needToDelete = false;
-		for (i = 0; i < instance.flows[flowId].edges.length; i++) {
-			if (instance.flows[flowId].edges[i].sourceNodeId == nodeId
-					|| instance.flows[flowId].edges[i].targetNodeId == nodeId) {
-				needToDelete = true;
-				break;
-			}
-		}
-		if (needToDelete) {
-			instance.flows[flowId].edges.splice(i, 1);
-		}
-	} while (needToDelete);
-	do {
-		needToDelete = false;
-		for (i = 0; i < instance.flows[flowId].nodes.length; i++) {
-			if (instance.flows[flowId].nodes[i].id == nodeId) {
-				needToDelete = true;
-				break;
-			}
-		}
-		if (needToDelete) {
-			instance.flows[flowId].nodes.splice(i, 1);
-		}
-	} while (needToDelete);
-	instance.paintFlow(flowId);
-};
-
-HAFlow.Main.prototype.onModuleClicked = function(instance, moduleId) {
 	var text = "";
-	var i;
-	for (i = 0; i < instance.moduleList.modules.length; i++) {
-		if (moduleId == instance.moduleList.modules[i].id) {
+	text += "<div><span>From: " + sourceNode.name + "." + sourceEndpoint
+			+ "</span><span>To: " + targetNode.name + "." + targetEndpoint
+			+ "</span></div>";
+	text += "<div>Delete?</div>";
+	text += "<div id=\"delete_connection_button\"></div>";
+	$("#" + instance.informationContainerId).html(text);
+	var button = new dijit.form.Button({
+		label : "Delete Connection",
+		onClick : function() {
+			instance.deleteConnection(instance, flowId, info);
+		}
+	});
+	button.placeAt(dojo.byId("delete_connection_button"));
+	button.startup();
+};
+
+HAFlow.Main.prototype.onConnectionCreated = function(instance, flowId, info) {
+	var source = info.sourceId.replace("node_", "");
+	var sourceEndpoint = info.sourceEndpoint.overlays[0].getLabel();
+	var target = info.targetId.replace("node_", "");
+	var targetEndpoint = info.targetEndpoint.overlays[0].getLabel();
+	var exist = false;
+	var illegal = false;
+	for ( var i = 0; i < instance.flows[flowId].edges.length; i++) {
+		if (instance.flows[flowId].edges[i].sourceNodeId == source
+				&& instance.flows[flowId].edges[i].sourceEndpoint == sourceEndpoint
+				&& instance.flows[flowId].edges[i].targetNodeId == target
+				&& instance.flows[flowId].edges[i].targetEndpoint == targetEndpoint) {
+			exist = true;
 			break;
 		}
 	}
-	text += "<div><span>Name: " + instance.moduleList.modules[i].name
-			+ ".</span></div>";
-	$("#" + instance.informationContainerId).html(text);
+	if (source == target) {
+		illegal = true;
+	}
+	if (!exist && !illegal) {
+		var newConnection = instance.newConnection(instance.flows[flowId].id,
+				source, sourceEndpoint, target, targetEndpoint);
+		instance.flows[flowId].edges.push(newConnection);
+		info.connection.setDetachable(false);
+		info.connection.setPaintStyle({
+			strokeStyle : "rgb(22,55,88)"
+		});
+	} else {
+		instance.jsPlumb[flowId].detach(info);
+	}
 };
 
-HAFlow.Main.prototype.refreshFlowList = function() {
-	var _currentInstance = this;
-	$.ajax({
-		url : this.basePath + "flow",
-		type : "GET",
-		cache : false,
-		dataType : "json",
-		success : function(data, status) {
-			_currentInstance.flowList = data;
-		},
-		error : function(request, status, error) {
-			HAFlow.showDialog("Error",
-					"An error occurred while refreshing flow list: " + error);
+HAFlow.Main.prototype.onDropNode = function(instance, flowId, event, ui) {
+	var newLeft = ui.position.left;
+	var newTop = ui.position.top;
+	var nodeId = ui.helper.context.id.replace("node_", "");
+	for ( var i = 0; i < instance.flows[flowId].nodes.length; i++) {
+		if (instance.flows[flowId].nodes[i].id == nodeId) {
+			instance.flows[flowId].nodes[i].position.left = newLeft;
+			instance.flows[flowId].nodes[i].position.top = newTop;
 		}
-	});
+	}
+	instance.jsPlumb[flowId].repaintEverything();
 };
 
 HAFlow.Main.prototype.onCloseTab = function(instance) {
@@ -1106,141 +1247,9 @@ HAFlow.Main.prototype.onCloseTab = function(instance) {
 	};
 };
 
-HAFlow.Main.prototype.newFlow = function() {
-	var newFlowId = HAFlow.generateUUID();
-	this.flows[newFlowId] = {};
-	this.flows[newFlowId].id = newFlowId;
-	this.flows[newFlowId].name = "NewFlow";
-	this.flows[newFlowId].nodes = new Array();
-	this.flows[newFlowId].edges = new Array();
-	var _currentInstance = this;
-	var contentPane = new dijit.layout.ContentPane({
-		id : "flowContainerPane_" + newFlowId,
-		title : _currentInstance.flows[newFlowId].name,
-		content : "<div id=\"flowContainer_" + newFlowId
-				+ "\" class=\"flowcontainer\"></div>",
-		closable : true,
-		onClose : _currentInstance.onCloseTab(_currentInstance)
-	});
-	this.ui.centerContainer.addChild(contentPane);
-	this.ui.centerContainer.selectChild(contentPane);
-	this.setupDroppable(newFlowId);
-	this.paintFlow(newFlowId);
-	this.saveFlow(newFlowId);
-	this.flowListStore.put({
-		id : this.flows[newFlowId].id,
-		name : this.flows[newFlowId].name,
-		node : true
-	});
-};
-
-HAFlow.Main.prototype.loadFlow = function(flowId) {
-	if (dojo.byId("flowContainer_" + flowId) == null) {
-		var _currentInstance = this;
-		$.ajax({
-			url : _currentInstance.basePath + "flow/" + flowId,
-			type : "GET",
-			cache : false,
-			dataType : "json",
-			success : function(data, status) {
-				_currentInstance.flows[data.id] = data;
-				var contentPane = new dijit.layout.ContentPane({
-					id : "flowContainerPane_" + flowId,
-					title : _currentInstance.flows[flowId].name,
-					content : "<div id=\"flowContainer_" + flowId
-							+ "\" class=\"flowcontainer\"></div>",
-					closable : true,
-					onClose : _currentInstance.onCloseTab(_currentInstance)
-				});
-				_currentInstance.ui.centerContainer.addChild(contentPane);
-				_currentInstance.setupDroppable(flowId);
-				_currentInstance.paintFlow(flowId);
-				_currentInstance.ui.centerContainer.selectChild(dijit
-						.byId("flowContainerPane_" + flowId));
-			},
-			error : function(request, status, error) {
-				HAFlow.showDialog("Error",
-						"An error occurred while loading flow: " + error);
-			}
-		});
-	} else {
-		this.ui.centerContainer.selectChild(dijit.byId("flowContainerPane_"
-				+ flowId));
-	}
-};
-
-HAFlow.Main.prototype.saveFlow = function(flowId) {
-	var _currentInstance = this;
-	$.ajax({
-		url : _currentInstance.basePath + "flow/" + flowId,
-		type : "PUT",
-		dataType : "json",
-		contentType : "application/json",
-		data : JSON.stringify(_currentInstance.flows[flowId]),
-		success : function(data, status) {
-			HAFlow.showDialog("Save Flow", "Flow saved.");
-			_currentInstance.refreshFlowList();
-		},
-		error : function(request, status, error) {
-			HAFlow.showDialog("Error", "An error occurred while saving flow: "
-					+ error);
-		}
-	});
-};
-
-HAFlow.Main.prototype.removeFlow = function(flowId) {
-	var _currentInstance = this;
-	$.ajax({
-		url : _currentInstance.basePath + "flow/" + flowId,
-		type : "DELETE",
-		dataType : "json",
-		contentType : "application/json",
-		data : JSON.stringify({}),
-		success : function(data, status) {
-			HAFlow.showDialog("Remove Flow", "Flow removed.");
-			_currentInstance.ui.centerContainer.removeChild(dijit
-					.byId("flowContainerPane_" + flowId));
-			_currentInstance.refreshFlowList();
-			_currentInstance.flowListStore
-					.remove(_currentInstance.flows[flowId].id);
-		},
-		error : function(request, status, error) {
-			HAFlow.showDialog("Error",
-					"An error occurred while removing flow: " + error);
-		}
-	});
-};
-
-HAFlow.Main.prototype.runFlow = function(flowId) {
-	var _currentInstance = this;
-	$.ajax({
-		url : _currentInstance.basePath + "flow/" + flowId,
-		type : "PUT",
-		dataType : "json",
-		contentType : "application/json",
-		data : JSON.stringify(_currentInstance.flows[flowId]),
-		success : function(data, status) {
-			HAFlow.showDialog("Save Flow", "Flow saved.");
-			_currentInstance.refreshFlowList();
-			$.ajax({
-				url : _currentInstance.basePath + "run/" + flowId,
-				type : "POST",
-				dataType : "json",
-				contentType : "application/json",
-				data : JSON.stringify({}),
-				success : function(data, status) {
-					HAFlow.showDialog("Run Flow", " Commited: " + data.commited
-							+ "\n" + "Result: " + data.message);
-				},
-				error : function(request, status, error) {
-					HAFlow.showDialog("Error",
-							"An error occurred while running flow: " + error);
-				}
-			});
-		},
-		error : function(request, status, error) {
-			HAFlow.showDialog("Error", "An error occurred while saving flow: "
-					+ error);
-		}
-	});
+HAFlow.Main.prototype.onModuleAdded = function(instance, flowId, event, ui) {
+	var moduleId = ui.draggable.context.id.replace("module_", "");
+	instance.doAddModule(instance, flowId, moduleId, ui.position.left,
+			ui.position.top);
+	instance.paintFlow(flowId);
 };
