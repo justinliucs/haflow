@@ -1,4 +1,4 @@
-package haflow.engin.model;
+package haflow.engine.model;
 
 import java.util.List;
 
