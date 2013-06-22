@@ -1,4 +1,4 @@
-package haflow.engin.model;
+package haflow.engine.model;
 
 import haflow.ui.model.ModuleConfigurationModel;
 import haflow.ui.model.ModuleEndpointModel;
