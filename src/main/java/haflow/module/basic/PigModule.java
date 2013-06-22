@@ -2,14 +2,16 @@ package haflow.module.basic;
 
 import java.util.Map;
 
-import haflow.entity.Node;
+import haflow.dto.entity.Node;
 import haflow.module.DataType;
 import haflow.module.Module;
 import haflow.module.ModuleConfiguration;
 import haflow.module.ModuleEndpoint;
 import haflow.module.AbstractModule;
+import haflow.module.ModuleType;
 
-@Module(id = "1c32fa2b-a5ec-4db7-6f29-0bd4e969af67", name = "Pig", category = "Basic", configurations = {
+@Module(id = "1c32fa2b-a5ec-4db7-6f29-0bd4e969af67", name = "Pig", category = "Basic", type = ModuleType.PIG, 
+	configurations = {
 		@ModuleConfiguration(key = "job-tracker", displayName = "Job Tracker"),
 		@ModuleConfiguration(key = "name-node", displayName = "Name Node"),
 		@ModuleConfiguration(key = "prepare.mkdir", displayName = "Prepare: Make Directory"),

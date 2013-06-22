@@ -1,7 +1,7 @@
-package haflow.flow;
+package haflow.engin.model;
 
-import haflow.entity.Edge;
-import haflow.entity.Node;
+import haflow.dto.entity.Edge;
+import haflow.dto.entity.Node;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class DirectedGraph {
+public class DirectedGraphOld {
 	private List<Node> nodeList;
 	private List<Edge> edgeList;
 	private Node startNode;
@@ -56,7 +56,7 @@ public class DirectedGraph {
 		this.adjacentMatrix = adjacentMatrix;
 	}
 
-	public DirectedGraph(Set<Node> nodes, Set<Edge> edges, Node startNode) {
+	public DirectedGraphOld(Set<Node> nodes, Set<Edge> edges, Node startNode) {
 		this.setNodeList(new ArrayList<Node>());
 		this.setEdgeList(new ArrayList<Edge>());
 		this.setStartNode(startNode);

@@ -2,14 +2,16 @@ package haflow.module.basic;
 
 import java.util.Map;
 
-import haflow.entity.Node;
+import haflow.dto.entity.Node;
 import haflow.module.DataType;
 import haflow.module.Module;
 import haflow.module.ModuleConfiguration;
 import haflow.module.ModuleEndpoint;
 import haflow.module.AbstractModule;
+import haflow.module.ModuleType;
 
-@Module(id = "a966ef60-f825-4ed9-146b-deef78805088", name = "FileSystem", category = "Basic", configurations = {
+@Module(id = "a966ef60-f825-4ed9-146b-deef78805088", name = "FileSystem", category = "Basic", type = ModuleType.FS, 
+	configurations = {
 		@ModuleConfiguration(key = "delete", displayName = "Delete"),
 		@ModuleConfiguration(key = "mkdir", displayName = "Make Directory"),
 		@ModuleConfiguration(key = "move", displayName = "Move"),

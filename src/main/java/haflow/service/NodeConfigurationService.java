@@ -1,7 +1,7 @@
 package haflow.service;
 
-import haflow.entity.Node;
-import haflow.profile.NodeConfiguration;
+import haflow.dto.entity.Node;
+import haflow.dto.profile.NodeConfiguration;
 import haflow.utility.SessionHelper;
 
 import java.util.List;
