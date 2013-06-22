@@ -47,17 +47,17 @@ public class FlowExecuteService {
 		result.setFlowId(flowId);
 		result.setCommited(false);
 		StringBuilder messageBuilder = new StringBuilder();
-		
+
 		Flow flow = (Flow) this.getFlowService().getFlow(flowId);
 		if (flow == null) {
 			messageBuilder.append("Flow " + flowId + " not found!");
 			result.setMessage(messageBuilder.toString());
 			return result;
 		}
-		
+
 		RunFlowResult enginResult = this.getEngin().runFlow(flow);
-		
-		result.setCommited(enginResult.isCommited());
+
+		result.setCommited(enginResult.isCommitted());
 		result.setJobId(enginResult.getJobId());
 		result.setMessage(enginResult.getMessage());
 

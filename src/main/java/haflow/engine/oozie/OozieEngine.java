@@ -3,14 +3,14 @@ package haflow.engine.oozie;
 import haflow.dto.entity.Flow;
 import haflow.dto.entity.Node;
 import haflow.dto.profile.NodeConfiguration;
-import haflow.engin.model.Action;
-import haflow.engin.model.AdjMatrixNode;
-import haflow.engin.model.DirectedGraph;
-import haflow.engin.model.TopologicalSort;
 import haflow.engine.AbstractEngine;
 import haflow.engine.Engine;
 import haflow.engine.RunFlowResult;
 import haflow.engine.ValidateFlowResult;
+import haflow.engine.model.Action;
+import haflow.engine.model.AdjMatrixNode;
+import haflow.engine.model.DirectedGraph;
+import haflow.engine.model.TopologicalSort;
 import haflow.module.Module;
 import haflow.module.basic.EndModule;
 import haflow.module.basic.StartModule;
@@ -41,7 +41,7 @@ public class OozieEngine extends AbstractEngine {
 	private HdfsService hdfsService;
 	private OozieService oozieService;
 	private FlowDeployService flowDeployService;
-	
+
 	private ModuleLoader getModuleLoader() {
 		return moduleLoader;
 	}
@@ -97,7 +97,7 @@ public class OozieEngine extends AbstractEngine {
 	private void setFlowDeployService(FlowDeployService flowDeployService) {
 		this.flowDeployService = flowDeployService;
 	}
-	
+
 	@Override
 	public ValidateFlowResult validateFlow(Flow flow) {
 		// TODO Auto-generated method stub
@@ -109,7 +109,7 @@ public class OozieEngine extends AbstractEngine {
 		UUID flowId = flow.getId();
 		RunFlowResult model = new RunFlowResult();
 		model.setFlowId(flowId);
-		model.setCommited(false);
+		model.setCommitted(false);
 		StringBuilder messageBuilder = new StringBuilder();
 
 		try {
@@ -173,7 +173,7 @@ public class OozieEngine extends AbstractEngine {
 							} else {
 								messageBuilder.append("Job commited! Job id : "
 										+ jobId + "\n");
-								model.setCommited(true);
+								model.setCommitted(true);
 								model.setJobId(jobId);
 							}
 						} else {
@@ -196,7 +196,7 @@ public class OozieEngine extends AbstractEngine {
 			return model;
 		}
 	}
-	
+
 	private Set<String> getJarPaths(Set<Node> nodes,
 			Map<UUID, Class<?>> moduleClasses) {
 		Set<String> jarPaths = new HashSet<String>();
@@ -251,11 +251,11 @@ public class OozieEngine extends AbstractEngine {
 		for (int i = 0; i < sorted.size(); i++) {// generate xml
 			int w = sorted.get(i);
 			Action node = graph.getNode(w);
-			
+
 			Map<String, String> configurations = new HashMap<String, String>();
-			configurations.put("name", node.getName());
+			configurations.put("name", node.getNodeName());
 			List<NodeConfiguration> ncps = this.getNodeConfigurationService()
-					.getNodeConfiguration(node.getId());
+					.getNodeConfiguration(node.getNodeId());
 			for (NodeConfiguration ncp : ncps) {
 				String key = ncp.getKey();
 				String value = ncp.getValue();
@@ -267,23 +267,23 @@ public class OozieEngine extends AbstractEngine {
 			for (AdjMatrixNode v : adj) {
 				if (sorted.contains(v)) {
 					Action action = graph.getNode(v.getIndex());
-					outputs.put(v.getPath().getSourceEndPoint(), //"ok"
+					outputs.put(v.getPath().getSourceEndPoint(), // "ok"
 							action.getNode());
 					break;
 				}
 			}
-			
+
 			Class<?> moduleClass = moduleClasses.get(node.getModuleId());
 			Module moduleProtype = moduleClass.getAnnotation(Module.class);
-			
+
 			OozieXmlGenerator gen = null;
-			switch(moduleProtype.type()) {
-			
+			switch (moduleProtype.type()) {
+
 			case START:
-				gen = new StartModuleGenerator();				
+				gen = new StartModuleGenerator();
 				break;
 			case END:
-				gen = new EndModuleGenerator();				
+				gen = new EndModuleGenerator();
 				break;
 			case KILL:
 				gen = new KillModuleGenerator();
@@ -291,24 +291,24 @@ public class OozieEngine extends AbstractEngine {
 			case JAVA:
 				gen = new JavaModuleGenerator();
 				break;
-				
+
 			case DECISION:
 			case FORK:
 			case JOIN:
 			case MAP_REDUCE:
 			case PIG:
 			case SUB_WORKFLOW:
-			case FS:			
+			case FS:
 			case OTHER:
 			default:
 				System.out.println("Unsupoorted Module Type!");
 				break;
 			}
-			if( gen != null){
+			if (gen != null) {
 				Document doc = gen.generate(configurations, null, outputs);
-				workflowXml.append(doc.toString());//TODO
+				workflowXml.append(doc.toString());// TODO
 			}
-			
+
 		}
 		workflowXml.append("</workflow-app>" + "\n");
 		return workflowXml.toString();
