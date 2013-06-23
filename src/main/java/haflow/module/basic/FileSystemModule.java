@@ -1,14 +1,13 @@
 package haflow.module.basic;
 
-import java.util.Map;
-
-import haflow.dto.entity.Node;
+import haflow.module.AbstractModule;
 import haflow.module.DataType;
 import haflow.module.Module;
 import haflow.module.ModuleConfiguration;
 import haflow.module.ModuleEndpoint;
-import haflow.module.AbstractModule;
 import haflow.module.ModuleType;
+
+import java.util.Map;
 
 @Module(id = "a966ef60-f825-4ed9-146b-deef78805088", name = "FileSystem", category = "Basic", type = ModuleType.FS, 
 	configurations = {
@@ -24,7 +23,7 @@ public class FileSystemModule extends AbstractModule {
 
 	@Override
 	public boolean validate(Map<String, String> configurations,
-			Map<String, Node> inputs, Map<String, Node> outputs) {
+			Map<String, String> inputs, Map<String, String> outputs) {
 		// TODO Auto-generated method stub
 		return false;
 	}

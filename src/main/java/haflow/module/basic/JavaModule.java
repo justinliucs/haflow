@@ -1,12 +1,10 @@
 package haflow.module.basic;
 
-import haflow.dto.entity.Node;
 import haflow.module.AbstractJavaModule;
 import haflow.module.DataType;
 import haflow.module.Module;
 import haflow.module.ModuleConfiguration;
 import haflow.module.ModuleEndpoint;
-import haflow.module.ModuleStaticConfiguration;
 import haflow.module.ModuleType;
 
 import java.util.Map;
@@ -25,7 +23,7 @@ import java.util.Map;
 		@ModuleConfiguration(key = "file", displayName = "File"),
 		@ModuleConfiguration(key = "archive", displayName = "Archive"),
 		@ModuleConfiguration(key = "capture-output", displayName = "Capture Output") }, 
-	static_configurations={@ModuleStaticConfiguration(key="main_class", value="haflow.module.basic.JavaModule")},
+	static_configurations={},
 	inputs = { @ModuleEndpoint(name = "from", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText) }, 
 	outputs = { @ModuleEndpoint(name = "ok", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText),
 		@ModuleEndpoint(name = "error", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText) })
@@ -33,7 +31,7 @@ public class JavaModule extends AbstractJavaModule {
 
 	@Override
 	public boolean validate(Map<String, String> configurations,
-			Map<String, Node> inputs, Map<String, Node> outputs) {
+			Map<String, String> inputs, Map<String, String> outputs) {
 		// TODO Auto-generated method stub
 		return false;
 	}

@@ -1,14 +1,13 @@
 package haflow.module.basic;
 
-import java.util.Map;
-
-import haflow.dto.entity.Node;
+import haflow.module.AbstractModule;
 import haflow.module.DataType;
 import haflow.module.Module;
 import haflow.module.ModuleConfiguration;
 import haflow.module.ModuleEndpoint;
-import haflow.module.AbstractModule;
 import haflow.module.ModuleType;
+
+import java.util.Map;
 
 @Module(id = "35267c79-5221-3a0e-d485-605fa8e4b191", name = "MapReduce", category = "Basic", type = ModuleType.MAP_REDUCE, 
 	configurations = {
@@ -29,7 +28,7 @@ public class MapReduceModule extends AbstractModule {
 
 	@Override
 	public boolean validate(Map<String, String> configurations,
-			Map<String, Node> inputs, Map<String, Node> outputs) {
+			Map<String, String> inputs, Map<String, String> outputs) {
 		// TODO Auto-generated method stub
 		return false;
 	}

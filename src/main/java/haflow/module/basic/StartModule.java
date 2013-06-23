@@ -1,10 +1,9 @@
 package haflow.module.basic;
 
-import haflow.dto.entity.Node;
+import haflow.module.AbstractModule;
 import haflow.module.DataType;
 import haflow.module.Module;
 import haflow.module.ModuleEndpoint;
-import haflow.module.AbstractModule;
 import haflow.module.ModuleType;
 
 import java.util.Map;
@@ -17,7 +16,7 @@ public final class StartModule extends AbstractModule {
 
 	@Override
 	public boolean validate(Map<String, String> configurations,
-			Map<String, Node> inputs, Map<String, Node> outputs) {
+			Map<String, String> inputs, Map<String, String> outputs) {
 		// TODO Auto-generated method stub
 		return false;
 	}

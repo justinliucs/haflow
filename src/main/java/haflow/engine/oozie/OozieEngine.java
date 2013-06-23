@@ -12,6 +12,7 @@ import haflow.engine.model.AdjMatrixNode;
 import haflow.engine.model.DirectedGraph;
 import haflow.engine.model.GlobalConfiguration;
 import haflow.engine.model.TopologicalSort;
+import haflow.module.AbstractJavaModule;
 import haflow.module.Module;
 import haflow.module.basic.EndModule;
 import haflow.module.basic.StartModule;
@@ -290,23 +291,15 @@ public class OozieEngine extends AbstractEngine {
 			//global consistent configurations
 			configurations.putAll(this.globalConfiguration.getProperties());
 			
+			Class<?> moduleClass = moduleClasses.get(node.getModuleId());
 			
 			//module static configurations
 			configurations
 					.putAll(this.getNodeStaticConfigurationService()
-							.getNodeConfiguration(moduleClasses.get(node
-									.getModuleId())));
+							.getNodeConfiguration(moduleClass));
 			
-			//run time configurations
 			configurations.put("name", node.getName());
-			List<NodeConfiguration> ncps = this.getNodeConfigurationService()
-					.getNodeConfiguration(node.getId());
-			for (NodeConfiguration ncp : ncps) {
-				String key = ncp.getKey();
-				String value = ncp.getValue();
-				configurations.put(key, value);
-			}
-
+			
 			Map<String, Node> outputs = new HashMap<String, Node>();
 			List<AdjMatrixNode> adj = graph.getAdjacent(w);
 			for (AdjMatrixNode v : adj) {
@@ -316,16 +309,23 @@ public class OozieEngine extends AbstractEngine {
 							path.getTargetNode());
 					System.out.println(path.getSourceEndpoint());
 					System.out.println(path.getTargetNode().getName());
-//					break;
 				}
 			}
 
-			Class<?> moduleClass = moduleClasses.get(node.getModuleId());
+			//user specific configurations
+			Map<String, String> userConfs = new HashMap<String, String>();			
+			List<NodeConfiguration> ncps = this.getNodeConfigurationService()
+					.getNodeConfiguration(node.getId());
+			for (NodeConfiguration ncp : ncps) {
+				String key = ncp.getKey();
+				String value = ncp.getValue();
+				userConfs.put(key, value);
+			}
+					
 			Module moduleProtype = moduleClass.getAnnotation(Module.class);
 
 			OozieXmlGenerator gen = null;
 			switch (moduleProtype.type()) {
-
 			case START:
 				gen = new StartModuleGenerator();
 				break;
@@ -336,9 +336,12 @@ public class OozieEngine extends AbstractEngine {
 				gen = new KillModuleGenerator();
 				break;
 			case JAVA:
+				AbstractJavaModule moduleInstance = (AbstractJavaModule) moduleClass.newInstance();
+				configurations.put("main_class", moduleInstance.getMainClass());
+				configurations.put("arg", moduleInstance.getArgs(userConfs));
 				gen = new JavaModuleGenerator();
 				break;
-
+			case HIVE:
 			case DECISION:
 			case FORK:
 			case JOIN:
