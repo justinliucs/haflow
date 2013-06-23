@@ -14,8 +14,9 @@ public class StartModuleGenerator extends OozieXmlGenerator {
 	@Override
 	public Document generate(Map<String, String> configurations,
 			Map<String, Node> inputs, Map<String, Node> outputs) {
+		System.out.println(outputs.size());
 		try {
-			String xml = "<start to=\"" + outputs.get("ok").getName() + "\"/>";
+			String xml = "<start to=\"" + outputs.get("to").getName() + "\"/>";
 			return DocumentBuilderFactory.newInstance().newDocumentBuilder()
 					.parse(new StringInputStream(xml));
 		} catch (Exception e) {

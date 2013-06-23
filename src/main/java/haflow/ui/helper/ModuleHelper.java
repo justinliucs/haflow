@@ -3,11 +3,11 @@ package haflow.ui.helper;
 import haflow.module.Module;
 import haflow.module.ModuleConfiguration;
 import haflow.module.ModuleEndpoint;
+import haflow.module.util.ModuleLoader;
 import haflow.ui.model.ModuleConfigurationModel;
 import haflow.ui.model.ModuleBriefModel;
 import haflow.ui.model.ModuleEndpointModel;
 import haflow.ui.model.ModuleListModel;
-import haflow.utility.ModuleLoader;
 
 import java.util.ArrayList;
 import java.util.HashSet;

@@ -1,10 +1,12 @@
 package haflow.engine.model;
 
+import haflow.dto.entity.Edge;
+
 public class AdjMatrixNode {
 	private int index;
-	private Path path;
+	private Edge path;
 	
-	public AdjMatrixNode(int index, Path path) {
+	public AdjMatrixNode(int index, Edge path) {
 		super();
 		this.index = index;
 		this.path = path;
@@ -16,10 +18,10 @@ public class AdjMatrixNode {
 	public void setIndex(int index) {
 		this.index = index;
 	}
-	public Path getPath() {
+	public Edge getPath() {
 		return path;
 	}
-	public void setPath(Path path) {
+	public void setPath(Edge path) {
 		this.path = path;
 	}
 	
