@@ -18,7 +18,7 @@ public class TestModule extends AbstractModule {
 
 	@Override
 	public boolean validate(Map<String, String> configurations,
-			Map<String, Node> inputs, Map<String, Node> outputs) {
+			Map<String, String> inputs, Map<String, String> outputs) {
 		// TODO Auto-generated method stub
 		return false;
 	}

@@ -1,14 +1,13 @@
 package haflow.module.basic;
 
-import java.util.Map;
-
-import haflow.dto.entity.Node;
+import haflow.module.AbstractModule;
 import haflow.module.DataType;
 import haflow.module.Module;
 import haflow.module.ModuleConfiguration;
 import haflow.module.ModuleEndpoint;
-import haflow.module.AbstractModule;
 import haflow.module.ModuleType;
+
+import java.util.Map;
 
 @Module(id = "1c32fa2b-a5ec-4db7-6f29-0bd4e969af67", name = "Pig", category = "Basic", type = ModuleType.PIG, 
 	configurations = {
@@ -31,7 +30,7 @@ public class PigModule extends AbstractModule {
 
 	@Override
 	public boolean validate(Map<String, String> configurations,
-			Map<String, Node> inputs, Map<String, Node> outputs) {
+			Map<String, String> inputs, Map<String, String> outputs) {
 		// TODO Auto-generated method stub
 		return false;
 	}
