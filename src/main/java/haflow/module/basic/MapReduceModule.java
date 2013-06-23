@@ -20,7 +20,9 @@ import haflow.module.ModuleType;
 		@ModuleConfiguration(key = "streaming.reducer", displayName = "Streaming:Reducer"),
 		@ModuleConfiguration(key = "streaming.record-reader", displayName = "Streaming:Record Reader"),
 		@ModuleConfiguration(key = "streaming.record-reader-mapping", displayName = "Streaming:Record Reader Mapping"),
-		@ModuleConfiguration(key = "streaming.env", displayName = "Streaming:Environment") }, inputs = { @ModuleEndpoint(name = "from", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText) }, outputs = {
+		@ModuleConfiguration(key = "streaming.env", displayName = "Streaming:Environment") }, 
+	static_configurations = {},	
+	inputs = { @ModuleEndpoint(name = "from", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText) }, outputs = {
 		@ModuleEndpoint(name = "to", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText),
 		@ModuleEndpoint(name = "error", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText) })
 public class MapReduceModule extends AbstractModule {

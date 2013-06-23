@@ -1,10 +1,11 @@
 package haflow.engine.model;
 
 import haflow.dto.entity.Edge;
+import haflow.dto.entity.Node;
 
 
 public class Path {
-//	private Edge edge;
+	private Edge edge;
 	
 	
 	private String sourceEndPoint;
@@ -21,6 +22,7 @@ public class Path {
 //	}
 	
 	public Path(Edge edge){
+		this.edge = edge;
 		this.sourceEndPoint = edge.getSourceEndpoint();
 		this.targetEndPoint = edge.getTargetEndpoint();
 	}
@@ -45,4 +47,11 @@ public class Path {
 //		return targetAction;
 //	}
 	
+//	public Edge getEdge(){
+//		return this.edge;
+//	}
+//	
+	public Node getTargetNode(){
+		return this.edge.getTargetNode();
+	}
 }

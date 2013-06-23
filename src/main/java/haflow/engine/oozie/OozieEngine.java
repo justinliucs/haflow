@@ -10,6 +10,8 @@ import haflow.engine.ValidateFlowResult;
 import haflow.engine.model.Action;
 import haflow.engine.model.AdjMatrixNode;
 import haflow.engine.model.DirectedGraph;
+import haflow.engine.model.GlobalConfiguration;
+import haflow.engine.model.Path;
 import haflow.engine.model.TopologicalSort;
 import haflow.module.Module;
 import haflow.module.basic.EndModule;
@@ -41,6 +43,8 @@ public class OozieEngine extends AbstractEngine {
 	private HdfsService hdfsService;
 	private OozieService oozieService;
 	private FlowDeployService flowDeployService;
+	private GlobalConfiguration globalConfiguration;
+	
 
 	private ModuleLoader getModuleLoader() {
 		return moduleLoader;
@@ -98,6 +102,15 @@ public class OozieEngine extends AbstractEngine {
 		this.flowDeployService = flowDeployService;
 	}
 
+	public GlobalConfiguration getGlobalConfiguration() {
+		return globalConfiguration;
+	}
+
+	@Autowired
+	public void setGlobalConfiguration(GlobalConfiguration globalConfiguration) {
+		this.globalConfiguration = globalConfiguration;
+	}
+	
 	@Override
 	public ValidateFlowResult validateFlow(Flow flow) {
 		// TODO Auto-generated method stub
@@ -253,6 +266,14 @@ public class OozieEngine extends AbstractEngine {
 			Action node = graph.getNode(w);
 
 			Map<String, String> configurations = new HashMap<String, String>();
+			
+			//global consistent configurations
+			configurations.putAll(this.globalConfiguration.getProperties());
+			
+			
+			//module configurations
+			
+			//run time configurations
 			configurations.put("name", node.getNodeName());
 			List<NodeConfiguration> ncps = this.getNodeConfigurationService()
 					.getNodeConfiguration(node.getNodeId());
@@ -266,9 +287,10 @@ public class OozieEngine extends AbstractEngine {
 			List<AdjMatrixNode> adj = graph.getAdjacent(w);
 			for (AdjMatrixNode v : adj) {
 				if (sorted.contains(v)) {
-					Action action = graph.getNode(v.getIndex());
-					outputs.put(v.getPath().getSourceEndPoint(), // "ok"
-							action.getNode());
+//					Action action = graph.getNode(v.getIndex());
+					Path path = v.getPath();
+					outputs.put(path.getSourceEndPoint(), // "ok"
+							path.getTargetNode());
 					break;
 				}
 			}

@@ -11,7 +11,9 @@ import haflow.module.AbstractModule;
 import haflow.module.ModuleType;
 
 @Module(id = "a0d027c3-a4bd-61b5-5063-134ff71f8122", name = "End", category = "Basic", type = ModuleType.END, 
-	configurations = { @ModuleConfiguration(key = "name", displayName = "Name") }, inputs = { @ModuleEndpoint(name = "from", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText) }, outputs = {})
+	configurations = { @ModuleConfiguration(key = "name", displayName = "Name") }, 
+	static_configurations={},
+	inputs = { @ModuleEndpoint(name = "from", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText) }, outputs = {})
 public final class EndModule extends AbstractModule {
 
 	@Override

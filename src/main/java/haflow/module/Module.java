@@ -17,6 +17,8 @@ public @interface Module {
 	ModuleType type();
 
 	ModuleConfiguration[] configurations();
+	
+	ModuleStaticConfiguration[] static_configurations();
 
 	ModuleEndpoint[] inputs();
 

@@ -15,7 +15,9 @@ import haflow.module.ModuleType;
 		@ModuleConfiguration(key = "delete", displayName = "Delete"),
 		@ModuleConfiguration(key = "mkdir", displayName = "Make Directory"),
 		@ModuleConfiguration(key = "move", displayName = "Move"),
-		@ModuleConfiguration(key = "chmod", displayName = "Change Mode") }, inputs = { @ModuleEndpoint(name = "from", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText) }, outputs = {
+		@ModuleConfiguration(key = "chmod", displayName = "Change Mode") }, 
+	static_configurations={},
+	inputs = { @ModuleEndpoint(name = "from", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText) }, outputs = {
 		@ModuleEndpoint(name = "to", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText),
 		@ModuleEndpoint(name = "error", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText) })
 public class FileSystemModule extends AbstractModule {
