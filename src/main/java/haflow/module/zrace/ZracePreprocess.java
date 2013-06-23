@@ -11,7 +11,9 @@ import java.util.Map;
 @Module(id = "6e744dc4-edc6-eca2-07d5-28ff55a75b2d", name = "Preprocess", category = "zrace", type = ModuleType.JAVA, 
 	configurations = {
 		@ModuleConfiguration(key = "input_path", displayName = "input path"),
-		@ModuleConfiguration(key = "output_path", displayName = "output path") }, inputs = {}, outputs = {})
+		@ModuleConfiguration(key = "output_path", displayName = "output path") }, 
+	static_configurations = {},
+	inputs = {}, outputs = {})
 public class ZracePreprocess extends AbstractModule {
 
 	@Override

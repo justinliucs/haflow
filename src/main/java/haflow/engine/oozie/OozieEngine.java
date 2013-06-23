@@ -1,5 +1,6 @@
 package haflow.engine.oozie;
 
+import haflow.dto.entity.Edge;
 import haflow.dto.entity.Flow;
 import haflow.dto.entity.Node;
 import haflow.dto.profile.NodeConfiguration;
@@ -7,18 +8,20 @@ import haflow.engine.AbstractEngine;
 import haflow.engine.Engine;
 import haflow.engine.RunFlowResult;
 import haflow.engine.ValidateFlowResult;
-import haflow.engine.model.Action;
 import haflow.engine.model.AdjMatrixNode;
 import haflow.engine.model.DirectedGraph;
+import haflow.engine.model.GlobalConfiguration;
 import haflow.engine.model.TopologicalSort;
 import haflow.module.Module;
 import haflow.module.basic.EndModule;
 import haflow.module.basic.StartModule;
+import haflow.module.util.ModuleLoader;
 import haflow.service.HdfsService;
 import haflow.service.NodeConfigurationService;
+import haflow.service.NodeStaticConfigurationService;
 import haflow.utility.ClusterConfiguration;
-import haflow.utility.ModuleLoader;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,6 +29,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -41,7 +52,9 @@ public class OozieEngine extends AbstractEngine {
 	private HdfsService hdfsService;
 	private OozieService oozieService;
 	private FlowDeployService flowDeployService;
-
+	private GlobalConfiguration globalConfiguration;
+	private NodeStaticConfigurationService nodeStaticConfigurationService;
+	
 	private ModuleLoader getModuleLoader() {
 		return moduleLoader;
 	}
@@ -96,6 +109,25 @@ public class OozieEngine extends AbstractEngine {
 	@Autowired
 	private void setFlowDeployService(FlowDeployService flowDeployService) {
 		this.flowDeployService = flowDeployService;
+	}
+
+	public GlobalConfiguration getGlobalConfiguration() {
+		return globalConfiguration;
+	}
+
+	@Autowired
+	public void setGlobalConfiguration(GlobalConfiguration globalConfiguration) {
+		this.globalConfiguration = globalConfiguration;
+	}
+	
+	private NodeStaticConfigurationService getNodeStaticConfigurationService() {
+		return nodeStaticConfigurationService;
+	}
+
+	@Autowired
+	private void setNodeStaticConfigurationService(
+			NodeStaticConfigurationService nodeStaticConfigurationService) {
+		this.nodeStaticConfigurationService = nodeStaticConfigurationService;
 	}
 
 	@Override
@@ -189,6 +221,7 @@ public class OozieEngine extends AbstractEngine {
 
 			System.out.println(messageBuilder.toString());
 			model.setMessage(messageBuilder.toString());
+			System.out.println(messageBuilder.toString());
 			return model;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -225,7 +258,7 @@ public class OozieEngine extends AbstractEngine {
 			Map<UUID, Class<?>> moduleClasses, DirectedGraph graph) {
 		for (int i = 0; i < sorted.size(); i++) {// move end node to the end
 			int w = sorted.get(i);
-			Action node = graph.getNode(w);
+			Node node = graph.getNode(w);
 			Class<?> moduleClass = moduleClasses.get(node.getModuleId());
 			if (moduleClass.equals(EndModule.class)) {// what if we have more
 														// than one end?
@@ -250,12 +283,24 @@ public class OozieEngine extends AbstractEngine {
 
 		for (int i = 0; i < sorted.size(); i++) {// generate xml
 			int w = sorted.get(i);
-			Action node = graph.getNode(w);
+			Node node = graph.getNode(w);
 
 			Map<String, String> configurations = new HashMap<String, String>();
-			configurations.put("name", node.getNodeName());
+			
+			//global consistent configurations
+			configurations.putAll(this.globalConfiguration.getProperties());
+			
+			
+			//module static configurations
+			configurations
+					.putAll(this.getNodeStaticConfigurationService()
+							.getNodeConfiguration(moduleClasses.get(node
+									.getModuleId())));
+			
+			//run time configurations
+			configurations.put("name", node.getName());
 			List<NodeConfiguration> ncps = this.getNodeConfigurationService()
-					.getNodeConfiguration(node.getNodeId());
+					.getNodeConfiguration(node.getId());
 			for (NodeConfiguration ncp : ncps) {
 				String key = ncp.getKey();
 				String value = ncp.getValue();
@@ -265,11 +310,13 @@ public class OozieEngine extends AbstractEngine {
 			Map<String, Node> outputs = new HashMap<String, Node>();
 			List<AdjMatrixNode> adj = graph.getAdjacent(w);
 			for (AdjMatrixNode v : adj) {
-				if (sorted.contains(v)) {
-					Action action = graph.getNode(v.getIndex());
-					outputs.put(v.getPath().getSourceEndPoint(), // "ok"
-							action.getNode());
-					break;
+				if (sorted.contains(v.getIndex())) {
+					Edge path = v.getPath();
+					outputs.put(path.getSourceEndpoint(), // "ok"
+							path.getTargetNode());
+					System.out.println(path.getSourceEndpoint());
+					System.out.println(path.getTargetNode().getName());
+//					break;
 				}
 			}
 
@@ -306,7 +353,20 @@ public class OozieEngine extends AbstractEngine {
 			}
 			if (gen != null) {
 				Document doc = gen.generate(configurations, null, outputs);
-				workflowXml.append(doc.toString());// TODO
+				TransformerFactory transFactory = TransformerFactory.newInstance();
+				Transformer transformer;
+				try {
+					transformer = transFactory.newTransformer();
+					transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "YES");
+					DOMSource domSource = new DOMSource(doc);
+					ByteArrayOutputStream bos = new ByteArrayOutputStream();
+					transformer.transform(domSource, new StreamResult(bos));
+					workflowXml.append(bos.toString());// TODO
+				} catch (TransformerConfigurationException e) {
+					e.printStackTrace();
+				} catch (TransformerException e) {
+					e.printStackTrace();
+				}
 			}
 
 		}

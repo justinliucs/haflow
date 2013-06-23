@@ -10,23 +10,22 @@ import java.util.Map;
 import java.util.Set;
 
 public class DirectedGraph {
-	private List<Action> nodeList;
-	private List<Path> edgeList;
-	private Action startNode;
-	private Map<Action, Integer> indexMap;
+	private List<Node> nodeList;
+	private List<Edge> edgeList;
+	private Node startNode;
+	private Map<Node, Integer> indexMap;
 	private List<List<AdjMatrixNode>> adjacentMatrix;
 
 	public DirectedGraph(Set<Node> nodes, Set<Edge> edges, Node startNode) {
-		this.nodeList = new ArrayList<Action>();
-		this.edgeList = new ArrayList<Path>();
-		this.startNode = new Action(startNode);
-		this.indexMap = new HashMap<Action, Integer>();
+		this.nodeList = new ArrayList<Node>();
+		this.edgeList = new ArrayList<Edge>();
+		this.startNode = startNode;
+		this.indexMap = new HashMap<Node, Integer>();
 
 		int i = 0;
 		for (Node node : nodes) {
-			Action newAction = new Action(node);
-			this.nodeList.add(newAction);
-			this.indexMap.put(newAction, i++);
+			this.nodeList.add(node);
+			this.indexMap.put(node, i++);
 		}
 
 		this.adjacentMatrix = new ArrayList<List<AdjMatrixNode>>();
@@ -36,12 +35,11 @@ public class DirectedGraph {
 
 		// TODO: Consider endpoints
 		for (Edge edge : edges) {
-			Path path = new Path(edge);
-			this.edgeList.add(path);
+			this.edgeList.add(edge);
 			Node source = edge.getSourceNode();
 			Node target = edge.getTargetNode();
 			this.adjacentMatrix.get(this.indexMap.get(source))
-					.add(new AdjMatrixNode(this.indexMap.get(target), path));
+					.add(new AdjMatrixNode(this.indexMap.get(target), edge));//TODO
 		}
 	}
 
@@ -70,19 +68,19 @@ public class DirectedGraph {
 		return this.indexMap.get(this.startNode);
 	}
 
-	public Action getNode(int nodeIndex) {
+	public Node getNode(int nodeIndex) {
 		assert (nodeIndex >= 0 && nodeIndex < this.adjacentMatrix.size());
 		return this.nodeList.get(nodeIndex);
 	}
 
 	public int getNodeIndex(Node node) {
-		assert (this.indexMap.containsKey(node));
+//		assert (this.indexMap.containsKey(node));
 		return this.indexMap.get(node);
 	}
 
 //	public Map<String, Node> getInputs(Node node) {
 //		Map<String, Node> ret = new HashMap<String, Node>();
-//		for (Path edge : this.edgeList) {
+//		for (Edge edge : this.edgeList) {
 //			if (edge.getTargetNode() == node) {
 //				ret.put(edge.getTargetEndpoint(), edge.getSourceNode());
 //			}

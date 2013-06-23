@@ -22,7 +22,9 @@ import haflow.module.ModuleType;
 		@ModuleConfiguration(key = "param", displayName = "Parameters"),
 		@ModuleConfiguration(key = "argument", displayName = "Arguments"),
 		@ModuleConfiguration(key = "file", displayName = "File"),
-		@ModuleConfiguration(key = "archive", displayName = "Archive"), }, inputs = { @ModuleEndpoint(name = "from", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText) }, outputs = {
+		@ModuleConfiguration(key = "archive", displayName = "Archive"), }, 
+	static_configurations = {},
+	inputs = { @ModuleEndpoint(name = "from", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText) }, outputs = {
 		@ModuleEndpoint(name = "to", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText),
 		@ModuleEndpoint(name = "error", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText) })
 public class PigModule extends AbstractModule {

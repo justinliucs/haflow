@@ -19,14 +19,6 @@ public class KillModuleGenerator extends OozieXmlGenerator {
 			String xml = "<kill name=\""
 					+ name
 					+ "\"><message>Work flow failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message></kill>";
-			// if (i == sorted.size() - 1) {// inject kill node
-			// workflowXml
-			// .append("<kill name=\"fail\">"
-			// + "<message>Work flow failed, "
-			// +
-			// "error message[${wf:errorMessage(wf:lastErrorNode())}]</message>"
-			// + "</kill>" + "\n");
-			// }
 			return DocumentBuilderFactory.newInstance().newDocumentBuilder()
 					.parse(new StringInputStream(xml));
 		} catch (Exception e) {

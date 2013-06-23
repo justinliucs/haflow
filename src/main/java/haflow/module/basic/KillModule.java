@@ -13,7 +13,9 @@ import haflow.module.ModuleType;
 @Module(id = "b0d027c3-a4bd-61b5-5063-134ff71f8123", name = "Kill", category = "Basic", type = ModuleType.KILL, 
 	configurations = {
 		@ModuleConfiguration(key = "name", displayName = "Name"),
-		@ModuleConfiguration(key = "message", displayName = "Message") }, inputs = { @ModuleEndpoint(name = "from", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText) }, outputs = {})
+		@ModuleConfiguration(key = "message", displayName = "Message") }, 
+	static_configurations={},
+	inputs = { @ModuleEndpoint(name = "from", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText) }, outputs = {})
 public final class KillModule extends AbstractModule {
 
 	@Override

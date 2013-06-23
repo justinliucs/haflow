@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import haflow.module.Module;
 import haflow.module.AbstractModule;
-import haflow.utility.ModuleLoader;
+import haflow.module.util.ModuleLoader;
 
 import org.junit.Assert;
 import org.junit.Test;
