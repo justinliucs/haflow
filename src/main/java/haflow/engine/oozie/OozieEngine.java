@@ -12,6 +12,7 @@ import haflow.engine.model.AdjMatrixNode;
 import haflow.engine.model.DirectedGraph;
 import haflow.engine.model.GlobalConfiguration;
 import haflow.engine.model.TopologicalSort;
+import haflow.module.AbstractHiveModule;
 import haflow.module.AbstractJavaModule;
 import haflow.module.Module;
 import haflow.module.basic.EndModule;
@@ -177,46 +178,46 @@ public class OozieEngine extends AbstractEngine {
 					boolean deloyedLocally = this.getFlowDeployService()
 							.deployFlowLocal(localDeployPath, workflowXml,
 									getJarPaths(nodes, moduleClasses));
-					if (deloyedLocally) {
-						messageBuilder.append(flowName
-								+ " has been deployed locally!" + "\n");
-
-						String hdfsDeployPath = this.getClusterConfiguration()
-								.getProperty(
-										ClusterConfiguration.WORKSPACE_HDFS)
-								+ flowName;
-						boolean deleted = this.getHdfsService()
-								.deleteDirectory(hdfsDeployPath);
-						if (deleted) {
-							messageBuilder.append("Old folder deleted: "
-									+ hdfsDeployPath + "\n");
-						}
-
-						boolean deployedToHdfs = this.getHdfsService()
-								.uploadFile(localDeployPath, hdfsDeployPath);
-						if (deployedToHdfs) {
-							messageBuilder.append(flowName
-									+ " has been uploaded to hdfs!" + "\n");
-
-							String jobId = this.getOozieService().runJob(
-									flowName);
-							if (jobId == null) {
-								messageBuilder.append("Failed to commit job: "
-										+ flowName + "\n");
-							} else {
-								messageBuilder.append("Job commited! Job id : "
-										+ jobId + "\n");
-								model.setCommitted(true);
-								model.setJobId(jobId);
-							}
-						} else {
-							messageBuilder.append(flowName
-									+ " failed to be uploaded to hdfs!" + "\n");
-						}
-					} else {
-						messageBuilder.append(flowName
-								+ " failed to be deployed locally!" + "\n");
-					}
+//					if (deloyedLocally) {
+//						messageBuilder.append(flowName
+//								+ " has been deployed locally!" + "\n");
+//
+//						String hdfsDeployPath = this.getClusterConfiguration()
+//								.getProperty(
+//										ClusterConfiguration.WORKSPACE_HDFS)
+//								+ flowName;
+//						boolean deleted = this.getHdfsService()
+//								.deleteDirectory(hdfsDeployPath);
+//						if (deleted) {
+//							messageBuilder.append("Old folder deleted: "
+//									+ hdfsDeployPath + "\n");
+//						}
+//
+//						boolean deployedToHdfs = this.getHdfsService()
+//								.uploadFile(localDeployPath, hdfsDeployPath);
+//						if (deployedToHdfs) {
+//							messageBuilder.append(flowName
+//									+ " has been uploaded to hdfs!" + "\n");
+//
+//							String jobId = this.getOozieService().runJob(
+//									flowName);
+//							if (jobId == null) {
+//								messageBuilder.append("Failed to commit job: "
+//										+ flowName + "\n");
+//							} else {
+//								messageBuilder.append("Job commited! Job id : "
+//										+ jobId + "\n");
+//								model.setCommitted(true);
+//								model.setJobId(jobId);
+//							}
+//						} else {
+//							messageBuilder.append(flowName
+//									+ " failed to be uploaded to hdfs!" + "\n");
+//						}
+//					} else {
+//						messageBuilder.append(flowName
+//								+ " failed to be deployed locally!" + "\n");
+//					}
 				}
 			}
 
@@ -323,7 +324,7 @@ public class OozieEngine extends AbstractEngine {
 			}
 					
 			Module moduleProtype = moduleClass.getAnnotation(Module.class);
-
+			
 			OozieXmlGenerator gen = null;
 			switch (moduleProtype.type()) {
 			case START:
@@ -342,6 +343,10 @@ public class OozieEngine extends AbstractEngine {
 				gen = new JavaModuleGenerator();
 				break;
 			case HIVE:
+				AbstractHiveModule hiveModuleInstance = (AbstractHiveModule) moduleClass.newInstance();
+				configurations.put("sql_file", hiveModuleInstance.getSQL(userConfs));
+				gen = new HiveModuleGenerator();
+				break;
 			case DECISION:
 			case FORK:
 			case JOIN:
