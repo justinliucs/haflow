@@ -1,4 +1,4 @@
-package haflow.module.basic;
+package haflow.module.zrace;
 
 import haflow.module.AbstractHiveModule;
 import haflow.module.DataType;
@@ -9,7 +9,7 @@ import haflow.module.ModuleType;
 
 import java.util.Map;
 
-@Module(id = "ada600a8-aa63-tttt-ca46-9999a0e0bd2f", name = "Hive", category = "Basic", type = ModuleType.HIVE,
+@Module(id = "add600a8-aa63-8901-ca46-aaffa0e0bd2f", name = "Hive", category = "Basic", type = ModuleType.HIVE,
 	configurations = {
 		@ModuleConfiguration(key = "sql", displayName = "Sql Command"),
 		@ModuleConfiguration(key = "output_dir", displayName = "Output Directory"),}, 
@@ -35,9 +35,9 @@ public class HiveModule extends AbstractHiveModule {
 	}
 
 	@Override
-	public String getSQL() {
+	public String getSQL(Map<String, String> configurations) {
 		// TODO Auto-generated method stub
-		return null;
+		return configurations.get("sql");
 	}
 
 }

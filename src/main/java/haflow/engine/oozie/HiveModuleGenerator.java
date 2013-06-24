@@ -16,9 +16,6 @@ public class HiveModuleGenerator extends OozieXmlGenerator {
 	
 //	public static final String PREPARE = "prepare";
 //	public static final String JOB_XML = "job_xml";
-	public static final String MAIN_CLASS = "main_class";
-	public static final String JAVA_OPT = "java_opt";
-	public static final String ARG = "arg";	
 	
 	public static final String MAPRED_JOB_QUEUE_NAME = "mapred.job.queue.name";
 	public static final String OOZIE_USER_SYSTEM_LIBPATH = "oozie.use.system.libpath";
@@ -35,7 +32,7 @@ public class HiveModuleGenerator extends OozieXmlGenerator {
 			String queue_name = configurations.get(MAPRED_JOB_QUEUE_NAME);
 			
 			String sqlFile = configurations.get("sql_file");
-			String output = configurations.get("output_dir");
+//			String output = configurations.get("output_dir");
 			
 			String ok = outputs.get("ok").getName();
 			String error = outputs.get("error").getName();
@@ -50,7 +47,7 @@ public class HiveModuleGenerator extends OozieXmlGenerator {
 				+ "<value>" + queue_name + "</value>" + "\n" + "</property>"
 				+ "\n" + "</configuration>" +
 		        "<script>" + sqlFile + "</script>" + 
-		        "<param>OUTPUT=" + output + "</param>" +
+//		        "<param>OUTPUT=" + output + "</param>" +
 		        "</hive>" 
 		        + "\n" + "<ok to=\"" + ok + "\"/>" + "\n"//ok
 				+ "<error to=\"" +error + "\"/>" + "\n" + "</action>";
