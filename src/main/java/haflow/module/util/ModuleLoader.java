@@ -2,7 +2,7 @@ package haflow.module.util;
 
 import haflow.module.AbstractModule;
 import haflow.module.Module;
-import haflow.utility.ClassHelper;
+import haflow.util.ClassHelper;
 
 import java.util.HashMap;
 import java.util.List;

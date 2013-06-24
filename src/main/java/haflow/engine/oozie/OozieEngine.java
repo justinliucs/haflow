@@ -10,7 +10,6 @@ import haflow.engine.RunFlowResult;
 import haflow.engine.ValidateFlowResult;
 import haflow.engine.model.AdjMatrixNode;
 import haflow.engine.model.DirectedGraph;
-import haflow.engine.model.GlobalConfiguration;
 import haflow.engine.model.TopologicalSort;
 import haflow.module.AbstractHiveModule;
 import haflow.module.AbstractJavaModule;
@@ -20,7 +19,8 @@ import haflow.module.basic.StartModule;
 import haflow.module.util.ModuleLoader;
 import haflow.service.HdfsService;
 import haflow.service.NodeConfigurationService;
-import haflow.utility.ClusterConfiguration;
+import haflow.util.ClusterConfiguration;
+import haflow.util.GlobalConfiguration;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -322,7 +322,7 @@ public class OozieEngine extends AbstractEngine {
 				AbstractJavaModule moduleInstance = (AbstractJavaModule) moduleClass
 						.newInstance();
 				configurations.put("main_class", moduleInstance.getMainClass());
-				configurations.put("arg", moduleInstance.getArgs(userConfs));
+				configurations.put("arg", moduleInstance.getArguments(userConfs));
 				gen = new JavaModuleGenerator();
 				break;
 			case HIVE:

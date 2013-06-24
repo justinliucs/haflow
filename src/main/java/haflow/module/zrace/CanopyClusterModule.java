@@ -33,7 +33,7 @@ public class CanopyClusterModule extends AbstractJavaModule {
 	}
 
 	@Override
-	public String getArgs(Map<String, String> configurations) {
+	public String getArguments(Map<String, String> configurations) {
 		StringBuilder sb = new StringBuilder();
 		for (String key : configurations.keySet()) {
 			if (key.equals("others")) {

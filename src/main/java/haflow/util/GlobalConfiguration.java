@@ -1,6 +1,5 @@
-package haflow.engine.model;
+package haflow.util;
 
-import haflow.utility.ClusterConfiguration;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +34,7 @@ public class GlobalConfiguration {
 		properties.put(OOZIE_USER_SYSTEM_LIBPATH, cc.getProperty(OOZIE_USER_SYSTEM_LIBPATH));
 	}
 	
-	public String getConf(String key){
+	public String getConfiguration(String key){
 		return this.properties.getProperty(key);
 	}
 	

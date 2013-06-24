@@ -1,4 +1,4 @@
-package haflow.utility;
+package haflow.util;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

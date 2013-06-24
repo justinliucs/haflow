@@ -1,4 +1,4 @@
-package haflow.utility;
+package haflow.util;
 
 import java.io.FileInputStream;
 import java.net.URL;
