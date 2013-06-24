@@ -5,7 +5,7 @@ import haflow.module.ModuleConfiguration;
 import haflow.module.ModuleEndpoint;
 import haflow.module.util.ModuleConfigurationComparator;
 import haflow.module.util.ModuleEndpointComparator;
-import haflow.module.util.ModuleLoader;
+import haflow.module.util.ModuleUtil;
 import haflow.ui.model.ModuleConfigurationModel;
 import haflow.ui.model.ModuleBriefModel;
 import haflow.ui.model.ModuleEndpointModel;
@@ -22,19 +22,36 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ModuleHelper {
-	private ModuleLoader moduleLoader;
+	private static ModuleHelper moduleHelper;
+	private ModuleUtil moduleUtil;
 
-	private ModuleLoader getModuleLoader() {
-		return moduleLoader;
+	public static ModuleHelper getModuleHelper() {
+		return moduleHelper;
+	}
+
+	private static void setModuleHelper(ModuleHelper moduleHelper) {
+		ModuleHelper.moduleHelper = moduleHelper;
+	}
+
+	private ModuleUtil getModuleUtil() {
+		return moduleUtil;
 	}
 
 	@Autowired
-	private void setModuleLoader(ModuleLoader moduleLoader) {
-		this.moduleLoader = moduleLoader;
+	private void setModuleUtil(ModuleUtil moduleUtil) {
+		this.moduleUtil = moduleUtil;
+	}
+
+	public ModuleHelper() {
+		ModuleHelper.setModuleHelper(this);
+	}
+
+	public boolean removeModule(UUID moduleId) {
+		return this.getModuleUtil().removeModule(moduleId);
 	}
 
 	public ModuleListModel getModuleList() {
-		Set<Module> moduleList = this.getModuleLoader().searchForModules()
+		Set<Module> moduleList = this.getModuleUtil().searchForModules()
 				.keySet();
 		ModuleListModel moduleListModel = new ModuleListModel();
 		moduleListModel.setModules(new ArrayList<ModuleBriefModel>());

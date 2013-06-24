@@ -16,7 +16,7 @@ import haflow.module.AbstractJavaModule;
 import haflow.module.Module;
 import haflow.module.basic.EndModule;
 import haflow.module.basic.StartModule;
-import haflow.module.util.ModuleLoader;
+import haflow.module.util.ModuleUtil;
 import haflow.service.HdfsService;
 import haflow.service.NodeConfigurationService;
 import haflow.util.ClusterConfiguration;
@@ -47,7 +47,7 @@ import org.w3c.dom.Document;
 @Component
 public class OozieEngine extends AbstractEngine {
 
-	private ModuleLoader moduleLoader;
+	private ModuleUtil moduleUtil;
 	private NodeConfigurationService nodeConfigurationService;
 	private ClusterConfiguration clusterConfiguration;
 	private HdfsService hdfsService;
@@ -55,13 +55,13 @@ public class OozieEngine extends AbstractEngine {
 	private FlowDeployService flowDeployService;
 	private GlobalConfiguration globalConfiguration;
 
-	private ModuleLoader getModuleLoader() {
-		return moduleLoader;
+	private ModuleUtil getModuleUtil() {
+		return moduleUtil;
 	}
 
 	@Autowired
-	private void setModuleLoader(ModuleLoader moduleLoader) {
-		this.moduleLoader = moduleLoader;
+	private void setModuleUtil(ModuleUtil moduleUtil) {
+		this.moduleUtil = moduleUtil;
 	}
 
 	private NodeConfigurationService getNodeConfigurationService() {
@@ -135,7 +135,7 @@ public class OozieEngine extends AbstractEngine {
 		StringBuilder messageBuilder = new StringBuilder();
 
 		try {
-			Map<UUID, Class<?>> moduleClasses = this.getModuleLoader()
+			Map<UUID, Class<?>> moduleClasses = this.getModuleUtil()
 					.searchForModuleClasses();
 
 			Set<Node> nodes = flow.getNodes();
@@ -322,7 +322,8 @@ public class OozieEngine extends AbstractEngine {
 				AbstractJavaModule moduleInstance = (AbstractJavaModule) moduleClass
 						.newInstance();
 				configurations.put("main_class", moduleInstance.getMainClass());
-				configurations.put("arg", moduleInstance.getArguments(userConfs));
+				configurations.put("arg",
+						moduleInstance.getArguments(userConfs));
 				gen = new JavaModuleGenerator();
 				break;
 			case HIVE:
