@@ -20,7 +20,6 @@ import haflow.module.basic.StartModule;
 import haflow.module.util.ModuleLoader;
 import haflow.service.HdfsService;
 import haflow.service.NodeConfigurationService;
-import haflow.service.NodeStaticConfigurationService;
 import haflow.utility.ClusterConfiguration;
 
 import java.io.ByteArrayOutputStream;
@@ -55,8 +54,7 @@ public class OozieEngine extends AbstractEngine {
 	private OozieService oozieService;
 	private FlowDeployService flowDeployService;
 	private GlobalConfiguration globalConfiguration;
-	private NodeStaticConfigurationService nodeStaticConfigurationService;
-	
+
 	private ModuleLoader getModuleLoader() {
 		return moduleLoader;
 	}
@@ -121,16 +119,6 @@ public class OozieEngine extends AbstractEngine {
 	public void setGlobalConfiguration(GlobalConfiguration globalConfiguration) {
 		this.globalConfiguration = globalConfiguration;
 	}
-	
-	private NodeStaticConfigurationService getNodeStaticConfigurationService() {
-		return nodeStaticConfigurationService;
-	}
-
-	@Autowired
-	private void setNodeStaticConfigurationService(
-			NodeStaticConfigurationService nodeStaticConfigurationService) {
-		this.nodeStaticConfigurationService = nodeStaticConfigurationService;
-	}
 
 	@Override
 	public ValidateFlowResult validateFlow(Flow flow) {
@@ -178,46 +166,46 @@ public class OozieEngine extends AbstractEngine {
 					boolean deloyedLocally = this.getFlowDeployService()
 							.deployFlowLocal(localDeployPath, workflowXml,
 									getJarPaths(nodes, moduleClasses));
-//					if (deloyedLocally) {
-//						messageBuilder.append(flowName
-//								+ " has been deployed locally!" + "\n");
-//
-//						String hdfsDeployPath = this.getClusterConfiguration()
-//								.getProperty(
-//										ClusterConfiguration.WORKSPACE_HDFS)
-//								+ flowName;
-//						boolean deleted = this.getHdfsService()
-//								.deleteDirectory(hdfsDeployPath);
-//						if (deleted) {
-//							messageBuilder.append("Old folder deleted: "
-//									+ hdfsDeployPath + "\n");
-//						}
-//
-//						boolean deployedToHdfs = this.getHdfsService()
-//								.uploadFile(localDeployPath, hdfsDeployPath);
-//						if (deployedToHdfs) {
-//							messageBuilder.append(flowName
-//									+ " has been uploaded to hdfs!" + "\n");
-//
-//							String jobId = this.getOozieService().runJob(
-//									flowName);
-//							if (jobId == null) {
-//								messageBuilder.append("Failed to commit job: "
-//										+ flowName + "\n");
-//							} else {
-//								messageBuilder.append("Job commited! Job id : "
-//										+ jobId + "\n");
-//								model.setCommitted(true);
-//								model.setJobId(jobId);
-//							}
-//						} else {
-//							messageBuilder.append(flowName
-//									+ " failed to be uploaded to hdfs!" + "\n");
-//						}
-//					} else {
-//						messageBuilder.append(flowName
-//								+ " failed to be deployed locally!" + "\n");
-//					}
+					// if (deloyedLocally) {
+					// messageBuilder.append(flowName
+					// + " has been deployed locally!" + "\n");
+					//
+					// String hdfsDeployPath = this.getClusterConfiguration()
+					// .getProperty(
+					// ClusterConfiguration.WORKSPACE_HDFS)
+					// + flowName;
+					// boolean deleted = this.getHdfsService()
+					// .deleteDirectory(hdfsDeployPath);
+					// if (deleted) {
+					// messageBuilder.append("Old folder deleted: "
+					// + hdfsDeployPath + "\n");
+					// }
+					//
+					// boolean deployedToHdfs = this.getHdfsService()
+					// .uploadFile(localDeployPath, hdfsDeployPath);
+					// if (deployedToHdfs) {
+					// messageBuilder.append(flowName
+					// + " has been uploaded to hdfs!" + "\n");
+					//
+					// String jobId = this.getOozieService().runJob(
+					// flowName);
+					// if (jobId == null) {
+					// messageBuilder.append("Failed to commit job: "
+					// + flowName + "\n");
+					// } else {
+					// messageBuilder.append("Job commited! Job id : "
+					// + jobId + "\n");
+					// model.setCommitted(true);
+					// model.setJobId(jobId);
+					// }
+					// } else {
+					// messageBuilder.append(flowName
+					// + " failed to be uploaded to hdfs!" + "\n");
+					// }
+					// } else {
+					// messageBuilder.append(flowName
+					// + " failed to be deployed locally!" + "\n");
+					// }
 				}
 			}
 
@@ -288,19 +276,13 @@ public class OozieEngine extends AbstractEngine {
 			Node node = graph.getNode(w);
 
 			Map<String, String> configurations = new HashMap<String, String>();
-			
-			//global consistent configurations
+
+			// global consistent configurations
 			configurations.putAll(this.globalConfiguration.getProperties());
-			
+
 			Class<?> moduleClass = moduleClasses.get(node.getModuleId());
-			
-			//module static configurations
-			configurations
-					.putAll(this.getNodeStaticConfigurationService()
-							.getNodeConfiguration(moduleClass));
-			
 			configurations.put("name", node.getName());
-			
+
 			Map<String, Node> outputs = new HashMap<String, Node>();
 			List<AdjMatrixNode> adj = graph.getAdjacent(w);
 			for (AdjMatrixNode v : adj) {
@@ -313,8 +295,8 @@ public class OozieEngine extends AbstractEngine {
 				}
 			}
 
-			//user specific configurations
-			Map<String, String> userConfs = new HashMap<String, String>();			
+			// user specific configurations
+			Map<String, String> userConfs = new HashMap<String, String>();
 			List<NodeConfiguration> ncps = this.getNodeConfigurationService()
 					.getNodeConfiguration(node.getId());
 			for (NodeConfiguration ncp : ncps) {
@@ -322,9 +304,9 @@ public class OozieEngine extends AbstractEngine {
 				String value = ncp.getValue();
 				userConfs.put(key, value);
 			}
-					
+
 			Module moduleProtype = moduleClass.getAnnotation(Module.class);
-			
+
 			OozieXmlGenerator gen = null;
 			switch (moduleProtype.type()) {
 			case START:
@@ -337,14 +319,17 @@ public class OozieEngine extends AbstractEngine {
 				gen = new KillModuleGenerator();
 				break;
 			case JAVA:
-				AbstractJavaModule moduleInstance = (AbstractJavaModule) moduleClass.newInstance();
+				AbstractJavaModule moduleInstance = (AbstractJavaModule) moduleClass
+						.newInstance();
 				configurations.put("main_class", moduleInstance.getMainClass());
 				configurations.put("arg", moduleInstance.getArgs(userConfs));
 				gen = new JavaModuleGenerator();
 				break;
 			case HIVE:
-				AbstractHiveModule hiveModuleInstance = (AbstractHiveModule) moduleClass.newInstance();
-				configurations.put("sql_file", hiveModuleInstance.getSQL(userConfs));
+				AbstractHiveModule hiveModuleInstance = (AbstractHiveModule) moduleClass
+						.newInstance();
+				configurations.put("sql_file",
+						hiveModuleInstance.getSQL(userConfs));
 				gen = new HiveModuleGenerator();
 				break;
 			case DECISION:
@@ -361,11 +346,13 @@ public class OozieEngine extends AbstractEngine {
 			}
 			if (gen != null) {
 				Document doc = gen.generate(configurations, null, outputs);
-				TransformerFactory transFactory = TransformerFactory.newInstance();
+				TransformerFactory transFactory = TransformerFactory
+						.newInstance();
 				Transformer transformer;
 				try {
 					transformer = transFactory.newTransformer();
-					transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "YES");
+					transformer.setOutputProperty(
+							OutputKeys.OMIT_XML_DECLARATION, "YES");
 					DOMSource domSource = new DOMSource(doc);
 					ByteArrayOutputStream bos = new ByteArrayOutputStream();
 					transformer.transform(domSource, new StreamResult(bos));

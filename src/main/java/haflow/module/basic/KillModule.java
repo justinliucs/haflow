@@ -9,12 +9,9 @@ import haflow.module.ModuleType;
 
 import java.util.Map;
 
-@Module(id = "b0d027c3-a4bd-61b5-5063-134ff71f8123", name = "Kill", category = "Basic", type = ModuleType.KILL, 
-	configurations = {
-		@ModuleConfiguration(key = "name", displayName = "Name"),
-		@ModuleConfiguration(key = "message", displayName = "Message") }, 
-	static_configurations={},
-	inputs = { @ModuleEndpoint(name = "from", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText) }, outputs = {})
+@Module(id = "b0d027c3-a4bd-61b5-5063-134ff71f8123", name = "Kill", category = "Basic", type = ModuleType.KILL, configurations = {
+		@ModuleConfiguration(key = "name", displayName = "Name", order = 1),
+		@ModuleConfiguration(key = "message", displayName = "Message", order = 2) }, inputs = { @ModuleEndpoint(name = "from", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText, order = 1) }, outputs = {})
 public final class KillModule extends AbstractModule {
 
 	@Override

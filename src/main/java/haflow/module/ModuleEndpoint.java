@@ -15,4 +15,6 @@ public @interface ModuleEndpoint {
 	int maxNumber();
 
 	DataType dataType();
+
+	int order();
 }

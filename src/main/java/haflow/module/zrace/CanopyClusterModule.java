@@ -9,19 +9,15 @@ import haflow.module.ModuleType;
 
 import java.util.Map;
 
-@Module(id = "ada600a8-aa63-968a-ca46-4356a0e0bd2f", name = "CanopyCluster", category = "zrace", type = ModuleType.JAVA,
-	configurations = {
-		@ModuleConfiguration(key = "input", displayName = "Input File Path"), 
-		@ModuleConfiguration(key = "output", displayName = "Output File Path"),
-		@ModuleConfiguration(key = "k", displayName = "Cluster Number"),
-		@ModuleConfiguration(key = "convergenceDelta", displayName = "Convergence Delta"),
-		@ModuleConfiguration(key = "maxIterations", displayName = "Max Iterations"),
-		@ModuleConfiguration(key = "others", displayName = "Other Parameters"),
-		}, 
-	static_configurations={},
-	inputs = { @ModuleEndpoint(name = "from", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText) }, 
-	outputs = { @ModuleEndpoint(name = "ok", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText),
-		@ModuleEndpoint(name = "error", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText) })
+@Module(id = "ada600a8-aa63-968a-ca46-4356a0e0bd2f", name = "CanopyCluster", category = "zrace", type = ModuleType.JAVA, configurations = {
+		@ModuleConfiguration(key = "input", displayName = "Input File Path", order = 1),
+		@ModuleConfiguration(key = "output", displayName = "Output File Path", order = 2),
+		@ModuleConfiguration(key = "k", displayName = "Cluster Number", order = 3),
+		@ModuleConfiguration(key = "convergenceDelta", displayName = "Convergence Delta", order = 4),
+		@ModuleConfiguration(key = "maxIterations", displayName = "Max Iterations", order = 5),
+		@ModuleConfiguration(key = "others", displayName = "Other Parameters", order = 6), }, inputs = { @ModuleEndpoint(name = "from", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText, order = 1) }, outputs = {
+		@ModuleEndpoint(name = "ok", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText, order = 1),
+		@ModuleEndpoint(name = "error", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText, order = 2) })
 public class CanopyClusterModule extends AbstractJavaModule {
 
 	@Override
@@ -30,25 +26,25 @@ public class CanopyClusterModule extends AbstractJavaModule {
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
+
 	@Override
-	public String getMainClass(){
+	public String getMainClass() {
 		return CanopyClusterModule.class.getName();
 	}
 
 	@Override
-	public String getArgs(Map<String, String> configurations){
+	public String getArgs(Map<String, String> configurations) {
 		StringBuilder sb = new StringBuilder();
-		for(String key : configurations.keySet()){
-			if( key.equals("others")){
+		for (String key : configurations.keySet()) {
+			if (key.equals("others")) {
 				sb.append(configurations.get(key) + " ");
-			}else{
+			} else {
 				sb.append("-" + key + " \"" + configurations.get(key) + "\" ");
 			}
 		}
 		return sb.toString();
 	}
-	
+
 	public static void main(String[] args) {
 		System.out.println("Demo Java Main");
 

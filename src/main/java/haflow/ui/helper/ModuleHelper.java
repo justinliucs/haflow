@@ -3,6 +3,8 @@ package haflow.ui.helper;
 import haflow.module.Module;
 import haflow.module.ModuleConfiguration;
 import haflow.module.ModuleEndpoint;
+import haflow.module.util.ModuleConfigurationComparator;
+import haflow.module.util.ModuleEndpointComparator;
 import haflow.module.util.ModuleLoader;
 import haflow.ui.model.ModuleConfigurationModel;
 import haflow.ui.model.ModuleBriefModel;
@@ -10,6 +12,7 @@ import haflow.ui.model.ModuleEndpointModel;
 import haflow.ui.model.ModuleListModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -44,26 +47,33 @@ public class ModuleHelper {
 					.setConfigurations(new HashSet<ModuleConfigurationModel>());
 			moduleBriefModel.setInputs(new HashSet<ModuleEndpointModel>());
 			moduleBriefModel.setOutputs(new HashSet<ModuleEndpointModel>());
-			for (ModuleConfiguration configuration : module.configurations()) {
+			ModuleConfiguration[] configurations = module.configurations();
+			Arrays.sort(configurations, new ModuleConfigurationComparator());
+			int i = 0;
+			for (i = 0; i < configurations.length; i++) {
 				ModuleConfigurationModel model = new ModuleConfigurationModel();
-				model.setDisplayName(configuration.displayName());
-				model.setKey(configuration.key());
+				model.setDisplayName(configurations[i].displayName());
+				model.setKey(configurations[i].key());
 				moduleBriefModel.getConfigurations().add(model);
 			}
-			for (ModuleEndpoint input : module.inputs()) {
+			ModuleEndpoint[] inputs = module.inputs();
+			Arrays.sort(inputs, new ModuleEndpointComparator());
+			for (i = 0; i < inputs.length; i++) {
 				ModuleEndpointModel model = new ModuleEndpointModel();
-				model.setMaxNumber(input.maxNumber());
-				model.setMinNumber(input.minNumber());
-				model.setName(input.name());
-				model.setDataType(input.dataType().toString());
+				model.setMaxNumber(inputs[i].maxNumber());
+				model.setMinNumber(inputs[i].minNumber());
+				model.setName(inputs[i].name());
+				model.setDataType(inputs[i].dataType().toString());
 				moduleBriefModel.getInputs().add(model);
 			}
-			for (ModuleEndpoint output : module.outputs()) {
+			ModuleEndpoint[] outputs = module.outputs();
+			Arrays.sort(outputs, new ModuleEndpointComparator());
+			for (i = 0; i < outputs.length; i++) {
 				ModuleEndpointModel model = new ModuleEndpointModel();
-				model.setMaxNumber(output.maxNumber());
-				model.setMinNumber(output.minNumber());
-				model.setName(output.name());
-				model.setDataType(output.dataType().toString());
+				model.setMaxNumber(outputs[i].maxNumber());
+				model.setMinNumber(outputs[i].minNumber());
+				model.setName(outputs[i].name());
+				model.setDataType(outputs[i].dataType().toString());
 				moduleBriefModel.getOutputs().add(model);
 			}
 			moduleListModel.getModules().add(moduleBriefModel);

@@ -11,4 +11,6 @@ public @interface ModuleConfiguration {
 	String key();
 
 	String displayName();
+
+	int order();
 }

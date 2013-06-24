@@ -9,14 +9,11 @@ import haflow.module.ModuleType;
 
 import java.util.Map;
 
-@Module(id = "add600a8-aa63-8901-ca46-aaffa0e0bd2f", name = "Hive", category = "Basic", type = ModuleType.HIVE,
-	configurations = {
-		@ModuleConfiguration(key = "sql", displayName = "Sql Command"),
-		@ModuleConfiguration(key = "output_dir", displayName = "Output Directory"),}, 
-	static_configurations={},
-	inputs = { @ModuleEndpoint(name = "from", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText) }, 
-	outputs = { @ModuleEndpoint(name = "ok", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText),
-		@ModuleEndpoint(name = "error", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText) })
+@Module(id = "add600a8-aa63-8901-ca46-aaffa0e0bd2f", name = "Hive", category = "Basic", type = ModuleType.HIVE, configurations = {
+		@ModuleConfiguration(key = "sql", displayName = "Sql Command", order = 1),
+		@ModuleConfiguration(key = "output_dir", displayName = "Output Directory", order = 2), }, inputs = { @ModuleEndpoint(name = "from", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText, order = 1) }, outputs = {
+		@ModuleEndpoint(name = "ok", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText, order = 1),
+		@ModuleEndpoint(name = "error", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText, order = 2) })
 public class HiveModule extends AbstractHiveModule {
 	@Override
 	public boolean validate(Map<String, String> configurations,
