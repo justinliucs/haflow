@@ -19,8 +19,8 @@ public class HiveModuleGenerator extends OozieXmlGenerator {
 	
 	public static final String MAPRED_JOB_QUEUE_NAME = "mapred.job.queue.name";
 	public static final String OOZIE_USER_SYSTEM_LIBPATH = "oozie.use.system.libpath";
-	
-	
+
+
 	@Override
 	public Document generate(Map<String, String> configurations,
 			Map<String, Node> inputs, Map<String, Node> outputs) {
@@ -37,20 +37,27 @@ public class HiveModuleGenerator extends OozieXmlGenerator {
 			String ok = outputs.get("ok").getName();
 			String error = outputs.get("error").getName();
 			
+			String main_class = "haflow.module.zrace.HiveServiceBAction";
+			
+			String host = configurations.get("oozie.hive.host");
+			String port = configurations.get("oozie.hive.port");
 			
 			String xml = "<action name=\"" + name + "\">" + 
-		        "<hive xmlns=\"uri:oozie:hive-action:0.2\">" + 
-		        "<job-tracker>" + job_tracker + "</job-tracker>" + "\n"
-				+ "<name-node>" + name_node + "</name-node>" + "\n"
-				+ "<configuration>" + "\n" + "<property>" + "\n"
-				+ "<name>mapred.job.queue.name</name>" + "\n"
-				+ "<value>" + queue_name + "</value>" + "\n" + "</property>"
-				+ "\n" + "</configuration>" +
-		        "<script>" + sqlFile + "</script>" + 
-//		        "<param>OUTPUT=" + output + "</param>" +
-		        "</hive>" 
-		        + "\n" + "<ok to=\"" + ok + "\"/>" + "\n"//ok
-				+ "<error to=\"" +error + "\"/>" + "\n" + "</action>";
+			        "<java xmlns=\"uri:oozie:hive-action:0.2\">" + 
+			        "<job-tracker>" + job_tracker + "</job-tracker>" + "\n"
+					+ "<name-node>" + name_node + "</name-node>" + "\n"
+					+ "<configuration>" + "\n" + "<property>" + "\n"
+					+ "<name>mapred.job.queue.name</name>" + "\n"
+					+ "<value>" + queue_name + "</value>" + "\n" + "</property>"
+					+ "\n" + "</configuration>" +
+			        "<main-class>" + main_class + "</main-class>" + 
+			        "<arg>" + host + "</arg>" +
+			        "<arg>" + port + "</arg>" +
+			        "<arg>" + sqlFile + "</arg>" +
+			        "</java>" 
+			        + "\n" + "<ok to=\"" + ok + "\"/>" + "\n"//ok
+					+ "<error to=\"" +error + "\"/>" + "\n" + "</action>";
+			
 			return DocumentBuilderFactory.newInstance().newDocumentBuilder()
 					.parse(new StringInputStream(xml));
 		} catch (Exception e) {
