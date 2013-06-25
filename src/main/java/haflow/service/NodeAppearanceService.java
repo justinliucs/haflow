@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import haflow.dto.entity.Node;
 import haflow.dto.profile.NodeAppearance;
-import haflow.utility.SessionHelper;
+import haflow.util.SessionHelper;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;

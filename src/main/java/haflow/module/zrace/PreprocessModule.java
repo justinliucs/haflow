@@ -9,14 +9,11 @@ import haflow.module.ModuleType;
 
 import java.util.Map;
 
-@Module(id = "ada600a8-aa63-968a-ca46-1234a0e0bd2f", name = "Preprocess", category = "zrace", type = ModuleType.JAVA,
-	configurations = {
-		@ModuleConfiguration(key = "input", displayName = "Input Path"),
-		@ModuleConfiguration(key = "output", displayName = "Output Path"),}, 
-	static_configurations={},
-	inputs = { @ModuleEndpoint(name = "from", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText) }, 
-	outputs = { @ModuleEndpoint(name = "ok", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText),
-		@ModuleEndpoint(name = "error", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText) })
+@Module(id = "ada600a8-aa63-968a-ca46-1234a0e0bd2f", name = "Preprocess", category = "zrace", type = ModuleType.JAVA, configurations = {
+		@ModuleConfiguration(key = "input", displayName = "Input Path", order = 1),
+		@ModuleConfiguration(key = "output", displayName = "Output Path", order = 2), }, inputs = { @ModuleEndpoint(name = "from", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText, order = 1) }, outputs = {
+		@ModuleEndpoint(name = "ok", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText, order = 1),
+		@ModuleEndpoint(name = "error", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText, order = 2) })
 public class PreprocessModule extends AbstractJavaModule {
 
 	@Override
@@ -25,9 +22,9 @@ public class PreprocessModule extends AbstractJavaModule {
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
+
 	@Override
-	public String getMainClass(){
+	public String getMainClass() {
 		return PreprocessModule.class.getName();
 	}
 

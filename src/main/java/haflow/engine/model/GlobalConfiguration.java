@@ -1,7 +1,6 @@
 package haflow.engine.model;
 
-import haflow.utility.ClusterConfiguration;
-
+import haflow.util.ClusterConfiguration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,23 +17,27 @@ public class GlobalConfiguration {
 	public static final String OOZIE_HIVE_CONNECTION_URL = "oozie.hive.connection.url";
 	public static final String OOZIE_HIVE_CONNECTION_NAME = "oozie.hive.connection.name";
 	public static final String OOZIE_HIVE_CONNECTION_PWD = "oozie.hive.connection.password";
-	
-	
+
 	private Map<String, String> map;
+
 	@Autowired
-	public GlobalConfiguration(ClusterConfiguration cc){
+	public GlobalConfiguration(ClusterConfiguration cc) {
 		this.map = new HashMap<String, String>();
 		map.put(JOB_TRACKER, cc.getProperty(JOB_TRACKER));
 		map.put(NAME_NODE, cc.getProperty(NAME_NODE));
 		map.put(MAPRED_JOB_QUEUE_NAME, cc.getProperty(MAPRED_JOB_QUEUE_NAME));
-		map.put(OOZIE_USER_SYSTEM_LIBPATH, cc.getProperty(OOZIE_USER_SYSTEM_LIBPATH));		
-		
-		map.put(OOZIE_HIVE_CONNECTION_URL, cc.getProperty(OOZIE_HIVE_CONNECTION_URL));		
-		map.put(OOZIE_HIVE_CONNECTION_NAME, cc.getProperty(OOZIE_HIVE_CONNECTION_NAME));	
-		map.put(OOZIE_HIVE_CONNECTION_PWD, cc.getProperty(OOZIE_HIVE_CONNECTION_PWD));	
+		map.put(OOZIE_USER_SYSTEM_LIBPATH,
+				cc.getProperty(OOZIE_USER_SYSTEM_LIBPATH));
+
+		map.put(OOZIE_HIVE_CONNECTION_URL,
+				cc.getProperty(OOZIE_HIVE_CONNECTION_URL));
+		map.put(OOZIE_HIVE_CONNECTION_NAME,
+				cc.getProperty(OOZIE_HIVE_CONNECTION_NAME));
+		map.put(OOZIE_HIVE_CONNECTION_PWD,
+				cc.getProperty(OOZIE_HIVE_CONNECTION_PWD));
 	}
-	
-	public Map<String, String> getProperties(){
+
+	public Map<String, String> getProperties() {
 		return this.map;
 	}
 }

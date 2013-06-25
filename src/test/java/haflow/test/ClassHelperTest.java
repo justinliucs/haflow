@@ -2,7 +2,7 @@ package haflow.test;
 
 import java.util.List;
 
-import haflow.utility.ClassHelper;
+import haflow.util.ClassHelper;
 
 import org.junit.Assert;
 import org.junit.Test;
