@@ -10,6 +10,7 @@ import haflow.engine.RunFlowResult;
 import haflow.engine.ValidateFlowResult;
 import haflow.engine.model.AdjMatrixNode;
 import haflow.engine.model.DirectedGraph;
+import haflow.engine.model.GlobalConfiguration;
 import haflow.engine.model.TopologicalSort;
 import haflow.module.AbstractHiveModule;
 import haflow.module.AbstractJavaModule;
@@ -20,7 +21,6 @@ import haflow.module.util.ModuleUtil;
 import haflow.service.HdfsService;
 import haflow.service.NodeConfigurationService;
 import haflow.util.ClusterConfiguration;
-import haflow.util.GlobalConfiguration;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;

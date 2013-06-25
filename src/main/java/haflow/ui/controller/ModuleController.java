@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import haflow.ui.helper.ModuleHelper;
 import haflow.ui.model.ModuleListModel;
-import haflow.util.GlobalConfiguration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -50,11 +49,9 @@ public class ModuleController {
 				String suffix = "." + suffixs[suffixs.length - 1];
 				if ((".jar".indexOf(suffix.toLowerCase()) != -1)) {
 					byte[] bytes = file.getBytes();
-					String uploadPath = GlobalConfiguration.UPLOAD_PATH + "/"
-							+ fileName;
-					String filePath = request.getSession().getServletContext()
-							.getRealPath("/").replace("\\", "/")
-							+ uploadPath;
+					String uploadDir = Thread.currentThread()
+							.getContextClassLoader().getResource("/").getFile();
+					String filePath = uploadDir + fileName;
 					File toUpload = new File(filePath);
 					FileCopyUtils.copy(bytes, toUpload);
 					return new ModelAndView("upload-success");
