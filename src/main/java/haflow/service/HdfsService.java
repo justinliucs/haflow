@@ -1,6 +1,6 @@
 package haflow.service;
 
-import haflow.utility.ClusterConfiguration;
+import haflow.util.ClusterConfiguration;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;

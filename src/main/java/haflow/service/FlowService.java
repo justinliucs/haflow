@@ -3,7 +3,7 @@ package haflow.service;
 import haflow.dto.entity.Edge;
 import haflow.dto.entity.Flow;
 import haflow.dto.entity.Node;
-import haflow.utility.SessionHelper;
+import haflow.util.SessionHelper;
 
 import java.util.HashSet;
 import java.util.List;

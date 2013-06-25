@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import haflow.module.Module;
 import haflow.module.AbstractModule;
-import haflow.module.util.ModuleLoader;
+import haflow.module.util.ModuleUtil;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -14,21 +14,21 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
 @ContextConfiguration(locations = "classpath:servlet-context.xml")
-public class ModuleLoaderTest extends AbstractJUnit4SpringContextTests {
-	private ModuleLoader moduleLoader;
+public class ModuleUtilTest extends AbstractJUnit4SpringContextTests {
+	private ModuleUtil moduleUtil;
 
-	private ModuleLoader getModuleLoader() {
-		return moduleLoader;
+	private ModuleUtil getModuleUtil() {
+		return moduleUtil;
 	}
 
 	@Autowired
-	private void setModuleLoader(ModuleLoader moduleLoader) {
-		this.moduleLoader = moduleLoader;
+	private void setModuleUtil(ModuleUtil moduleUtil) {
+		this.moduleUtil = moduleUtil;
 	}
 
 	@Test
 	public void testSearchForModule() {
-		Map<Module, AbstractModule> map = this.getModuleLoader()
+		Map<Module, AbstractModule> map = this.getModuleUtil()
 				.searchForModules();
 		Assert.assertNotNull(map);
 		Assert.assertTrue(map.keySet().size() > 0);
@@ -36,15 +36,14 @@ public class ModuleLoaderTest extends AbstractJUnit4SpringContextTests {
 
 	@Test
 	public void testSearchForModuleClasses() {
-		Map<UUID, Class<?>> map = this.getModuleLoader()
-				.searchForModuleClasses();
+		Map<UUID, Class<?>> map = this.getModuleUtil().searchForModuleClasses();
 		Assert.assertNotNull(map);
 		Assert.assertTrue(map.keySet().size() > 0);
 	}
 
 	@Test
 	public void testSearchForModuleInAnotherPackage() {
-		Map<Module, AbstractModule> map = this.getModuleLoader()
+		Map<Module, AbstractModule> map = this.getModuleUtil()
 				.searchForModules("haflow.test");
 		Assert.assertNotNull(map);
 		Assert.assertTrue(map.keySet().size() > 0);
@@ -63,8 +62,8 @@ public class ModuleLoaderTest extends AbstractJUnit4SpringContextTests {
 
 	@Test
 	public void testSearchForModuleClassesInAnotherPackage() {
-		Map<UUID, Class<?>> map = this.getModuleLoader()
-				.searchForModuleClasses("haflow.test");
+		Map<UUID, Class<?>> map = this.getModuleUtil().searchForModuleClasses(
+				"haflow.test");
 		Assert.assertNotNull(map);
 		Assert.assertTrue(map.keySet().size() > 0);
 		Assert.assertTrue(map.containsKey(UUID
