@@ -3,8 +3,6 @@ package haflow.ui.controller;
 import java.io.File;
 import java.util.UUID;
 
-import javax.servlet.http.HttpServletRequest;
-
 import haflow.ui.helper.ModuleHelper;
 import haflow.ui.model.ModuleListModel;
 
@@ -40,8 +38,7 @@ public class ModuleController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView post(HttpServletRequest request,
-			@RequestParam("file") CommonsMultipartFile file) {
+	public ModelAndView post(@RequestParam("file") CommonsMultipartFile file) {
 		if (!file.isEmpty()) {
 			try {
 				String fileName = file.getOriginalFilename();
