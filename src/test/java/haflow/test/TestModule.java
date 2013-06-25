@@ -1,11 +1,10 @@
 package haflow.test;
 
-import haflow.dto.entity.Node;
+import haflow.module.AbstractModule;
 import haflow.module.DataType;
 import haflow.module.Module;
 import haflow.module.ModuleConfiguration;
 import haflow.module.ModuleEndpoint;
-import haflow.module.AbstractModule;
 import haflow.module.ModuleType;
 
 import java.util.Map;
