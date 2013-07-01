@@ -12,5 +12,7 @@ public @interface ModuleConfiguration {
 
 	String displayName();
 
+	String pattern();
+
 	int order();
 }
