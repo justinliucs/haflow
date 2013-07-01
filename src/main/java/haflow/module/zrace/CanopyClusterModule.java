@@ -10,12 +10,12 @@ import haflow.module.ModuleType;
 import java.util.Map;
 
 @Module(id = "ada600a8-aa63-968a-ca46-4356a0e0bd2f", name = "CanopyCluster", category = "zrace", type = ModuleType.JAVA, configurations = {
-		@ModuleConfiguration(key = "input", displayName = "Input File Path", order = 1),
-		@ModuleConfiguration(key = "output", displayName = "Output File Path", order = 2),
-		@ModuleConfiguration(key = "k", displayName = "Cluster Number", order = 3),
-		@ModuleConfiguration(key = "convergenceDelta", displayName = "Convergence Delta", order = 4),
-		@ModuleConfiguration(key = "maxIterations", displayName = "Max Iterations", order = 5),
-		@ModuleConfiguration(key = "others", displayName = "Other Parameters", order = 6), }, inputs = { @ModuleEndpoint(name = "from", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText, order = 1) }, outputs = {
+		@ModuleConfiguration(key = "input", displayName = "Input File Path", pattern = "^(.*)$", order = 1),
+		@ModuleConfiguration(key = "output", displayName = "Output File Path", pattern = "^(.*)$", order = 2),
+		@ModuleConfiguration(key = "k", displayName = "Cluster Number", pattern = "^(.*)$", order = 3),
+		@ModuleConfiguration(key = "convergenceDelta", displayName = "Convergence Delta", pattern = "^(.*)$", order = 4),
+		@ModuleConfiguration(key = "maxIterations", displayName = "Max Iterations", pattern = "^(.*)$", order = 5),
+		@ModuleConfiguration(key = "others", displayName = "Other Parameters", pattern = "^(.*)$", order = 6), }, inputs = { @ModuleEndpoint(name = "from", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText, order = 1) }, outputs = {
 		@ModuleEndpoint(name = "ok", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText, order = 1),
 		@ModuleEndpoint(name = "error", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText, order = 2) })
 public class CanopyClusterModule extends AbstractJavaModule {

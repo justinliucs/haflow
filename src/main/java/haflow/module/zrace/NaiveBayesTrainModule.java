@@ -10,11 +10,11 @@ import haflow.module.ModuleType;
 import java.util.Map;
 
 @Module(id = "ada600a8-aa63-968a-ca56-aeaeade0bd2f", name = "NaiveBayesTrain", category = "zrace", type = ModuleType.JAVA, configurations = {
-		@ModuleConfiguration(key = "i", displayName = "Input File Path", order = 1),
-		@ModuleConfiguration(key = "o", displayName = "Output File Path", order = 2),
-		@ModuleConfiguration(key = "li", displayName = "Label Index Path", order = 3),
-		@ModuleConfiguration(key = "cl", displayName = "Cluster Path", order = 4),
-		@ModuleConfiguration(key = "others", displayName = "Other Parameters", order = 5), }, inputs = { @ModuleEndpoint(name = "from", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText, order = 1) }, outputs = {
+		@ModuleConfiguration(key = "i", displayName = "Input File Path", pattern = "^(.*)$", order = 1),
+		@ModuleConfiguration(key = "o", displayName = "Output File Path", pattern = "^(.*)$", order = 2),
+		@ModuleConfiguration(key = "li", displayName = "Label Index Path", pattern = "^(.*)$", order = 3),
+		@ModuleConfiguration(key = "cl", displayName = "Cluster Path", pattern = "^(.*)$", order = 4),
+		@ModuleConfiguration(key = "others", displayName = "Other Parameters", pattern = "^(.*)$", order = 5), }, inputs = { @ModuleEndpoint(name = "from", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText, order = 1) }, outputs = {
 		@ModuleEndpoint(name = "ok", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText, order = 1),
 		@ModuleEndpoint(name = "error", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText, order = 2) })
 public class NaiveBayesTrainModule extends AbstractJavaModule {

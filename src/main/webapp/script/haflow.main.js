@@ -283,6 +283,17 @@ HAFlow.Main.prototype.saveConfiguration = function(instance, flowId, nodeId) {
 	var i;
 	node.configurations = [];
 	for (i = 0; i < module.configurations.length; i++) {
+		var val = $(
+				"#" + "flow_" + flowId + "_node_" + nodeId + "_"
+						+ module.configurations[i].key).val();
+		if (val.match(module.configurations[i].pattern) == null) {
+			HAFlow.showDialog("Error", "Invalid node configuration: "
+					+ module.configurations[i].displayName);
+			return;
+		}
+	}
+
+	for (i = 0; i < module.configurations.length; i++) {
 		node.configurations.push({
 			key : module.configurations[i].key,
 			value : $(

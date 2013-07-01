@@ -7,6 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class ModuleConfigurationModel {
 	private String key;
 	private String displayName;
+	private String pattern;
 
 	@XmlElement
 	public String getKey() {
@@ -25,4 +26,14 @@ public class ModuleConfigurationModel {
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
 	}
+
+	@XmlElement
+	public String getPattern() {
+		return pattern;
+	}
+
+	public void setPattern(String pattern) {
+		this.pattern = pattern;
+	}
+
 }

@@ -9,7 +9,7 @@ import haflow.module.ModuleType;
 
 import java.util.Map;
 
-@Module(id = "a0d027c3-a4bd-61b5-5063-134ff71f8122", name = "End", category = "Basic", type = ModuleType.END, configurations = { @ModuleConfiguration(key = "name", displayName = "Name", order = 1) }, inputs = { @ModuleEndpoint(name = "from", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText, order = 1) }, outputs = {})
+@Module(id = "a0d027c3-a4bd-61b5-5063-134ff71f8122", name = "End", category = "Basic", type = ModuleType.END, configurations = { @ModuleConfiguration(key = "name", displayName = "Name", pattern = "^(.*)$", order = 1) }, inputs = { @ModuleEndpoint(name = "from", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText, order = 1) }, outputs = {})
 public final class EndModule extends AbstractModule {
 
 	@Override
