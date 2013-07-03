@@ -306,7 +306,7 @@ public class OozieEngine extends AbstractEngine {
 			}
 
 			Module moduleProtype = moduleClass.getAnnotation(Module.class);
-
+			List<String> arguments = null;
 			OozieXmlGenerator gen = null;
 			switch (moduleProtype.type()) {
 			case START:
@@ -322,8 +322,9 @@ public class OozieEngine extends AbstractEngine {
 				AbstractJavaModule moduleInstance = (AbstractJavaModule) moduleClass
 						.newInstance();
 				configurations.put("main_class", moduleInstance.getMainClass());
-				configurations.put("arg",
-						moduleInstance.getArguments(userConfs));
+//				configurations.put("arg",
+//						moduleInstance.getArguments(userConfs));
+				arguments = moduleInstance.getArguments(userConfs);
 				gen = new JavaModuleGenerator();
 				break;
 			case HIVE:
@@ -346,7 +347,7 @@ public class OozieEngine extends AbstractEngine {
 				break;
 			}
 			if (gen != null) {
-				Document doc = gen.generate(configurations, null, outputs);
+				Document doc = gen.generate(configurations, null, outputs, arguments);
 				TransformerFactory transFactory = TransformerFactory
 						.newInstance();
 				Transformer transformer;

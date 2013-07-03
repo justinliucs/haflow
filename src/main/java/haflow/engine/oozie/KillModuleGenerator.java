@@ -2,6 +2,7 @@ package haflow.engine.oozie;
 
 import haflow.dto.entity.Node;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -13,7 +14,7 @@ public class KillModuleGenerator extends OozieXmlGenerator {
 
 	@Override
 	public Document generate(Map<String, String> configurations,
-			Map<String, Node> inputs, Map<String, Node> outputs) {
+			Map<String, Node> inputs, Map<String, Node> outputs, List<String> arguments) {
 		try {
 			String name = configurations.get("name");
 			String xml = "<kill name=\""
