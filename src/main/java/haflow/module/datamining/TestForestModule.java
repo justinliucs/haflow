@@ -10,14 +10,18 @@ import haflow.module.ModuleType;
 
 import java.util.Map;
 
-@Module(id = "ada600a8-aa63-968a-ca46-4356a0e0bdab", name = "Describe", category = "datamining", type = ModuleType.JAVA, configurations = {
-		@ModuleConfiguration(key = "path", displayName = "path: Data path", pattern = "^(.*)$", type = ModuleConfigurationType.PLAIN_TEXT),
-		@ModuleConfiguration(key = "descriptor", displayName = "descriptor: Data descriptor", pattern = "^(.*)$", type = ModuleConfigurationType.PLAIN_TEXT),
-		@ModuleConfiguration(key = "file", displayName = "file: Path to generated descriptor file", pattern = "^(.*)$", type = ModuleConfigurationType.PLAIN_TEXT),
-		@ModuleConfiguration(key = "regression", displayName = "regression: Regression Problem", pattern = "^(.*)$", type = ModuleConfigurationType.BOOLEAN) }, inputs = { @ModuleEndpoint(name = "from", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText) }, outputs = {
+@Module(id = "ada600a8-aa63-968a-ca46-4356a0e0bdad", name = "TestForest", category = "datamining", type = ModuleType.JAVA, 
+	configurations = {
+		@ModuleConfiguration(key = "input", displayName = "input : Path to job input directory.", pattern = "^(.*)$", type=ModuleConfigurationType.PLAIN_TEXT),
+		@ModuleConfiguration(key = "dataset", displayName = "dataset : Dataset path",pattern = "^(.*)$", type=ModuleConfigurationType.PLAIN_TEXT),
+		@ModuleConfiguration(key = "model", displayName = "model: Path to the Decision Forest", pattern = "^(.*)$",type=ModuleConfigurationType.PLAIN_TEXT),
+		@ModuleConfiguration(key = "output", displayName = "output: The directory pathname for output.", pattern = "^(.*)$",type=ModuleConfigurationType.PLAIN_TEXT), 
+		@ModuleConfiguration(key = "analyze", displayName = "analyze: ", pattern = "^(.*)$", type=ModuleConfigurationType.BOOLEAN),
+		@ModuleConfiguration(key = "mapreduce", displayName = "mapreduce: ", pattern = "^(.*)$", type=ModuleConfigurationType.BOOLEAN)},
+	inputs = { @ModuleEndpoint(name = "from", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText) }, outputs = {
 		@ModuleEndpoint(name = "ok", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText),
 		@ModuleEndpoint(name = "error", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText) })
-public class DescribeModule extends AbstractJavaModule {
+public class TestForestModule extends AbstractJavaModule {
 
 	@Override
 	public boolean validate(Map<String, String> configurations,
@@ -28,21 +32,22 @@ public class DescribeModule extends AbstractJavaModule {
 
 	@Override
 	public String getMainClass() {
-		return "org.apache.mahout.classifier.df.tools.Describe";
+		return "org.apache.mahout.classifier.df.mapreduce.TestForest";
 	}
 
 	@Override
 	public String getArguments(Map<String, String> configurations) {
-		Module module = DescribeModule.class.getAnnotation(Module.class);
+		Module module= TestForestModule.class.getAnnotation(Module.class);
 		ModuleConfiguration[] confs = module.configurations();
-
+		
 		StringBuilder sb = new StringBuilder();
 		for (String key : configurations.keySet()) {
 			ModuleConfigurationType confType = getConfigurationType(key, confs);
-			switch (confType) {
+			switch(confType){
 			case BOOLEAN:
 				String boolValue = configurations.get(key);
-				if( boolValue.equals("true"))
+				boolValue = boolValue.trim().toLowerCase();
+				if( boolValue.equals("true") || boolValue.equals("1"))
 					sb.append("--" + key + " ");
 				break;
 			case PLAIN_TEXT:
@@ -50,7 +55,7 @@ public class DescribeModule extends AbstractJavaModule {
 				if( textValue.length() > 0)
 					sb.append("--" + key + " \"" + configurations.get(key) + "\" ");
 				break;
-			case OTHER:
+			case OTHER:				
 			default:
 				System.out.println("Invalid Parameters!");
 				break;
@@ -58,11 +63,10 @@ public class DescribeModule extends AbstractJavaModule {
 		}
 		return sb.toString();
 	}
-
-	private ModuleConfigurationType getConfigurationType(String key,
-			ModuleConfiguration[] confs) {
-		for (ModuleConfiguration conf : confs) {
-			if (key.equals(conf.key()))
+	
+	private ModuleConfigurationType getConfigurationType(String key, ModuleConfiguration[] confs){
+		for( ModuleConfiguration conf : confs){
+			if( key.equals(conf.key()))
 				return conf.type();
 		}
 		return ModuleConfigurationType.OTHER;
