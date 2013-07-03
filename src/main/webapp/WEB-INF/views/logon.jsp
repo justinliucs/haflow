@@ -16,23 +16,24 @@
 <body>
 	<div class="wrapper">
 		<div class="title">
-			<h1>基于Hadoop的大数据分析平台</h1>
+			<h1>大数据分析服务平台</h1>
 		</div>
 		<div class="content">
 			<div class="left">
 				<img src="<%=basePath%>/images/logon.png" />
 			</div>
 			<div class="right">
-				<h2>登录</h2>
+				<!--  <h2>登录</h2> -->
 				<div class="field">
-					<span>用户名：</span><input type="text" />
-				</div>
+					<span style="float: left; width: 80px;">用户名：</span><input type="text" />
+				</div><br/>
 				<div class="field">
-					<span>密码：</span><input type="password" />
-				</div>
+					<span style="float: left; width: 80px;">密码：</span><input type="password" />
+				</div><br/>
 				<div>
-					<button type="button" onclick="window.location.href='main'">登录</button>
-					<button type="button" onclick="window.location.href='admin'">管理员登录</button>
+					<button style="width: 70px;height: 35px; font-family:Arial;font-size:14px;font-weight:bold;color:#333333;" type="button" onclick="window.location.href='main'">登录</button>
+					&nbsp;&nbsp;
+					<button style="width: 120px;height: 35px; font-family:Arial;font-size:14px;font-weight:normal;color:#333333;" type="button" onclick="window.location.href='admin'">管理员登录</button>
 				</div>
 			</div>
 			<div class="clear"></div>
