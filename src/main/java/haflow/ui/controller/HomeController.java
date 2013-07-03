@@ -7,7 +7,12 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class HomeController {
 
-	@RequestMapping({ "/", "/main" })
+	@RequestMapping("/")
+	public ModelAndView logon() {
+		return new ModelAndView("logon");
+	}
+
+	@RequestMapping("/main")
 	public ModelAndView main() {
 		return new ModelAndView("main");
 	}
