@@ -15,6 +15,4 @@ public @interface ModuleConfiguration {
 	String pattern();
 	
 	ModuleConfigurationType type();
-
-	int order();
 }
