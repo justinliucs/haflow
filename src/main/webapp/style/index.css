@@ -46,6 +46,23 @@ p {
 	width: 700px;
 }
 
+.left {
+	float: left;
+}
+
+.right {
+	width: 40%;
+	float: right;
+}
+
+.field {
+	margin: 5px;
+}
+
+.clear {
+	clear: both;
+}
+
 h1 {
 	color: #333;
 	font-size: 36px;
