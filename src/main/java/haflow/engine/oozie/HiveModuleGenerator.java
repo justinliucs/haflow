@@ -31,16 +31,15 @@ public class HiveModuleGenerator extends OozieXmlGenerator {
 			String name_node = configurations.get(NAME_NODE);
 			String queue_name = configurations.get(MAPRED_JOB_QUEUE_NAME);
 			
-			String sqlFile = configurations.get("sql_file");
+			String sql = configurations.get("sql_file");
 //			String output = configurations.get("output_dir");
 			
 			String ok = outputs.get("ok").getName();
 			String error = outputs.get("error").getName();
 			
-			String main_class = "haflow.module.zrace.HiveServiceBAction";
+			String main_class = "haflow.module.zrace.HiveJdbcClient";
 			
-			String host = configurations.get("oozie.hive.host");
-			String port = configurations.get("oozie.hive.port");
+			String uri = configurations.get("oozie.hive.connection.url");
 			
 			String xml = "<action name=\"" + name + "\">" + 
 			        "<java xmlns=\"uri:oozie:hive-action:0.2\">" + 
@@ -51,9 +50,8 @@ public class HiveModuleGenerator extends OozieXmlGenerator {
 					+ "<value>" + queue_name + "</value>" + "\n" + "</property>"
 					+ "\n" + "</configuration>" +
 			        "<main-class>" + main_class + "</main-class>" + 
-			        "<arg>" + host + "</arg>" +
-			        "<arg>" + port + "</arg>" +
-			        "<arg>" + sqlFile + "</arg>" +
+			        "<arg>" + uri + "</arg>" +
+			        "<arg>" + sql + "</arg>" +
 			        "</java>" 
 			        + "\n" + "<ok to=\"" + ok + "\"/>" + "\n"//ok
 					+ "<error to=\"" +error + "\"/>" + "\n" + "</action>";

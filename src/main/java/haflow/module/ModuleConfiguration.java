@@ -13,6 +13,8 @@ public @interface ModuleConfiguration {
 	String displayName();
 
 	String pattern();
+	
+	ModuleConfigurationType type();
 
 	int order();
 }

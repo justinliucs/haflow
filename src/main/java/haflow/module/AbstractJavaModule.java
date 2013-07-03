@@ -10,9 +10,8 @@ public abstract class AbstractJavaModule extends AbstractModule{
 	public String getArguments(Map<String, String> configurations){
 		StringBuilder sb = new StringBuilder();
 		for(String key : configurations.keySet()){
-			sb.append("-" + key + " \"" + configurations.get(key) + "\" ");
+			sb.append("--" + key + " \"" + configurations.get(key) + "\" ");
 		}
 		return sb.toString();
 	}
-
 }
