@@ -1,6 +1,6 @@
 package haflow.ui.model;
 
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -12,9 +12,9 @@ public class ModuleBriefModel {
 	private UUID id;
 	private String name;
 	private String category;
-	private Set<ModuleConfigurationModel> configurations;
-	private Set<ModuleEndpointModel> inputs;
-	private Set<ModuleEndpointModel> outputs;
+	private List<ModuleConfigurationModel> configurations;
+	private List<ModuleEndpointModel> inputs;
+	private List<ModuleEndpointModel> outputs;
 
 	@XmlElement
 	public UUID getId() {
@@ -45,31 +45,31 @@ public class ModuleBriefModel {
 
 	@XmlElementWrapper(name = "configurations")
 	@XmlElement(name = "configuration")
-	public Set<ModuleConfigurationModel> getConfigurations() {
+	public List<ModuleConfigurationModel> getConfigurations() {
 		return configurations;
 	}
 
-	public void setConfigurations(Set<ModuleConfigurationModel> configurations) {
+	public void setConfigurations(List<ModuleConfigurationModel> configurations) {
 		this.configurations = configurations;
 	}
 
 	@XmlElementWrapper(name = "inputs")
 	@XmlElement(name = "input")
-	public Set<ModuleEndpointModel> getInputs() {
+	public List<ModuleEndpointModel> getInputs() {
 		return inputs;
 	}
 
-	public void setInputs(Set<ModuleEndpointModel> inputs) {
+	public void setInputs(List<ModuleEndpointModel> inputs) {
 		this.inputs = inputs;
 	}
 
 	@XmlElementWrapper(name = "outputs")
 	@XmlElement(name = "output")
-	public Set<ModuleEndpointModel> getOutputs() {
+	public List<ModuleEndpointModel> getOutputs() {
 		return outputs;
 	}
 
-	public void setOutputs(Set<ModuleEndpointModel> outputs) {
+	public void setOutputs(List<ModuleEndpointModel> outputs) {
 		this.outputs = outputs;
-	}	
+	}
 }
