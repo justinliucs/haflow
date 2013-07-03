@@ -37,7 +37,7 @@ public class HiveJdbcClient {
 		con.close();
 	}
 	
-	public static boolean execSql(String uri, String sql) throws SQLException{
+	public static boolean execSql(String uri, String[] sqls) throws SQLException{
 		try {
 			Class.forName(driverName);
 		} catch (ClassNotFoundException e) {
@@ -46,10 +46,12 @@ public class HiveJdbcClient {
 		}
 		Connection con = DriverManager.getConnection(uri, "", "");
 		Statement stmt = con.createStatement();		
-		boolean result = stmt.execute(sql);
+		for( String sql : sqls){
+			stmt.execute(sql);
+		}
 		con.close();
 		
-		return result;
+		return true;
 	}
 	
 	public static void main(String[] args) {
@@ -60,7 +62,8 @@ public class HiveJdbcClient {
 		String uri = args[0];
 		String sql = args[1];
 		try {
-			execQuery(uri, sql, ",", true);
+//			execQuery(uri, sql, ",", true);
+			execSql(uri, sql.split(";"));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

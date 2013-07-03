@@ -37,6 +37,7 @@ public class JavaModuleGenerator extends OozieXmlGenerator {
 			String main_class = configurations.get(MAIN_CLASS);
 //			String java_opt = configurations.get(JAVA_OPT);
 			String argument = configurations.get(ARG);
+			System.out.println("argument: " + argument);
 			
 			String ok = outputs.get("ok").getName();
 			String error = outputs.get("error").getName();
