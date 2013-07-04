@@ -47,7 +47,7 @@ public class OozieService {
 		Properties conf = wc.createConfiguration();
 		// set the workflow application path
 		conf.setProperty(OozieClient.APP_PATH,
-				"hdfs://m150:9000/user/root/examples/apps/z-java-module");
+				"hdfs://m150:9000/user/root/examples/apps/race_random_forest2");//z-java-module
 
 		// setting workflow parameters
 		conf.setProperty("nameNode", "hdfs://m150:9000");

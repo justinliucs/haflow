@@ -8,9 +8,11 @@ import haflow.module.ModuleConfigurationType;
 import haflow.module.ModuleEndpoint;
 import haflow.module.ModuleType;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-@Module(id = "ada600a8-aa63-968a-ca46-4356a0e0bdac", name = "BuildForest", category = "datamining", type = ModuleType.JAVA, 
+@Module(id = "ada600a8-aa63-968a-ca46-4356a0e0bdac", name = "BuildForest", category = "DataMining-Mahout", type = ModuleType.JAVA, 
 	configurations = {
 		@ModuleConfiguration(key = "data", displayName = "data: Data path", pattern = "^(.*)$", type=ModuleConfigurationType.PLAIN_TEXT),
 		@ModuleConfiguration(key = "dataset", displayName = "dataset: Dataset path",pattern = "^(.*)$", type=ModuleConfigurationType.PLAIN_TEXT),
@@ -40,23 +42,26 @@ public class BuildForestModule extends AbstractJavaModule {
 	}
 
 	@Override
-	public String getArguments(Map<String, String> configurations) {
-		Module module= BuildForestModule.class.getAnnotation(Module.class);
+	public List<String> getArguments(Map<String, String> configurations) {
+		Module module= this.getClass().getAnnotation(Module.class);
 		ModuleConfiguration[] confs = module.configurations();
 		
-		StringBuilder sb = new StringBuilder();
+		List<String> result = new ArrayList<String>();
 		for (String key : configurations.keySet()) {
 			ModuleConfigurationType confType = getConfigurationType(key, confs);
 			switch(confType){
 			case BOOLEAN:
 				String boolValue = configurations.get(key);
-				if( boolValue.equals("true"))
-					sb.append("--" + key + " ");
+				if( boolValue.equals("true")){
+					result.add("--" + key );
+				}
 				break;
 			case PLAIN_TEXT:
 				String textValue = configurations.get(key).trim();
-				if( textValue.length() > 0)
-					sb.append("--" + key + " \"" + configurations.get(key) + "\" ");
+				if( textValue.length() > 0){
+					result.add("--" + key);
+					result.add(configurations.get(key));
+				}
 				break;
 			case OTHER:				
 			default:
@@ -64,7 +69,7 @@ public class BuildForestModule extends AbstractJavaModule {
 				break;
 			}
 		}
-		return sb.toString();
+		return result;
 	}
 	
 	private ModuleConfigurationType getConfigurationType(String key, ModuleConfiguration[] confs){
