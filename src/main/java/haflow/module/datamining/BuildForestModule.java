@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@Module(id = "ada600a8-aa63-968a-ca46-4356a0e0bdac", name = "BuildForest", category = "datamining", type = ModuleType.JAVA, 
+@Module(id = "ada600a8-aa63-968a-ca46-4356a0e0bdac", name = "BuildForest", category = "DataMining-Mahout", type = ModuleType.JAVA, 
 	configurations = {
 		@ModuleConfiguration(key = "data", displayName = "data: Data path", pattern = "^(.*)$", type=ModuleConfigurationType.PLAIN_TEXT),
 		@ModuleConfiguration(key = "dataset", displayName = "dataset: Dataset path",pattern = "^(.*)$", type=ModuleConfigurationType.PLAIN_TEXT),

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@Module(id = "ada600a8-aa63-968a-ca46-4356a0e0bdab", name = "Describe", category = "datamining", type = ModuleType.JAVA, configurations = {
+@Module(id = "ada600a8-aa63-968a-ca46-4356a0e0bdab", name = "Describe", category = "DataMining-Mahout", type = ModuleType.JAVA, configurations = {
 		@ModuleConfiguration(key = "path", displayName = "path: Data path", pattern = "^(.*)$", type = ModuleConfigurationType.PLAIN_TEXT),
 		@ModuleConfiguration(key = "descriptor", displayName = "descriptor: Data descriptor", pattern = "^(.*)$", type = ModuleConfigurationType.PLAIN_TEXT),
 		@ModuleConfiguration(key = "file", displayName = "file: Path to generated descriptor file", pattern = "^(.*)$", type = ModuleConfigurationType.PLAIN_TEXT),

@@ -12,18 +12,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@Module(id = "ada600a8-aa63-968a-ca46-4356a0e0bdad", name = "TestForest", category = "DataMining-Mahout", type = ModuleType.JAVA, 
+@Module(id = "ada600a8-aa63-968a-ca46-4356a0e0bd00", name = "CanopyCluster", category = "DataMining-Mahout", type = ModuleType.JAVA, 
 	configurations = {
-		@ModuleConfiguration(key = "input", displayName = "input : Path to job input directory.", pattern = "^(.*)$", type=ModuleConfigurationType.PLAIN_TEXT),
-		@ModuleConfiguration(key = "dataset", displayName = "dataset : Dataset path",pattern = "^(.*)$", type=ModuleConfigurationType.PLAIN_TEXT),
-		@ModuleConfiguration(key = "model", displayName = "model: Path to the Decision Forest", pattern = "^(.*)$",type=ModuleConfigurationType.PLAIN_TEXT),
-		@ModuleConfiguration(key = "output", displayName = "output: The directory pathname for output.", pattern = "^(.*)$",type=ModuleConfigurationType.PLAIN_TEXT), 
-		@ModuleConfiguration(key = "analyze", displayName = "analyze: ", pattern = "^(.*)$", type=ModuleConfigurationType.BOOLEAN),
-		@ModuleConfiguration(key = "mapreduce", displayName = "mapreduce: ", pattern = "^(.*)$", type=ModuleConfigurationType.BOOLEAN)},
+		@ModuleConfiguration(key = "input", displayName = "input", pattern = "^(.*)$", type=ModuleConfigurationType.PLAIN_TEXT),
+		@ModuleConfiguration(key = "output", displayName = "output",pattern = "^(.*)$", type=ModuleConfigurationType.PLAIN_TEXT),
+		@ModuleConfiguration(key = "distanceMeasure", displayName = "distanceMeasure", pattern = "^(.*)$",type=ModuleConfigurationType.PLAIN_TEXT),
+		@ModuleConfiguration(key = "t1", displayName = "t1", pattern = "^(.*)$",type=ModuleConfigurationType.PLAIN_TEXT), 
+		@ModuleConfiguration(key = "t2", displayName = "t2", pattern = "^(.*)$", type=ModuleConfigurationType.PLAIN_TEXT),
+		@ModuleConfiguration(key = "t3", displayName = "t3", pattern = "^(.*)$", type=ModuleConfigurationType.PLAIN_TEXT),
+		@ModuleConfiguration(key = "t4", displayName = "t4", pattern = "^(.*)$", type=ModuleConfigurationType.PLAIN_TEXT),
+		@ModuleConfiguration(key = "clusterFilter", displayName = "clusterFilter", pattern = "^(.*)$", type=ModuleConfigurationType.PLAIN_TEXT),
+		@ModuleConfiguration(key = "overwrite", displayName = "overwrite", pattern = "^(.*)$", type=ModuleConfigurationType.BOOLEAN),
+		@ModuleConfiguration(key = "outlierThreshold", displayName = "outlierThreshold", pattern = "^(.*)$", type=ModuleConfigurationType.PLAIN_TEXT)},
 	inputs = { @ModuleEndpoint(name = "from", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText) }, outputs = {
 		@ModuleEndpoint(name = "ok", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText),
 		@ModuleEndpoint(name = "error", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText) })
-public class TestForestModule extends AbstractJavaModule {
+public class CanopyClusterModule extends AbstractJavaModule {
 
 	@Override
 	public boolean validate(Map<String, String> configurations,
@@ -34,7 +38,7 @@ public class TestForestModule extends AbstractJavaModule {
 
 	@Override
 	public String getMainClass() {
-		return "org.apache.mahout.classifier.df.mapreduce.TestForest";
+		return "org.apache.mahout.clustering.canopy.CanopyDriver";
 	}
 
 	@Override
@@ -74,15 +78,6 @@ public class TestForestModule extends AbstractJavaModule {
 				return conf.type();
 		}
 		return ModuleConfigurationType.OTHER;
-	}
-
-	public static void main(String[] args) {
-		System.out.println("Demo Java Main");
-
-		System.out.println("# Arguments: " + args.length);
-		for (int i = 0; i < args.length; i++) {
-			System.out.println("Argument[" + i + "]: " + args[i]);
-		}
 	}
 
 }
