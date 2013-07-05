@@ -16,10 +16,10 @@ HAFlow.UI.prototype.init = function() {
 	this.initId();
 	this.initMainContainer();
 	this.initMainMenu();
-	this.initBottomContainer();
 	this.initLeadingContainer();
 	this.initTrailingContainer();
 	this.initCenterContainer();
+	this.initBottomContainer();
 };
 
 HAFlow.UI.prototype.refresh = function() {
@@ -60,7 +60,7 @@ HAFlow.UI.prototype.initBottomContainer = function() {
 		region : "bottom",
 		splitter : "true"
 	});
-	this.mainContainer.addChild(this.bottomContainer);
+	this.centerContainerParent.addChild(this.bottomContainer);
 	this.bottomContainer.startup();
 };
 
@@ -85,11 +85,17 @@ HAFlow.UI.prototype.initTrailingContainer = function() {
 };
 
 HAFlow.UI.prototype.initCenterContainer = function() {
+	this.centerContainerParent = new dijit.layout.BorderContainer({
+		region : "center",
+		splitter : "true"
+	});
 	this.centerContainer = new dijit.layout.TabContainer({
 		id : this.centerContainerId,
 		region : "center",
 		splitter : "true"
 	});
-	this.mainContainer.addChild(this.centerContainer);
+	this.mainContainer.addChild(this.centerContainerParent);
+	this.centerContainerParent.addChild(this.centerContainer);
+	this.centerContainerParent.startup();
 	this.centerContainer.startup();
 };
