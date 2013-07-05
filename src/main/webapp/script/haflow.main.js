@@ -622,6 +622,8 @@ HAFlow.Main.prototype.initToolbar = function() {
 	this.toolbar.toolbar.addChild(this.toolbar.saveFlowButton);
 	this.toolbar.toolbar.addChild(this.toolbar.removeFlowButton);
 	this.toolbar.toolbar.addChild(this.toolbar.runFlowButton);
+	this.toolbar.toolbar.startup();
+
 	var _currentInstance = this;
 	dojo.connect(this.toolbar.newFlowButton, "onClick", function(event) {
 		_currentInstance.newFlow();
@@ -635,7 +637,6 @@ HAFlow.Main.prototype.initToolbar = function() {
 	dojo.connect(this.toolbar.runFlowButton, "onClick", function(event) {
 		_currentInstance.runFlow(_currentInstance.currentFlowId);
 	});
-
 	this.ui.mainMenu.addChild(this.toolbar.toolbar);
 };
 
@@ -663,29 +664,154 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 	});
 	this.menu.flowMenu.newFlowMenuItem = new dijit.MenuItem({
 		id : "newFlowMenuItem",
-		label : "New Flow",
+		label : "New",
 	});
-	this.menu.flowMenu.saveFlowMenuItem = new dijit.MenuItem({
-		id : "saveFlowMenuItem",
-		label : "Save Flow"
+	this.menu.flowMenu.openFlowMenuItem = new dijit.MenuItem({
+		id : "openFlowMenuItem",
+		label : "Open",
+		disabled : true
 	});
-	this.menu.flowMenu.removeFlowMenuItem = new dijit.MenuItem({
-		id : "removeFlowMenuItem",
-		label : "Remove Flow"
+	this.menu.flowMenu.closeFlowMenuItem = new dijit.MenuItem({
+		id : "closeFlowMenuItem",
+		label : "Close",
+		disabled : true
 	});
-	this.menu.flowMenu.runFlowMenuItem = new dijit.MenuItem({
-		id : "runFlowMenuItem",
-		label : "Run Flow"
+	// this.menu.flowMenu.saveFlowMenuItem = new dijit.MenuItem({
+	// id : "saveFlowMenuItem",
+	// label : "Save Flow"
+	// });
+	this.menu.flowMenu.deleteFlowMenuItem = new dijit.MenuItem({
+		id : "deleteFlowMenuItem",
+		label : "Delete"
+	});
+	this.menu.flowMenu.exportFlowMenuItem = new dijit.MenuItem({
+		id : "exportFlowMenuItem",
+		label : "Export",
+		disabled : true
+	});
+	this.menu.flowMenu.importFlowMenuItem = new dijit.MenuItem({
+		id : "importFlowMenuItem",
+		label : "Import",
+		disabled : true
 	});
 	this.menu.flowMenu.addChild(this.menu.flowMenu.newFlowMenuItem);
-	this.menu.flowMenu.addChild(this.menu.flowMenu.saveFlowMenuItem);
-	this.menu.flowMenu.addChild(this.menu.flowMenu.removeFlowMenuItem);
-	this.menu.flowMenu.addChild(this.menu.flowMenu.runFlowMenuItem);
+	this.menu.flowMenu.addChild(this.menu.flowMenu.openFlowMenuItem);
+	this.menu.flowMenu.addChild(this.menu.flowMenu.closeFlowMenuItem);
+	// this.menu.flowMenu.addChild(this.menu.flowMenu.saveFlowMenuItem);
+	this.menu.flowMenu.addChild(this.menu.flowMenu.deleteFlowMenuItem);
+	this.menu.flowMenu.addChild(this.menu.flowMenu.exportFlowMenuItem);
+	this.menu.flowMenu.addChild(this.menu.flowMenu.importFlowMenuItem);
 	this.menu.flowMenu.startup();
+
+	this.menu.runMenu = new dijit.Menu({
+		id : "runMenu"
+	});
+	this.menu.runMenu.runMenuItem = new dijit.MenuItem({
+		id : "runMenuItem",
+		label : "Run",
+	});
+	this.menu.runMenu.debugMenuItem = new dijit.MenuItem({
+		id : "debugMenuItem",
+		label : "Debug",
+		disabled : true
+	});
+	this.menu.runMenu.validateMenuItem = new dijit.MenuItem({
+		id : "validateMenuItem",
+		label : "Validate",
+		disabled : true
+	});
+	this.menu.runMenu.runHistoryMenuItem = new dijit.MenuItem({
+		id : "runHistoryMenuItem",
+		label : "Run History",
+		disabled : true
+	});
+	this.menu.runMenu.debugHistoryMenuItem = new dijit.MenuItem({
+		id : "debugHistoryMenuItem",
+		label : "Debug History",
+		disabled : true
+	});
+	this.menu.runMenu.addChild(this.menu.runMenu.runMenuItem);
+	this.menu.runMenu.addChild(this.menu.runMenu.debugMenuItem);
+	this.menu.runMenu.addChild(this.menu.runMenu.validateMenuItem);
+	this.menu.runMenu.addChild(this.menu.runMenu.runHistoryMenuItem);
+	this.menu.runMenu.addChild(this.menu.runMenu.debugHistoryMenuItem);
+	this.menu.runMenu.startup();
+
+	this.menu.searchMenu = new dijit.Menu({
+		id : "searchMenu"
+	});
+	this.menu.searchMenu.searchFlowMenuItem = new dijit.MenuItem({
+		id : "searchFlowMenuItem",
+		label : "Search Flow",
+		disabled : true
+	});
+	this.menu.searchMenu.searchModuleMenuItem = new dijit.MenuItem({
+		id : "searchModuleMenuItem",
+		label : "Search Module",
+		disabled : true
+	});
+	this.menu.searchMenu.searchLogMenuItem = new dijit.MenuItem({
+		id : "searchLogMenuItem",
+		label : "Search Log",
+		disabled : true
+	});
+	this.menu.searchMenu.addChild(this.menu.searchMenu.searchFlowMenuItem);
+	this.menu.searchMenu.addChild(this.menu.searchMenu.searchModuleMenuItem);
+	this.menu.searchMenu.addChild(this.menu.searchMenu.searchLogMenuItem);
+	this.menu.searchMenu.startup();
+
+	this.menu.windowMenu = new dijit.Menu({
+		id : "windowMenu"
+	});
+	this.menu.windowMenu.hideToolbarMenuItem = new dijit.MenuItem({
+		id : "hideToolbarMenuItem",
+		label : "Hide Toolbar",
+		disabled : true
+	});
+	this.menu.windowMenu.addChild(this.menu.windowMenu.hideToolbarMenuItem);
+	this.menu.windowMenu.startup();
+
+	this.menu.helpMenu = new dijit.Menu({
+		id : "helpMenu"
+	});
+	this.menu.helpMenu.aboutMenuItem = new dijit.MenuItem({
+		id : "aboutMenuItem",
+		label : "About",
+		disabled : true
+	});
+	this.menu.helpMenu.manualMenuItem = new dijit.MenuItem({
+		id : "manualMenuItem",
+		label : "Manual",
+		disabled : true
+	});
+	this.menu.helpMenu.addChild(this.menu.helpMenu.aboutMenuItem);
+	this.menu.helpMenu.addChild(this.menu.helpMenu.manualMenuItem);
+	this.menu.helpMenu.startup();
+
 	this.ui.mainMenu.addChild(new dijit.PopupMenuBarItem({
 		id : "flowPopupMenuBarItem",
 		label : "Flow",
 		popup : this.menu.flowMenu
+	}));
+	this.ui.mainMenu.addChild(new dijit.PopupMenuBarItem({
+		id : "runPopupMenuBarItem",
+		label : "Run",
+		popup : this.menu.runMenu
+	}));
+	this.ui.mainMenu.addChild(new dijit.PopupMenuBarItem({
+		id : "searchPopupMenuBarItem",
+		label : "Search",
+		popup : this.menu.searchMenu
+	}));
+	this.ui.mainMenu.addChild(new dijit.PopupMenuBarItem({
+		id : "windowPopupMenuBarItem",
+		label : "Window",
+		popup : this.menu.windowMenu
+	}));
+	this.ui.mainMenu.addChild(new dijit.PopupMenuBarItem({
+		id : "helpPopupMenuBarItem",
+		label : "Help",
+		popup : this.menu.helpMenu
 	}));
 
 	var _currentInstance = this;
@@ -693,18 +819,17 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 			function(event) {
 				_currentInstance.newFlow();
 			});
-	dojo.connect(this.menu.flowMenu.saveFlowMenuItem, "onClick",
-			function(event) {
-				_currentInstance.saveFlow(_currentInstance.currentFlowId);
-			});
-	dojo.connect(this.menu.flowMenu.removeFlowMenuItem, "onClick", function(
+	// dojo.connect(this.menu.flowMenu.saveFlowMenuItem, "onClick",
+	// function(event) {
+	// _currentInstance.saveFlow(_currentInstance.currentFlowId);
+	// });
+	dojo.connect(this.menu.flowMenu.deleteFlowMenuItem, "onClick", function(
 			event) {
 		_currentInstance.removeFlow(_currentInstance.currentFlowId);
 	});
-	dojo.connect(this.menu.flowMenu.runFlowMenuItem, "onClick",
-			function(event) {
-				_currentInstance.runFlow(_currentInstance.currentFlowId);
-			});
+	dojo.connect(this.menu.runMenu.runMenuItem, "onClick", function(event) {
+		_currentInstance.runFlow(_currentInstance.currentFlowId);
+	});
 };
 
 HAFlow.Main.prototype.initBottomTabs = function() {
@@ -990,20 +1115,23 @@ HAFlow.Main.prototype.paintFlow = function(flowId) {
 HAFlow.Main.prototype.paintNodes = function(flowId) {
 	var text = "";
 	for ( var i = 0; i < this.flows[flowId].nodes.length; i++) {
-		text += "<div class=\"node\" style=\"left:"
-				+ this.flows[flowId].nodes[i].position.left
-				+ "px; top:"
-				+ this.flows[flowId].nodes[i].position.top
-				+ "px;\" id=\"node_"
-				+ this.flows[flowId].nodes[i].id
-				+ "\"><div>"
-				+ this.flows[flowId].nodes[i].name
-				+ "</div><div>"
-				+ "("
-				+ this
-						.getModuleById(this,
-								this.flows[flowId].nodes[i].moduleId).name
-				+ ")</div>" + "</div>";
+		var moduleName = this.getModuleById(this,
+				this.flows[flowId].nodes[i].moduleId).name;
+		text += "<div class=\"node" + "\" style=\"left:"
+				+ this.flows[flowId].nodes[i].position.left + "px; top:"
+				+ this.flows[flowId].nodes[i].position.top + "px;";
+		if (moduleName == "Start") {
+			text += "background:#C0C0C0";
+		}
+		if (moduleName == "End") {
+			text += "background:#B8860B";
+		}
+		if (moduleName == "Kill") {
+			text += "background:#DC143C";
+		}
+		text += "\" id=\"node_" + this.flows[flowId].nodes[i].id + "\">"
+				+ "<div>" + this.flows[flowId].nodes[i].name + "</div><div>"
+				+ "(" + moduleName + ")</div>" + "</div>";
 	}
 	$("#" + "flowContainer_" + flowId).html(text);
 };
@@ -1048,11 +1176,13 @@ HAFlow.Main.prototype.bindFunctions = function(flowId) {
 HAFlow.Main.prototype.onFlowClicked = function(instance, flowId) {
 	var flowBrief = instance.getFlowBriefById(instance, flowId);
 	var text = "";
-	text += "<div>";
-	text += "<div><span>Id: " + flowBrief.id + "</span></div>";
-	text += "<div><span>Name: </span></div>";
-	text += "<div id=\"flow_name_text_box\"></div>";
-	text += "<div id=\"save_flow_name_button\"></div>";
+	text += "<div class=\"configuration\">";
+	text += "<div class=\"configuration-content\"><strong>Flow Info:</strong></div>";
+	text += "<div class=\"configuration-content\"><span><strong>Id:</strong> "
+			+ flowBrief.id + "</span></div>";
+	text += "<div class=\"configuration-content\"><span><strong>Name:</strong></span></div>";
+	text += "<div id=\"flow_name_text_box\" class=\"configuration-content\"></div>";
+	text += "<div id=\"save_flow_name_button\" class=\"configuration-content\"></div>";
 	text += "</div>";
 	$("#" + instance.informationContainerId).html(text);
 	if (dijit.byId("flow_" + flowBrief.id + "_name") != null) {
@@ -1060,7 +1190,8 @@ HAFlow.Main.prototype.onFlowClicked = function(instance, flowId) {
 	}
 	var flowNameTextBox = new dijit.form.TextBox({
 		id : "flow_" + flowBrief.id + "_name",
-		value : flowBrief.name
+		value : flowBrief.name,
+		style : "width:600px;"
 	});
 	flowNameTextBox.placeAt(dojo.byId("flow_name_text_box"));
 	flowNameTextBox.startup();
@@ -1082,8 +1213,8 @@ HAFlow.Main.prototype.onModuleClicked = function(instance, flowId, moduleId) {
 			break;
 		}
 	}
-	text += "<div><span>Name: " + instance.moduleList.modules[i].name
-			+ ".</span></div>";
+	text += "<div class=\"configuration\"><div class=\"configuration-content\"><span><strong>Name:</strong> "
+			+ instance.moduleList.modules[i].name + ".</span></div></div>";
 	$("#" + instance.informationContainerId).html(text);
 };
 
@@ -1091,18 +1222,20 @@ HAFlow.Main.prototype.onNodeClicked = function(instance, flowId, nodeId) {
 	var node = instance.getNodeById(instance, flowId, nodeId);
 	var module = instance.getModuleById(instance, node.moduleId);
 	var text = "";
-	text += "<div>";
-	text += "<div><span>Node Id: " + node.id + "</span></div>";
-	text += "<div><span>Flow: " + instance.flows[node.flowId].name
-			+ "</span></div>";
-	text += "<div><span>Module: " + module.name + "</span></div>";
-	text += "<div>";
-	text += "<span>Name: </span>";
-	text += "<div id=\"node_name_text_box\"></div>";
-	text += "<div id=\"save_node_name_button\"></div>";
+	text += "<div class=\"configuration\">";
+	text += "<div class=\"configuration-content\"><span><strong>Node Id:</strong> "
+			+ node.id + "</span></div>";
+	text += "<div class=\"configuration-content\"><span><strong>Flow:</strong> "
+			+ instance.flows[node.flowId].name + "</span></div>";
+	text += "<div class=\"configuration-content\"><span><strong>Module:</strong> "
+			+ module.name + "</span></div>";
+	text += "<div class=\"configuration-content\">";
+	text += "<span><strong>Name:</strong> </span>";
+	text += "<div id=\"node_name_text_box\" class=\"configuration-content\"></div>";
+	text += "<div id=\"save_node_name_button\" class=\"configuration-content\"></div>";
 	text += "</div>";
-	text += "<div>Delete?</div>";
-	text += "<div id=\"delete_node_button\"></div>";
+	text += "<div class=\"configuration-content\"><strong>Delete?</strong></div>";
+	text += "<div id=\"delete_node_button\" class=\"configuration-content\"></div>";
 	text += "</div>";
 	$("#" + instance.informationContainerId).html(text);
 
@@ -1111,7 +1244,8 @@ HAFlow.Main.prototype.onNodeClicked = function(instance, flowId, nodeId) {
 	}
 	var nodeNameTextBox = new dijit.form.TextBox({
 		id : "node_" + nodeId + "_name",
-		value : node.name
+		value : node.name,
+		style : "width:600px;"
 	});
 	nodeNameTextBox.placeAt(dojo.byId("node_name_text_box"));
 	nodeNameTextBox.startup();
@@ -1126,7 +1260,7 @@ HAFlow.Main.prototype.onNodeClicked = function(instance, flowId, nodeId) {
 	saveNodeNameButton.startup();
 
 	var deleteNodeButton = new dijit.form.Button({
-		label : "DeleteNode",
+		label : "Delete Node",
 		onClick : function() {
 			instance.deleteNode(instance, flowId, nodeId);
 		}
@@ -1135,19 +1269,20 @@ HAFlow.Main.prototype.onNodeClicked = function(instance, flowId, nodeId) {
 	deleteNodeButton.startup();
 
 	var form = "";
-	form += "<div>";
-	form += "<div>Configuration:</div>";
+	form += "<div class=\"configuration\">";
+	form += "<div class=\"configuration-content\"><strong>Configuration:</strong></div>";
 	var i;
 	for (i = 0; i < module.configurations.length; i++) {
 		var textBoxId = "flow_" + flowId + "_node_" + nodeId + "_"
 				+ module.configurations[i].key;
 		var divId = textBoxId + "_container";
-		form += "<div>";
-		form += ("<span>" + module.configurations[i].displayName + "</span>");
-		form += "<div id=\"" + divId + "\"></div>";
+		form += "<div class=\"configuration-content\">";
+		form += ("<span><strong>" + module.configurations[i].displayName + "</strong></span>");
+		form += "<div class=\"configuration-content\" id=\"" + divId
+				+ "\"></div>";
 		form += "</div>";
 	}
-	form += "<div id=\"save_configuration_button\"></div>";
+	form += "<div class=\"configuration-content\" id=\"save_configuration_button\"></div>";
 	form += "</div>";
 	$("#" + instance.configurationContainerId).html(form);
 
@@ -1161,7 +1296,8 @@ HAFlow.Main.prototype.onNodeClicked = function(instance, flowId, nodeId) {
 		var configurationTextBox = new dijit.form.TextBox({
 			id : textBoxId,
 			value : instance.getConfigurationValue(instance, flowId, nodeId,
-					module.configurations[i].key)
+					module.configurations[i].key),
+			style : "width:600px;"
 		});
 		configurationTextBox.placeAt(dojo.byId(divId));
 		configurationTextBox.startup();
@@ -1186,11 +1322,14 @@ HAFlow.Main.prototype.onConnectionClicked = function(instance, flowId, info) {
 	var targetNode = instance.getNodeById(instance, flowId, target);
 
 	var text = "";
-	text += "<div><span>From: " + sourceNode.name + "." + sourceEndpoint
-			+ "</span><span>To: " + targetNode.name + "." + targetEndpoint
-			+ "</span></div>";
-	text += "<div>Delete?</div>";
-	text += "<div id=\"delete_connection_button\"></div>";
+	text += "<div class=\"configuration\">";
+	text += "<div class=\"configuration-content\"><span><strong>From: "
+			+ sourceNode.name + "." + sourceEndpoint + "</strong></span></div>"
+			+ "<div class=\"configuration-content\"><span><strong>To: "
+			+ targetNode.name + "." + targetEndpoint + "</strong></span></div>";
+	text += "<div class=\"configuration-content\">Delete?</div>";
+	text += "<div class=\"configuration-content\" id=\"delete_connection_button\"></div>";
+	text += "</div>";
 	$("#" + instance.informationContainerId).html(text);
 	var button = new dijit.form.Button({
 		label : "Delete Connection",
