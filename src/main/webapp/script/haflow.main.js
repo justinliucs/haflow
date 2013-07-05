@@ -1120,6 +1120,7 @@ HAFlow.Main.prototype.paintNodes = function(flowId) {
 		text += "<div class=\"node" + "\" style=\"left:"
 				+ this.flows[flowId].nodes[i].position.left + "px; top:"
 				+ this.flows[flowId].nodes[i].position.top + "px;";
+		// TODO:
 		if (moduleName == "Start") {
 			text += "background:#C0C0C0";
 		}
