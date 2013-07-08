@@ -16,7 +16,7 @@
 <title>HA Flow Administration</title>
 <link rel="stylesheet" href="<%=basePath%>/style/site.css">
 <body>
-	<h1>HA Flow Administration</h1>
+	<h1>Haflow Administration</h1>
 	<h2>Module List</h2>
 	<table>
 		<tr>

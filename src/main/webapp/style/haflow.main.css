@@ -60,7 +60,15 @@
 
 }
 ._jsPlumb_endpoint {
-	z-index: 3;
+	z-index: 9;
+}
+
+._jsPlumb_overlay {
+	z-index: 4;
+}
+
+._jsPlumb_endpoint_anchor_ {
+	z-index: 9;
 }
 
 .dragHover {
