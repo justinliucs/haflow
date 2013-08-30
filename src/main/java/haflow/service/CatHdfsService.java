@@ -60,6 +60,7 @@ public class CatHdfsService {
 				value=s.split(",");
 				JSONObject jobj=new JSONObject();
 				for(int j=0;j<value.length;j++){
+			
 					jobj.put(col[j], value[j]);
 				}
 				arr.put(jobj);			    	
