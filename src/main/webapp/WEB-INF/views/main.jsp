@@ -24,9 +24,9 @@
 <script type="text/javascript"
 	src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 <script type="text/javascript"
-	src="script/jsPlumb/jquery.ui.touch-punch.min.js"></script>
+	src="http://jsplumbtoolkit.com/js/jquery.ui.touch-punch.min.js"></script>
 <script type="text/javascript"
-	src="script/jsPlumb/jquery.jsPlumb-1.4.1-all.js"></script>
+	src="http://jsplumbtoolkit.com/js/jquery.jsPlumb-1.4.1-all.js"></script>
 <script type="text/javascript"
 	src="http://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dojo/dojo.js"></script>
 <script type="text/javascript" src="<%=basePath%>/script/haflow.js"></script>
