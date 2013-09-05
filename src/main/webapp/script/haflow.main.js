@@ -42,10 +42,6 @@ HAFlow.Main.prototype.newFlow = function() {
 	this.flows[newFlowId].edges = new Array();
 	var _currentInstance = this;
 	var contentPane = new dijit.layout.ContentPane({
-		
-		
-		
-		
 		id : "flowContainerPane_" + newFlowId,
 		title : _currentInstance.flows[newFlowId].name,
 		content : "<div id=\"flowContainer_" + newFlowId
@@ -1237,34 +1233,10 @@ HAFlow.Main.prototype.onFlowClicked = function(instance, flowId) {
 	text += "<span id=\"flow_name_text_box\" class=\"configuration-content\"></span></div>";
 	text += "<div id=\"save_flow_name_button\" class=\"configuration-content\"></div>";
 	text += "</div>";
-	$("#" + instance.informationContainerId).html(text);
-	var config = "";
-	config += "<div class=\"configuration\">";
-	config += "<div class=\"configuration-content\"><span><strong>Name:</strong></span>";
-	config += "<span id=\"config_name_text_box\" class=\"configuration-content\"></span></div>";
-	config += "<div class=\"configuration-content\"><span><strong>Type:</strong></div>";
-	config += "<div id=\"configtype_text_box1\" class=\"configuration-content\">true<</div>";
-	config += "<div id=\"configtype_text_box2\" class=\"configuration-content\">false</div>";
-	config += "<div id=\"save_config_button\" class=\"configuration-content\"></div>";
-	config += "</div>";
-	$("#" + instance.configurationContainerId).html(config);
-	var configNameTextBox = new dijit.form.TextBox({
-		style : "width:600px;"
-	});
-	configNameTextBox.placeAt(dojo.byId("config_name_text_box"));
-	configNameTextBox.startup();
-	
+	$("#" + instance.informationContainerId).html(text);	
 	if (dijit.byId("flow_" + flowBrief.id + "_name") != null) {
 		dijit.registry.remove("flow_" + flowBrief.id + "_name");
 	}
-	var button = new dijit.form.Button({
-		label : "Save",
-		onClick : function() {
-			//saveconfig();
-		}
-	});
-	button.placeAt(dojo.byId("save_config_button"));
-	button.startup();
 	var flowNameTextBox = new dijit.form.TextBox({
 		id : "flow_" + flowBrief.id + "_name",
 		value : flowBrief.name,
@@ -1290,7 +1262,8 @@ HAFlow.Main.prototype.onModuleClicked = function(instance, flowId, moduleId) {
 			break;
 		}
 	}
-	text += "<div class=\"configuration\"><div class=\"configuration-content\"><span><strong>Name:</strong> "
+	text += "<div class=\"configuration\"><div class=\"configuration-content\">" +
+			"<span><strong>Name:</strong>"
 			+ instance.moduleList.modules[i].name + ".</span></div></div>";
 	$("#" + instance.informationContainerId).html(text);
 };
@@ -1347,6 +1320,7 @@ HAFlow.Main.prototype.onNodeClicked = function(instance, flowId, nodeId) {
 
 	var form = "";
 	form += "<div class=\"configuration\">";
+	form += "<div class=\"configuration-content\"><strong>Configuration:</strong></div>";
 	var i;
 	for (i = 0; i < module.configurations.length; i++) {
 		var textBoxId = "flow_" + flowId + "_node_" + nodeId + "_"
@@ -1354,7 +1328,9 @@ HAFlow.Main.prototype.onNodeClicked = function(instance, flowId, nodeId) {
 		var divId = textBoxId + "_container";
 		form += "<div class=\"configuration-content\">";
 		if(module.configurations[i].type=="BOOLEAN"){
-			form += "<div class=\"configuration-content\"><span><strong>" + module.configurations[i].displayName +"</strong></span><span id=\""+divId+"\" class=\"configuration-content\"></span></div>";	
+			form += "<div class=\"configuration-content\"><span><strong>" 
+				+ module.configurations[i].displayName +"</strong></span><span id=\""
+				+divId+"\" class=\"configuration-content\"></span></div>";	
 		}
 		else{
 		form += ("<span><strong>" + module.configurations[i].displayName +"</strong></span>");
@@ -1377,7 +1353,8 @@ HAFlow.Main.prototype.onNodeClicked = function(instance, flowId, nodeId) {
 		{
 			var configtype_true=new dijit.form.CheckBox({
 				id:textBoxId,
-			   checked:(instance.getConfigurationValue(instance, flowId, nodeId,module.configurations[i].key)=="on")?true:false
+			   checked:(instance.getConfigurationValue(instance,flowId,nodeId,
+					   module.configurations[i].key)=="on")?true:false
 			});
 			configtype_true.placeAt(dojo.byId(divId));
 			configtype_true.startup();		
@@ -1386,7 +1363,7 @@ HAFlow.Main.prototype.onNodeClicked = function(instance, flowId, nodeId) {
 			{
 			var configurationTextBox = new dijit.form.TextBox({
 				id : textBoxId,
-				value : instance.getConfigurationValue(instance, flowId, nodeId,
+				value : instance.getConfigurationValue(instance,flowId,nodeId,
 						module.configurations[i].key),
 				style : "width:600px;"
 			});
