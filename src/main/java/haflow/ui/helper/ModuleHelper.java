@@ -67,6 +67,7 @@ public class ModuleHelper {
 				model.setDisplayName(configurations[i].displayName());
 				model.setKey(configurations[i].key());
 				model.setPattern(configurations[i].pattern());
+				model.setType(configurations[i].type());
 				moduleBriefModel.getConfigurations().add(model);
 			}
 			ModuleEndpoint[] inputs = module.inputs();

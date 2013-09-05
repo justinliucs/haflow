@@ -21,4 +21,9 @@ public class HomeController {
 	public ModelAndView admin() {
 		return new ModelAndView("admin");
 	}
+	
+	@RequestMapping({ "/oozie" })
+	public ModelAndView oozie() {
+		return new ModelAndView("oozie");
+	}
 }

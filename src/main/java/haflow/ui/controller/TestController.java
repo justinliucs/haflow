@@ -17,7 +17,10 @@ public class TestController {
 	public ModelAndView cat() {
 		return new ModelAndView("cat");
 	}
-	
+//	@RequestMapping({ "/oozie" })
+//	public ModelAndView oozie() {
+//		return new ModelAndView("oozie");
+//	}
 
 	@RequestMapping( value="/doCat",method = RequestMethod.POST )
 	public ModelAndView doCat(@RequestParam String file) {

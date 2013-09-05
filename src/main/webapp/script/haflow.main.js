@@ -3,6 +3,7 @@ dojo.require("dojo.json");
 dojo.require("dojo.store.Memory");
 dojo.require("dojo.store.Observable");
 dojo.require("dijit.form.Button");
+dojo.require("dijit.form.CheckBox");
 dojo.require("dijit.form.TextBox");
 dojo.require("dijit.layout.BorderContainer");
 dojo.require("dijit.layout.TabContainer");
@@ -16,6 +17,7 @@ dojo.require("dijit.PopupMenuBarItem");
 dojo.require("dijit.TitlePane");
 dojo.require("dijit.Toolbar");
 dojo.require("dijit.Tree");
+dojo.require("dijit.registry");
 
 var flow;
 
@@ -40,6 +42,10 @@ HAFlow.Main.prototype.newFlow = function() {
 	this.flows[newFlowId].edges = new Array();
 	var _currentInstance = this;
 	var contentPane = new dijit.layout.ContentPane({
+		
+		
+		
+		
 		id : "flowContainerPane_" + newFlowId,
 		title : _currentInstance.flows[newFlowId].name,
 		content : "<div id=\"flowContainer_" + newFlowId
@@ -132,6 +138,28 @@ HAFlow.Main.prototype.removeFlow = function(flowId) {
 		error : function(request, status, error) {
 			HAFlow.showDialog("Error",
 					"An error occurred while removing flow: " + error);
+		}
+	});
+};
+
+HAFlow.Main.prototype.openoozie = function() {
+	var _currentInstance = this;
+	$.ajax({
+		url : _currentInstance.basePath + "oozie/",
+		type : "Post",
+		success : function(data, status) {
+			var contentPane = new dijit.layout.ContentPane({
+				id : "oozie",
+				title : "oozie",
+				content : data,
+				closable : true,
+			});
+			_currentInstance.ui.centerContainer.addChild(contentPane);
+			_currentInstance.ui.centerContainer.selectChild(contentPane);
+		},
+		error : function(request, status, error) {
+			HAFlow.showDialog("Error",
+					"An error occurred while opening: " + error);
 		}
 	});
 };
@@ -283,24 +311,21 @@ HAFlow.Main.prototype.saveConfiguration = function(instance, flowId, nodeId) {
 	var i;
 	node.configurations = [];
 	for (i = 0; i < module.configurations.length; i++) {
-		var val = $(
-				"#" + "flow_" + flowId + "_node_" + nodeId + "_"
-						+ module.configurations[i].key).val();
-		if (val.match(module.configurations[i].pattern) == null) {
+		var val = dijit.registry.byId("flow_" + flowId + "_node_" + nodeId + "_"+ module.configurations[i].key).get("value");
+		if (module.configurations[i].type!="BOOLEAN"&&val!=null&&val.match(module.configurations[i].pattern) == null) {
 			HAFlow.showDialog("Error", "Invalid node configuration: "
 					+ module.configurations[i].displayName);
 			return;
 		}
 	}
-
 	for (i = 0; i < module.configurations.length; i++) {
+		console.log(module.configurations[i].displayName);
 		node.configurations.push({
 			key : module.configurations[i].key,
-			value : $(
-					"#" + "flow_" + flowId + "_node_" + nodeId + "_"
-							+ module.configurations[i].key).val()
+            value:dijit.registry.byId("flow_" + flowId + "_node_" + nodeId + "_"+ module.configurations[i].key).get("value")
 		});
 	}
+
 };
 
 HAFlow.Main.prototype.newConnection = function(flowId, source, sourceEndpoint,
@@ -394,6 +419,7 @@ HAFlow.Main.prototype.doAddModule = function(instance, flowId, moduleId, left,
 	newNode["configurations"] = [];
 	instance.flows[flowId].nodes.push(newNode);
 };
+
 
 // HDFS
 HAFlow.Main.prototype.getHdfsFile = function(path, fileName) {
@@ -563,6 +589,7 @@ HAFlow.Main.prototype.initFlowListData = function() {
 HAFlow.Main.prototype.initModuleListData = function() {
 	var _currentInstance = this;
 	$.ajax({
+		
 		url : _currentInstance.basePath + "module",
 		type : "GET",
 		cache : false,
@@ -787,6 +814,22 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 	this.menu.helpMenu.addChild(this.menu.helpMenu.aboutMenuItem);
 	this.menu.helpMenu.addChild(this.menu.helpMenu.manualMenuItem);
 	this.menu.helpMenu.startup();
+	
+	this.menu.oozieMenu = new dijit.Menu({
+		id : "oozieMenu"
+	});
+	this.menu.oozieMenu.openMenuItem = new dijit.MenuItem({
+		id : "openMenuItem",
+		label : "Open"
+	});
+	this.menu.oozieMenu.closeMenuItem = new dijit.MenuItem({
+		id : "closeMenuItem",
+		label : "Close",
+		disabled : true
+	});
+	this.menu.oozieMenu.addChild(this.menu.oozieMenu.openMenuItem);
+	this.menu.oozieMenu.addChild(this.menu.oozieMenu.closeMenuItem);
+	this.menu.oozieMenu.startup();
 
 	this.ui.mainMenu.addChild(new dijit.PopupMenuBarItem({
 		id : "flowPopupMenuBarItem",
@@ -813,6 +856,11 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 		label : "Help",
 		popup : this.menu.helpMenu
 	}));
+	this.ui.mainMenu.addChild(new dijit.PopupMenuBarItem({
+		id : "ooziePopupMenuBarItem",
+		label : "oozie",
+		popup : this.menu.oozieMenu
+	}));
 
 	var _currentInstance = this;
 	dojo.connect(this.menu.flowMenu.newFlowMenuItem, "onClick",
@@ -830,6 +878,10 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 	dojo.connect(this.menu.runMenu.runMenuItem, "onClick", function(event) {
 		_currentInstance.runFlow(_currentInstance.currentFlowId);
 	});
+	dojo.connect(this.menu.oozieMenu.openMenuItem, "onClick", function(event) {
+		_currentInstance.openoozie();
+	});
+	
 };
 
 HAFlow.Main.prototype.initBottomTabs = function() {
@@ -1186,9 +1238,33 @@ HAFlow.Main.prototype.onFlowClicked = function(instance, flowId) {
 	text += "<div id=\"save_flow_name_button\" class=\"configuration-content\"></div>";
 	text += "</div>";
 	$("#" + instance.informationContainerId).html(text);
+	var config = "";
+	config += "<div class=\"configuration\">";
+	config += "<div class=\"configuration-content\"><span><strong>Name:</strong></span>";
+	config += "<span id=\"config_name_text_box\" class=\"configuration-content\"></span></div>";
+	config += "<div class=\"configuration-content\"><span><strong>Type:</strong></div>";
+	config += "<div id=\"configtype_text_box1\" class=\"configuration-content\">true<</div>";
+	config += "<div id=\"configtype_text_box2\" class=\"configuration-content\">false</div>";
+	config += "<div id=\"save_config_button\" class=\"configuration-content\"></div>";
+	config += "</div>";
+	$("#" + instance.configurationContainerId).html(config);
+	var configNameTextBox = new dijit.form.TextBox({
+		style : "width:600px;"
+	});
+	configNameTextBox.placeAt(dojo.byId("config_name_text_box"));
+	configNameTextBox.startup();
+	
 	if (dijit.byId("flow_" + flowBrief.id + "_name") != null) {
 		dijit.registry.remove("flow_" + flowBrief.id + "_name");
 	}
+	var button = new dijit.form.Button({
+		label : "Save",
+		onClick : function() {
+			//saveconfig();
+		}
+	});
+	button.placeAt(dojo.byId("save_config_button"));
+	button.startup();
 	var flowNameTextBox = new dijit.form.TextBox({
 		id : "flow_" + flowBrief.id + "_name",
 		value : flowBrief.name,
@@ -1271,22 +1347,25 @@ HAFlow.Main.prototype.onNodeClicked = function(instance, flowId, nodeId) {
 
 	var form = "";
 	form += "<div class=\"configuration\">";
-	//form += "<div class=\"configuration-content\"><strong>Configuration:</strong></div>";
 	var i;
 	for (i = 0; i < module.configurations.length; i++) {
 		var textBoxId = "flow_" + flowId + "_node_" + nodeId + "_"
 				+ module.configurations[i].key;
 		var divId = textBoxId + "_container";
 		form += "<div class=\"configuration-content\">";
-		form += ("<span><strong>" + module.configurations[i].displayName + "</strong></span>");
+		if(module.configurations[i].type=="BOOLEAN"){
+			form += "<div class=\"configuration-content\"><span><strong>" + module.configurations[i].displayName +"</strong></span><span id=\""+divId+"\" class=\"configuration-content\"></span></div>";	
+		}
+		else{
+		form += ("<span><strong>" + module.configurations[i].displayName +"</strong></span>");
 		form += "<div class=\"configuration-content\" id=\"" + divId
-				+ "\"></div>";
+				+ "\"></div>";			
+		}
 		form += "</div>";
 	}
 	form += "<div class=\"configuration-content\" id=\"save_configuration_button\"></div>";
 	form += "</div>";
 	$("#" + instance.configurationContainerId).html(form);
-
 	for (i = 0; i < module.configurations.length; i++) {
 		var textBoxId = "flow_" + flowId + "_node_" + nodeId + "_"
 				+ module.configurations[i].key;
@@ -1294,14 +1373,26 @@ HAFlow.Main.prototype.onNodeClicked = function(instance, flowId, nodeId) {
 		if (dijit.byId(textBoxId) != null) {
 			dijit.registry.remove(textBoxId);
 		}
-		var configurationTextBox = new dijit.form.TextBox({
-			id : textBoxId,
-			value : instance.getConfigurationValue(instance, flowId, nodeId,
-					module.configurations[i].key),
-			style : "width:600px;"
-		});
-		configurationTextBox.placeAt(dojo.byId(divId));
-		configurationTextBox.startup();
+		if(module.configurations[i].type=="BOOLEAN")
+		{
+			var configtype_true=new dijit.form.CheckBox({
+				id:textBoxId,
+			   checked:(instance.getConfigurationValue(instance, flowId, nodeId,module.configurations[i].key)=="on")?true:false
+			});
+			configtype_true.placeAt(dojo.byId(divId));
+			configtype_true.startup();		
+		}
+		else
+			{
+			var configurationTextBox = new dijit.form.TextBox({
+				id : textBoxId,
+				value : instance.getConfigurationValue(instance, flowId, nodeId,
+						module.configurations[i].key),
+				style : "width:600px;"
+			});
+			configurationTextBox.placeAt(dojo.byId(divId));
+			configurationTextBox.startup();
+			}		
 	}
 
 	var saveConfigurationButton = new dijit.form.Button({
