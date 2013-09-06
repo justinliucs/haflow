@@ -39,6 +39,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
@@ -47,6 +48,7 @@ import org.w3c.dom.Document;
 @Component
 public class OozieEngine extends AbstractEngine {
 
+	private Logger logger = Logger.getLogger(this.getClass().getName());
 	private ModuleUtil moduleUtil;
 	private NodeConfigurationService nodeConfigurationService;
 	private ClusterConfiguration clusterConfiguration;
@@ -151,7 +153,7 @@ public class OozieEngine extends AbstractEngine {
 				List<Integer> sorted = new TopologicalSort(graph).getOrder();
 
 				if (sorted == null) {
-					messageBuilder.append("Error: Flow is has Circles!");
+					messageBuilder.append("Error: Flow has Circles!");
 				} else {
 					String flowName = flow.getName();
 					String workflowXml = genWorkflowXml(flowName, sorted,
@@ -212,6 +214,7 @@ public class OozieEngine extends AbstractEngine {
 			System.out.println(messageBuilder.toString());
 			model.setMessage(messageBuilder.toString());
 			System.out.println(messageBuilder.toString());
+			logger.info(messageBuilder);
 			return model;
 		} catch (Exception e) {
 			e.printStackTrace();

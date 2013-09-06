@@ -24,7 +24,7 @@ public class FlowDeployService {
 			if (jarPath.endsWith(".jar")) {
 				File jarFile = new File(jarPath);
 				File dstPath = new File(deployPath + "/lib");
-				// System.out.println(jarPath);
+				System.out.println(jarPath);
 				this.copyJarFile(jarFile, dstPath, jarFile.getName());
 			}
 		}

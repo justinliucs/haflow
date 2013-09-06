@@ -68,6 +68,8 @@ public class ClassHelper {
 								.replace("/", ".");
 						classNames.add(className);
 					}
+				}else if(filePath.endsWith(".jar")){
+					classNames.addAll(getClassNameFromJar(packageName, true, new File(filePath)));
 				}
 			}
 		}

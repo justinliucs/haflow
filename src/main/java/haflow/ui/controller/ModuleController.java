@@ -1,11 +1,12 @@
 package haflow.ui.controller;
 
-import java.io.File;
-import java.util.UUID;
-
 import haflow.ui.helper.ModuleHelper;
 import haflow.ui.model.ModuleListModel;
 
+import java.io.File;
+import java.util.UUID;
+
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
@@ -20,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping("/module")
 public class ModuleController {
+	private Logger logger = Logger.getLogger(ModuleController.class.getName());
 	private ModuleHelper moduleHelper;
 
 	private ModuleHelper getModuleHelper() {
@@ -42,15 +44,15 @@ public class ModuleController {
 		if (!file.isEmpty()) {
 			try {
 				String fileName = file.getOriginalFilename();
-				String[] suffixs = fileName.split("\\.");
-				String suffix = "." + suffixs[suffixs.length - 1];
-				if ((".jar".indexOf(suffix.toLowerCase()) != -1)) {
+				if (fileName.endsWith(".jar")) {
 					byte[] bytes = file.getBytes();
-					String uploadDir = Thread.currentThread()
+					String clazzPath = Thread.currentThread()
 							.getContextClassLoader().getResource("/").getFile();
+					String uploadDir = clazzPath.substring(0, clazzPath.length()-8) + "lib/";
 					String filePath = uploadDir + fileName;
 					File toUpload = new File(filePath);
 					FileCopyUtils.copy(bytes, toUpload);
+					logger.info(fileName + " uploaded to : " + filePath);
 					return new ModelAndView("upload-success");
 				} else {
 					return new ModelAndView("upload-error");
