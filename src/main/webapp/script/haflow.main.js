@@ -1263,7 +1263,7 @@ HAFlow.Main.prototype.onModuleClicked = function(instance, flowId, moduleId) {
 		}
 	}
 	text += "<div class=\"configuration\"><div class=\"configuration-content\">" +
-			"<span><strong>Name:</strong>"
+			"<span><strong>Name:</strong> "
 			+ instance.moduleList.modules[i].name + ".</span></div></div>";
 	$("#" + instance.informationContainerId).html(text);
 };
