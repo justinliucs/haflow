@@ -19,6 +19,7 @@ dojo.require("dijit.Toolbar");
 dojo.require("dijit.Tree");
 dojo.require("dijit.registry");
 
+
 var flow;
 
 dojo.ready(function() {
@@ -190,6 +191,24 @@ HAFlow.Main.prototype.runFlow = function(flowId) {
 		error : function(request, status, error) {
 			HAFlow.showDialog("Error", "An error occurred while saving flow: "
 					+ error);
+		}
+	});
+};
+
+HAFlow.Main.prototype.showRunHistory = function(flowId) {
+	var _currentInstance = this;
+	dojo.xhrGet({
+		url :  _currentInstance.basePath + "runHistory/" + flowId,
+		load : function(data, ioArgs){
+//			open locally
+//			window.location = _currentInstance.basePath + "runHistory/" + flowId;
+			
+//			open in a new window
+			href = _currentInstance.basePath + "runHistory/" + flowId;
+	        window.open(href);
+		},
+		error : function(err, ioArgs){
+			
 		}
 	});
 };
@@ -746,7 +765,7 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 	this.menu.runMenu.runHistoryMenuItem = new dijit.MenuItem({
 		id : "runHistoryMenuItem",
 		label : "Run History",
-		disabled : true
+		disabled : false
 	});
 	this.menu.runMenu.debugHistoryMenuItem = new dijit.MenuItem({
 		id : "debugHistoryMenuItem",
@@ -877,7 +896,9 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 	dojo.connect(this.menu.oozieMenu.openMenuItem, "onClick", function(event) {
 		_currentInstance.openoozie();
 	});
-	
+	dojo.connect(this.menu.runMenu.runHistoryMenuItem, "onClick", function(event){
+		_currentInstance.showRunHistory(_currentInstance.currentFlowId);
+	});
 };
 
 HAFlow.Main.prototype.initBottomTabs = function() {

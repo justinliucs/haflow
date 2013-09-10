@@ -142,7 +142,7 @@ public class OozieEngine extends AbstractEngine {
 
 			Set<Node> nodes = flow.getNodes();
 
-			messageBuilder.append("Start parsing flow ..." + "\n");
+			messageBuilder.append("Start parsing flow ..." + "<br>");
 			List<Node> startNodes = findStartNodes(nodes, moduleClasses);
 			if (startNodes.size() != 1) {
 				messageBuilder.append("Error: Wrong start node number "
@@ -159,8 +159,8 @@ public class OozieEngine extends AbstractEngine {
 					String workflowXml = genWorkflowXml(flowName, sorted,
 							moduleClasses, graph);
 
-					messageBuilder.append("Parsing flow ... Finised" + "\n");
-					messageBuilder.append("Start deploying flow ..." + "\n");
+					messageBuilder.append("Parsing flow ... Finised" + "<br>");
+					messageBuilder.append("Start deploying flow ..." + "<br>");
 
 					String localDeployPath = this.getClusterConfiguration()
 							.getProperty(ClusterConfiguration.WORKSPACE_LOCAL)
@@ -170,7 +170,7 @@ public class OozieEngine extends AbstractEngine {
 									getJarPaths(nodes, moduleClasses));
 					if (deloyedLocally) {
 						messageBuilder.append(flowName
-								+ " has been deployed locally!" + "\n");
+								+ " has been deployed locally!" + "<br>");
 
 						String hdfsDeployPath = this.getClusterConfiguration()
 								.getProperty(
@@ -180,41 +180,41 @@ public class OozieEngine extends AbstractEngine {
 								.deleteDirectory(hdfsDeployPath);
 						if (deleted) {
 							messageBuilder.append("Old folder deleted: "
-									+ hdfsDeployPath + "\n");
+									+ hdfsDeployPath + "<br>");
 						}
 
 						boolean deployedToHdfs = this.getHdfsService()
 								.uploadFile(localDeployPath, hdfsDeployPath);
 						if (deployedToHdfs) {
 							messageBuilder.append(flowName
-									+ " has been uploaded to hdfs!" + "\n");
+									+ " has been uploaded to hdfs!" + "<br>");
 
 							String jobId = this.getOozieService().runJob(
 									flowName);
 							if (jobId == null) {
 								messageBuilder.append("Failed to commit job: "
-										+ flowName + "\n");
+										+ flowName + "<br>");
 							} else {
 								messageBuilder.append("Job commited! Job id : "
-										+ jobId + "\n");
+										+ jobId + "<br>");
 								model.setCommitted(true);
 								model.setJobId(jobId);
 							}
 						} else {
 							messageBuilder.append(flowName
-									+ " failed to be uploaded to hdfs!" + "\n");
+									+ " failed to be uploaded to hdfs!" + "<br>");
 						}
 					} else {
 						messageBuilder.append(flowName
-								+ " failed to be deployed locally!" + "\n");
+								+ " failed to be deployed locally!" + "<br>");
 					}
 				}
 			}
 
-			System.out.println(messageBuilder.toString());
+//			System.out.println(messageBuilder.toString());
 			model.setMessage(messageBuilder.toString());
-			System.out.println(messageBuilder.toString());
-			logger.info(messageBuilder);
+//			System.out.println(messageBuilder.toString());
+			logger.info(messageBuilder.toString());
 			return model;
 		} catch (Exception e) {
 			e.printStackTrace();
