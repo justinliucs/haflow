@@ -98,22 +98,22 @@ public class DirectedGraph {
 //		return ret;
 //	}
 	
-//	private List<Node> getNodeList() {
-//		return nodeList;
-//	}
-//
-//	private void setNodeList(List<Node> nodeList) {
-//		this.nodeList = nodeList;
-//	}
-//
-//	private List<Edge> getEdgeList() {
-//		return edgeList;
-//	}
-//
-//	private void setEdgeList(List<Edge> edgeList) {
-//		this.edgeList = edgeList;
-//	}
-//
+	public List<Node> getNodeList() {
+		return nodeList;
+	}
+
+	public void setNodeList(List<Node> nodeList) {
+		this.nodeList = nodeList;
+	}
+
+	public List<Edge> getEdgeList() {
+		return edgeList;
+	}
+
+	public void setEdgeList(List<Edge> edgeList) {
+		this.edgeList = edgeList;
+	}
+
 //	private Node getStartNode() {
 //		return startNode;
 //	}

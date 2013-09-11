@@ -180,7 +180,7 @@ HAFlow.Main.prototype.runFlow = function(flowId) {
 				data : JSON.stringify({}),
 				success : function(data, status) {
 					HAFlow.showDialog("Run Flow", " Commited: " + data.commited
-							+ "\n" + "Result: " + data.message);
+							+ "<br>" + "Message:<br> " + data.message);
 				},
 				error : function(request, status, error) {
 					HAFlow.showDialog("Error",

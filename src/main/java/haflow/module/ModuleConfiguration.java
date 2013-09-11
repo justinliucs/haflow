@@ -15,4 +15,6 @@ public @interface ModuleConfiguration {
 	String pattern();
 	
 	ModuleConfigurationType type();
+	
+	boolean required() default false;
 }
