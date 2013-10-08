@@ -16,6 +16,7 @@ HAFlow.UI.prototype.init = function() {
 	this.initId();
 	this.initMainContainer();
 	this.initMainMenu();
+	this.initMainoozieContainer();
 	this.initLeadingContainer();
 	this.initTrailingContainer();
 	this.initCenterContainer();
@@ -29,6 +30,7 @@ HAFlow.UI.prototype.refresh = function() {
 HAFlow.UI.prototype.initId = function() {
 	this.mainContainerId = "main";
 	this.mainMenuContainerId = "mainMenu";
+	this.mainoozieContainerId="mainoozie";
 	this.bottomContainerId = "bottom";
 	this.leadingContainerId = "leading";
 	this.trailingContainerId = "trailing";
@@ -54,6 +56,16 @@ HAFlow.UI.prototype.initMainMenu = function() {
 	this.mainMenu.startup();
 };
 
+HAFlow.UI.prototype.initMainoozieContainer = function() {
+	this.mainoozieContainer = new dijit.layout.BorderContainer({
+		id : this.mainoozieContainerId,
+		region : "center",
+		splitter : "true"
+	});
+	this.mainContainer.addChild(this.mainoozieContainer);
+	this.mainoozieContainer.startup();
+};
+
 HAFlow.UI.prototype.initBottomContainer = function() {
 	this.bottomContainer = new dijit.layout.TabContainer({
 		id : this.bottomContainerId,
@@ -70,7 +82,7 @@ HAFlow.UI.prototype.initLeadingContainer = function() {
 		region : "leading",
 		splitter : "true"
 	});
-	this.mainContainer.addChild(this.leadingContainer);
+	this.mainoozieContainer.addChild(this.leadingContainer);
 	this.leadingContainer.startup();
 };
 
@@ -80,7 +92,7 @@ HAFlow.UI.prototype.initTrailingContainer = function() {
 		region : "trailing",
 		splitter : "true"
 	});
-	this.mainContainer.addChild(this.trailingContainer);
+	this.mainoozieContainer.addChild(this.trailingContainer);
 	this.trailingContainer.startup();
 };
 
@@ -94,7 +106,7 @@ HAFlow.UI.prototype.initCenterContainer = function() {
 		region : "center",
 		splitter : "true"
 	});
-	this.mainContainer.addChild(this.centerContainerParent);
+	this.mainoozieContainer.addChild(this.centerContainerParent);
 	this.centerContainerParent.addChild(this.centerContainer);
 	this.centerContainerParent.startup();
 	this.centerContainer.startup();

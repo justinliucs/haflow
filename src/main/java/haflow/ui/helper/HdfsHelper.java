@@ -50,6 +50,29 @@ public class HdfsHelper {
 			model.setLength(ret.length());
 		}
 		model.setPath(filePath);
+		model.setFilename(fileName);
 		return model;
+	}
+	
+	public Boolean uploadFile(String localpath,String remotePath) {
+		Boolean ret = this.getHdfsService().uploadFile(localpath,remotePath);
+		return ret;
+	}
+	public Boolean downloadFile(String localpath,String remotePath) {
+		Boolean ret = this.getHdfsService().downloadFile(localpath,remotePath);
+		return ret;
+	}
+	public boolean createdirectory(String remotePath,String directoryname) {
+		boolean ret=this.getHdfsService().createDirectory(remotePath,directoryname);
+		return ret;
+	}
+	public boolean deletedirectory(String remotePath) {
+		boolean ret=this.getHdfsService().deleteDirectory(remotePath);
+		return ret;
+	}
+	
+	public boolean deletefile(String remotePath) {
+		boolean ret=this.getHdfsService().deleteFile(remotePath);
+		return ret;
 	}
 }

@@ -52,7 +52,19 @@ public class HdfsService {
 			return false;
 		}
 	}
-
+	
+	public boolean createDirectory(String remotePath, String directoryname) {
+		try {
+			FileSystem fs = this.getFileSystem();
+			fs.mkdirs(new Path(remotePath+"/"+directoryname));
+			fs.close();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
 	public boolean writeFile(String content, String remotePath) {
 		try {
 			InputStream in = new BufferedInputStream(new StringInputStream(

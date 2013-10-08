@@ -6,6 +6,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "file")
 public class HdfsFileModel {
 	private String path;
+	private String filename;
 	private long length;
 	private String content;
 
@@ -34,6 +35,15 @@ public class HdfsFileModel {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+	
+	@XmlElement
+	public String getFilename() {
+		return filename;
+	}
+
+	public void setFilename(String filename) {
+		this.filename = filename;
 	}
 
 }
