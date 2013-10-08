@@ -915,6 +915,9 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 		_currentInstance.openoozie();
 	});
 
+	dojo.connect(this.menu.runMenu.runHistoryMenuItem, "onClick", function(event){
+		_currentInstance.showRunHistory(_currentInstance.currentFlowId);
+	});
 };
 
 HAFlow.Main.prototype.initBottomTabs = function() {
