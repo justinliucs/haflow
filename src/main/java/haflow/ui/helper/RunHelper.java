@@ -22,9 +22,9 @@ public class RunHelper {
 		this.flowExecuteService = flowExecuteService;
 	}
 
-	public RunFlowResultModel runFlow(UUID flowId, RunFlowModel model) {
+	public RunFlowResultModel runFlow(UUID flowId, RunFlowModel model,int userid) {
 		RunFlowResultModel result = this.getFlowExecuteService()
-				.runFlow(flowId);
+				.runFlow(flowId,userid);
 		return result;
 	}
 

@@ -65,8 +65,8 @@ public class FlowHelper {
 		this.nodeConfigurationProfileService = nodeConfigurationProfileService;
 	}
 
-	public FlowListModel getFlowList() {
-		List<Flow> flowList = this.getFlowService().getFlowList();
+	public FlowListModel getFlowList(int userid) {
+		List<Flow> flowList = this.getFlowService().getFlowList(userid);
 		FlowListModel flowListModel = new FlowListModel();
 		flowListModel.setFlows(new ArrayList<FlowBriefModel>());
 		for (Flow flow : flowList) {
@@ -78,8 +78,8 @@ public class FlowHelper {
 		return flowListModel;
 	}
 
-	public FlowModel getFlow(UUID flowId) {
-		Flow flow = this.getFlowService().getFlow(flowId);
+	public FlowModel getFlow(UUID flowId,int userid) {
+		Flow flow = this.getFlowService().getFlow(flowId,userid);
 		if (flow == null) {
 			return null;
 		}
@@ -127,8 +127,8 @@ public class FlowHelper {
 		return flowModel;
 	}
 
-	public SaveFlowResultModel saveFlow(UUID flowId, SaveFlowModel model) {
-		boolean success = this.doSaveFlow(flowId, model);
+	public SaveFlowResultModel saveFlow(UUID flowId, SaveFlowModel model,int userid) {
+		boolean success = this.doSaveFlow(flowId, model,userid);
 		SaveFlowResultModel result = new SaveFlowResultModel();
 		result.setFlowId(flowId);
 		result.setSuccess(success);
@@ -140,7 +140,7 @@ public class FlowHelper {
 		return result;
 	}
 
-	public boolean doSaveFlow(UUID flowId, SaveFlowModel model) {
+	public boolean doSaveFlow(UUID flowId, SaveFlowModel model,int userid) {
 		Set<Node> nodes = new HashSet<Node>();
 		Set<Edge> edges = new HashSet<Edge>();
 		for (NodeModel nodeModel : model.getNodes()) {
@@ -184,7 +184,7 @@ public class FlowHelper {
 		boolean result = true;
 		result = result
 				&& this.getFlowService().saveFlow(flowId, model.getName(),
-						nodes, edges);
+						nodes, edges,userid);
 		result = result
 				&& this.getNodeAppearanceService()
 						.cleanUpOrphanNodeAppearance();
@@ -194,8 +194,8 @@ public class FlowHelper {
 		return result;
 	}
 
-	public RemoveFlowResultModel removeFlow(UUID flowId, RemoveFlowModel model) {
-		boolean success = this.getFlowService().removeFlow(flowId);
+	public RemoveFlowResultModel removeFlow(UUID flowId, RemoveFlowModel model,int userid) {
+		boolean success = this.getFlowService().removeFlow(flowId,userid);
 		success = success
 				&& this.getNodeAppearanceService()
 						.cleanUpOrphanNodeAppearance();

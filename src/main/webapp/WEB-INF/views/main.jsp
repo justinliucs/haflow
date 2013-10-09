@@ -6,6 +6,9 @@
 	String basePath = request.getScheme() + "://"
 			+ request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
+	String username=request.getSession().getAttribute("username").toString();
+	Object userid=request.getSession().getAttribute("userid");
+	
 %>
 <html>
 <head>
@@ -18,6 +21,8 @@
 <link rel="stylesheet" href="<%=basePath%>/style/haflow.css">
 <link rel="stylesheet" href="<%=basePath%>/style/haflow.ui.css">
 <link rel="stylesheet" href="<%=basePath%>/style/haflow.main.css">
+
+
 
 <script type="text/javascript"
 	src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
@@ -32,8 +37,15 @@
 <script type="text/javascript" src="<%=basePath%>/script/haflow.js"></script>
 <script type="text/javascript" src="<%=basePath%>/script/haflow.ui.js"></script>
 <script type="text/javascript" src="<%=basePath%>/script/haflow.main.js"></script>
+
 </head>
 <body class="claro">
+
+	<script type="text/javascript">
+		var username="<%=username%>";
+		var userid=<%=userid%>;
+	</script>
 	<input type="hidden" value="<%=basePath%>" id="basePath" />
+	
 </body>
 </html>

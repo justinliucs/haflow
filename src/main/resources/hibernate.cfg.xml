@@ -18,7 +18,10 @@
 		<mapping class="haflow.dto.entity.Edge" />
 		<mapping class="haflow.dto.entity.Flow" />
 		<mapping class="haflow.dto.entity.Node" />
-
+        <mapping class="haflow.dto.entity.MainUser"/>
+        <mapping class="haflow.dto.entity.FlowRunHistory" />
+        
+        
 		<mapping class="haflow.dto.profile.NodeAppearance" />
 		<mapping class="haflow.dto.profile.NodeConfiguration" />
 	</session-factory>
