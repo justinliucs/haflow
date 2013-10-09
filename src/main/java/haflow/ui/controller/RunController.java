@@ -2,6 +2,8 @@ package haflow.ui.controller;
 
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
+
 import haflow.ui.helper.RunHelper;
 import haflow.ui.model.RunFlowModel;
 import haflow.ui.model.RunFlowResultModel;
@@ -31,7 +33,7 @@ public class RunController {
 	@RequestMapping(value = "/{flowId}", method = RequestMethod.POST)
 	@ResponseBody
 	public RunFlowResultModel post(@PathVariable UUID flowId,
-			@RequestBody RunFlowModel model) {
-		return this.getRunHelper().runFlow(flowId, model);
+			@RequestBody RunFlowModel model,HttpServletRequest request) {
+		return this.getRunHelper().runFlow(flowId, model,(Integer)request.getSession().getAttribute("userid"));
 	}
 }

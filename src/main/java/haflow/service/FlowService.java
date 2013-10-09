@@ -1,7 +1,9 @@
+
 package haflow.service;
 
 import haflow.dto.entity.Edge;
 import haflow.dto.entity.Flow;
+import haflow.dto.entity.MainUser;
 import haflow.dto.entity.Node;
 import haflow.util.SessionHelper;
 
@@ -30,10 +32,11 @@ public class FlowService {
 	}
 
 	public boolean saveFlow(UUID flowId, String name, Set<Node> nodes,
-			Set<Edge> edges) {
+			Set<Edge> edges, int userid) {
 		Session session = this.getSessionHelper().openSession();
 		Transaction transaction = session.beginTransaction();
 		try {
+			MainUser user = (MainUser) session.get(MainUser.class, userid);
 			Flow flow = (Flow) session.get(Flow.class, flowId);
 			if (flow == null) {
 				flow = new Flow();
@@ -41,12 +44,13 @@ public class FlowService {
 				flow.setName(name);
 				flow.setNodes(new HashSet<Node>());
 				flow.setEdges(new HashSet<Edge>());
-				session.merge(flow);
-			}
-
+				flow.setUser(user);
+			} 
+			
 			flow.setName(name);
 			flow.getNodes().clear();
 			flow.getEdges().clear();
+			
 
 			for (Node node : nodes) {
 				node.setFlow(flow);
@@ -71,31 +75,50 @@ public class FlowService {
 				}
 				flow.getEdges().add(edge);
 			}
+			
 			session.merge(flow);
+			
 			transaction.commit();
-			session.close();
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
 			transaction.rollback();
-			session.close();
 			return false;
+		} finally {
+			if (session != null)
+				session.close();
 		}
 	}
 
-	public boolean removeFlow(UUID flowId) {
+	public boolean removeFlow(UUID flowId,int userid) {
 		Session session = this.getSessionHelper().openSession();
 		Transaction transaction = session.beginTransaction();
-		Flow flow = (Flow) session.get(Flow.class, flowId);
-		if (flow == null) {
-			return false;
-		}
-
+		MainUser user=(MainUser) session.get(MainUser.class, userid);
 		try {
-			session.delete(flow);
-			transaction.commit();
-			session.close();
-			return true;
+		for(Flow f:user.getFlows()){
+			if(f.getId().equals(flowId)){
+				user.getFlows().remove(f);
+				f.setUser(null);
+				session.delete(f);
+				transaction.commit();
+				session.close();
+				return true;
+			}
+					
+		}
+		return false;
+		
+		//Flow flow = (Flow) session.get(Flow.class, flowId);
+//		if (flow == null) {
+//			return false;
+//		}
+
+//		try {
+//			System.out.println("remove flow before");
+//			session.delete(flow);
+//			transaction.commit();
+//			session.close();
+//			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
 			transaction.rollback();
@@ -105,10 +128,10 @@ public class FlowService {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Flow> getFlowList() {
+	public List<Flow> getFlowList(int userid) {
 		Session session = this.getSessionHelper().openSession();
 		try {
-			Query query = session.createQuery("from Flow flow");
+			Query query = session.createQuery("select f from Flow f join f.user u where u.id= "+userid);
 			List<Flow> flows = (List<Flow>) query.list();
 			session.close();
 			return flows;
@@ -119,16 +142,27 @@ public class FlowService {
 		}
 	}
 
-	public Flow getFlow(UUID flowId) {
+	public Flow getFlow(UUID flowId,int userid) {
 		Session session = this.getSessionHelper().openSession();
 		try {
-			Flow flow = (Flow) session.get(Flow.class, flowId);
-			session.close();
-			return flow;
+			MainUser user = (MainUser) session.get(MainUser.class, userid);
+
+			Set<Flow> flows = (Set<Flow>) user.getFlows();
+			for (Flow flow : flows) {
+				if (flow.getId().equals(flowId)) {
+					return flow;
+				}
+			}
+			return null;
+			//Flow flow = (Flow) session.get(Flow.class, flowId);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			session.close();
 			return null;
+		}finally{
+			if(session!=null)
+				session.close();
 		}
 	}
 }

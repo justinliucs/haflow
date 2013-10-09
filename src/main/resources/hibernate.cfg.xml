@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
@@ -23,4 +24,33 @@
 		<mapping class="haflow.dto.profile.NodeAppearance" />
 		<mapping class="haflow.dto.profile.NodeConfiguration" />
 	</session-factory>
+=======
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+	<session-factory>
+		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver </property>
+		<property name="hibernate.connection.url"> jdbc:mysql://localhost:3306/haflow
+		</property>
+		<property name="hibernate.connection.username">root </property>
+		<property name="hibernate.connection.password">123456 </property>
+		<property name="hibernate.connection.pool.size">20 </property>
+		<property name="hibernate.show_sql">false </property>
+		<property name="format_sql">false</property>
+		<property name="Connection.useUnicode">true </property>
+		<property name="connection.characterEncoding">utf-8 </property>
+		<property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect </property>
+		<property name="hibernate.hbm2ddl.auto">update</property>
+
+		<mapping class="haflow.dto.entity.Edge" />
+		<mapping class="haflow.dto.entity.Flow" />
+		<mapping class="haflow.dto.entity.Node" />
+        <mapping class="haflow.dto.entity.MainUser"/>
+        <mapping class="haflow.dto.entity.FlowRunHistory" />
+        
+        
+		<mapping class="haflow.dto.profile.NodeAppearance" />
+		<mapping class="haflow.dto.profile.NodeConfiguration" />
+	</session-factory>
+>>>>>>> branch 'master' of https://github.com/justinliucs/haflow.git
 </hibernate-configuration>
