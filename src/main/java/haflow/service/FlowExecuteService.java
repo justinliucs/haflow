@@ -57,13 +57,13 @@ public class FlowExecuteService {
 		return null;
 	}
 
-	public RunFlowResultModel runFlow(UUID flowId) {
+	public RunFlowResultModel runFlow(UUID flowId,int userid) {
 		RunFlowResultModel result = new RunFlowResultModel();
 		result.setFlowId(flowId);
 		result.setCommited(false);
 		StringBuilder messageBuilder = new StringBuilder();
 
-		Flow flow = (Flow) this.getFlowService().getFlow(flowId);
+		Flow flow = (Flow) this.getFlowService().getFlow(flowId, userid);
 		if (flow == null) {
 			messageBuilder.append("Flow " + flowId + " not found!");
 			result.setMessage(messageBuilder.toString());
