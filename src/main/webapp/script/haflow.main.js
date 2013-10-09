@@ -21,7 +21,8 @@ dojo.require("dijit.TitlePane");
 dojo.require("dijit.Toolbar");
 dojo.require("dijit.Tree");
 dojo.require("dijit.registry");
-dojo.require("dojox.form.FileUploader");
+dojo.require("dijit.form.Form");
+
 var flow;
 
 dojo.ready(function() {
@@ -898,8 +899,151 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 		label : "oozie",
 		popup : this.menu.oozieMenu
 	}));
+	//userInformation
+	this.ui.mainMenu.addChild(new dijit.layout.ContentPane({
+		id : "tipContentPane",
+		title : "tip",
+		content : "|&nbsp&nbsp<a href=quit><font size=2px>quit</font></a>",
+		style : "float:right;"
+	}));
+	
+	this.menu.userMenu=new dijit.Menu({
+		id: "userMenu"
+	});
+	this.menu.userMenu.userInforMenuItem=new dijit.MenuItem({
+		id: "userInforMenuItem",
+		label:"user information"
+	});
+	this.menu.userMenu.addChild(this.menu.userMenu.userInforMenuItem);
+	this.menu.userMenu.startup();
+	
+	this.ui.mainMenu.addChild(new dijit.PopupMenuBarItem({
+		id : "usernameContentPane",
+		label : "<a href><font color=red size=2px>" + username
+				+ "</font></a>",
+		style : "float:right;",
+		popup : this.menu.userMenu
+	}));
+	this.ui.mainMenu.addChild(new dijit.layout.ContentPane({
+		id : "welcomeContentPane",
+		title : "welcome",
+		content : "<font size=2px align=top>Welcome,</font>",
+		style : "float:right;"
+	}));
 
 	var _currentInstance = this;
+	
+    //new dialog
+	var user=null;
+	var text = "";
+	text += "<div >";
+	text += "<div ><span style=\"float: left; width: 80px;\"><strong>Name:</strong></span>";
+	text += "<span id=\"user_name_text_box\" ></span></div>";
+	
+	text += "<div ><span style=\"float: left; width: 80px;\"><strong>Space:</strong></span>";
+	text += "<span id=\"user_space_text_box\"></span></div>";
+	text += "<div class=\"field\"><span style=\"float: left; width: 80px;\"><strong>UsedSpace:</strong></span>";
+	text += "<span id=\"user_used_text_box\"></span></div>";
+	text += "<div class=\"field\"><span style=\"float: left; width: 80px;\"><strong>RealName:</strong></span>";
+	text += "<span id=\"user_real_text_box\"></span></div>";
+	text += "<div class=\"field\"><span style=\"float: left; width: 80px;\"><strong>Email:</strong></span>";
+	text += "<span id=\"user_email_text_box\"></span></div>";
+	text += "<div><span id=\"edit_user_button\" ></span>";
+	text += "<span id=\"save_user_button\" ></span></div>";
+	text += "</div>";
+	userForm=new dijit.form.Form({
+		innerHTML:text
+	});
+	userForm.startup();
+	userDialog = new dijit.Dialog({
+	    title: "User Infomation",
+	    style: "width: 400px"
+	});
+	userDialog.addChild(userForm);
+	var userRealTextBox = new dijit.form.TextBox({
+		id : "userRealTextBox",
+		style : "width:200px;"
+	});
+	
+	var userEmailTextBox =new dijit.form.TextBox({
+		id:"userEmailTextBox",
+		style:"width:200px;"
+	});
+	
+	
+	var button1=new dijit.form.Button({
+		label:"edit",
+		onClick: function(){
+			dojo.byId("user_real_text_box").innerHTML='';
+			dojo.byId("user_email_text_box").innerHTML='';
+			userRealTextBox.placeAt(dojo.byId("user_real_text_box"));
+			userRealTextBox.startup();
+			userEmailTextBox.placeAt(dojo.byId("user_email_text_box"));
+			userEmailTextBox.startup();
+			
+		}
+	});
+	button1.placeAt(dojo.byId("edit_user_button"));
+	button1.startup();
+	
+	var button = new dijit.form.Button({
+		label : "Save",
+		onClick : function() {
+			user.realname=userRealTextBox.get("value");
+			user.email=userEmailTextBox.get("value");
+			saveUser(user,userid);
+		}
+	});
+	button.placeAt(dojo.byId("save_user_button"));
+	button.startup();
+	saveUser=function(user,userid){
+		$.ajax({
+			url : _currentInstance.basePath + "user/update/"+userid,
+			type : "Post",
+			dataType : "json",
+			contentType : "application/json",
+			data:JSON.stringify(user),
+			success :function(data,status){
+				userDialog.hide();
+				HAFlow.showDialog("Success", "Successfully update user information! ");
+				
+			},
+			error : function(request, status, error) {
+				userDialog.hide();
+				HAFlow.showDialog("Error", "An error occurred while updating user information: "
+						+ error);
+			}
+		});
+	};
+	dojo.connect(dijit.byId("userInforMenuItem"), "onClick", function() {
+		$.ajax({
+			url : _currentInstance.basePath + "user/get/"+userid,
+			type : "GET",
+			cache : false,
+			dataType : "json",
+			success : function(data, status) {
+				user = data;
+				dojo.byId("user_name_text_box").innerHTML = data.name;
+				userRealTextBox.set("value", data.realname);
+				userEmailTextBox.set("value", data.email);
+				if(data.realname==null) tmp="å°šæœªå¡«å†™";
+				else tmp=data.realname
+				dojo.byId("user_real_text_box").innerHTML=tmp;
+				dojo.byId("user_email_text_box").innerHTML=data.email;
+				dojo.byId("user_space_text_box").innerHTML=data.space;
+				dojo.byId("user_used_text_box").innerHTML=data.usedspace;
+				// dojo.parser.parse(userDialog);
+				userDialog.show();
+
+			},
+			error : function(request, status, error) {
+				HAFlow.showDialog("Error",
+						"An error occurred while loading user information: "
+								+ error);
+			}
+		});
+	});
+
 	dojo.connect(this.menu.flowMenu.newFlowMenuItem, "onClick",
 			function(event) {
 				_currentInstance.newFlow();
@@ -1052,39 +1196,45 @@ HAFlow.Main.prototype.initHdfsFileListTree = function() {
 							var dialog = new dijit.Dialog({
 								title : "upload",
 								content : "<html><body><form id=\"hdfsfilepath\" action=\"hdfs/upload\" enctype=\"multipart/form-data\" method=\"post\">"
-									+ "<input type=\"file\" name=\"file\" />"
+									+ "<input type=\"file\" name=\"file\" id=\"file\" />"
 									+ " <button type=\"button\" id=\"upload_btn\">submit</button></form><div id=\"debug\"><div></body></html>",
 								style : "width:400px"
 							});
 							dialog.show();
 							dojo.connect(dojo.byId("upload_btn"),"onclick",function(){
-	//						alert("before send. url:"+_currentInstance.basePath+"/hdfs/upload");
-							alert(path);
-							dojo.io.iframe.send({
-							    form: "hdfsfilepath", //Ä³¸öformÔªËØ°üº¬±¾µØÎÄ¼þÂ·¾¶
-							    handleAs: "xml", //·þÎñÆ÷½«·µ»ØhtmlÒ³Ãæ
-							    url:_currentInstance.basePath+"/hdfs/upload?remotePath="+path,
-							    load: function(response){
-								    	var success = response.getElementsByTagName("success")[0].childNodes[0].nodeValue;
-								    	var filename = response.getElementsByTagName("filename")[0].childNodes[0].nodeValue;
-								    	if(success=="true")
-								    		{
-								    		HAFlow.showDialog("Upload", "Upload scceess.");
-									    	_currentInstance.hdfsFileListStore.put({
-									    		id:path+"/"+filename,
-									    		name:filename,
-									    		isDirectory:false,
-									    		path:path+"/"+filename,
-									    		parentPath:path,
-									    	});	
-								    		}								    		
-								    	else
-								    		HAFlow.showDialog("Upload", "Upload failure.");		
-							    }, //Ìá½»³É¹¦
-							    error: function(e){
-									HAFlow.showDialog("Upload", "Upload failure.");
-							    }//Ìá½»Ê§°Ü
-							});
+							var filename = document.getElementById("file").value;
+							var result=_currentInstance.hdfsFileListStore.query({path:path+"/"+filename});
+							if(result.total==0)
+								{
+								dojo.io.iframe.send({
+								    form: "hdfsfilepath", //Ä³ï¿½ï¿½formÔªï¿½Ø°ï¿½ï¿½ï¿½Ä¼ï¿½Â·ï¿½ï¿½
+								    handleAs: "xml", //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½htmlÒ³ï¿½ï¿½
+								    url:_currentInstance.basePath+"/hdfs/upload?remotePath="+path,
+								    load: function(response){
+									    	var success = response.getElementsByTagName("success")[0].childNodes[0].nodeValue;
+									    	var filename = response.getElementsByTagName("filename")[0].childNodes[0].nodeValue;
+									    	if(success=="true")
+									    		{
+									    		HAFlow.showDialog("Upload", "Upload scceess.");
+										    	_currentInstance.hdfsFileListStore.put({
+										    		id:path+"/"+filename,
+										    		name:filename,
+										    		isDirectory:false,
+										    		path:path+"/"+filename,
+										    		parentPath:path,
+										    	});	
+									    		}								    		
+									    	else
+									    		HAFlow.showDialog("Upload", "Upload failure.");		
+								    }, //ï¿½á½»ï¿½É¹ï¿½
+								    error: function(e){
+										HAFlow.showDialog("Upload", "Upload failure.");
+								    }//ï¿½á½»Ê§ï¿½ï¿½
+								});
+								}
+							else{
+								HAFlow.showDialog("Upload", "File exits.");
+							}
 							dialog.destroy();
 							});
 							}
@@ -1168,33 +1318,42 @@ HAFlow.Main.prototype.initHdfsFileListTree = function() {
 									+ "new name:<input type=\"text\" id=\"directoryname\" name=\"directoryname\"> </input>"
 									+ " <button type=\"button\" id=\"create_btn\">submit</button></form></body></html>");
 					dojo.connect(dojo.byId("create_btn"),"onclick",function(){	
-					$.ajax({
-						url : _currentInstance.basePath+"hdfs/createdirectory?remotepath="+path+"&directoryname="+dojo.byId("directoryname").value,
-						type : "GET",
-						dataType : "json",
-						contentType : "application/json",
-						data : JSON.stringify({}),
-						success : function(data, status) {
-							if(data.success=true)
-								{
-								 HAFlow.showDialog("Create HdfsFile Directory", "HdfsFile Directory created.");
-							    	_currentInstance.hdfsFileListStore.put({
-							    		id:path+"/"+data.directoryname,
-							    		name:data.directoryname,
-							    		isDirectory:true,
-							    		path:path+"/"+data.directoryname,
-							    		parentPath:path,
-							    	});	
-							    	
+						var directoryname = document.getElementById("directoryname").value;
+						var result=_currentInstance.hdfsFileListStore.query({path:path+"/"+directoryname});
+						if(result.total==0)
+							{
+							$.ajax({
+								url : _currentInstance.basePath+"hdfs/createdirectory?remotepath="+path+"&directoryname="+dojo.byId("directoryname").value,
+								type : "GET",
+								dataType : "json",
+								contentType : "application/json",
+								data : JSON.stringify({}),
+								success : function(data, status) {
+									if(data.success=true)
+										{
+										 HAFlow.showDialog("Create HdfsFile Directory", "HdfsFile Directory created.");
+									    	_currentInstance.hdfsFileListStore.put({
+									    		id:path+"/"+data.directoryname,
+									    		name:data.directoryname,
+									    		isDirectory:true,
+									    		path:path+"/"+data.directoryname,
+									    		parentPath:path,
+									    	});	
+									    	
+										}
+									else
+										HAFlow.showDialog("Create HdfsFile Directory", "HdfsFile Directory can't be created.");
+								},
+								error : function(request, status, error) {
+									HAFlow.showDialog("Error",
+											"An error occurred while removing HdfsFile Directory: " + error);
 								}
-							else
-								HAFlow.showDialog("Create HdfsFile Directory", "HdfsFile Directory can't be created.");
-						},
-						error : function(request, status, error) {
-							HAFlow.showDialog("Error",
-									"An error occurred while removing HdfsFile Directory: " + error);
+								});
+							}
+						else{
+							HAFlow.showDialog("Create HdfsFile Directory", "HdfsFile Directory exits.");
 						}
-						});
+					
 					});
 					}
 				else
@@ -1213,9 +1372,9 @@ HAFlow.Main.prototype.initHdfsFileListTree = function() {
 				var isDirectory=tn.item.isDirectory;
 				if(isDirectory==false)
 				{
-			       var form = $("<form>");   //¶¨ÒåÒ»¸öform±íµ¥
+			       var form = $("<form>");   //ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½formï¿½?
 
-			       form.attr('style','display:none');   //ÔÚform±íµ¥ÖÐÌí¼Ó²éÑ¯²ÎÊý
+			       form.attr('style','display:none');   //ï¿½ï¿½formï¿½?ï¿½ï¿½ï¿½ï¿½Ó²ï¿½Ñ¯ï¿½ï¿½ï¿½ï¿½
 
 			       form.attr('target','');
 
@@ -1242,11 +1401,11 @@ HAFlow.Main.prototype.initHdfsFileListTree = function() {
 
 			       input2.attr('value',name); 
 
-			       $('body').append(form);  //½«±íµ¥·ÅÖÃÔÚwebÖÐ
+			       $('body').append(form);  //ï¿½ï¿½ï¿½?ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½webï¿½ï¿½
 
-			       form.append(input1);   //½«²éÑ¯²ÎÊý¿Ø¼þÌá½»µ½±íµ¥ÉÏ
+			       form.append(input1);   //ï¿½ï¿½ï¿½ï¿½Ñ¯ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½ï¿½á½»ï¿½ï¿½ï¿½?ï¿½ï¿½
 			       form.append(input2); 
-			       form.submit();   //±íµ¥Ìá½»
+			       form.submit();   //ï¿½?ï¿½á½»
 					$("#form1").ajaxForm(function(){
 						HAFlow.showDialog("Download", "Succeed to download it.");
 					});
