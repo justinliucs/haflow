@@ -12,6 +12,7 @@ HAFlow.UI = function() {
 
 };
 
+
 HAFlow.UI.prototype.init = function() {
 	this.initId();
 	this.initMainContainer();

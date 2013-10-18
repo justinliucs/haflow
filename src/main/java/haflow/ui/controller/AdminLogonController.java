@@ -1,10 +1,8 @@
 package haflow.ui.controller;
 
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import haflow.dto.entity.MainUser;
 import haflow.module.util.Md5Util;
 import haflow.ui.helper.UserHelper;
 
@@ -37,7 +35,7 @@ public class AdminLogonController {
 		else
 			return new ModelAndView("logon");
 	}
-	@RequestMapping(value="/adminusermana")
+	/*@RequestMapping(value="/adminusermana")
 	public ModelAndView adminmana(HttpServletRequest request){
 		
 		if(UserHelper.isUserLogon(request,1)){
@@ -48,7 +46,7 @@ public class AdminLogonController {
 			
 		else
 			return new ModelAndView("logon");
-	}
+	}*/
 	@RequestMapping(value="/adminhome")
 	public ModelAndView aminhome(HttpServletRequest request){
 		if(UserHelper.isUserLogon(request,1))

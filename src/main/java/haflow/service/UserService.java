@@ -3,7 +3,6 @@ package haflow.service;
 
 import java.util.List;
 
-import haflow.dto.entity.Flow;
 import haflow.dto.entity.MainUser;
 import haflow.util.SessionHelper;
 
@@ -13,7 +12,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hsqldb.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 @Component
@@ -125,7 +123,7 @@ public class UserService {
 		Session session=this.getSessionHelper().openSession();
 		
 			try {
-				Query query=session.createQuery("from MainUser as mainUser where role=0");
+				Query query=session.createQuery("from MainUser as mainUser");
 				List<MainUser> list=query.list();
 				session.close();
 				return list;

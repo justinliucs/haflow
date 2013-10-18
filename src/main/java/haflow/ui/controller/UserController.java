@@ -1,9 +1,11 @@
 package haflow.ui.controller;
 
+
 import javax.servlet.http.HttpServletRequest;
 
 import haflow.ui.helper.UserHelper;
 import haflow.ui.model.SaveUserResultModel;
+import haflow.ui.model.UserListModel;
 import haflow.ui.model.UserModel;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -30,7 +31,16 @@ public class UserController {
 	public void setUserHelper(UserHelper userHelper) {
 		this.userHelper = userHelper;
 	}
-	
+	@RequestMapping(value="/get",method=RequestMethod.GET)
+	@ResponseBody
+	public UserListModel get(HttpServletRequest request){
+		if(UserHelper.isUserLogon(request,1)){
+			return this.getUserHelper().getAllUser();
+		}
+			
+		else
+			return null;
+	}
 	@RequestMapping(value = "/get/{userid}", method = RequestMethod.GET)
 	@ResponseBody
 	public UserModel get(@PathVariable int userid,HttpServletRequest request){
@@ -48,8 +58,6 @@ public class UserController {
 	@RequestMapping(value = "/update/{userid}", method = RequestMethod.POST)
 	@ResponseBody
 	public SaveUserResultModel post(@PathVariable int userid,@RequestBody UserModel user,HttpServletRequest request){
-		System.out.println(userid);
-		System.out.println("!!!!!!!!!!!success update");
 		boolean flag=UserHelper.isUserLogon(request, 0);
 		
 		if(flag){
@@ -60,23 +68,18 @@ public class UserController {
 		return null;
 	
 	}
-	@RequestMapping(value = "/remove/{userid}", method = RequestMethod.GET)
-	public String delete(@PathVariable int userid,HttpServletRequest request,RedirectAttributes redirectAttributes){
+	@RequestMapping(value = "/remove/{userid}", method = RequestMethod.DELETE)
+	@ResponseBody
+	public SaveUserResultModel delete(@PathVariable int userid,HttpServletRequest request,RedirectAttributes redirectAttributes){
 		boolean flag=UserHelper.isUserLogon(request, 1);
 		
 		if(flag){
 			
-			if(this.getUserHelper().deleteUser(userid)){
-				redirectAttributes.addFlashAttribute("message", "success removed a user!");
-				return "redirect:/adminhome";
-//				 mav.addObject("message", "success!");
-//				 return mav;
-			}
+			return this.getUserHelper().deleteUser(userid);
+			
 		}
-		redirectAttributes.addFlashAttribute("message", "failed removed a user!");
-		return "redirect:/adminhome";
-//		mav.addObject("message", "failed!");
-//		return mav;
+		
+		return null;
 	}
 
 }
