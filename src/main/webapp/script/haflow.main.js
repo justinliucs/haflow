@@ -1026,7 +1026,7 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 				dojo.byId("user_name_text_box").innerHTML = data.name;
 				userRealTextBox.set("value", data.realname);
 				userEmailTextBox.set("value", data.email);
-				if(data.realname==null) tmp="灏氭湭濉啓";
+				if(data.realname==null) tmp="blank";
 				else tmp=data.realname
 				dojo.byId("user_real_text_box").innerHTML=tmp;
 				dojo.byId("user_email_text_box").innerHTML=data.email;

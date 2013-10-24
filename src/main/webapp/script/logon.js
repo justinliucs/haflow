@@ -30,21 +30,21 @@ function checkField(){
  }else if(usernameValue == "" && passwordValue == ""){
 	 
  document.getElementById("errorSpan").innerHTML="";
- document.getElementById("error_username").innerHTML = "用户名不能为空！";
- document.getElementById("error_password").innerHTML = "密码不能为空！";
+ document.getElementById("error_username").innerHTML = "username can not be blank";
+ document.getElementById("error_password").innerHTML = "password can not be blank";
   
  return false ;
  }else if(usernameValue !== "" && passwordValue == ""){
  document.getElementById("errorSpan").innerHTML="";
  document.getElementById("password").focus() ;
  document.getElementById("error_username").innerHTML = "";
- document.getElementById("error_password").innerHTML = "密码不能为空！";
+ document.getElementById("error_password").innerHTML = "password can not be blank";
  return false ;
  }else if(passwordValue !== "" && usernameValue == ""){
  document.getElementById("errorSpan").innerHTML="";
  document.getElementById("username").focus() ;
  document.getElementById("error_password").innerHTML = "";
- document.getElementById("error_username").innerHTML = "用户名不能为空！";
+ document.getElementById("error_username").innerHTML = "username can not be blank";
  return false ;
  }
 }
