@@ -195,7 +195,7 @@ HAFlow.Main.prototype.openoozie = function() {
 
 HAFlow.Main.prototype.runFlow = function(flowId) {
 	var _currentInstance = this;
-	/*$.ajax({
+	$.ajax({
 		url : _currentInstance.basePath + "flow/" + flowId,
 		type : "PUT",
 		dataType : "json",
@@ -203,7 +203,7 @@ HAFlow.Main.prototype.runFlow = function(flowId) {
 		data : JSON.stringify(_currentInstance.flows[flowId]),
 		success : function(data, status) {
 			HAFlow.showDialog("Save Flow", "Flow saved.");
-			_currentInstance.refreshFlowList();*/
+			_currentInstance.refreshFlowList();
 			$.ajax({
 				url : _currentInstance.basePath + "run/" + flowId,
 				type : "POST",
@@ -219,12 +219,12 @@ HAFlow.Main.prototype.runFlow = function(flowId) {
 							"An error occurred while running flow: " + error);
 				}
 			});
-		/*},
+		},
 		error : function(request, status, error) {
 			HAFlow.showDialog("Error", "An error occurred while saving flow: "
 					+ error);
 		}
-	});*/
+	});
 };
 
 // Flow Helper
@@ -1032,7 +1032,6 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 				dojo.byId("user_email_text_box").innerHTML=data.email;
 				dojo.byId("user_space_text_box").innerHTML=data.space;
 				dojo.byId("user_used_text_box").innerHTML=data.usedspace;
-				// dojo.parser.parse(userDialog);
 				userDialog.show();
 
 			},
@@ -1207,7 +1206,8 @@ HAFlow.Main.prototype.initHdfsFileListTree = function() {
 							if(result.total==0)
 								{
 								dojo.io.iframe.send({
-								    form: "hdfsfilepath", //某锟斤拷form元锟截帮拷锟斤拷募锟铰凤拷锟�								    handleAs: "xml", //锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷html页锟斤拷
+								    form: "hdfsfilepath", 								    
+								    handleAs: "xml", 
 								    url:_currentInstance.basePath+"/hdfs/upload?remotePath="+path,
 								    load: function(response){
 									    	var success = response.getElementsByTagName("success")[0].childNodes[0].nodeValue;
@@ -1225,10 +1225,10 @@ HAFlow.Main.prototype.initHdfsFileListTree = function() {
 									    		}								    		
 									    	else
 									    		HAFlow.showDialog("Upload", "Upload failure.");		
-								    }, //锟结交锟缴癸拷
+								    }, 
 								    error: function(e){
 										HAFlow.showDialog("Upload", "Upload failure.");
-								    }//锟结交失锟斤拷
+								    }
 								});
 								}
 							else{
@@ -1371,9 +1371,9 @@ HAFlow.Main.prototype.initHdfsFileListTree = function() {
 				var isDirectory=tn.item.isDirectory;
 				if(isDirectory==false)
 				{
-			       var form = $("<form>");   //锟斤拷锟斤拷一锟斤拷form锟�
+			       var form = $("<form>");   
 
-			       form.attr('style','display:none');   //锟斤拷form锟�锟斤拷锟斤拷硬锟窖拷锟斤拷锟�
+			       form.attr('style','display:none');   
 			       form.attr('target','');
 
 			       form.attr('method','post');
@@ -1399,11 +1399,11 @@ HAFlow.Main.prototype.initHdfsFileListTree = function() {
 
 			       input2.attr('value',name); 
 
-			       $('body').append(form);  //锟斤拷锟�锟斤拷锟斤拷锟斤拷web锟斤拷
+			       $('body').append(form);  
 
-			       form.append(input1);   //锟斤拷锟斤拷询锟斤拷锟斤拷丶锟斤拷峤伙拷锟斤拷?锟斤拷
+			       form.append(input1);   
 			       form.append(input2); 
-			       form.submit();   //锟�锟结交
+			       form.submit();   
 					$("#form1").ajaxForm(function(){
 						HAFlow.showDialog("Download", "Succeed to download it.");
 					});
