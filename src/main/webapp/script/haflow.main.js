@@ -1,4 +1,5 @@
 dojo.require("dojo.dom");
+dojo.require("dojo.aspect");
 dojo.require("dojo.on");
 dojo.require("dojo.json");
 dojo.require("dojo.mouse");
@@ -20,10 +21,12 @@ dojo.require("dijit.PopupMenuBarItem");
 dojo.require("dijit.TitlePane");
 dojo.require("dijit.Toolbar");
 dojo.require("dijit.Tree");
+dojo.require("dijit.tree.dndSource");
 dojo.require("dijit.registry");
 dojo.require("dijit.form.Form");
 
 var flow;
+var watchHandle;
 
 dojo.ready(function() {
 	flow = new HAFlow.Main(new HAFlow.UI());
@@ -33,8 +36,8 @@ dojo.ready(function() {
 HAFlow.Main = function(ui) {
 	this.basePath = dojo.byId("basePath").value;
 	this.ui = ui;
-	this.rootPath = "hdfs://133.133.2.150:9000/user/root";
-	this.hdfspath=null;
+	this.rootPath = "hdfs://133.133.2.150:9000/user/root/" + username;
+	this.hdfspath = null;
 };
 
 // Flow
@@ -169,6 +172,54 @@ HAFlow.Main.prototype.openoozie = function() {
 							});
 					var contentPaneContainer = new dijit.layout.TabContainer({
 						// id : "ooziecontent",
+						region : "center",
+						splitter : "true",
+					});
+
+					_currentInstance.ui.mainoozieContainer
+							.removeChild(_currentInstance.ui.leadingContainer);
+					_currentInstance.ui.mainoozieContainer
+							.removeChild(_currentInstance.ui.trailingContainer);
+					_currentInstance.ui.mainoozieContainer
+							.removeChild(_currentInstance.ui.centerContainerParent);
+					contentPaneContainer.addChild(contentPane);
+					contentPaneContainer.selectChild(contentPane);
+					contentPaneContainer.startup();
+					_currentInstance.ui.mainoozieContainer
+							.addChild(contentPaneContainer);
+
+				},
+				error : function(request, status, error) {
+					HAFlow.showDialog("Error",
+							"An error occurred while opening: " + error);
+				}
+			});
+};
+
+HAFlow.Main.prototype.openhive = function() {
+	var _currentInstance = this;
+	$
+			.ajax({
+				url : _currentInstance.basePath + "hive/",
+				type : "Post",
+				success : function(data, status) {
+					var contentPane = new dijit.layout.ContentPane(
+							{
+								title : "hive",
+								content : data,
+								closable : true,
+								onClose : function() {
+									_currentInstance.ui.mainoozieContainer
+											.addChild(_currentInstance.ui.leadingContainer);
+									_currentInstance.ui.mainoozieContainer
+											.addChild(_currentInstance.ui.trailingContainer);
+									_currentInstance.ui.mainoozieContainer
+											.addChild(_currentInstance.ui.centerContainerParent);
+									_currentInstance.ui.mainoozieContainer
+											.removeChild(contentPaneContainer);
+								}
+							});
+					var contentPaneContainer = new dijit.layout.TabContainer({
 						region : "center",
 						splitter : "true",
 					});
@@ -455,8 +506,9 @@ HAFlow.Main.prototype.doAddModule = function(instance, flowId, moduleId, left,
 };
 
 // HDFS
-HAFlow.Main.prototype.getHdfsFile = function(path, fileName) {
-	_currentInstance=this;
+HAFlow.Main.prototype.getHdfsFile = function(path, fileName, startline) {
+	var _currentInstance = this;
+	var url = path + "/" + fileName;
 	$.ajax({
 		url : this.basePath + "hdfs/file",
 		type : "GET",
@@ -466,21 +518,77 @@ HAFlow.Main.prototype.getHdfsFile = function(path, fileName) {
 			fileName : fileName
 		},
 		success : function(data, status) {
-			var contentPane = new dijit.layout.ContentPane({
-				id : data.path,
-				title : data.filename,
-				content : data.content,
-				closable : true,
-			});
-			_currentInstance.ui.centerContainer.addChild(contentPane);
-			_currentInstance.ui.centerContainer.selectChild(dijit
-					.byId(data.path));
+			var content = data.content;
+			content = content.replace(/\r\n/ig, "<br>");
+			var length = content.split("<br>").length;
+			if (length < startline)
+				HAFlow.showDialog("Error", "It has only " + length + "line!");
+			else {
+				var tmp = content;
+				var count = 0;
+				for ( var i = 0; i < startline; i++) {
+					var start = tmp.indexOf("<br>");
+					tmp = tmp.slice(start + 4);
+				}
+				content = tmp;
+				if (length - startline + 1 > 100) {
+					for ( var i = 0; i < 100; i++) {
+						var start = tmp.indexOf("<br>");
+						tmp = tmp.slice(start + 4);
+						count = start + count + 4;
+					}
+					content = content.substring(0, count);
+				}
+				var contentPane = new dijit.layout.ContentPane({
+					id : "flowContainerPane_" + url,
+					title : fileName,
+					content : "<div id=\"flowContainer_" + url + "\">"
+							+ content + "</div>",
+					closable : true,
+					onClose : function() {
+						dijit.registry.remove("flowContainerPane_" + url);
+						return true;
+					}
+				});
+				_currentInstance.ui.centerContainer.addChild(contentPane);
+				watchHandle.unwatch();
+				_currentInstance.ui.centerContainer.selectChild(dijit
+						.byId("flowContainerPane_" + url));
+			}
 		},
 		error : function(request, status, error) {
 			HAFlow.showDialog("Error",
 					"An error occurred while reading hdfs file: " + error);
 		}
 	});
+};
+
+HAFlow.Main.prototype.getHdfsPicture = function(path, fileName) {
+	var url = this.basePath + "hdfs/picture" + "?path=" + path + "&fileName="
+			+ fileName;
+	if (dijit.byId(url) == null) {
+		var text = "";
+		text += "<div id=\"flowContainer_" + url + "\"><img src=\"" + url
+				+ "\"/>";
+		text += "</div>";
+		var contentPane = new dijit.layout.ContentPane({
+			id : "flowContainerPane_" + path + "/" + fileName,
+			title : fileName,
+			content : text,
+			closable : true,
+			onClose : function() {
+				dijit.registry.remove("flowContainerPane_" + path + "/"
+						+ fileName);
+				return true;
+			}
+		});
+		this.ui.centerContainer.addChild(contentPane);
+		watchHandle.unwatch();
+		this.ui.centerContainer.selectChild(dijit.byId("flowContainerPane_"
+				+ path + "/" + fileName));
+	} else
+		this.ui.centerContainer.selectChild(dijit.byId("flowContainerPane_"
+				+ url + "/" + fileName));
 };
 
 HAFlow.Main.prototype.getHdfsFileList = function(path) {
@@ -494,6 +602,7 @@ HAFlow.Main.prototype.getHdfsFileList = function(path) {
 		},
 		success : function(data, status) {
 			_currentInstance.refreshHdfsFileList(_currentInstance, path, data);
+
 		},
 		error : function(request, status, error) {
 			HAFlow.showDialog("Error",
@@ -504,9 +613,10 @@ HAFlow.Main.prototype.getHdfsFileList = function(path) {
 
 HAFlow.Main.prototype.refreshHdfsFileList = function(instance, parentPath, data) {
 	var i;
+//	signal.remove();
 	for (i = 0; i < data.files.length; i++) {
 		this.hdfsFileListStore.put({
-			id:parentPath + "/" + data.files[i].name,
+			id : parentPath + "/" + data.files[i].name,
 			name : data.files[i].name,
 			isDirectory : data.files[i].directory,
 			path : parentPath + "/" + data.files[i].name,
@@ -516,6 +626,30 @@ HAFlow.Main.prototype.refreshHdfsFileList = function(instance, parentPath, data)
 			instance.getHdfsFileList(parentPath + "/" + data.files[i].name);
 		}
 	}
+};
+
+HAFlow.Main.prototype.changepath = function(instance, child, newparentpath,
+		newhfdname) {
+	instance.hdfsFileListStore.put({
+		id : newparentpath + "/" + newhfdname,
+		name : newhfdname,
+		isDirectory : child.isDirectory,
+		path : newparentpath + "/" + newhfdname,
+		parentPath : newparentpath,
+	});
+	var tmp = newparentpath + "/" + newhfdname;
+	var newparentpath = tmp;
+	var items = instance.hdfsFileListStore.query({
+		parentPath : child.path
+	});
+	if (child.isDirectory == true) {
+		for ( var i = 0; i < items.total; i++) {
+			var childitem = items[i];
+			var newhfdname = childitem.name;
+			instance.changepath(instance, childitem, newparentpath, newhfdname);
+		}
+	}
+	instance.hdfsFileListStore.remove(child.id);
 };
 
 // Paint Helper
@@ -559,9 +693,8 @@ HAFlow.Main.prototype.addEndpoints = function(instance, flowId, nodeId, module,
 HAFlow.Main.prototype.init = function() {
 	this.flows = {};
 	this.jsPlumb = {};
-
 	this.initUserInterface();
-	this.initFlowContainer();
+
 	this.initData();
 };
 
@@ -608,7 +741,6 @@ HAFlow.Main.prototype.initNodes = function(flowId) {
 
 HAFlow.Main.prototype.initData = function() {
 	this.initFlowListData();
-	this.getHdfsFileList(this.rootPath);
 };
 
 HAFlow.Main.prototype.initFlowListData = function() {
@@ -655,6 +787,7 @@ HAFlow.Main.prototype.initUserInterface = function() {
 	this.initToolbar();
 	this.initBottomTabs();
 	this.initFlowList();
+	this.initFlowContainer();
 	this.initHdfsFileList();
 	this.ui.refresh();
 };
@@ -856,18 +989,36 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 	this.menu.oozieMenu = new dijit.Menu({
 		id : "oozieMenu"
 	});
-	this.menu.oozieMenu.openMenuItem = new dijit.MenuItem({
-		id : "openMenuItem",
+
+	this.menu.oozieMenu.openoozieMenuItem = new dijit.MenuItem({
+		id : "openoozieMenuItem",
 		label : "Open"
 	});
-	this.menu.oozieMenu.closeMenuItem = new dijit.MenuItem({
-		id : "closeMenuItem",
+	this.menu.oozieMenu.closeoozieMenuItem = new dijit.MenuItem({
+		id : "closeoozieMenuItem",
 		label : "Close",
 		disabled : true
 	});
-	this.menu.oozieMenu.addChild(this.menu.oozieMenu.openMenuItem);
-	this.menu.oozieMenu.addChild(this.menu.oozieMenu.closeMenuItem);
+	this.menu.oozieMenu.addChild(this.menu.oozieMenu.openoozieMenuItem);
+	this.menu.oozieMenu.addChild(this.menu.oozieMenu.closeoozieMenuItem);
 	this.menu.oozieMenu.startup();
+
+	this.menu.hiveMenu = new dijit.Menu({
+		id : "hiveMenu"
+	});
+
+	this.menu.hiveMenu.openhiveMenuItem = new dijit.MenuItem({
+		id : "openhiveMenuItem",
+		label : "Open"
+	});
+	this.menu.hiveMenu.closehiveMenuItem = new dijit.MenuItem({
+		id : "closehiveMenuItem",
+		label : "Close",
+		disabled : true
+	});
+	this.menu.hiveMenu.addChild(this.menu.hiveMenu.openhiveMenuItem);
+	this.menu.hiveMenu.addChild(this.menu.hiveMenu.closehiveMenuItem);
+	this.menu.hiveMenu.startup();
 
 	this.ui.mainMenu.addChild(new dijit.PopupMenuBarItem({
 		id : "flowPopupMenuBarItem",
@@ -899,28 +1050,32 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 		label : "oozie",
 		popup : this.menu.oozieMenu
 	}));
-	//userInformation
+	this.ui.mainMenu.addChild(new dijit.PopupMenuBarItem({
+		id : "hivePopupMenuBarItem",
+		label : "hive",
+		popup : this.menu.hiveMenu
+	}));
+	// userInformation
 	this.ui.mainMenu.addChild(new dijit.layout.ContentPane({
 		id : "tipContentPane",
 		title : "tip",
 		content : "|&nbsp&nbsp<a href=quit><font size=2px>quit</font></a>",
 		style : "float:right;"
 	}));
-	
-	this.menu.userMenu=new dijit.Menu({
-		id: "userMenu"
+
+	this.menu.userMenu = new dijit.Menu({
+		id : "userMenu"
 	});
-	this.menu.userMenu.userInforMenuItem=new dijit.MenuItem({
-		id: "userInforMenuItem",
-		label:"user information"
+	this.menu.userMenu.userInforMenuItem = new dijit.MenuItem({
+		id : "userInforMenuItem",
+		label : "user information"
 	});
 	this.menu.userMenu.addChild(this.menu.userMenu.userInforMenuItem);
 	this.menu.userMenu.startup();
-	
+
 	this.ui.mainMenu.addChild(new dijit.PopupMenuBarItem({
 		id : "usernameContentPane",
-		label : "<a href><font color=red size=2px>" + username
-				+ "</font></a>",
+		label : "<a href><font color=red size=2px>" + username + "</font></a>",
 		style : "float:right;",
 		popup : this.menu.userMenu
 	}));
@@ -932,14 +1087,14 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 	}));
 
 	var _currentInstance = this;
-	
-    //new dialog
-	var user=null;
+
+	// new dialog
+	var user = null;
 	var text = "";
 	text += "<div >";
 	text += "<div ><span style=\"float: left; width: 80px;\"><strong>Name:</strong></span>";
 	text += "<span id=\"user_name_text_box\" ></span></div>";
-	
+
 	text += "<div ><span style=\"float: left; width: 80px;\"><strong>Space:</strong></span>";
 	text += "<span id=\"user_space_text_box\"></span></div>";
 	text += "<div class=\"field\"><span style=\"float: left; width: 80px;\"><strong>UsedSpace:</strong></span>";
@@ -951,73 +1106,74 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 	text += "<div><span id=\"edit_user_button\" ></span>";
 	text += "<span id=\"save_user_button\" ></span></div>";
 	text += "</div>";
-	userForm=new dijit.form.Form({
-		innerHTML:text
+	userForm = new dijit.form.Form({
+		innerHTML : text
 	});
 	userForm.startup();
 	userDialog = new dijit.Dialog({
-	    title: "User Infomation",
-	    style: "width: 400px"
+		title : "User Infomation",
+		style : "width: 400px"
 	});
 	userDialog.addChild(userForm);
 	var userRealTextBox = new dijit.form.TextBox({
 		id : "userRealTextBox",
 		style : "width:200px;"
 	});
-	
-	var userEmailTextBox =new dijit.form.TextBox({
-		id:"userEmailTextBox",
-		style:"width:200px;"
+
+	var userEmailTextBox = new dijit.form.TextBox({
+		id : "userEmailTextBox",
+		style : "width:200px;"
 	});
-	
-	
-	var button1=new dijit.form.Button({
-		label:"edit",
-		onClick: function(){
-			dojo.byId("user_real_text_box").innerHTML='';
-			dojo.byId("user_email_text_box").innerHTML='';
+
+	var button1 = new dijit.form.Button({
+		label : "edit",
+		onClick : function() {
+			dojo.byId("user_real_text_box").innerHTML = '';
+			dojo.byId("user_email_text_box").innerHTML = '';
 			userRealTextBox.placeAt(dojo.byId("user_real_text_box"));
 			userRealTextBox.startup();
 			userEmailTextBox.placeAt(dojo.byId("user_email_text_box"));
 			userEmailTextBox.startup();
-			
+
 		}
 	});
 	button1.placeAt(dojo.byId("edit_user_button"));
 	button1.startup();
-	
+
 	var button = new dijit.form.Button({
 		label : "Save",
 		onClick : function() {
-			user.realname=userRealTextBox.get("value");
-			user.email=userEmailTextBox.get("value");
-			saveUser(user,userid);
+			user.realname = userRealTextBox.get("value");
+			user.email = userEmailTextBox.get("value");
+			saveUser(user, userid);
 		}
 	});
 	button.placeAt(dojo.byId("save_user_button"));
 	button.startup();
-	saveUser=function(user,userid){
+	saveUser = function(user, userid) {
 		$.ajax({
-			url : _currentInstance.basePath + "user/update/"+userid,
+			url : _currentInstance.basePath + "user/update/" + userid,
 			type : "Post",
 			dataType : "json",
 			contentType : "application/json",
-			data:JSON.stringify(user),
-			success :function(data,status){
+			data : JSON.stringify(user),
+			success : function(data, status) {
 				userDialog.hide();
-				HAFlow.showDialog("Success", "Successfully update user information! ");
-				
+				HAFlow.showDialog("Success",
+						"Successfully update user information! ");
+
 			},
 			error : function(request, status, error) {
 				userDialog.hide();
-				HAFlow.showDialog("Error", "An error occurred while updating user information: "
-						+ error);
+				HAFlow.showDialog("Error",
+						"An error occurred while updating user information: "
+								+ error);
 			}
 		});
 	};
 	dojo.connect(dijit.byId("userInforMenuItem"), "onClick", function() {
 		$.ajax({
-			url : _currentInstance.basePath + "user/get/"+userid,
+			url : _currentInstance.basePath + "user/get/" + userid,
 			type : "GET",
 			cache : false,
 			dataType : "json",
@@ -1026,7 +1182,7 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 				dojo.byId("user_name_text_box").innerHTML = data.name;
 				userRealTextBox.set("value", data.realname);
 				userEmailTextBox.set("value", data.email);
-				if(data.realname==null) tmp="尚未填写";
+				if(data.realname==null) tmp="blank";
 				else tmp=data.realname
 				dojo.byId("user_real_text_box").innerHTML=tmp;
 				dojo.byId("user_email_text_box").innerHTML=data.email;
@@ -1055,11 +1211,16 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 	dojo.connect(this.menu.runMenu.runMenuItem, "onClick", function(event) {
 		_currentInstance.runFlow(_currentInstance.currentFlowId);
 	});
-	dojo.connect(this.menu.oozieMenu.openMenuItem, "onClick", function(event) {
+	dojo.connect(this.menu.oozieMenu.openoozieMenuItem, "onClick", function(
+			event) {
 		_currentInstance.openoozie();
 	});
-
-	dojo.connect(this.menu.runMenu.runHistoryMenuItem, "onClick", function(event){
+	dojo.connect(this.menu.hiveMenu.openhiveMenuItem, "onClick",
+			function(event) {
+				_currentInstance.openhive();
+			});
+	dojo.connect(this.menu.runMenu.runHistoryMenuItem, "onClick", function(
+			event) {
 		_currentInstance.showRunHistory(_currentInstance.currentFlowId);
 	});
 };
@@ -1120,6 +1281,7 @@ HAFlow.Main.prototype.initHdfsFileList = function() {
 	});
 	this.ui.leadingContainer.addChild(hdfsFileListContentPane);
 	this.initHdfsFileListStore();
+	this.getHdfsFileList(this.rootPath);
 	this.initHdfsFileListTree();
 };
 
@@ -1129,7 +1291,8 @@ HAFlow.Main.prototype.initHdfsFileListStore = function() {
 			id : "root",
 			name : "Root(" + this.rootPath + ")",
 			isDirectory : true,
-			path : this.rootPath
+			path : this.rootPath,
+			parentPath : null
 		} ],
 		getChildren : function(object) {
 			return this.query({
@@ -1149,12 +1312,69 @@ HAFlow.Main.prototype.initHdfsFileListTree = function() {
 			return item.isDirectory;
 		}
 	});
+
 	var tree = new dijit.Tree({
-		model : treeModel
+		model : treeModel,
+		dndController : dijit.tree.dndSource
 	}, dojo.create("div", {
 		id : this.hdfsFileListTreeId,
 	}, this.hdfsFileListContainerId));
 	var _currentInstance = this;
+//	var foo = new dijit.tree.dndSource(/* dijit.Tree */ tree, /* dijit.tree.__SourceArgs */ params);
+
+	dojo.aspect.around(this.hdfsFileListStore, "put", function(originalPut) {	
+		return function(obj, options) {
+			 if(options && options.parent){
+//				 if(options.parent.id!=obj.parentPath)
+//					 {
+	                 obj.parentPath = options.parent.id;
+	                 var frompath=obj.path;
+	                 var topath=obj.parentPath+"/"+obj.name;
+	                 var filename=obj.name;
+	                 alert(frompath);
+	                 alert(topath);
+	                 alert(filename);
+	                 $.ajax({
+	         			url : _currentInstance.basePath + "hdfs/movefile?frompath="+frompath+"&topath="+topath+"&filename="+filename,
+	         			type : "GET",	       
+	         			dataType : "json",
+						contentType : "application/json",
+						data : JSON.stringify({}),
+	         			success : function(data, status) {
+	         				if(data==true)
+							HAFlow
+							.showDialog(
+									"Move",
+									"Move success.");
+	         				else
+								HAFlow
+								.showDialog(
+										"Move",
+										"Move failure.");
+	         				},
+	                 	error:function(e){
+							HAFlow
+									.showDialog(
+											"Move",
+											"Move failure.");
+	                 	}
+	                 	});
+//					 }
+//				 else
+//				 {
+//					 flow.hdfsFileListStore.put({
+//							id : obj.id,
+//							name : obj.name,
+	                 
+//							isDirectory : obj.directory,
+//							path : obj.path,
+//							parentPath : obj.parentPath
+//						});
+//					 }
+             }
+			return originalPut.call(flow.hdfsFileListStore, obj, options);
+		};
+	});
 
 	this.menu.treeMenu = new dijit.Menu({
 		id : "treeMenu",
@@ -1178,28 +1398,43 @@ HAFlow.Main.prototype.initHdfsFileListTree = function() {
 		id : "UploadMenuItem",
 		label : "Upload files to Hdfs"
 	});
+
+	this.menu.treeMenu.RenameMenuItem = new dijit.MenuItem({
+		id : "RenameMenuItem",
+		label : "Rename"
+	});
+
 	this.menu.treeMenu.addChild(this.menu.treeMenu.DownloadMenuItem);
 	this.menu.treeMenu.addChild(this.menu.treeMenu.CreateMenuItem);
 	this.menu.treeMenu.addChild(this.menu.treeMenu.DeleteMenuItem);
 	this.menu.treeMenu.addChild(this.menu.treeMenu.UploadMenuItem);
+	this.menu.treeMenu.addChild(this.menu.treeMenu.RenameMenuItem);
 
-	dojo.connect(
+	dojo
+			.connect(
+
 					this.menu.treeMenu.UploadMenuItem,
 					"onClick",
 					function() {
 						var tn = dijit.byNode(this.getParent().currentTarget);
-						var path=tn.item.path;
+						var path = tn.item.path;
 						alert(path);
-						var isDirectory=tn.item.isDirectory;
-						if(isDirectory==true)
-							{
-							var dialog = new dijit.Dialog({
-								title : "upload",
-								content : "<html><body><form id=\"hdfsfilepath\" action=\"hdfs/upload\" enctype=\"multipart/form-data\" method=\"post\">"
-									+ "<input type=\"file\" name=\"file\" id=\"file\" />"
-									+ " <button type=\"button\" id=\"upload_btn\">submit</button></form><div id=\"debug\"><div></body></html>",
-								style : "width:400px"
-							});
+						var isDirectory = tn.item.isDirectory;
+						if (isDirectory == true) {
+							var dialog = new dijit.Dialog(
+									{
+										title : "upload",
+										content : "<form id=\"hdfsfilepath\" action=\"hdfs/upload\" enctype=\"multipart/form-data\" method=\"post\">"
+												+ "<input type=\"file\" name=\"file\" id=\"file\" />"
+												+ "<input type=\"hidden\" name=\"remotePath\" value="
+												+ "\""
+												+ path
+												+ "\">"
+
+												+ " <button type=\"button\" id=\"upload_btn\">submit</button></form><div id=\"debug\"><div>",
+										style : "width:400px"
+									});
+
 							dialog.show();
 							dojo.connect(dojo.byId("upload_btn"),"onclick",function(){
 							var filename = document.getElementById("file").value;
@@ -1207,8 +1442,8 @@ HAFlow.Main.prototype.initHdfsFileListTree = function() {
 							if(result.total==0)
 								{
 								dojo.io.iframe.send({
-								    form: "hdfsfilepath", //ĳ��formԪ�ذ���ļ�·��
-								    handleAs: "xml", //������������htmlҳ��
+								    form: "hdfsfilepath", 								    
+								    handleAs: "xml", 
 								    url:_currentInstance.basePath+"/hdfs/upload?remotePath="+path,
 								    load: function(response){
 									    	var success = response.getElementsByTagName("success")[0].childNodes[0].nodeValue;
@@ -1226,10 +1461,10 @@ HAFlow.Main.prototype.initHdfsFileListTree = function() {
 									    		}								    		
 									    	else
 									    		HAFlow.showDialog("Upload", "Upload failure.");		
-								    }, //�ύ�ɹ�
+								    }, 
 								    error: function(e){
 										HAFlow.showDialog("Upload", "Upload failure.");
-								    }//�ύʧ��
+								    }
 								});
 								}
 							else{
@@ -1242,114 +1477,233 @@ HAFlow.Main.prototype.initHdfsFileListTree = function() {
 							HAFlow.showDialog("Upload", "It's a file.Can't upload to it.");
 						
 
+																}// �ύʧ��
+															});
+												} else {
+													HAFlow.showDialog("Upload",
+															"File exits.");
+												}
+												dialog.destroy();
+											});
+						} else
+							HAFlow.showDialog("Upload",
+									"It's a file.Can't upload to it.");
 					});
-	dojo.connect(
-			this.menu.treeMenu.DeleteMenuItem,
-			"onClick",
-			function() {
-				var tn = dijit.byNode(this.getParent().currentTarget);
-				var path=tn.item.path;
-				var isDirectory=tn.item.isDirectory;
-				if(isDirectory==true)
-				$.ajax({
-					url : _currentInstance.basePath+"hdfs/deletedirectory?remotepath="+path,
-					type : "GET",
-					dataType : "json",
-					contentType : "application/json",
-					data : JSON.stringify({}),
-					success : function(data, status) {
-						if(data.success=true)
-							{
-							 HAFlow.showDialog("Remove HdfsFile Directory", "HdfsFile Directory removed.");
-							}
-						else
-							HAFlow.showDialog("Remove HdfsFile Directory", "HdfsFile Directory can't be removed.");
-						var file_item=_currentInstance.hdfsFileListStore.query({parentPath:path});
-						var i;
-						for(i=0;i<file_item.length;i++)
-							{
-							_currentInstance.hdfsFileListStore.remove(file_item[i].id);
-							}
-						var directory_item=_currentInstance.hdfsFileListStore.query({path:path});
-						_currentInstance.hdfsFileListStore.remove(directory_item[0].id);
-					},
-					error : function(request, status, error) {
-						HAFlow.showDialog("Error",
-								"An error occurred while removing HdfsFile Directory: " + error);
-					}
-				});
-				else
-					$.ajax({
-						url : _currentInstance.basePath+"hdfs/deletefile?remotepath="+path,
-						type : "GET",
-						dataType : "json",
-						contentType : "application/json",
-						data : JSON.stringify({}),
-						success : function(data, status) {
-							if(data.success=true)
+	dojo
+			.connect(
+					this.menu.treeMenu.DeleteMenuItem,
+					"onClick",
+					function() {
+						var tn = dijit.byNode(this.getParent().currentTarget);
+						var path = tn.item.path;
+						var isDirectory = tn.item.isDirectory;
+						var dialog = new dijit.Dialog(
 								{
-								 HAFlow.showDialog("Remove HdfsFile", "HdfsFile removed.");
-								}
-							else
-								HAFlow.showDialog("Remove HdfsFile", "HdfsFile can't be removed.");
-							var item=_currentInstance.hdfsFileListStore.query({path:path});
-							_currentInstance.hdfsFileListStore.remove(item[0].id);
-						},
-						error : function(request, status, error) {
-							HAFlow.showDialog("Error",
-									"An error occurred while removing HdfsFile: " + error);
-						}
+									id : "dialog_assure",
+									title : "Delete",
+									content : "<div>Are you sure to delete?<br><button type=\"button\" id=\"assure_btn\">Yes</button><button type=\"button\" id=\"cancel_btn\">No</button></br></div>",
+									style : "width:200px"
+								});
+						alert(dojo.byId("assure_btn"));
+						dojo
+								.connect(
+										dojo.byId("assure_btn"),
+										"onclick",
+										function() {
+											if (isDirectory == true)
+												$
+														.ajax({
+															url : _currentInstance.basePath
+																	+ "hdfs/deletedirectory?remotepath="
+																	+ path,
+															type : "GET",
+															dataType : "json",
+															contentType : "application/json",
+															data : JSON
+																	.stringify({}),
+															success : function(
+																	data,
+																	status) {
+																if (data.success = true) {
+																	HAFlow
+																			.showDialog(
+																					"Remove HdfsFile Directory",
+																					"HdfsFile Directory removed.");
+																} else
+																	HAFlow
+																			.showDialog(
+																					"Remove HdfsFile Directory",
+																					"HdfsFile Directory can't be removed.");
+																var file_item = _currentInstance.hdfsFileListStore
+																		.query({
+																			parentPath : path
+																		});
+																var i;
+																for (i = 0; i < file_item.length; i++) {
+																	_currentInstance.hdfsFileListStore
+																			.remove(file_item[i].id);
+																}
+																var directory_item = _currentInstance.hdfsFileListStore
+																		.query({
+																			path : path
+																		});
+																_currentInstance.hdfsFileListStore
+																		.remove(directory_item[0].id);
+															},
+															error : function(
+																	request,
+																	status,
+																	error) {
+																HAFlow
+																		.showDialog(
+																				"Error",
+																				"An error occurred while removing HdfsFile Directory: "
+																						+ error);
+															}
+														});
+											else
+												$
+														.ajax({
+															url : _currentInstance.basePath
+																	+ "hdfs/deletefile?remotepath="
+																	+ path,
+															type : "GET",
+															dataType : "json",
+															contentType : "application/json",
+															data : JSON
+																	.stringify({}),
+															success : function(
+																	data,
+																	status) {
+																if (data.success = true) {
+																	HAFlow
+																			.showDialog(
+																					"Remove HdfsFile",
+																					"HdfsFile removed.");
+																	_currentInstance.ui.centerContainer
+																			.removeChild(dijit
+																					.byId("flowContainerPane_"
+																							+ path));
+																} else
+																	HAFlow
+																			.showDialog(
+																					"Remove HdfsFile",
+																					"HdfsFile can't be removed.");
+																var item = _currentInstance.hdfsFileListStore
+																		.query({
+																			path : path
+																		});
+																_currentInstance.hdfsFileListStore
+																		.remove(item[0].id);
+															},
+															error : function(
+																	request,
+																	status,
+																	error) {
+																HAFlow
+																		.showDialog(
+																				"Error",
+																				"An error occurred while removing HdfsFile: "
+																						+ error);
+															}
+														});
+											dialog.destroy();
+										});
+						dojo.connect(dojo.byId("cancel_btn"), "onclick",
+								function() {
+									dialog.destroy();
+								});
+						dialog.show();
 					});
 
-			});
-	dojo.connect(
-			this.menu.treeMenu.CreateMenuItem,
-			"onClick",
-			function() {
-				var tn = dijit.byNode(this.getParent().currentTarget);
-				var path=tn.item.path;
-				var isDirectory=tn.item.isDirectory;
-				if(isDirectory==true)
-					{
-					HAFlow
-					.showDialog(
-							"create new directory",
-							"<html><body><form id=\"hdfsfilepath\" method=\"post\">"
-									+ "new name:<input type=\"text\" id=\"directoryname\" name=\"directoryname\"> </input>"
-									+ " <button type=\"button\" id=\"create_btn\">submit</button></form></body></html>");
-					dojo.connect(dojo.byId("create_btn"),"onclick",function(){	
-						var directoryname = document.getElementById("directoryname").value;
-						var result=_currentInstance.hdfsFileListStore.query({path:path+"/"+directoryname});
-						if(result.total==0)
-							{
-							$.ajax({
-								url : _currentInstance.basePath+"hdfs/createdirectory?remotepath="+path+"&directoryname="+dojo.byId("directoryname").value,
-								type : "GET",
-								dataType : "json",
-								contentType : "application/json",
-								data : JSON.stringify({}),
-								success : function(data, status) {
-									if(data.success=true)
-										{
-										 HAFlow.showDialog("Create HdfsFile Directory", "HdfsFile Directory created.");
-									    	_currentInstance.hdfsFileListStore.put({
-									    		id:path+"/"+data.directoryname,
-									    		name:data.directoryname,
-									    		isDirectory:true,
-									    		path:path+"/"+data.directoryname,
-									    		parentPath:path,
-									    	});	
-									    	
-										}
-									else
-										HAFlow.showDialog("Create HdfsFile Directory", "HdfsFile Directory can't be created.");
-								},
-								error : function(request, status, error) {
-									HAFlow.showDialog("Error",
-											"An error occurred while removing HdfsFile Directory: " + error);
-								}
-								});
-							}
+	dojo
+			.connect(
+					this.menu.treeMenu.CreateMenuItem,
+					"onClick",
+					function() {
+						var tn = dijit.byNode(this.getParent().currentTarget);
+						var path = tn.item.path;
+						var isDirectory = tn.item.isDirectory;
+						if (isDirectory == true) {
+							HAFlow
+									.showDialog(
+											"create new directory",
+											"<html><body><form id=\"hdfsfilepath\" method=\"post\">"
+													+ "new name:<input type=\"text\" id=\"directoryname\" name=\"directoryname\"> </input>"
+													+ " <button type=\"button\" id=\"create_btn\">submit</button></form></body></html>");
+							dojo
+									.connect(
+											dojo.byId("create_btn"),
+											"onclick",
+											function() {
+												var directoryname = document
+														.getElementById("directoryname").value;
+												var result = _currentInstance.hdfsFileListStore
+														.query({
+															path : path
+																	+ "/"
+																	+ directoryname
+														});
+												if (result.total == 0) {
+													$
+															.ajax({
+																url : _currentInstance.basePath
+																		+ "hdfs/createdirectory?remotepath="
+																		+ path
+																		+ "&directoryname="
+																		+ dojo
+																				.byId("directoryname").value,
+																type : "GET",
+																dataType : "json",
+																contentType : "application/json",
+																data : JSON
+																		.stringify({}),
+																success : function(
+																		data,
+																		status) {
+																	if (data.success = true) {
+																		HAFlow
+																				.showDialog(
+																						"Create HdfsFile Directory",
+																						"HdfsFile Directory created.");
+																		_currentInstance.hdfsFileListStore
+																				.put({
+																					id : path
+																							+ "/"
+																							+ data.directoryname,
+																					name : data.directoryname,
+																					isDirectory : true,
+																					path : path
+																							+ "/"
+																							+ data.directoryname,
+																					parentPath : path,
+																				});
+
+																	} else
+																		HAFlow
+																				.showDialog(
+																						"Create HdfsFile Directory",
+																						"HdfsFile Directory can't be created.");
+																},
+																error : function(
+																		request,
+																		status,
+																		error) {
+																	HAFlow
+																			.showDialog(
+																					"Error",
+																					"An error occurred while removing HdfsFile Directory: "
+																							+ error);
+																}
+															});
+												} else {
+													HAFlow
+															.showDialog(
+																	"Create HdfsFile Directory",
+																	"HdfsFile Directory exits.");
+												}
+
+											});
 						else{
 							HAFlow.showDialog("Create HdfsFile Directory", "HdfsFile Directory exits.");
 						}
@@ -1372,10 +1726,9 @@ HAFlow.Main.prototype.initHdfsFileListTree = function() {
 				var isDirectory=tn.item.isDirectory;
 				if(isDirectory==false)
 				{
-			       var form = $("<form>");   //����һ��form�?
+			       var form = $("<form>");   
 
-			       form.attr('style','display:none');   //��form�?����Ӳ�ѯ����
-
+			       form.attr('style','display:none');   
 			       form.attr('target','');
 
 			       form.attr('method','post');
@@ -1401,37 +1754,199 @@ HAFlow.Main.prototype.initHdfsFileListTree = function() {
 
 			       input2.attr('value',name); 
 
-			       $('body').append(form);  //���?������web��
+			       $('body').append(form);  
 
-			       form.append(input1);   //����ѯ����ؼ��ύ���?��
+			       form.append(input1);   
 			       form.append(input2); 
-			       form.submit();   //�?�ύ
+			       form.submit();   
 					$("#form1").ajaxForm(function(){
 						HAFlow.showDialog("Download", "Succeed to download it.");
 					});
-				}
-				else
-					{
-					
-					HAFlow.showDialog("Download", "It's a directory.Can't download it.");
-					}
-				});
+		} else {
+
+			HAFlow
+					.showDialog("Download",
+							"It's a directory.Can't download it.");
+		}
+	});
+
+	dojo
+			.connect(
+					this.menu.treeMenu.RenameMenuItem,
+					"onClick",
+					function() {
+						if (dijit.byId("newname_btn") != null) {
+							dijit.registry.remove("newname_btn");
+						}
+						if (dijit.byId("newname") != null) {
+							dijit.registry.remove("newname");
+						}
+						var renamedialog = new dijit.Dialog(
+								{
+									title : "Rename",
+									content : "<html><body><form id=\"rename\" method=\"post\">"
+											+ "new name:<input type=\"text\" id=\"newname\" name=\"newname\"> </input>"
+											+ " <button type=\"button\" id=\"newname_btn\">submit</button></form></body></html>"
+								});
+						renamedialog.show();
+						var tn = dijit.byNode(this.getParent().currentTarget);
+						var path = tn.item.path;
+						var parentpath = tn.item.parentPath;
+						dojo
+								.connect(
+										dojo.byId("newname_btn"),
+										"onclick",
+										function() {
+											var newname = document
+													.getElementById("newname").value;
+											if (newname != null) {
+												var result = _currentInstance.hdfsFileListStore
+														.query({
+															path : path + "/"
+																	+ newname
+														});
+												var newpath = parentpath + "/"
+														+ newname;
+												alert(newpath);
+												if (result.total == 0) {
+													$
+															.ajax({
+																url : _currentInstance.basePath
+																		+ "hdfs/rename?path="
+																		+ path
+																		+ "&newpath="
+																		+ newpath,
+																type : "GET",
+																dataType : "json",
+																contentType : "application/json",
+																data : JSON
+																		.stringify({}),
+																success : function(
+																		data,
+																		status) {
+																	if (data.success = true) {
+																		HAFlow
+																				.showDialog(
+																						"Rename",
+																						"Succeed to rename.");
+																		var newparentpath = parentpath;
+																		var items = _currentInstance.hdfsFileListStore
+																				.query({
+																					path : path
+																				});
+																		var newhfdname = newname;
+																		var child = items[0];
+																		alert(newparentpath);
+																		alert(newhfdname);
+																		_currentInstance
+																				.changepath(
+																						_currentInstance,
+																						child,
+																						newparentpath,
+																						newhfdname);
+																	} else {
+																		HAFlow
+																				.showDialog(
+																						"Rename",
+																						"Can't rename.");
+																	}
+																},
+																error : function(
+																		request,
+																		status,
+																		error) {
+																	HAFlow
+																			.showDialog(
+																					"Error",
+																					"An error occurred while renaming: "
+																							+ error);
+																}
+															});
+												} else {
+													HAFlow.showDialog("Rename",
+															"It exits.");
+												}
+											}
+											renamedialog.destroy();
+										});
+					});
+
 	this.menu.treeMenu.startup();
 	tree.on("click", function(item) {
 		if (item.directory == true) {
 
-		}
-		else{
-			hdfspath=item.path;
-		}
-	}, true);
-	tree.on("dblclick", function(item) {
-		if (item.isDirectory == true) {
-
 		} else {
-			_currentInstance.getHdfsFile(item.parentPath, item.name);
+			hdfspath = item.path;
 		}
 	}, true);
+	var picture = new RegExp("^[A-Za-z0-9_]*\.jpg$");
+	var text = new RegExp("^[A-Za-z0-9_]*\.(txt|ini)$");
+	tree
+			.on(
+					"dblclick",
+					function(item) {
+						if (item.isDirectory == true) {
+
+						} else {
+							if (picture.test(item.name)) {
+								_currentInstance.getHdfsPicture(
+										item.parentPath, item.name);
+							} else if (text.test(item.name)) {
+								if (dijit.byId("setreadline_btn") != null) {
+									dijit.registry.remove("setreadline_btn");
+								}
+								if (dijit.byId("start") != null) {
+									dijit.registry.remove("start");
+								}
+								var setreadlinedialog = new dijit.Dialog(
+										{
+											title : "Set Read Line",
+											content : "<html><body><form id=\"setreadline\" method=\"post\">"
+													+ "start with line:<input type=\"text\" id=\"start\" name=\"newname\"> </input>"
+													+ " <button type=\"button\" id=\"setreadline_btn\">submit</button></form></body></html>"
+										});
+								setreadlinedialog.show();
+								dojo
+										.connect(
+												dojo.byId("setreadline_btn"),
+												"onclick",
+												function() {
+													var start = document
+															.getElementById("start").value - 1;
+													var url = item.parentPath
+															+ "/" + item.name;
+													if (dijit
+															.byId("flowContainerPane_"
+																	+ url) == null) {
+														_currentInstance
+																.getHdfsFile(
+																		item.parentPath,
+																		item.name,
+																		start);
+													} else {
+														_currentInstance.ui.centerContainer
+																.removeChild(dijit
+																		.byId("flowContainerPane_"
+																				+ url));
+														dijit.registry
+																.remove("flowContainerPane_"
+																		+ url);
+														_currentInstance
+																.getHdfsFile(
+																		item.parentPath,
+																		item.name,
+																		start);
+													}
+													setreadlinedialog.destroy();
+												});
+							}
+
+							else
+								HAFlow
+										.showDialog("Read file",
+												"Can't read it.");
+						}
+					}, true);
 
 	tree.startup();
 };
@@ -1482,6 +1997,13 @@ HAFlow.Main.prototype.initFlowListTree = function() {
 	});
 	tree.on("dblclick", function(item) {
 		if (item.node == true) {
+			watchHandle=_currentInstance.ui.centerContainer.watch("selectedChildWidget", function(name, from,
+					to) {
+				var flowId = to.domNode.id.replace("flowContainerPane_", "");
+				_currentInstance.currentFlowId = flowId;
+				_currentInstance.setupDroppable(flowId);
+				_currentInstance.paintFlow(flowId);
+			});
 			_currentInstance.loadFlow(item.id);
 		}
 	}, true);
@@ -1491,7 +2013,7 @@ HAFlow.Main.prototype.initFlowListTree = function() {
 
 HAFlow.Main.prototype.initFlowContainer = function() {
 	var _currentInstance = this;
-	this.ui.centerContainer.watch("selectedChildWidget", function(name, from,
+	watchHandle=this.ui.centerContainer.watch("selectedChildWidget", function(name, from,
 			to) {
 		var flowId = to.domNode.id.replace("flowContainerPane_", "");
 		_currentInstance.currentFlowId = flowId;
@@ -1777,7 +2299,7 @@ HAFlow.Main.prototype.onNodeClicked = function(instance, flowId, nodeId) {
 		var textBoxId = "flow_" + flowId + "_node_" + nodeId + "_"
 				+ module.configurations[i].key;
 		var divId = textBoxId + "_container";
-		var hdfspathButtonId=textBoxId+"_hdfspathButton";
+		var hdfspathButtonId = textBoxId + "_hdfspathButton";
 		form += "<div class=\"configuration-content\">";
 		if (module.configurations[i].type == "BOOLEAN") {
 			form += "<div class=\"configuration-content\"><span><strong>"
@@ -1787,7 +2309,9 @@ HAFlow.Main.prototype.onNodeClicked = function(instance, flowId, nodeId) {
 		} else {
 			form += ("<span><strong>" + module.configurations[i].displayName + "</strong></span>");
 			form += "<div class=\"configuration-content\"><span id=\"" + divId
-					+ "\" class=\"configuration-content\"></span><span id=\""+hdfspathButtonId+"\" class=\"configuration-content\"></div>";
+					+ "\" class=\"configuration-content\"></span><span id=\""
+					+ hdfspathButtonId
+					+ "\" class=\"configuration-content\"></div>";
 		}
 		form += "</div>";
 	}
@@ -1798,7 +2322,7 @@ HAFlow.Main.prototype.onNodeClicked = function(instance, flowId, nodeId) {
 		var textBoxId = "flow_" + flowId + "_node_" + nodeId + "_"
 				+ module.configurations[i].key;
 		var divId = textBoxId + "_container";
-		var hdfspathButtonId=textBoxId+"_hdfspathButton";
+		var hdfspathButtonId = textBoxId + "_hdfspathButton";
 		if (dijit.byId(textBoxId) != null) {
 			dijit.registry.remove(textBoxId);
 		}
@@ -1813,18 +2337,18 @@ HAFlow.Main.prototype.onNodeClicked = function(instance, flowId, nodeId) {
 			configtype_true.startup();
 		} else {
 			var configurationTextBox = new dijit.form.TextBox({
-				id : textBoxId+"_textbox",
+				id : textBoxId + "_textbox",
 				value : instance.getConfigurationValue(instance, flowId,
 						nodeId, module.configurations[i].key),
 				style : "width:600px;"
 			});
 			configurationTextBox.placeAt(dojo.byId(divId));
-			configurationTextBox.startup();			
+			configurationTextBox.startup();
 			var hdfspathButton = new dijit.form.Button({
-				id:textBoxId,
+				id : textBoxId,
 				label : "Hdfs Path",
 				onClick : function() {
-					dijit.byId(this.id+"_textbox").set("value",hdfspath);				
+					dijit.byId(this.id + "_textbox").set("value", hdfspath);
 				}
 			});
 			hdfspathButton.placeAt(dojo.byId(hdfspathButtonId));
@@ -1924,6 +2448,10 @@ HAFlow.Main.prototype.onCloseTab = function(instance) {
 		}
 		return true;
 	};
+};
+HAFlow.Main.prototype.onCloseTab_hdfs = function(instance) {
+	var flowId = this.id.replace("flowContainerPane_", "");
+	alert(flowId);
 };
 
 HAFlow.Main.prototype.onModuleAdded = function(instance, flowId, event, ui) {
