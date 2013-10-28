@@ -1,10 +1,4 @@
 @CHARSET "UTF-8";
-.dijitDisabled.dijitButtonDisabled .dijitButtonNode {
-    
-    border: none;
-    background-color: transparent;
-}
-
 
 .node {
 	width: 8em;

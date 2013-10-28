@@ -151,6 +151,8 @@ public class FlowHelper {
 			node.setFlow(null);
 			node.setId(nodeModel.getId());
 			node.setModuleId(nodeModel.getModuleId());
+			System.out.println("return node moduleId");
+			System.out.println(nodeModel.getModuleId());
 			node.setName(nodeModel.getName());
 			this.getNodeAppearanceService().mergeNodeAppearance(
 					nodeModel.getId(), nodeModel.getPosition().getLeft(),

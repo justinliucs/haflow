@@ -35,7 +35,7 @@ function RePass(){
 		return true;
 	}
 	else{
-		document.getElementById("password1_err").innerHTML="两次密码不一致！";
+		document.getElementById("password1_err").innerHTML="Password doesn't match the confirmation";
 		return false;
 	}
 		
@@ -51,25 +51,25 @@ function checkPass() {
 
 			   
 			   if(user_name==""){
-		       document.getElementById("username_err").innerHTML="用户名不能为空！";     
+		       document.getElementById("username_err").innerHTML="username can not be blank";     
 		       document.getElementsByName('username')[0].value="";		     
 		       document.getElementsByName('username')[0].style.border="1px solid red";
 		       null_flag=1;}
 			   
 			   if(eml_msg==""){
-				   document.getElementById("email_err").innerHTML="邮箱不能为空！";     
+				   document.getElementById("email_err").innerHTML="email can not be blank";     
 			       document.getElementsByName('email')[0].value="";		     
 			       document.getElementsByName('email')[0].style.border="1px solid red";
 			       null_flag=1;}		   
 			   if(input_pwd==""){
 				   
-				   document.getElementById("password_err").innerHTML="密码不能为空！";       
+				   document.getElementById("password_err").innerHTML="password can not be blank";       
 		       document.getElementsByName('password')[0].value="";		     
 		       document.getElementsByName('password')[0].style.border="1px solid red";
 		       null_flag=1;}			   
 			   
 			   if(retype_pwd==""){
-				   document.getElementById("password1_err").innerHTML="密码不能为空！";       
+				   document.getElementById("password1_err").innerHTML="password can not be blank";       
 			     document.getElementsByName('password1')[0].value="";		     
 			     document.getElementsByName('password1')[0].style.border="1px solid red";
 			     null_flag=1;
@@ -91,15 +91,15 @@ function form_validation(name) {
 	   var err=null;
 	   if(name=="username"){
 		   regx=/^[a-z0-9_-]{3,8}$/;
-		   err="3-8位数字或字母！";
+		   err="please write 3 to 8 letters or numbers";
 	   }
 	   if(name=="password"){
 		   regx=/^[a-z0-9_-]{4,18}$/;
-		   err="4-18位数字或字母！";
+		   err="please write 4 to 18 letters or numbers";
 	   }
 	   if (name == "email") {
 		regx = /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/;
-		err = "请填写有效的邮箱地址！";
+		err = "please write valid email address";
 	   }
 	   if(!regx.test(input_value)){
 	       

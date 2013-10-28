@@ -2,12 +2,14 @@ package haflow.ui.helper;
 
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import haflow.service.UserService;
 import haflow.ui.model.SaveUserResultModel;
+import haflow.ui.model.UserListModel;
 import haflow.ui.model.UserModel;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,8 +62,17 @@ public class UserHelper {
 	public boolean updateUserEmail(int userid,String email){
 		return this.getUserService().updateUserEmail(userid, email);
 	}
-	public boolean deleteUser(int userid){
-		return this.getUserService().deleteUser(userid);
+	public SaveUserResultModel deleteUser(int userid){
+		boolean success=this.getUserService().deleteUser(userid);
+		SaveUserResultModel result=new SaveUserResultModel();
+		result.setSuccess(success);
+		result.setUserid(userid);
+		if(success){
+			result.setMessage("success");
+		}
+		else
+			result.setMessage("failed");
+		return result;
 	}
     public int validate(String username,String password,String mora){
     	return this.getUserService().validate(username,password,mora);
@@ -69,9 +80,26 @@ public class UserHelper {
     public boolean saveUser(String username,String password,String email,String mora){
     	return this.getUserService().saveUser(username,password,email,mora);
     }
-    public List<MainUser> getAllUser(){
-    	return this.getUserService().getAllUser();
-    	
+    public UserListModel getAllUser(){
+    	List<MainUser> list= this.getUserService().getAllUser();
+    	if(list==null)
+    		return null;
+    	UserListModel userListModel= new UserListModel();
+    	List<UserModel> users=new ArrayList<UserModel>();
+    	for(MainUser user:list){
+    		UserModel userModel=new UserModel();
+    		userModel.setId(user.getId());
+    		userModel.setName(user.getName());
+    		userModel.setPassword(user.getPassword());
+    		userModel.setRealname(user.getRealname());
+    		userModel.setRole(user.getRole());
+    		userModel.setSpace(user.getSpace());
+    		userModel.setUsedspace(user.getUsedspace());
+    		userModel.setEmail(user.getEmail());
+    		users.add(userModel);
+    	}
+    	userListModel.setUsers(users);
+    	return userListModel;
     }
     public static boolean isUserLogon(HttpServletRequest request,int authscope) {
 		String username = (String) request.getSession()

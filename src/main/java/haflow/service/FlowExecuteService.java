@@ -64,6 +64,7 @@ public class FlowExecuteService {
 		StringBuilder messageBuilder = new StringBuilder();
 
 		Flow flow = (Flow) this.getFlowService().getFlow(flowId, userid);
+		
 		if (flow == null) {
 			messageBuilder.append("Flow " + flowId + " not found!");
 			result.setMessage(messageBuilder.toString());
