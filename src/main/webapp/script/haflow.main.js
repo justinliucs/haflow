@@ -1188,7 +1188,6 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 				dojo.byId("user_email_text_box").innerHTML=data.email;
 				dojo.byId("user_space_text_box").innerHTML=data.space;
 				dojo.byId("user_used_text_box").innerHTML=data.usedspace;
-				// dojo.parser.parse(userDialog);
 				userDialog.show();
 
 			},
