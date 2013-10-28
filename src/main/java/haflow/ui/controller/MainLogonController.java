@@ -1,8 +1,10 @@
 package haflow.ui.controller;
 
+
 import javax.servlet.http.HttpServletRequest;
 
 import haflow.module.util.Md5Util;
+import haflow.ui.helper.HdfsHelper;
 import haflow.ui.helper.UserHelper;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,16 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class MainLogonController {
 	private UserHelper userHelper;
+	private HdfsHelper hdfsHelper;
 
+	private HdfsHelper getHdfsHelper() {
+		return hdfsHelper;
+	}
+	
+	@Autowired
+	private void setHdfsHelper(HdfsHelper hdfsHelper) {
+		this.hdfsHelper = hdfsHelper;
+	}
 	private UserHelper getUserHelper() {
 		return userHelper;
 	}
@@ -40,8 +51,17 @@ public class MainLogonController {
 		password=Md5Util.getMd5Hex(password);
 		if (this.getUserHelper().saveUser(username, password,email, mora)) {
 			//System.out.println("successful return main");
+//			System.out
+//					.println("controller:"+(this.getHdfsHelper()==null));
+			if(this.getHdfsHelper().createdirectory("hdfs://133.133.2.150:9000/user/root",username))
+			{
 			redirectAttributes.addFlashAttribute("message", "注册成功");
 			return "redirect:/";
+			}
+			else{
+				redirectAttributes.addFlashAttribute("message", "用户hdfs空间未分配成功！");
+				return "redirect:/registration";
+			}
 
 		} else {
 			redirectAttributes.addFlashAttribute("message", "用户名或邮箱已存在");

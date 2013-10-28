@@ -26,4 +26,8 @@ public class HomeController {
 	public ModelAndView oozie() {
 		return new ModelAndView("oozie");
 	}
+	@RequestMapping({ "/hive" })
+	public ModelAndView hive() {
+		return new ModelAndView("hive");
+	}
 }

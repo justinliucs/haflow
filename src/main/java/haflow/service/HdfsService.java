@@ -4,6 +4,7 @@ import haflow.util.ClusterConfiguration;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -56,6 +57,8 @@ public class HdfsService {
 	public boolean createDirectory(String remotePath, String directoryname) {
 		try {
 			FileSystem fs = this.getFileSystem();
+			System.out
+					.println("service:"+(fs==null));
 			fs.mkdirs(new Path(remotePath+"/"+directoryname));
 			fs.close();
 			return true;
@@ -110,6 +113,18 @@ public class HdfsService {
 			return null;
 		}
 	}
+	
+	public FSDataInputStream readPicture(String remotePath) {
+		try {
+			FileSystem fs = this.getFileSystem();
+			FSDataInputStream hdfsInStream = fs.open(new Path(remotePath));
+			return hdfsInStream;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 
 	public boolean appendFile(String content, String remotePath) {
 		try {
@@ -150,7 +165,7 @@ public class HdfsService {
 	public boolean renameFile(String fromPath, String toPath) {
 		try {
 			FileSystem fs = this.getFileSystem();
-			return fs.rename(new Path(fromPath), new Path(toPath));
+			return fs.rename(new Path(fromPath), new Path(toPath));		
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -167,5 +182,39 @@ public class HdfsService {
 			return null;
 		}
 	}
+	
+    public boolean movefile(String fromPath,String toPath,String filename){  
+        FileSystem fs;
+		try {
+			fs = this.getFileSystem();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;			
+		}
+        String localPath = "/home/tmp";  
+        File dirPath = new File(localPath);  
+        if (!dirPath.exists()) {  
+            dirPath.mkdirs();  
+            System.out.print(localPath);
+        }  
+        else
+        	System.out.print(localPath);
+        Path fromhdfsPath = new Path(fromPath);
+        Path tmpPath = new Path(localPath);
+        Path tohdfsPath = new Path(toPath);
+        try {
+			fs.moveToLocalFile (fromhdfsPath, tmpPath);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		} 
+        try {
+			fs.moveFromLocalFile (tmpPath, tohdfsPath);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+        return true;
+    }  
 
 }

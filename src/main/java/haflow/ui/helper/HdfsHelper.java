@@ -8,6 +8,7 @@ import haflow.ui.model.HdfsFileListModel;
 import haflow.ui.model.HdfsFileModel;
 
 import org.apache.hadoop.fs.FileStatus;
+import org.apache.hadoop.fs.FSDataInputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -54,6 +55,11 @@ public class HdfsHelper {
 		return model;
 	}
 	
+	public FSDataInputStream getPicture(String path, String fileName) {
+		String filePath = path + "/" + fileName;
+		return this.getHdfsService().readPicture(filePath);
+	}
+	
 	public Boolean uploadFile(String localpath,String remotePath) {
 		Boolean ret = this.getHdfsService().uploadFile(localpath,remotePath);
 		return ret;
@@ -73,6 +79,16 @@ public class HdfsHelper {
 	
 	public boolean deletefile(String remotePath) {
 		boolean ret=this.getHdfsService().deleteFile(remotePath);
+		return ret;
+	}
+	public boolean rename(String path,String newpath) {
+		boolean ret=this.getHdfsService().renameFile(path,newpath);
+		System.out.println("helper:"+ret);
+		return ret;
+	}
+	public boolean movefile(String fromPath,String toPath,String filename) {
+		boolean ret=this.getHdfsService().renameFile(fromPath,toPath);
+		System.out.println("movefile:"+ret);
 		return ret;
 	}
 }

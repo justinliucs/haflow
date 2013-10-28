@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import haflow.ui.helper.HdfsHelper;
 import haflow.ui.model.HdfsFileListModel;
 import haflow.ui.model.HdfsFileModel;
+import haflow.ui.model.RenameModel;
 import haflow.ui.model.UploadFileModel;
 import haflow.ui.model.RemoveHdfsFileModel;
 import haflow.ui.model.CreateDirectoryModel;
@@ -50,7 +51,16 @@ public class HdfsController {
 	public UploadFileModel upload(MultipartHttpServletRequest request,@RequestParam(value = "remotePath", required = true) String remotepath){
 		System.out.println("begin to upload");
 		UploadFileModel model=new UploadFileModel();
-		MultipartFile file =(MultipartFile)request.getFile("file");
+		MultipartFile file=null;
+		try{
+			file =(MultipartFile)request.getFile("file");
+		}catch(Exception e){
+			System.out
+					.println("got exception:"+e.getMessage());
+			e.printStackTrace();
+		}
+		
+		
 		try{
 	        byte[] bytes=file.getBytes();
 	        String uploadDir = "c:\\uploadFile";  
@@ -204,5 +214,76 @@ public class HdfsController {
 		String in_fileName=fileName;
 		String out_fileName = new String(in_fileName.getBytes("iso-8859-1"),"UTF-8");
 		return this.getHdfsHelper().getFile(out_path, out_fileName);
+	}
+	
+	@RequestMapping(value = "/picture", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<byte[]> getpicture(HttpServletResponse response,
+			@RequestParam(value = "path", required = true) String path,
+			@RequestParam(value = "fileName", required = true) String fileName) throws UnsupportedEncodingException {
+		response.setContentType("image/jpg");
+		String in_path=path;
+		String out_path = new String(in_path.getBytes("iso-8859-1"),"UTF-8");
+		String in_fileName=fileName;
+		String out_fileName = new String(in_fileName.getBytes("iso-8859-1"),"UTF-8");
+//		String new_path=out_path + "/" + out_fileName;
+		try{
+		BufferedOutputStream bos = new BufferedOutputStream(response.getOutputStream());		
+		BufferedInputStream bis = new BufferedInputStream(this.hdfsHelper.getPicture(out_path, out_fileName));
+		byte[] buf = new byte[1024];
+		int read;
+		while((read=bis.read(buf))!=-1){
+				bos.write(buf,0,read);
+		}
+		bos.close();
+		bis.close();
+		}
+		catch (Exception e) {
+		     e.printStackTrace();
+		    }
+		return null;
+	}
+	
+	@RequestMapping(value = "/rename", method = RequestMethod.GET)
+	@ResponseBody
+	public RenameModel rename(
+			@RequestParam("path") String path,@RequestParam("newpath") String newpath) throws UnsupportedEncodingException{
+		String in_path=path;
+		String out_path = new String(in_path.getBytes("iso-8859-1"),"UTF-8");
+		String in_newpath=newpath;
+		String out_newpath = new String(in_newpath.getBytes("iso-8859-1"),"UTF-8");
+		RenameModel model=new RenameModel();
+		System.out.println("out_path:"+out_path);
+		System.out.println("out_newpath:"+out_newpath);
+		if(this.getHdfsHelper().rename(out_path,out_newpath))
+		{
+		     model.setSuccess(true);
+		     model.setMessage("Succeed to rename");
+		     System.out.println("Succeed to rename");
+		}
+		else
+		{
+			 model.setSuccess(false);
+		     model.setMessage("Fail to rename");
+		     model.setMessage("Fail to rename");
+		}
+			 return model;
+			
+	}
+
+	@RequestMapping(value = "/movefile", method = RequestMethod.GET)
+	@ResponseBody
+	public boolean movefile(
+			@RequestParam("frompath") String frompath,@RequestParam("topath") String topath,@RequestParam("filename") String filename) throws UnsupportedEncodingException{
+		System.out.println("out_path:");
+		String in_frompath=frompath;
+		String out_frompath = new String(in_frompath.getBytes("iso-8859-1"),"UTF-8");
+		String in_topath=topath;
+		String out_topath = new String(in_topath.getBytes("iso-8859-1"),"UTF-8");
+		String in_filename=filename;
+		String out_filename = new String(in_filename.getBytes("iso-8859-1"),"UTF-8");
+		System.out.println("out_path:"+out_frompath);
+		System.out.println("out_newpath:"+out_topath);
+		return this.getHdfsHelper().movefile(out_frompath,out_topath,out_filename);		
 	}
 }

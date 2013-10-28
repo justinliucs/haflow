@@ -1183,7 +1183,7 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 				userRealTextBox.set("value", data.realname);
 				userEmailTextBox.set("value", data.email);
 				if(data.realname==null) tmp="blank";
-				else tmp=data.realname
+				else tmp=data.realname;
 				dojo.byId("user_real_text_box").innerHTML=tmp;
 				dojo.byId("user_email_text_box").innerHTML=data.email;
 				dojo.byId("user_space_text_box").innerHTML=data.space;
@@ -1429,7 +1429,6 @@ HAFlow.Main.prototype.initHdfsFileListTree = function() {
 												+ "\""
 												+ path
 												+ "\">"
-
 												+ " <button type=\"button\" id=\"upload_btn\">submit</button></form><div id=\"debug\"><div>",
 										style : "width:400px"
 									});
@@ -1471,20 +1470,7 @@ HAFlow.Main.prototype.initHdfsFileListTree = function() {
 							}
 							dialog.destroy();
 							});
-							}
-						else
-							HAFlow.showDialog("Upload", "It's a file.Can't upload to it.");
-						
-
-																}// �ύʧ��
-															});
-												} else {
-													HAFlow.showDialog("Upload",
-															"File exits.");
-												}
-												dialog.destroy();
-											});
-						} else
+							}else
 							HAFlow.showDialog("Upload",
 									"It's a file.Can't upload to it.");
 					});
@@ -1616,104 +1602,99 @@ HAFlow.Main.prototype.initHdfsFileListTree = function() {
 					});
 
 	dojo
-			.connect(
-					this.menu.treeMenu.CreateMenuItem,
-					"onClick",
-					function() {
-						var tn = dijit.byNode(this.getParent().currentTarget);
-						var path = tn.item.path;
-						var isDirectory = tn.item.isDirectory;
-						if (isDirectory == true) {
-							HAFlow
-									.showDialog(
-											"create new directory",
-											"<html><body><form id=\"hdfsfilepath\" method=\"post\">"
-													+ "new name:<input type=\"text\" id=\"directoryname\" name=\"directoryname\"> </input>"
-													+ " <button type=\"button\" id=\"create_btn\">submit</button></form></body></html>");
-							dojo
-									.connect(
-											dojo.byId("create_btn"),
-											"onclick",
-											function() {
-												var directoryname = document
-														.getElementById("directoryname").value;
-												var result = _currentInstance.hdfsFileListStore
-														.query({
-															path : path
-																	+ "/"
-																	+ directoryname
-														});
-												if (result.total == 0) {
-													$
-															.ajax({
-																url : _currentInstance.basePath
-																		+ "hdfs/createdirectory?remotepath="
-																		+ path
-																		+ "&directoryname="
-																		+ dojo
-																				.byId("directoryname").value,
-																type : "GET",
-																dataType : "json",
-																contentType : "application/json",
-																data : JSON
-																		.stringify({}),
-																success : function(
-																		data,
-																		status) {
-																	if (data.success = true) {
-																		HAFlow
-																				.showDialog(
-																						"Create HdfsFile Directory",
-																						"HdfsFile Directory created.");
-																		_currentInstance.hdfsFileListStore
-																				.put({
-																					id : path
-																							+ "/"
-																							+ data.directoryname,
-																					name : data.directoryname,
-																					isDirectory : true,
-																					path : path
-																							+ "/"
-																							+ data.directoryname,
-																					parentPath : path,
-																				});
+	.connect(
+			this.menu.treeMenu.CreateMenuItem,
+			"onClick",
+			function() {
+				var tn = dijit.byNode(this.getParent().currentTarget);
+				var path = tn.item.path;
+				var isDirectory = tn.item.isDirectory;
+				if (isDirectory == true) {
+					HAFlow
+							.showDialog(
+									"create new directory",
+									"<html><body><form id=\"hdfsfilepath\" method=\"post\">"
+											+ "new name:<input type=\"text\" id=\"directoryname\" name=\"directoryname\"> </input>"
+											+ " <button type=\"button\" id=\"create_btn\">submit</button></form></body></html>");
+					dojo
+							.connect(
+									dojo.byId("create_btn"),
+									"onclick",
+									function() {
+										var directoryname = document
+												.getElementById("directoryname").value;
+										var result = _currentInstance.hdfsFileListStore
+												.query({
+													path : path
+															+ "/"
+															+ directoryname
+												});
+										if (result.total == 0) {
+											$
+													.ajax({
+														url : _currentInstance.basePath
+																+ "hdfs/createdirectory?remotepath="
+																+ path
+																+ "&directoryname="
+																+ dojo
+																		.byId("directoryname").value,
+														type : "GET",
+														dataType : "json",
+														contentType : "application/json",
+														data : JSON
+																.stringify({}),
+														success : function(
+																data,
+																status) {
+															if (data.success = true) {
+																HAFlow
+																		.showDialog(
+																				"Create HdfsFile Directory",
+																				"HdfsFile Directory created.");
+																_currentInstance.hdfsFileListStore
+																		.put({
+																			id : path
+																					+ "/"
+																					+ data.directoryname,
+																			name : data.directoryname,
+																			isDirectory : true,
+																			path : path
+																					+ "/"
+																					+ data.directoryname,
+																			parentPath : path,
+																		});
 
-																	} else
-																		HAFlow
-																				.showDialog(
-																						"Create HdfsFile Directory",
-																						"HdfsFile Directory can't be created.");
-																},
-																error : function(
-																		request,
-																		status,
-																		error) {
-																	HAFlow
-																			.showDialog(
-																					"Error",
-																					"An error occurred while removing HdfsFile Directory: "
-																							+ error);
-																}
-															});
-												} else {
-													HAFlow
-															.showDialog(
-																	"Create HdfsFile Directory",
-																	"HdfsFile Directory exits.");
-												}
+															} else
+																HAFlow
+																		.showDialog(
+																				"Create HdfsFile Directory",
+																				"HdfsFile Directory can't be created.");
+														},
+														error : function(
+																request,
+																status,
+																error) {
+															HAFlow
+																	.showDialog(
+																			"Error",
+																			"An error occurred while removing HdfsFile Directory: "
+																					+ error);
+														}
+													});
+										} else {
+											HAFlow
+													.showDialog(
+															"Create HdfsFile Directory",
+															"HdfsFile Directory exits.");
+										}
 
-											});
-						else{
-							HAFlow.showDialog("Create HdfsFile Directory", "HdfsFile Directory exits.");
-						}
-					
-					});
-					}
-				else
-					{
-					HAFlow.showDialog("Create HdfsFile Directory", "It's a file.HdfsFile Directory can't be created in it.");
-					}
-				
+									});
+				} else {
+					HAFlow
+							.showDialog("Create HdfsFile Directory",
+									"It's a file.HdfsFile Directory can't be created in it.");
+				}
+
 			});
 	dojo.connect(
 			this.menu.treeMenu.DownloadMenuItem,
@@ -2322,10 +2303,10 @@ HAFlow.Main.prototype.onNodeClicked = function(instance, flowId, nodeId) {
 				+ module.configurations[i].key;
 		var divId = textBoxId + "_container";
 		var hdfspathButtonId = textBoxId + "_hdfspathButton";
-		if (dijit.byId(textBoxId) != null) {
-			dijit.registry.remove(textBoxId);
-		}
 		if (module.configurations[i].type == "BOOLEAN") {
+			if (dijit.byId(textBoxId) != null) {
+				dijit.registry.remove(textBoxId);
+			}
 			var configtype_true = new dijit.form.CheckBox({
 				id : textBoxId,
 				checked : (instance.getConfigurationValue(instance, flowId,
@@ -2335,19 +2316,26 @@ HAFlow.Main.prototype.onNodeClicked = function(instance, flowId, nodeId) {
 			configtype_true.placeAt(dojo.byId(divId));
 			configtype_true.startup();
 		} else {
+			if (dijit.byId(textBoxId) != null) {
+				dijit.registry.remove(textBoxId);
+			}
 			var configurationTextBox = new dijit.form.TextBox({
-				id : textBoxId + "_textbox",
+				id : textBoxId,
 				value : instance.getConfigurationValue(instance, flowId,
 						nodeId, module.configurations[i].key),
 				style : "width:600px;"
 			});
 			configurationTextBox.placeAt(dojo.byId(divId));
 			configurationTextBox.startup();
+			if (dijit.byId(textBoxId+"_hdfspath") != null) {
+				dijit.registry.remove(textBoxId+"_hdfspath");
+			}
+			var a="_hdfspath";
 			var hdfspathButton = new dijit.form.Button({
-				id : textBoxId,
+				id : textBoxId+a,
 				label : "Hdfs Path",
 				onClick : function() {
-					dijit.byId(this.id + "_textbox").set("value", hdfspath);
+					dijit.byId(this.id.replace(a,"")).set("value", hdfspath);
 				}
 			});
 			hdfspathButton.placeAt(dojo.byId(hdfspathButtonId));
