@@ -10,6 +10,6 @@
 <title>ozzie</title>
 </head>
 <body>
-<iframe src="http://133.133.2.150:11000/oozie/" height="570px" width="1080px" frameborder="0" align="middle" ></iframe>
+<iframe src="http://133.133.2.150:11000/oozie/" height="100%" width="100%" frameborder="0" align="middle" ></iframe> 
 </body>
 </html>

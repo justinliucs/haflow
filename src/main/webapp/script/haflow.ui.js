@@ -18,6 +18,7 @@ HAFlow.UI.prototype.init = function() {
 	this.initMainContainer();
 	this.initMainMenu();
 	this.initMainoozieContainer();
+	this.initOozieHiveContainer();
 	this.initLeadingContainer();
 	this.initTrailingContainer();
 	this.initCenterContainer();
@@ -32,6 +33,7 @@ HAFlow.UI.prototype.initId = function() {
 	this.mainContainerId = "main";
 	this.mainMenuContainerId = "mainMenu";
 	this.mainoozieContainerId="mainoozie";
+	this.oozieHiveContainerId="ooziehive";
 	this.bottomContainerId = "bottom";
 	this.leadingContainerId = "leading";
 	this.trailingContainerId = "trailing";
@@ -65,6 +67,15 @@ HAFlow.UI.prototype.initMainoozieContainer = function() {
 	});
 	this.mainContainer.addChild(this.mainoozieContainer);
 	this.mainoozieContainer.startup();
+};
+
+HAFlow.UI.prototype.initOozieHiveContainer= function() {
+	this.oozieHiveContainer = new dijit.layout.TabContainer({
+		id : "ooziehive",
+		region : "center",
+		splitter : "true",
+	});
+	this.oozieHiveContainer.startup();
 };
 
 HAFlow.UI.prototype.initBottomContainer = function() {
@@ -101,12 +112,16 @@ HAFlow.UI.prototype.initCenterContainer = function() {
 	this.centerContainerParent = new dijit.layout.BorderContainer({
 		region : "center",
 		splitter : "true"
-	});
+	},dojo.create("div", {
+		id : "centerparent"
+	}, dojo.body()));
 	this.centerContainer = new dijit.layout.TabContainer({
 		id : this.centerContainerId,
 		region : "center",
 		splitter : "true"
-	});
+	}, dojo.create("div", {
+		id : this.centerContainerId
+	}, dojo.body()));
 	this.mainoozieContainer.addChild(this.centerContainerParent);
 	this.centerContainerParent.addChild(this.centerContainer);
 	this.centerContainerParent.startup();

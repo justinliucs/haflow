@@ -8,6 +8,9 @@ public class HdfsFileListItemModel {
 	private String name;
 	private boolean isDirectory;
 	private long length;
+	private String type;
+	private String time;
+	
 
 	@XmlElement
 	public String getName() {
@@ -34,6 +37,25 @@ public class HdfsFileListItemModel {
 
 	public void setLength(long length) {
 		this.length = length;
+	}
+	
+	
+	@XmlElement
+	public String getTime() {
+		return time;
+	}
+
+	public void setTime(String time) {
+		this.time = time;
+	}
+	
+	@XmlElement
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 }
