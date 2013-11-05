@@ -433,6 +433,55 @@ HAFlow.Main.prototype.showRunHistory = function(flowId) {
 	});
 };
 
+
+HAFlow.Main.prototype.showRunHistory = function(flowId) {
+	if( flowId == null){
+		alert("No flow selected, please double click a flow!");
+		return;
+	}
+	
+	var found = false;
+	var children = this.ui.bottomContainer.getChildren();	
+	var i;
+	for( i = 0; i < children.length; i++ ){
+		var child = children[i];
+		if( child.id == ("runHistoryPane_" + flowId)){
+			alert("Run History Panel for " + flowId + " already opened!");
+			this.ui.bottomContainer.selectChild(child);
+			found = true;
+			break;
+		}
+	}
+	var _currentInstance = this;
+	dojo.xhrGet({
+		url :  _currentInstance.basePath + "runHistory/get/" + flowId,
+		load : function(data, ioArgs){
+			if( found == true){
+				var contentPane = dijit.registry.byId("runHistoryPaneInline_" + flowId);
+				contentPane.set('content', data);	
+			}else {
+				var contentPaneInner = new dijit.layout.ContentPane({
+					id : "runHistoryPaneInline_" + flowId,
+					title : "History_" + _currentInstance.flows[flowId].name,
+					content : data,
+					closable : true
+				});
+				var contentPane = new dijit.layout.ContentPane({
+					id : "runHistoryPane_" + flowId,
+					title : "History_" + _currentInstance.flows[flowId].name,
+					content : contentPaneInner,
+					closable : true
+				});
+				_currentInstance.ui.bottomContainer.addChild(contentPane);			
+				_currentInstance.ui.bottomContainer.selectChild(contentPane);
+			}
+		},
+		error : function(err, ioArgs){
+			alert(err);
+		}
+	});
+};
+
 // Flow Helper
 HAFlow.Main.prototype.refreshFlowList = function() {
 	var _currentInstance = this;

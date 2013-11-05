@@ -50,7 +50,7 @@ public class ModuleUtil {
 								+ ".class");
 		String classFileName;
 		if (classFile.getProtocol().equals("jar")) {
-			classFileName = classFile.getFile().substring("file:".length(),
+			classFileName = classFile.getFile().substring("file:/".length(),
 					classFile.getFile().indexOf("!"));
 		} else {
 			classFileName = classFile.getFile();

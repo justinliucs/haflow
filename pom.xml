@@ -107,6 +107,6 @@
 				<version>9.0.3.v20130506</version>
 			</plugin>
 		</plugins>
-		<finalName>bench4q-web</finalName>
+		<finalName>haflow</finalName>
 	</build>
 </project>
