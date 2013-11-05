@@ -3,10 +3,12 @@ package haflow.service;
 import haflow.util.ClusterConfiguration;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 
 import org.apache.hadoop.conf.Configuration;
@@ -17,6 +19,8 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IOUtils;
 import org.apache.tools.ant.filters.StringInputStream;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -119,6 +123,48 @@ public class HdfsService {
 			FileSystem fs = this.getFileSystem();
 			FSDataInputStream hdfsInStream = fs.open(new Path(remotePath));
 			return hdfsInStream;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public String readCsvFile(String remotePath) {
+		try {
+			FileSystem fs = this.getFileSystem();
+			FSDataInputStream hdfsInStream = fs.open(new Path(remotePath));
+			BufferedReader d=new BufferedReader(new InputStreamReader(hdfsInStream));
+			String s;
+			String[] col=new String[12];
+			String[] value=new String[12];
+			JSONArray arr=new JSONArray();
+			JSONObject obj=new JSONObject();
+			obj.put("length",value.length);
+			arr.put(obj);
+			if ((s=d.readLine())!=null)
+			{
+				value=s.split(",");
+				JSONObject jobj=new JSONObject();
+				for(int i=0;i<value.length;i++){			
+					col[i]=value[i];
+					String s1=""+i;
+					jobj.put(s1,col[i]);
+				}
+				arr.put(jobj);
+			}
+			int line=0;
+			while (((s=d.readLine())!=null)&&(line<=9)){
+				line++;
+				value=s.split(",");
+				JSONObject jobj=new JSONObject();
+				for(int j=0;j<value.length;j++){			
+					jobj.put(col[j], value[j]);
+				}
+				arr.put(jobj);			    	
+			}
+			d.close();
+			System.out.println(arr.toString());
+			return arr.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

@@ -1,5 +1,7 @@
 package haflow.ui.helper;
 
+
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import haflow.service.HdfsService;
@@ -35,6 +37,7 @@ public class HdfsHelper {
 				file.setName(stat.getPath().getName());
 				file.setLength(stat.getLen());
 				file.setDirectory(stat.isDir());
+				file.setTime(new Timestamp(stat.getModificationTime()).toString());
 				model.getFiles().add(file);
 			}
 		}
@@ -58,6 +61,17 @@ public class HdfsHelper {
 	public FSDataInputStream getPicture(String path, String fileName) {
 		String filePath = path + "/" + fileName;
 		return this.getHdfsService().readPicture(filePath);
+	}
+	
+	public HdfsFileModel getCsvFile(String path) {
+		HdfsFileModel model = new HdfsFileModel();
+		String ret = this.getHdfsService().readCsvFile(path);
+		if (ret != null) {
+			model.setContent(ret);
+			model.setLength(ret.length());
+		}
+		model.setPath(path);
+		return model;
 	}
 	
 	public Boolean uploadFile(String localpath,String remotePath) {
