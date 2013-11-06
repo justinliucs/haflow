@@ -873,7 +873,9 @@ HAFlow.Main.prototype.getHdfsCsv = function(path, fileName) {
 								dijit.registry.remove("flowContainerPane_" + path + "/"+ fileName);
 								return true;
 							}
+						
 						});
+//				contentPane.setHref(url);
 				_currentInstance.ui.centerContainer.addChild(contentPane);
 				watchHandle.unwatch();
 				_currentInstance.ui.centerContainer.selectChild(dijit.byId("flowContainerPane_"
@@ -1199,10 +1201,68 @@ HAFlow.Main.prototype.initToolbar = function() {
 		showLabel : false,
 		iconClass : "dijitEditorIcon dijitEditorIconTabIndent"
 	});
+	this.toolbar.copyFlowButton = new dijit.form.Button({
+		id : "toolbar_copyFlow",
+		label : "Copy Flow",
+		showLabel : false,
+		iconClass : "dijitEditorIcon dijitEditorIconCopy"
+	});
+	this.toolbar.pasteFlowButton = new dijit.form.Button({
+		id : "toolbar_pasteFlow",
+		label : "Paste Flow",
+		showLabel : false,
+		iconClass : "dijitEditorIcon dijitEditorIconPaste"
+	});
+	this.toolbar.undoFlowButton = new dijit.form.Button({
+		id : "toolbar_Undo",
+		label : "Undo",
+		showLabel : false,
+		iconClass : "dijitEditorIcon dijitEditorIconUndo"
+	});
+	this.toolbar.redoFlowButton = new dijit.form.Button({
+		id : "toolbar_Redo",
+		label : "Redo",
+		showLabel : false,
+		iconClass : "dijitEditorIcon dijitEditorIconRedo"
+	});
+//	this.toolbar.BackColorFlowButton = new dijit.form.Button({
+//		id : "BackColor",
+//		label : "BackColor",
+//		showLabel : false,
+//		iconClass : "dijitEditorIcon dijitEditorIconBackColor" 
+//	});
+	this.toolbar.BoldFlowButton = new dijit.form.Button({
+		id : "Bold",
+		label : "Bold",
+		showLabel : false,
+		iconClass : "dijitEditorIcon dijitEditorIconBold"
+	});
+	this.toolbar.CancelFlowButton = new dijit.form.Button({
+		id : "Cancel",
+		label : "Cancel",
+		showLabel : false,
+		iconClass : "dijitEditorIcon dijitEditorIconCancel"
+	});
+	this.toolbar.InsertImageFlowButton = new dijit.form.Button({
+		id : "InsertImage",
+		label : "InsertImage",
+		showLabel : false,
+		iconClass : "dijitEditorIcon dijitEditorIconInsertImage"
+	});
+	
+	
 	this.toolbar.toolbar.addChild(this.toolbar.newFlowButton);
 	this.toolbar.toolbar.addChild(this.toolbar.saveFlowButton);
 	this.toolbar.toolbar.addChild(this.toolbar.removeFlowButton);
 	this.toolbar.toolbar.addChild(this.toolbar.runFlowButton);
+	this.toolbar.toolbar.addChild(this.toolbar.copyFlowButton);
+	this.toolbar.toolbar.addChild(this.toolbar.pasteFlowButton);
+	this.toolbar.toolbar.addChild(this.toolbar.undoFlowButton);
+	this.toolbar.toolbar.addChild(this.toolbar.redoFlowButton);
+//	this.toolbar.toolbar.addChild(this.toolbar.BlackColorFlowButton);
+	this.toolbar.toolbar.addChild(this.toolbar.BoldFlowButton);
+	this.toolbar.toolbar.addChild(this.toolbar.CancelFlowButton);
+	this.toolbar.toolbar.addChild(this.toolbar.InsertImageFlowButton);
 	this.toolbar.toolbar.startup();
 
 	var _currentInstance = this;
@@ -1453,16 +1513,16 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 
 	this.ui.mainMenu.addChild(new dijit.PopupMenuBarItem({
 		id : "usernameContentPane",
-		label : "<a href><font color=red size=3px>" + username + "</font></a>",
+		label : "<a href><font color=red size=2px>" + username + "</font></a>",
 		style : "float:right;",
 		popup : this.menu.userMenu
 	}));
-	/*this.ui.mainMenu.addChild(new dijit.layout.ContentPane({
+	this.ui.mainMenu.addChild(new dijit.layout.ContentPane({
 		id : "welcomeContentPane",
 		title : "welcome",
 		content : "<font size=2px align=top>Welcome,</font>",
 		style : "float:right;"
-	}));*/
+	}));
 
 	var _currentInstance = this;
 
