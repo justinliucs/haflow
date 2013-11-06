@@ -24,6 +24,8 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import antlr.collections.impl.Vector;
+
 @Component
 public class HdfsService {
 	private ClusterConfiguration clusterConfiguration;
@@ -135,15 +137,19 @@ public class HdfsService {
 			FSDataInputStream hdfsInStream = fs.open(new Path(remotePath));
 			BufferedReader d=new BufferedReader(new InputStreamReader(hdfsInStream));
 			String s;
-			String[] col=new String[12];
-			String[] value=new String[12];
+//			String[] col=new String[12];
+//			String[] value=new String[12];
+//			Vector col=new Vector();
+//			Vector value=new Vector();
 			JSONArray arr=new JSONArray();
 			JSONObject obj=new JSONObject();
-			obj.put("length",value.length);
+
 			arr.put(obj);
 			if ((s=d.readLine())!=null)
 			{
-				value=s.split(",");
+				String[] value=s.split(",");
+				String[] col=new String[value.length];
+				obj.put("length",value.length);
 				JSONObject jobj=new JSONObject();
 				for(int i=0;i<value.length;i++){			
 					col[i]=value[i];
@@ -151,19 +157,23 @@ public class HdfsService {
 					jobj.put(s1,col[i]);
 				}
 				arr.put(jobj);
-			}
 			int line=0;
 			while (((s=d.readLine())!=null)&&(line<=9)){
 				line++;
 				value=s.split(",");
-				JSONObject jobj=new JSONObject();
+				JSONObject jobj1=new JSONObject();
 				for(int j=0;j<value.length;j++){			
-					jobj.put(col[j], value[j]);
+					jobj1.put(col[j], value[j]);
 				}
-				arr.put(jobj);			    	
+				arr.put(jobj1);			    	
 			}
 			d.close();
 			System.out.println(arr.toString());
+			}
+			else
+			{
+				
+			}
 			return arr.toString();
 		} catch (Exception e) {
 			e.printStackTrace();

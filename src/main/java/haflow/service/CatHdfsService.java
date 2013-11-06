@@ -43,24 +43,47 @@ public class CatHdfsService {
 			FSDataInputStream hdfsInStream = fs.open(new Path(remotePath));
 			BufferedReader d=new BufferedReader(new InputStreamReader(hdfsInStream));
 			String s;
-			String[] col=new String[10];
-			String[] value=new String[10];
+			String[] col=new String[12];
+			String[] value=new String[12];
 			JSONArray arr=new JSONArray();
-			int i=0;
-			while ((s=d.readLine())!=null) {
-				if(s.startsWith("@ATTRIBUTE"))
-				{
-					col[i]=(s.split("\\s+"))[1];
-					i++;
-							}
-				if(s.startsWith("@DATA"))
-					break;
-			}		
-			while ((s=d.readLine())!=null&&!(s.startsWith("%"))){
+//			int i=0;
+//			while ((s=d.readLine())!=null) {
+//				if(s.startsWith("@ATTRIBUTE"))
+//				{
+//					col[i]=(s.split("\\s+"))[1];
+//					i++;
+//							}
+//				if(s.startsWith("@DATA"))
+//					break;
+//			}									
+//			while ((s=d.readLine())!=null&&!(s.startsWith("%"))){
+//				value=s.split(",");
+//				JSONObject jobj=new JSONObject();
+//				for(int j=0;j<value.length;j++){
+//			
+//					jobj.put(col[j], value[j]);
+//				}
+//				arr.put(jobj);			    	
+//			}
+			JSONObject obj=new JSONObject();
+			obj.put("length",value.length);
+			arr.put(obj);
+			if ((s=d.readLine())!=null)
+			{
 				value=s.split(",");
 				JSONObject jobj=new JSONObject();
-				for(int j=0;j<value.length;j++){
-			
+				for(int i=0;i<value.length;i++){			
+					col[i]=value[i];
+					String s1=""+i;
+					jobj.put(s1,col[i]);
+				}
+				arr.put(jobj);
+			}
+
+			while ((s=d.readLine())!=null){
+				value=s.split(",");
+				JSONObject jobj=new JSONObject();
+				for(int j=0;j<value.length;j++){			
 					jobj.put(col[j], value[j]);
 				}
 				arr.put(jobj);			    	
