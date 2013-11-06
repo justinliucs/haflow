@@ -26,7 +26,16 @@ public class ModuleUtil {
 	private void setClassHelper(ClassHelper classHelper) {
 		this.classHelper = classHelper;
 	}
-
+	public Module getModule(UUID moduleId){
+		Map<Module,AbstractModule> modules=this.searchForModules();
+		for(Module m:modules.keySet()){
+			if(UUID.fromString(m.id()).equals(moduleId)){
+				return m;
+			}
+		}
+		return null;
+	}
+	
 	public boolean removeModule(UUID moduleId) {
 		Map<Module, AbstractModule> modules = this.searchForModules();
 		Module module = null;
@@ -50,7 +59,7 @@ public class ModuleUtil {
 								+ ".class");
 		String classFileName;
 		if (classFile.getProtocol().equals("jar")) {
-			classFileName = classFile.getFile().substring("file:".length(),
+			classFileName = classFile.getFile().substring("file:/".length(),
 					classFile.getFile().indexOf("!"));
 		} else {
 			classFileName = classFile.getFile();
