@@ -8,6 +8,13 @@
 			+ path + "/";
 	String username = request.getSession().getAttribute("username")
 			.toString();
+	boolean isModuleUpload=false;
+	String moduleUploadMessage=null;
+	if(request.getAttribute("uploadmessage")!=null) {
+		isModuleUpload=true;
+		moduleUploadMessage=(String)request.getAttribute("uploadmessage");
+		
+		}
 	boolean flag;
 	Object message = request.getAttribute("message");
 	if (request.getAttribute("message") != null) {
@@ -50,7 +57,8 @@ html,body {
 	src="http://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dojo/dojo.js"></script>
 
 <script>
-require(["dojo/parser", "dijit/layout/TabContainer", "dojox/layout/ContentPane","dijit/MenuBar","dijit/layout/BorderContainer"]);
+require(["dojo/parser", "dijit/Dialog","dijit/layout/TabContainer", "dojox/layout/ContentPane","dijit/MenuBar","dijit/layout/BorderContainer"]);
+
 	var flag=<%=flag%>
 	
 	if(flag){
@@ -58,12 +66,17 @@ require(["dojo/parser", "dijit/layout/TabContainer", "dojox/layout/ContentPane",
 		alert(message);
 	}
 	var basePath="<%=basePath%>";
+	var flag1=<%=isModuleUpload%>;
+	var message1="<%=moduleUploadMessage%>";
+
 </script>
 
 </head>
 <body class="claro">
+<script type="text/javascript" src="<%=basePath%>script/admin.js"></script>
 <script type="text/javascript"
 	src="<%=basePath%>script/adminusermana.js"></script>
+
 	<div data-dojo-type="dijit/layout/BorderContainer"
 		data-dojo-props="design:'sidebar', gutters:true, liveSplitters:true"
 		id="borderContainer">

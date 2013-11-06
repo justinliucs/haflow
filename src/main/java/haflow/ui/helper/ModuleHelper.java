@@ -10,6 +10,7 @@ import haflow.ui.model.ModuleEndpointModel;
 import haflow.ui.model.ModuleListModel;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -41,7 +42,50 @@ public class ModuleHelper {
 	public ModuleHelper() {
 		ModuleHelper.setModuleHelper(this);
 	}
-
+	public ModuleBriefModel getModule(UUID moduleId){
+		Module m= this.getModuleUtil().getModule(moduleId);
+		if(m==null) return null;
+		ModuleBriefModel moduleBriefModel=new ModuleBriefModel();
+		moduleBriefModel.setId(UUID.fromString(m.id()));
+		moduleBriefModel.setName(m.name());
+		moduleBriefModel.setCategory(m.category());
+		ModuleConfiguration[] moduleConfigurations=m.configurations();
+		List<ModuleConfigurationModel> mcList=new ArrayList<ModuleConfigurationModel>();
+		for(ModuleConfiguration mc:moduleConfigurations){
+			ModuleConfigurationModel module=new ModuleConfigurationModel();
+			module.setKey(mc.key());
+			module.setDisplayName(mc.displayName());
+			module.setPattern(mc.pattern());
+			module.setType(mc.type());
+			mcList.add(module);
+		}
+		moduleBriefModel.setConfigurations(mcList);
+		
+		ModuleEndpoint[] inputs=m.inputs();
+		List<ModuleEndpointModel> miList=new ArrayList<ModuleEndpointModel>();
+		for(ModuleEndpoint me:inputs){
+			ModuleEndpointModel model=new ModuleEndpointModel();
+			model.setName(me.name());
+			model.setDataType(me.dataType().toString());
+			model.setMaxNumber(me.maxNumber());
+			model.setMinNumber(me.minNumber());
+			miList.add(model);
+		}
+		moduleBriefModel.setInputs(miList);
+		
+		ModuleEndpoint[] outputs=m.outputs();
+		List<ModuleEndpointModel> moList=new ArrayList<ModuleEndpointModel>();
+		for(ModuleEndpoint me:outputs){
+			ModuleEndpointModel model=new ModuleEndpointModel();
+			model.setName(me.name());
+			model.setDataType(me.dataType().toString());
+			model.setMaxNumber(me.maxNumber());
+			model.setMinNumber(me.minNumber());
+			moList.add(model);
+		}
+		moduleBriefModel.setOutputs(moList);
+		return moduleBriefModel;
+	}
 	public boolean removeModule(UUID moduleId) {
 		return this.getModuleUtil().removeModule(moduleId);
 	}

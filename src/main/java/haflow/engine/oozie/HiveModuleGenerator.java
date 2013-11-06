@@ -38,12 +38,12 @@ public class HiveModuleGenerator extends OozieXmlGenerator {
 			String ok = outputs.get("ok").getName();
 			String error = outputs.get("error").getName();
 			
-			String main_class = "haflow.module.zrace.HiveJdbcClient";
+			String main_class = "haflow.module.hive.HiveJdbcClient";
 			
 			String uri = configurations.get("oozie.hive.connection.url");
 			
 			String xml = "<action name=\"" + name + "\">" + 
-			        "<java xmlns=\"uri:oozie:hive-action:0.2\">" + 
+			        "<java>" + 
 			        "<job-tracker>" + job_tracker + "</job-tracker>" + "\n"
 					+ "<name-node>" + name_node + "</name-node>" + "\n"
 					+ "<configuration>" + "\n" + "<property>" + "\n"

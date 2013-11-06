@@ -4,15 +4,17 @@ dojo.require("dijit.form.Button");
 dojo.require("dijit.form.TextBox");
 dojo.require("dijit.form.Form");
 dojo.require("dijit.Dialog");
+var confirmdialog;
 
-showDialog = function(title, content) {
-	var dialog = new dijit.Dialog({
-		title : title,
-		content : content,
-		style : "width:400px"
+showDialog=function(title, content){
+	dialog = new dijit.Dialog({
+		title:title,
+		content:content,
+		style : "width:400px",
 	});
 	dialog.show();
 };
+
 var confirmDialog=function(){};
 confirmDialog.userid;
 
@@ -20,13 +22,10 @@ confirmDialog.init=function(){
 	content="Are You Sure?"+  
     "<br/><div><span  id='yesButton'>Yes</span>" +  
     "<span id='noButton'>No</span></div>";  
-	dialog=new dijit.Dialog({
+	confirmdialog=new dijit.Dialog({
 		title:"confirm",
 		content:content,
 		Style: "width:400px",
-		onHide : function() {  
-	              this.destroyRecursive(); 
-		}
 	});
 	
 	
@@ -39,10 +38,10 @@ confirmDialog.init=function(){
 	var cancelButton=new dijit.form.Button({
 		label:"No",
 	},"noButton");
-	dialog.startup();
+	confirmdialog.startup();
 	dojo.connect(confirmButton,"onClick",delUser);
 	dojo.connect(cancelButton,"onClick",function(mouseEvent) {  
-        dialog.hide();});
+        confirmdialog.hide();});
 	//dialog.addChild(confirmButton);
 	//dialog.addChild(cancelButton);
 	
@@ -218,17 +217,6 @@ var loadUsers = function() {
 											innerHTML : "<p><font color=red>NOTE: 0=users;1=administrators(Role)</font></p>"
 										}, dojo.byId("table_pane"));
 						dojo.place(table, dojo.byId("table_pane"));
-
-						/*
-						 * var editbutton=new dijit.form.Button({ label:"edit"
-						 * });
-						 */
-						// dojo.connect(editbutton,"onclick",null,showUserInfoDia());
-						/*
-						 * for(var j=0;j<i;j++)
-						 * editbutton.placeAt(dojo.byId("edit_user_button"+j));
-						 * editbutton.startup();
-						 */
 					}
 		},
 		error : function(request, status, error) {
@@ -241,33 +229,31 @@ var loadUsers = function() {
 
 
 dojo.addOnLoad(function() {
-
+	
 	dojo.byId("title").innerHTML="<h2>Haflow Background</h2>";
 	
 	loadUsers();
 	newDialog.init();
 	confirmDialog.init();
 	
+	
 });
 
 function deleteRow(obj) {
 	var row = obj.parentNode.parentNode;
 	confirmDialog.userid = document.getElementById("userlist").rows[row.rowIndex].cells[0].innerHTML;
-	dialog.show();
+	confirmdialog.show();
 };
-var haha=function(){
-	alert("helo wangjie");
-	
-}
+
 var delUser=function(){
-	dialog.hide();
+	confirmdialog.hide();
 	$.ajax({
 		url : basePath + "user/remove/"+confirmDialog.userid,
 		type : "DELETE",
 		cache : false,
 		dataType : "json",
 		success : function(data, status) {
-			alert(data.success);
+			
 			if (data.success == true) {
 				showDialog("Success", "Successfully delete the user! ");
 				loadUsers();

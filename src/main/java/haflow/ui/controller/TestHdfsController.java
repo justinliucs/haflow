@@ -1,5 +1,7 @@
 package haflow.ui.controller;
 
+import java.io.UnsupportedEncodingException;
+
 import haflow.ui.helper.CatHdfsHelper;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +29,16 @@ public class TestHdfsController {
 	@ResponseBody
 	public ModelAndView get(
 			@RequestParam(value = "path", required = true) String path) {
+		String in_path=path;
+		try {
+			String out_path = new String(in_path.getBytes("iso-8859-1"),"UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		ModelAndView mv=new ModelAndView("cat_hdfs");
 		mv.addObject("content",this.getHdfsHelper().getFile(path).getContent());
 		return mv;
+//		return this.getHdfsHelper().getFile(path).getContent();
 	}
 }

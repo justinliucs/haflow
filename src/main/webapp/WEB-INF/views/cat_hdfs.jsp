@@ -38,11 +38,8 @@
 			items : []
 		};
 		
-// 		var data_list=JSON.parse('[{"col2":"aa"},{"col2":"bb"}]');
 		var data_list=JSON.parse('${content}');
-
-
-        for(var i = 0 ; i < data_list.length; i++){
+        for(var i = 2 ; i < data_list.length; i++){
           data.items.push(lang.mixin({ id: i+1 }, data_list[i]));
         
         }
@@ -51,49 +48,62 @@
 		var store = new ItemFileWriteStore({
 			data : data	
 		});
+    var length=eval(data_list)[0]["length"];
+	var layout=[];
+	for(i=0;i<length;i++)
+		{
+		layout.push({
+			'name' :eval(data_list)[1][i],
+			'field' : eval(data_list)[1][i],
+			'width' : '80px',
+			type : dojox.grid.cells.CheckBox,
+			styles : 'text-align: center;'
+		});
+		}
 
 		/*set up layout*/
-		var layout = [ [ {
-			'name' : 'id',
-			'field' : 'id',
+/* 		var layout = [ [ {
+			'name' :eval(data_list)[0]["0"],
+			'field' : eval(data_list)[0]["0"],
 			'width' : '100px'
 		}, {
-			'name' : 'sepallength',
-			'field' : 'sepallength',
+			'name' : eval(data_list)[0]["1"],
+			'field' : eval(data_list)[0]["1"],
 			'width' : '100px',
 			editable : true,
 			type : dojox.grid.cells.CheckBox,
 			styles : 'text-align: center;'
 		} ,{
-			'name' : 'sepalwidth',
-			'field' : 'sepalwidth',
+			'name' : eval(data_list)[0]["3"],
+			'field' : eval(data_list)[0]["3"],
 			'width' : '100px',
 			editable : true,
 			type : dojox.grid.cells.CheckBox,
 			styles : 'text-align: center;'
 		} ,{
-			'name' : 'petallength',
-			'field' : 'petallength',
+			'name' : eval(data_list)[0]["4"],
+			'field' : eval(data_list)[0]["4"],
 			'width' : '100px',
 			editable : true,
 			type : dojox.grid.cells.CheckBox,
 			styles : 'text-align: center;'
 		},
 		{
-			'name' : 'petalwidth',
-			'field' : 'petalwidth',
+			'name' : eval(data_list)[0]["5"],
+			'field' : eval(data_list)[0]["5"],
+			
 			'width' : '100px',
 			editable : true,
 			type : dojox.grid.cells.CheckBox,
 			styles : 'text-align: center;'
 		}, {
-			'name' : 'class',
-			'field' : 'class',
+			'name' : eval(data_list)[0]["6"],
+			'field' : eval(data_list)[0]["6"],
 			'width' : '100px',
 			editable : true,
 			type : dojox.grid.cells.CheckBox,
 			styles : 'text-align: center;'
-		}] ];
+		}] ]; */
 
 		/*create a new grid*/
 		var grid = new DataGrid({

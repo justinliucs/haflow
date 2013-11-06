@@ -249,6 +249,7 @@ public class HdfsController {
 		try {
 			String out_path = new String(in_path.getBytes("iso-8859-1"),"UTF-8");
 			mv.addObject("content",this.getHdfsHelper().getCsvFile(out_path).getContent());
+			mv.addObject("path",path);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}

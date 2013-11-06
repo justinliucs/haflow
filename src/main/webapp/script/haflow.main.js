@@ -1513,16 +1513,16 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 
 	this.ui.mainMenu.addChild(new dijit.PopupMenuBarItem({
 		id : "usernameContentPane",
-		label : "<a href><font color=red size=3px>" + username + "</font></a>",
+		label : "<a href><font color=red size=2px>" + username + "</font></a>",
 		style : "float:right;",
 		popup : this.menu.userMenu
 	}));
-	/*this.ui.mainMenu.addChild(new dijit.layout.ContentPane({
+	this.ui.mainMenu.addChild(new dijit.layout.ContentPane({
 		id : "welcomeContentPane",
 		title : "welcome",
 		content : "<font size=2px align=top>Welcome,</font>",
 		style : "float:right;"
-	}));*/
+	}));
 
 	var _currentInstance = this;
 
