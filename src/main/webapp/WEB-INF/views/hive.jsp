@@ -10,6 +10,6 @@
 <title>ozzie</title>
 </head>
 <body>
-<iframe src="http://localhost:8011/javaHiveAdimin/" height="570px" width="1080px" frameborder="0" align="middle" ></iframe>
+<iframe src="http://133.133.133.89:8011/javaHiveAdimin/" height="570px" width="1080px" frameborder="0" align="middle" ></iframe>
 </body>
 </html>

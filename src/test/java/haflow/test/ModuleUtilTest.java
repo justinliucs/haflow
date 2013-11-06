@@ -37,6 +37,11 @@ public class ModuleUtilTest extends AbstractJUnit4SpringContextTests {
 	@Test
 	public void testSearchForModuleClasses() {
 		Map<UUID, Class<?>> map = this.getModuleUtil().searchForModuleClasses();
+		
+		for(Map.Entry<UUID,Class<?>> m:map.entrySet()){
+			System.out.println(m.getKey());
+			System.out.println(m.getValue());
+		}
 		Assert.assertNotNull(map);
 		Assert.assertTrue(map.keySet().size() > 0);
 	}

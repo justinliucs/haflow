@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.ModelAndView;
 //import org.springframework.web.servlet.ModelAndView;
 import org.springframework.util.FileCopyUtils;
 
@@ -92,6 +93,7 @@ public class HdfsController {
 	@ResponseBody
 	public ResponseEntity<byte[]> download(HttpServletResponse response,@RequestParam(value = "remotepath", required = true) String remotepath,@RequestParam(value = "filename", required = true) String filename){
 	    response.setContentType("application/x-download");
+	    response.setHeader("content-disposition","attachment;filename="+filename); 
 	    try {
 	        String downloadDir = "c:\\downloadFile";  
 	        File dirPath = new File(downloadDir);  
@@ -118,10 +120,6 @@ public class HdfsController {
 	    return null;
 	}
 	
-
-	
-	
-	
 	@RequestMapping(value = "/createdirectory", method = RequestMethod.GET)
 	@ResponseBody
 	public CreateDirectoryModel createdirectory(
@@ -145,9 +143,6 @@ public class HdfsController {
 			 return model;
 			
 	}
-	
-
-
 	
 	@RequestMapping(value = "/deletedirectory", method = RequestMethod.GET)
 	@ResponseBody
@@ -216,6 +211,8 @@ public class HdfsController {
 		return this.getHdfsHelper().getFile(out_path, out_fileName);
 	}
 	
+
+	
 	@RequestMapping(value = "/picture", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<byte[]> getpicture(HttpServletResponse response,
@@ -226,7 +223,6 @@ public class HdfsController {
 		String out_path = new String(in_path.getBytes("iso-8859-1"),"UTF-8");
 		String in_fileName=fileName;
 		String out_fileName = new String(in_fileName.getBytes("iso-8859-1"),"UTF-8");
-//		String new_path=out_path + "/" + out_fileName;
 		try{
 		BufferedOutputStream bos = new BufferedOutputStream(response.getOutputStream());		
 		BufferedInputStream bis = new BufferedInputStream(this.hdfsHelper.getPicture(out_path, out_fileName));
@@ -242,6 +238,21 @@ public class HdfsController {
 		     e.printStackTrace();
 		    }
 		return null;
+	}
+	
+	@RequestMapping(value = "/cvs_file", method = RequestMethod.GET)
+	@ResponseBody
+	public ModelAndView getcvsfile(
+			@RequestParam(value = "path", required = true) String path) {
+		String in_path=path;
+		ModelAndView mv=new ModelAndView("cvs");
+		try {
+			String out_path = new String(in_path.getBytes("iso-8859-1"),"UTF-8");
+			mv.addObject("content",this.getHdfsHelper().getCsvFile(out_path).getContent());
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return mv;
 	}
 	
 	@RequestMapping(value = "/rename", method = RequestMethod.GET)

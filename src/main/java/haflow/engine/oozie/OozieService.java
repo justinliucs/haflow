@@ -24,7 +24,8 @@ public class OozieService {
 		conf.setProperty("jobTracker", "m150:9001");
 		conf.setProperty("queueName", "default");
 		conf.setProperty("examplesRoot", "examples");
-		conf.setProperty("oozie.use.system.libpath", "true");
+//		conf.setProperty("oozie.use.system.libpath", "true");
+		conf.setProperty("oozie.libpath", "share/lib/hive");
 
 		String jobId = null;
 		try {

@@ -30,12 +30,23 @@ public class RunHistoryController {
 		this.runHistoryHelper = runHistoryHelper;
 	}
 
-	@RequestMapping(value = "/{flowId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/get/{flowId}", method = RequestMethod.GET)
 	public ModelAndView get(@PathVariable UUID flowId,
 			HttpServletRequest request, HttpServletResponse response) {
 		FlowRunHistoryListModel fhlm = this.getRunHistoryHelper()
 				.getFlowRunHistoryList(flowId);
 		request.setAttribute("flowHistory", fhlm);
+		request.setAttribute("flowIdOfHistory", flowId);
+		return new ModelAndView("run-history");
+	}
+	
+	@RequestMapping(value = "/refresh/{flowId}", method = RequestMethod.GET)
+	public ModelAndView refresh(@PathVariable UUID flowId,
+			HttpServletRequest request, HttpServletResponse response) {
+		FlowRunHistoryListModel fhlm = this.getRunHistoryHelper()
+				.getFlowRunHistoryList(flowId);
+		request.setAttribute("flowHistory", fhlm);
+		request.setAttribute("flowIdOfHistory", flowId);
 		return new ModelAndView("run-history");
 	}
 }

@@ -20,6 +20,8 @@
 		<mapping class="haflow.dto.entity.Node" />
         <mapping class="haflow.dto.entity.MainUser"/>
         <mapping class="haflow.dto.entity.FlowRunHistory" />
+        <mapping class="haflow.dto.entity.TestType"/>
+        <mapping class="haflow.dto.entity.Test"/>
         
         
 		<mapping class="haflow.dto.profile.NodeAppearance" />
