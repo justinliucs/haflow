@@ -93,40 +93,59 @@ public class FlowService {
 	public boolean removeFlow(UUID flowId,int userid) {
 		Session session = this.getSessionHelper().openSession();
 		Transaction transaction = session.beginTransaction();
+		Flow flow=(Flow) session.get(Flow.class, flowId);
 		MainUser user=(MainUser) session.get(MainUser.class, userid);
+		if(flow==null) return false;
 		try {
-		for(Flow f:user.getFlows()){
-			if(f.getId().equals(flowId)){
-				user.getFlows().remove(f);
-				f.setUser(null);
-				session.delete(f);
-				transaction.commit();
-				session.close();
-				return true;
+			for(Flow tmpFlow:user.getFlows()){
+				if(flow.getId().equals(tmpFlow.getId())){
+					user.getFlows().remove(tmpFlow);
+					flow.setUser(null);
+					session.delete(flow);
+					transaction.commit();
+					session.close();
+					return true;
+				}
 			}
-					
-		}
-		return false;
-		
-		//Flow flow = (Flow) session.get(Flow.class, flowId);
-//		if (flow == null) {
-//			return false;
-//		}
-
-//		try {
-//			System.out.println("remove flow before");
-//			session.delete(flow);
-//			transaction.commit();
-//			session.close();
-//			return true;
-		} catch (Exception e) {
+			return false;
+		}catch (Exception e) {
 			e.printStackTrace();
 			transaction.rollback();
 			session.close();
 			return false;
 		}
 	}
+		/*for(Flow f:user.getFlows()){
+			if(f.getId().equals(flowId)){
+//				user.getFlows().remove(f);
+//				f.setUser(null);
+				session.delete(f);
+				transaction.commit();
+				session.close();
+				return true;
+			}
+					
+		}*/
+		
+		
+		/*Flow flow = (Flow) session.get(Flow.class, flowId);
+		if (flow == null) {
+			return false;
+		}
 
+		try {
+			System.out.println("remove flow before");
+			session.delete(flow);
+			transaction.commit();
+			session.close();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			transaction.rollback();
+			session.close();
+			return false;
+		}*/
+	
 	@SuppressWarnings("unchecked")
 	public List<Flow> getFlowList(int userid) {
 		Session session = this.getSessionHelper().openSession();

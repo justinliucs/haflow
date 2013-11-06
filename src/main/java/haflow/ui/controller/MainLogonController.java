@@ -37,7 +37,7 @@ public class MainLogonController {
 		this.userHelper = userHelper;
 	}
 
-	@RequestMapping("registration")
+	@RequestMapping(value="/registration")
 	public ModelAndView toRegister() {
 		return new ModelAndView("registration");
 	}

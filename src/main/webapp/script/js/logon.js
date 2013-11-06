@@ -9,14 +9,14 @@ function fun1(){
 function userlogon() 
 { 
 	
-	document.getElementById("form1").action="logon";
-	document.getElementById("form1").submit();
+	document.getElementById("form").action="logon";
+	document.getElementById("form").submit();
 } 
 
 function adminlogon() 
 { 
-	document.getElementById("form1").action="adminlogon"; 
-	document.getElementById("form1").submit();
+	document.getElementById("form").action="adminlogon"; 
+	document.getElementById("form").submit();
 } 
 
 function checkField(){

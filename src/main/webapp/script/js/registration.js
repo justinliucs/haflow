@@ -1,10 +1,11 @@
 function fun3(){
+	cleanErrlog();
 	if(checkAll()&&RePass()){
 		
 
 		document.getElementById("mora").value = "main";
 
-		document.getElementById("form2").submit();
+		document.getElementById("mktForm_1116").submit();
 	}
 	
 	
@@ -14,7 +15,7 @@ if(checkAll()&&RePass()){
 		
 		document.getElementById("mora").value= "admin";
 		
-		document.getElementById("form2").submit();
+		document.getElementById("mktForm_1116").submit();
 	}
 	
 }
@@ -36,6 +37,7 @@ function RePass(){
 	}
 	else{
 		document.getElementById("password1_err").innerHTML="Password doesn't match the confirmation";
+		document.getElementsByName('password1')[0].style.border="1px solid red";
 		return false;
 	}
 		
@@ -77,7 +79,16 @@ function checkPass() {
 			   if((null_flag==0)) return true;
 			   else return false;
  } 
-
+function cleanErrlog(){
+	document.getElementById('username_err').innerHTML="";
+	document.getElementsByName('username')[0].style.border="";
+	    document.getElementById('email_err').value="";
+	   document.getElementsByName('email')[0].style.border="";
+	   document.getElementById('password_err').value="";
+	   document.getElementsByName('password')[0].style.border="";
+	   document.getElementById('password1_err').value="";
+	   document.getElementsByName('password1')[0].style.border="";
+}
 function clean() {
 	   document.getElementsByName('username')[0].value="";		     
 	   document.getElementsByName('password')[0].value="";

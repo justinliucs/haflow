@@ -9,16 +9,30 @@
 	String basePath = request.getScheme() + "://"
 			+ request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
+	
 %>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>HA Flow Administration</title>
+<!-- <link rel="stylesheet"
+	href="http://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dijit/themes/claro/claro.css"> -->
 <link rel="stylesheet" href="<%=basePath%>/style/site.css">
-<body>
+<!-- <script type="text/javascript"
+	src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+<script type="text/javascript"
+	src="http://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dojo/dojo.js"></script> -->
+
+<script type="text/javascript">
+var basePath="<%=basePath%>";
+</script>	
+<%-- <script type="text/javascript" src="<%=basePath%>script/admin.js"></script> --%>
+</head>
+<body  class="claro">
+	
 	<h1>Haflow Administration</h1>
-	<h2>Module List</h2>
-	<table>
+	
+	<table id="modulelist">
 		<tr>
 			<th>Module Id</th>
 			<th>Name</th>
@@ -35,6 +49,7 @@
 			<td><%=moduleBriefModel.getCategory()%></td>
 			<td><a
 				href="module/remove/<%=moduleBriefModel.getId().toString()%>">Remove</a></td>
+			<td><a onclick="javascript:getModuleInfo(this); return false;" href="#">Edit</a></td>
 		</tr>
 		<%
 			}

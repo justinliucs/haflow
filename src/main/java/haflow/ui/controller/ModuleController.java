@@ -1,6 +1,7 @@
 package haflow.ui.controller;
 
 import haflow.ui.helper.ModuleHelper;
+import haflow.ui.model.ModuleBriefModel;
 import haflow.ui.model.ModuleListModel;
 
 import java.io.File;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/module")
@@ -32,7 +34,11 @@ public class ModuleController {
 	private void setModuleHelper(ModuleHelper moduleHelper) {
 		this.moduleHelper = moduleHelper;
 	}
-
+	@RequestMapping(value="/get/{moduleId}",method=RequestMethod.GET)
+	@ResponseBody
+	public ModuleBriefModel get(@PathVariable UUID moduleId){
+		return this.getModuleHelper().getModule(moduleId);
+	}
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
 	public ModuleListModel get() {
@@ -40,7 +46,7 @@ public class ModuleController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView post(@RequestParam("file") CommonsMultipartFile file) {
+	public String post(RedirectAttributes redirectAttributes, @RequestParam("file") CommonsMultipartFile file) {
 		if (!file.isEmpty()) {
 			try {
 				String fileName = file.getOriginalFilename();
@@ -53,16 +59,20 @@ public class ModuleController {
 					File toUpload = new File(filePath);
 					FileCopyUtils.copy(bytes, toUpload);
 					logger.info(fileName + " uploaded to : " + filePath);
-					return new ModelAndView("upload-success");
+					redirectAttributes.addFlashAttribute("uploadmessage","upload successed!");
+					return "redirect:/adminhome";
 				} else {
-					return new ModelAndView("upload-error");
+					redirectAttributes.addAttribute("uploadmessage","upload failed!");
+					return "redirect:/adminhome";
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
-				return new ModelAndView("upload-error");
+				redirectAttributes.addAttribute("uploadmessage","upload failed!");
+				return "redirect:/adminhome";
 			}
 		}
-		return new ModelAndView("upload-error");
+		redirectAttributes.addFlashAttribute("uploadmessage","upload failed!");
+		return "redirect:/adminhome";
 	}
 
 	@RequestMapping(value = "/remove/{moduleId}", method = RequestMethod.GET)
