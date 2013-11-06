@@ -1,17 +1,3 @@
-@font-face {
-  font-family: 'OpenSans-Regular';
-  src:url('../fonts/OpenSans-Regular.eot?#iefix') format('embedded-opentype'), url('../fonts/OpenSans-Regular.ttf') format('truetype'), url('../fonts/OpenSans-Regular.woff') format('woff');
-}
-
-@font-face {
-  font-family: 'OpenSans-Bold';
-  src: url('../fonts/OpenSans-Bold.eot?#iefix') format('embedded-opentype'), url('../fonts/OpenSans-Bold.ttf') format('truetype'), url('../fonts/OpenSans-Bold.woff') format('woff');
-}
-
-@font-face {
-  font-family: 'helvetica-neue';
-  src: url('../fonts/ufonts.com_helvetica-neue1.eot?#iefix') format('embedded-opentype'), url('../fonts/ufonts.com_helvetica-neue1.ttf') format('truetype'), url('../fonts/ufonts.com_helvetica-neue1.woff') format('woff');
-}
 
 /*************** BRWSER RESET ******************/
 
