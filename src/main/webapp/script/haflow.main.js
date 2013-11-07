@@ -164,7 +164,7 @@ HAFlow.Main.prototype.openoozie = function() {
 						var contentPane = new dijit.layout.ContentPane(
 								{
 									id : "oozie",
-									title : "oozie",
+									title : "Oozie",
 									content : data,
 									closable : true,
 									onClose : function() {
@@ -211,7 +211,7 @@ HAFlow.Main.prototype.openoozie = function() {
 							var contentPane = new dijit.layout.ContentPane(
 									{
 										id : "oozie",
-										title : "oozie",
+										title : "Oozie",
 										content : data,
 										closable : true,
 										onClose : function() {
@@ -263,7 +263,7 @@ HAFlow.Main.prototype.openhive = function() {
 						var contentPane = new dijit.layout.ContentPane(
 								{
 									id : "hive",
-									title : "hive",
+									title : "Hive",
 									content : data,
 									closable : true,
 									onClose : function() {
@@ -300,7 +300,7 @@ HAFlow.Main.prototype.openhive = function() {
 						_currentInstance.ui.mainoozieContainer
 							.addChild(_currentInstance.ui.oozieHiveContainer);	
 						_currentInstance.ui.oozieHiveContainer.addChild(contentPane);
-						_currentInstance.ui.oozieHiveContainer.selectChild(contentPane)
+						_currentInstance.ui.oozieHiveContainer.selectChild(contentPane);
 					}
 					else
 						{
@@ -309,7 +309,7 @@ HAFlow.Main.prototype.openhive = function() {
 							var contentPane = new dijit.layout.ContentPane(
 									{
 										id : "hive",
-										title : "hive",
+										title : "Hive",
 										content : data,
 										closable : true,
 										onClose : function() {
@@ -854,8 +854,21 @@ HAFlow.Main.prototype.getHdfsCsv = function(path, fileName) {
 		type : "GET",
 		dataType : "html",
 		success : function(data, status) {
-			var text = "";
-			text+=data;
+			var data_list=JSON.parse(data);
+			var length=eval(data_list)[0]["length"];
+			var table = "<table border=\"1\" class=\"csvtable\" >";
+			table+="<tr class=\"csvtr\">";
+			for(var i=0;i<length;i++)
+				table+="<th class=\"cvstd\">"+eval(data_list)[1][i]+"</th>";
+			table+="</tr>";
+			for(var line=2;line<data_list.length;line++)
+				{
+				table+="<tr>";
+				for(var i=0;i<length;i++)
+					table+="<td class=\"cvstd\">"+eval(data_list)[line][eval(data_list)[1][i]]+"</td>";
+				table+="</tr>";
+				}
+			table += "</table>";
 			if(dijit.byId("flowContainerPane_" + path + "/"+ fileName)!=null)
 				{
 				watchHandle.unwatch();
@@ -867,7 +880,7 @@ HAFlow.Main.prototype.getHdfsCsv = function(path, fileName) {
 						{
 							id : "flowContainerPane_" + path + "/"+ fileName,
 							title : fileName,
-							content : text,
+							content : table,
 							closable : true,
 							onClose : function() {
 								dijit.registry.remove("flowContainerPane_" + path + "/"+ fileName);
@@ -1046,7 +1059,7 @@ HAFlow.Main.prototype.addEndpoints = function(instance, flowId, nodeId, module,
 									1, 0 ],
 							uuid : sourceId,
 							overlays : [ [ "Label", {
-								location : [ 0.5, -0.5 ],
+								location : [ 1.5, -0.1 ],
 								label : module.outputs[i].name
 							} ] ]
 						}));
@@ -1062,7 +1075,7 @@ HAFlow.Main.prototype.addEndpoints = function(instance, flowId, nodeId, module,
 									-1, 0 ],
 							uuid : targetId,
 							overlays : [ [ "Label", {
-								location : [ 0.5, -0.5 ],
+								location : [ -0.3, -0.2 ],
 								label : module.inputs[j].name
 							} ] ]
 						}));
@@ -1265,7 +1278,7 @@ HAFlow.Main.prototype.initToolbar = function() {
 	});
 	this.toolbar.openOozieButton = new dijit.form.Button({
 		id : "toolbar_openOozie",
-		label : "open Oozie",
+		label : "Open Oozie",
 		iconClass : "dijitIconFolderOpen"
 	});
 	this.toolbar.closeOozieButton = new dijit.form.Button({
@@ -1281,7 +1294,7 @@ HAFlow.Main.prototype.initToolbar = function() {
 	});
 	this.toolbar.openHiveButton = new dijit.form.Button({
 		id : "toolbar_openHive",
-		label : "open Hive",
+		label : "Open Hive",
 		iconClass : "dijitIconFolderOpen"
 	});
 	this.toolbar.closeHiveButton = new dijit.form.Button({
@@ -1555,7 +1568,8 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 	this.menu.helpMenu.startup();
 
 	this.menu.oozieMenu = new dijit.Menu({
-		id : "oozieMenu"
+		id : "oozieMenu",
+		label : "Oozie",
 	});
 
 	this.menu.oozieMenu.openoozieMenuItem = new dijit.MenuItem({
@@ -1572,7 +1586,8 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 	this.menu.oozieMenu.startup();
 
 	this.menu.hiveMenu = new dijit.Menu({
-		id : "hiveMenu"
+		id : "hiveMenu",
+		label : "Hive",
 	});
 
 	this.menu.hiveMenu.openhiveMenuItem = new dijit.MenuItem({
@@ -1615,19 +1630,19 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 	}));
 	this.ui.mainMenu.addChild(new dijit.PopupMenuBarItem({
 		id : "ooziePopupMenuBarItem",
-		label : "oozie",
+		label : "Oozie",
 		popup : this.menu.oozieMenu
 	}));
 	this.ui.mainMenu.addChild(new dijit.PopupMenuBarItem({
 		id : "hivePopupMenuBarItem",
-		label : "hive",
+		label : "Hive",
 		popup : this.menu.hiveMenu
 	}));
 	// userInformation
 	this.ui.mainMenu.addChild(new dijit.layout.ContentPane({
 		id : "tipContentPane",
 		title : "tip",
-		content : "<div style='margin:-3px'>|&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<a href=quit style='text-decoration: none;'><font size=2px>quit</font></a></div>",
+		content : "<div style='margin-bottom:0px; padding-top:4px; font-family:Times, serif;'>|&nbsp<a href=quit style='text-decoration: none;'><font size=2px>quit</font></a>&nbsp&nbsp</div>",
 		style : "float:right;"
 	}));
 
@@ -1643,8 +1658,8 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 
 	this.ui.mainMenu.addChild(new dijit.PopupMenuBarItem({
 		id : "usernameContentPane",
-		label : "<font  size=2px>" + username + "</font>",
-		style : "float:right;",
+		label : "<font size=2px style='font-family:Times, serif;'>" + username + "</font>",
+		style : "float:right;padding-top:4px;",
 		popup : this.menu.userMenu
 	}));
 	/*this.ui.mainMenu.addChild(new dijit.layout.ContentPane({
@@ -3135,7 +3150,7 @@ HAFlow.Main.prototype.onCloseTab = function(instance) {
 	};
 };
 HAFlow.Main.prototype.onCloseTab_hdfs = function(instance) {
-	var flowId = this.id.replace("flowContainerPane_", "");
+	this.id.replace("flowContainerPane_", "");
 };
 
 HAFlow.Main.prototype.onModuleAdded = function(instance, flowId, event, ui) {

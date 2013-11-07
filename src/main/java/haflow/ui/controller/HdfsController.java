@@ -242,18 +242,20 @@ public class HdfsController {
 	
 	@RequestMapping(value = "/cvs_file", method = RequestMethod.GET)
 	@ResponseBody
-	public ModelAndView getcvsfile(
+	public String getcvsfile(
 			@RequestParam(value = "path", required = true) String path) {
 		String in_path=path;
-		ModelAndView mv=new ModelAndView("cvs");
+//		ModelAndView mv=new ModelAndView("cvs");
 		try {
 			String out_path = new String(in_path.getBytes("iso-8859-1"),"UTF-8");
-			mv.addObject("content",this.getHdfsHelper().getCsvFile(out_path).getContent());
-			mv.addObject("path",path);
+//			mv.addObject("content",this.getHdfsHelper().getCsvFile(out_path).getContent());
+//			mv.addObject("path",path);
+			return this.getHdfsHelper().getCsvFile(out_path).getContent();
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
+			return null;
 		}
-		return mv;
+
 	}
 	
 	@RequestMapping(value = "/rename", method = RequestMethod.GET)
