@@ -214,7 +214,7 @@ var loadUsers = function() {
 								.create(
 										"message",
 										{
-											innerHTML : "<p><font color=red>NOTE: 0=users;1=administrators(Role)</font></p>"
+											innerHTML : "<p><font color=gray>NOTE: 0=users;1=administrators(Role)</font></p>"
 										}, dojo.byId("table_pane"));
 						dojo.place(table, dojo.byId("table_pane"));
 					}
@@ -230,7 +230,7 @@ var loadUsers = function() {
 
 dojo.addOnLoad(function() {
 	
-	dojo.byId("title").innerHTML="<h2>Haflow Background</h2>";
+	dojo.byId("title").innerHTML="<h2>Haflow Administration</h2>";
 	
 	loadUsers();
 	newDialog.init();
