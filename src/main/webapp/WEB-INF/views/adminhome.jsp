@@ -100,6 +100,8 @@ require(["dojo/parser", "dijit/Dialog","dijit/layout/TabContainer", "dojox/layou
 			<div id="table_pane" data-dojo-type="dojox/layout/ContentPane" title="User List">
 				
 			</div>
+			<div data-dojo-type="dojox/layout/ContentPane" title="Hadoop Administration"
+				href="hadoop_administration"></div>
 
 
 		</div>
