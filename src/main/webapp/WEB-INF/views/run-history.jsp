@@ -13,11 +13,11 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>HaFlow: Flow Run Histories</title>
 <style>
-table
+.runhistory_table
 {
 	border-collapse:collapse;
 }
-table, th, td{
+.runhistory_table{
 	border : 1px solid #C0C0C0;
 	padding-left : 5px;
 	padding-right : 5px;
@@ -26,8 +26,7 @@ table, th, td{
 </head>
 <body>
 
-<h1>Flow Run History</h1>
-<h2>History List</h2>
+<h2>Flow Run History</h2>
 
 <% 
 	FlowRunHistoryListModel frhlm = 
@@ -35,20 +34,20 @@ table, th, td{
 %>
 
 <% if(frhlm != null && frhlm.getFlowHistorys().size() != 0){ %>
-	<table>
+	<table class="runhistory_table">
 		<tr>
-			<th>Oozie Job Id</th>
-			<th>Time</th>
-			<th>Commit Message</th>
+			<th class="runhistory_table">Oozie Job Id</th>
+			<th class="runhistory_table">Time</th>
+			<th class="runhistory_table">Commit Message</th>
 		</tr>
 		<%
 			for( int i = 0; i < frhlm.getFlowHistorys().size(); i++){
 				FlowRunHistoryModel frhm = frhlm.getFlowHistorys().get(i);
 		%>
 		<tr>
-			<td><%=frhm.getOozieJobId() %></td>
-			<td><%=frhm.getTimestamp() %></td>
-			<td><%=frhm.getCommitMessage() %></td>
+			<td class="runhistory_table"><%=frhm.getOozieJobId() %></td>
+			<td class="runhistory_table"><%=frhm.getTimestamp() %></td>
+			<td class="runhistory_table"><%=frhm.getCommitMessage() %></td>
 		</tr>
 		<%
 			}

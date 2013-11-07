@@ -10,6 +10,6 @@
 <title>admin</title>
 </head>
 <body>
-<iframe src="http://133.133.2.150:50030/jobtracker.jsp" height="100%" width="100%" frameborder="0" align="middle" ></iframe> 
+<iframe src="http://133.133.2.150:50070/dfshealth.jsp" height="100%" width="100%" frameborder="0" align="middle" ></iframe> 
 </body>
 </html>
