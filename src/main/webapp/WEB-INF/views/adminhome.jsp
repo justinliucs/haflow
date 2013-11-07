@@ -87,7 +87,7 @@ require(["dojo/parser", "dijit/Dialog","dijit/layout/TabContainer", "dojox/layou
 			</div>
 			<div data-dojo-type="dojox/layout/ContentPane" style="float: right">
 				<h5>
-					hello：<font color=red><%=username%></font> | <a href="quit">quit</a>
+					<font><%=username%></font> | <a href="quit" style="text-decoration: none;"><font color="black">quit</font></a>
 				</h5>
 
 			</div>
@@ -100,6 +100,8 @@ require(["dojo/parser", "dijit/Dialog","dijit/layout/TabContainer", "dojox/layou
 			<div id="table_pane" data-dojo-type="dojox/layout/ContentPane" title="User List">
 				
 			</div>
+			<div data-dojo-type="dojox/layout/ContentPane" title="Hadoop Administration"
+				href="hadoop_administration"></div>
 
 
 		</div>

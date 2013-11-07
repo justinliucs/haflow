@@ -17,6 +17,8 @@
 <link rel="stylesheet"
 	href="http://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dijit/themes/claro/claro.css">
 <link rel="stylesheet"
+	href="http://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dijit/themes/soria/soria.css">
+<link rel="stylesheet"
 	href="http://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dojox/layout/resources/ScrollPane.css">
 <link rel="stylesheet" href="<%=basePath%>/style/haflow.css">
 <link rel="stylesheet" href="<%=basePath%>/style/haflow.ui.css">
@@ -39,7 +41,7 @@
 <script type="text/javascript" src="<%=basePath%>/script/haflow.main.js"></script>
 
 </head>
-<body class="claro">
+<body class="soria" > <!-- claro -->
 
 	<script type="text/javascript">
 		var username="<%=username%>";

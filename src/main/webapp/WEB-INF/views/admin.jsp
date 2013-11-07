@@ -14,7 +14,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>HA Flow Administration</title>
+
 <!-- <link rel="stylesheet"
 	href="http://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dijit/themes/claro/claro.css"> -->
 <link rel="stylesheet" href="<%=basePath%>/style/site.css">
@@ -30,13 +30,13 @@ var basePath="<%=basePath%>";
 </head>
 <body  class="claro">
 	
-	<h1>Haflow Administration</h1>
 	
 	<table id="modulelist">
 		<tr>
 			<th>Module Id</th>
 			<th>Name</th>
 			<th>Category</th>
+			<th>Operation</th>
 			<th>Operation</th>
 		</tr>
 		<%
@@ -49,7 +49,7 @@ var basePath="<%=basePath%>";
 			<td><%=moduleBriefModel.getCategory()%></td>
 			<td><a
 				href="module/remove/<%=moduleBriefModel.getId().toString()%>">Remove</a></td>
-			<td><a onclick="javascript:getModuleInfo(this); return false;" href="#">Edit</a></td>
+			<td><a onclick="javascript:getModuleInfo(this); return false;" href="#">Info</a></td>
 		</tr>
 		<%
 			}

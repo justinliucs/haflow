@@ -79,5 +79,8 @@ public class AdminLogonController {
 		
 			
 		}
-	
+	@RequestMapping(value="/hadoop_administration")
+	public ModelAndView hadoopAdmin(HttpServletRequest request){
+		return new ModelAndView("hadoop-administration");
+	}
 }

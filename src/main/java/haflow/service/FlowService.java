@@ -101,7 +101,7 @@ public class FlowService {
 				if(flow.getId().equals(tmpFlow.getId())){
 					user.getFlows().remove(tmpFlow);
 					flow.setUser(null);
-					session.delete(flow);
+					session.delete(flow); 
 					transaction.commit();
 					session.close();
 					return true;

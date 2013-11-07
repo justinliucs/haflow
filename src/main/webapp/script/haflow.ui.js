@@ -42,7 +42,8 @@ HAFlow.UI.prototype.initId = function() {
 
 HAFlow.UI.prototype.initMainContainer = function() {
 	this.mainContainer = new dijit.layout.BorderContainer({
-		design : "headline"
+		design : "headline",
+		style : "padding:5px 5px 15px 5px;"
 	}, dojo.create("div", {
 		id : this.mainContainerId
 	}, dojo.body()));

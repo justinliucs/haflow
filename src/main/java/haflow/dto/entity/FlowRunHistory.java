@@ -1,10 +1,11 @@
 package haflow.dto.entity;
 
 import java.util.Date;
-import java.util.UUID;
 
-import javax.jdo.annotations.Column;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
@@ -14,18 +15,20 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "flowRunHistory")
 public class FlowRunHistory {
-	private UUID id;
+	private int id;
 	private String oozieJobId;
 	private String commitMessage;
 	private Date timestamp;
 	private Flow flow;
 	
 	@Id
-	@Column(name="id", length = 16)
-	public UUID getId() {
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", nullable = false)
+	public int getId() {
 		return id;
 	}
-	public void setId(UUID id) {
+	
+	public void setId(int id) {
 		this.id = id;
 	}
 	
@@ -55,7 +58,7 @@ public class FlowRunHistory {
 	}
 	
 	@ManyToOne
-	@JoinColumn(name = "flowId")
+	@JoinColumn(name = "flowId",referencedColumnName="id")
 	public Flow getFlow() {
 		return flow;
 	}

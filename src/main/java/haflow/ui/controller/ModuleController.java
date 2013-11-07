@@ -76,10 +76,12 @@ public class ModuleController {
 	}
 
 	@RequestMapping(value = "/remove/{moduleId}", method = RequestMethod.GET)
-	public ModelAndView delete(@PathVariable UUID moduleId) {
+	public String delete(RedirectAttributes redirectAttributes,@PathVariable UUID moduleId) {
 		if (this.getModuleHelper().removeModule(moduleId)) {
-			return new ModelAndView("remove-success");
+			redirectAttributes.addFlashAttribute("uploadmessage","remove successed!");
+			return "redirect:/adminhome";
 		}
-		return new ModelAndView("remove-error");
+		redirectAttributes.addFlashAttribute("uploadmessage","remove failed!");
+		return "redirect:/adminhome";
 	}
 }

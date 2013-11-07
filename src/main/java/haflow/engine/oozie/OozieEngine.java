@@ -461,8 +461,6 @@ public class OozieEngine extends AbstractEngine {
 				AbstractJavaModule moduleInstance = (AbstractJavaModule) moduleClass
 						.newInstance();
 				configurations.put("main_class", moduleInstance.getMainClass());
-//				configurations.put("arg",
-//						moduleInstance.getArguments(userConfs));
 				arguments = moduleInstance.getArguments(userConfs);
 				gen = new JavaModuleGenerator();
 				break;
@@ -471,6 +469,8 @@ public class OozieEngine extends AbstractEngine {
 						.newInstance();
 				configurations.put("sql_file",
 						hiveModuleInstance.getSQL(userConfs));
+				configurations.put("outpath", hiveModuleInstance.getOutPath(userConfs));
+				configurations.put("main_class", hiveModuleInstance.getMainClass());
 				gen = new HiveModuleGenerator();
 				break;
 			case DECISION:
