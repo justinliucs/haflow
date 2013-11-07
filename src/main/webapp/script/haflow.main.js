@@ -1046,7 +1046,7 @@ HAFlow.Main.prototype.addEndpoints = function(instance, flowId, nodeId, module,
 									1, 0 ],
 							uuid : sourceId,
 							overlays : [ [ "Label", {
-								location : [ 0.5, -0.5 ],
+								location : [ 1.5, -0.1 ],
 								label : module.outputs[i].name
 							} ] ]
 						}));
@@ -1062,7 +1062,7 @@ HAFlow.Main.prototype.addEndpoints = function(instance, flowId, nodeId, module,
 									-1, 0 ],
 							uuid : targetId,
 							overlays : [ [ "Label", {
-								location : [ 0.5, -0.5 ],
+								location : [ -0.3, -0.2 ],
 								label : module.inputs[j].name
 							} ] ]
 						}));
