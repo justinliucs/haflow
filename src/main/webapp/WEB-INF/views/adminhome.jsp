@@ -87,7 +87,7 @@ require(["dojo/parser", "dijit/Dialog","dijit/layout/TabContainer", "dojox/layou
 			</div>
 			<div data-dojo-type="dojox/layout/ContentPane" style="float: right">
 				<h5>
-					hello：<font><%=username%></font> | <a href="quit" style="text-decoration: none;"><font color="black">quit</font></a>
+					<font><%=username%></font> | <a href="quit" style="text-decoration: none;"><font color="black">quit</font></a>
 				</h5>
 
 			</div>
