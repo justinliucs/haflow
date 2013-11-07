@@ -1,23 +1,22 @@
 package haflow.ui.model;
 
 import java.util.Date;
-import java.util.UUID;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "flowRunHistory")
 public class FlowRunHistoryModel {
-	private UUID id;
+	private int id;
 	private String oozieJobId;
 	private String commitMessage;
 	private Date timestamp;
 	
 	@XmlElement
-	public UUID getId() {
+	public int getId() {
 		return id;
 	}
-	public void setId(UUID id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	

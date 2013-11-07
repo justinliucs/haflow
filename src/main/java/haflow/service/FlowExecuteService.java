@@ -78,7 +78,7 @@ public class FlowExecuteService {
 		Transaction transaction = session.beginTransaction();
 		
 		FlowRunHistory feh = new FlowRunHistory();
-		feh.setId(UUID.randomUUID());
+//		feh.setId(UUID.randomUUID());
 		feh.setOozieJobId(enginResult.getJobId());
 		feh.setCommitMessage(enginResult.getMessage());
 		feh.setTimestamp(new Date());
