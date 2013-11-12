@@ -39,6 +39,12 @@
 <script type="text/javascript" src="<%=basePath%>/script/haflow.js"></script>
 <script type="text/javascript" src="<%=basePath%>/script/haflow.ui.js"></script>
 <script type="text/javascript" src="<%=basePath%>/script/haflow.main.js"></script>
+<script type="text/javascript" src="<%=basePath%>/script/haflow.flow_operation.js"></script>
+<script type="text/javascript" src="<%=basePath%>/script/haflow.flow_operation_helper.js"></script>
+<script type="text/javascript" src="<%=basePath%>/script/haflow.hdfs.js"></script>
+<script type="text/javascript" src="<%=basePath%>/script/haflow.jsplumb.js"></script>
+<script type="text/javascript" src="<%=basePath%>/script/haflow.oozie_hive.js"></script>
+<script type="text/javascript" src="<%=basePath%>/script/haflow.toolbar.js"></script>
 
 </head>
 <body class="soria" > <!-- claro -->
