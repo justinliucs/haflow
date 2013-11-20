@@ -48,7 +48,10 @@ public class DepthFirstSearch {
 		this.setReversePostorder(new ArrayList<Integer>());
 		this.setVisited(new boolean[graph.getNodeCount()]);
 		// subgraph of start node
-		doDepthFirstSearch(graph, graph.getStartNodeIndex());
+		for( int i = 0; i < visited.length; i++){
+			if( !visited[i] )
+				doDepthFirstSearch(graph, i);//graph.getStartNodeIndex()
+		}
 		this.getReversePostorder().addAll(this.getPostorder());
 		Collections.reverse(this.getReversePostorder());
 	}

@@ -12,14 +12,12 @@ import java.util.Set;
 public class DirectedGraph {
 	private List<Node> nodeList;
 	private List<Edge> edgeList;
-	private Node startNode;
 	private Map<Node, Integer> indexMap;
 	private List<List<AdjMatrixNode>> adjacentMatrix;
 
-	public DirectedGraph(Set<Node> nodes, Set<Edge> edges, Node startNode) {
+	public DirectedGraph(Set<Node> nodes, Set<Edge> edges) {
 		this.nodeList = new ArrayList<Node>();
 		this.edgeList = new ArrayList<Edge>();
-		this.startNode = startNode;
 		this.indexMap = new HashMap<Node, Integer>();
 
 		int i = 0;
@@ -64,9 +62,6 @@ public class DirectedGraph {
 		return this.adjacentMatrix.get(nodeIndex);
 	}
 
-	public int getStartNodeIndex() {
-		return this.indexMap.get(this.startNode);
-	}
 
 	public Node getNode(int nodeIndex) {
 		assert (nodeIndex >= 0 && nodeIndex < this.adjacentMatrix.size());
@@ -77,26 +72,6 @@ public class DirectedGraph {
 //		assert (this.indexMap.containsKey(node));
 		return this.indexMap.get(node);
 	}
-
-//	public Map<String, Node> getInputs(Node node) {
-//		Map<String, Node> ret = new HashMap<String, Node>();
-//		for (Edge edge : this.edgeList) {
-//			if (edge.getTargetNode() == node) {
-//				ret.put(edge.getTargetEndpoint(), edge.getSourceNode());
-//			}
-//		}
-//		return ret;
-//	}
-//
-//	public Map<String, Node> getOutputs(Node node) {
-//		Map<String, Node> ret = new HashMap<String, Node>();
-//		for (Edge edge : this.edgeList) {
-//			if (edge.getSourceNode() == node) {
-//				ret.put(edge.getSourceEndpoint(), edge.getSourceNode());
-//			}
-//		}
-//		return ret;
-//	}
 	
 	public List<Node> getNodeList() {
 		return nodeList;
@@ -113,28 +88,4 @@ public class DirectedGraph {
 	public void setEdgeList(List<Edge> edgeList) {
 		this.edgeList = edgeList;
 	}
-
-//	private Node getStartNode() {
-//		return startNode;
-//	}
-//
-//	private void setStartNode(Node startNode) {
-//		this.startNode = startNode;
-//	}
-//
-//	private Map<Node, Integer> getIndexMap() {
-//		return indexMap;
-//	}
-//
-//	private void setIndexMap(Map<Node, Integer> indexMap) {
-//		this.indexMap = indexMap;
-//	}
-//
-//	private List<List<Integer>> getAdjacentMatrix() {
-//		return adjacentMatrix;
-//	}
-//
-//	private void setAdjacentMatrix(List<List<Integer>> adjacentMatrix) {
-//		this.adjacentMatrix = adjacentMatrix;
-//	}
 }

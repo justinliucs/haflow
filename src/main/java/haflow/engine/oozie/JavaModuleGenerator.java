@@ -10,7 +10,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.tools.ant.filters.StringInputStream;
 import org.w3c.dom.Document;
 
-public class JavaModuleGenerator extends OozieXmlGenerator {
+public class JavaModuleGenerator extends OozieNodeXmlGenerator {
 
 	public static final String JOB_TRACKER = "job-tracker";
 	public static final String NAME_NODE = "name-node";
@@ -40,7 +40,7 @@ public class JavaModuleGenerator extends OozieXmlGenerator {
 //			String argument = configurations.get(ARG);
 //			System.out.println("argument: " + argument);
 						
-			String ok = outputs.get("ok").getName();
+			String ok = outputs.get("ok").getName();//TODO
 			String error = outputs.get("error").getName();
 			
 			StringBuilder sb = new StringBuilder();
@@ -61,7 +61,7 @@ public class JavaModuleGenerator extends OozieXmlGenerator {
 					+ sb.toString()
 					+ "</java>"
 					+ "\n" + "<ok to=\"" + ok + "\"/>" + "\n"//ok
-					+ "<error to=\"" +error + "\"/>" + "\n" + "</action>";
+					+ "<error to=\"" +error + "\"/>" + "\n" + "</action>" + "\n";
 			return DocumentBuilderFactory.newInstance().newDocumentBuilder()
 					.parse(new StringInputStream(xml));
 		} catch (Exception e) {

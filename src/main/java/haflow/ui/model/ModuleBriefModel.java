@@ -12,6 +12,7 @@ public class ModuleBriefModel {
 	private UUID id;
 	private String name;
 	private String category;
+	private String type;
 	private List<ModuleConfigurationModel> configurations;
 	private List<ModuleEndpointModel> inputs;
 	private List<ModuleEndpointModel> outputs;
@@ -41,6 +42,15 @@ public class ModuleBriefModel {
 
 	public void setCategory(String category) {
 		this.category = category;
+	}
+	
+	@XmlElement
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	@XmlElementWrapper(name = "configurations")

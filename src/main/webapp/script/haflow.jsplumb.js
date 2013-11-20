@@ -60,6 +60,8 @@ HAFlow.Main.prototype.paintNodes = function(flowId) {
 	for ( var i = 0; i < this.flows[flowId].nodes.length; i++) {
 		var moduleName = this.getModuleById(this,
 				this.flows[flowId].nodes[i].moduleId).name;
+		var moduleType = this.getModuleById(this,
+				this.flows[flowId].nodes[i].moduleId).type;
 		text += "<div class=\"node" + "\" style=\"left:"
 				+ this.flows[flowId].nodes[i].position.left + "px; top:"
 				+ this.flows[flowId].nodes[i].position.top + "px;";
@@ -72,6 +74,17 @@ HAFlow.Main.prototype.paintNodes = function(flowId) {
 		if (moduleName == "Kill") {
 			text += "background:#DC143C";
 		}
+		
+		if( moduleType == "SOURCE"){
+			text += "background:#ACE6E6";
+		}else if( moduleType == "DEST"){
+			text += "background:#009999";
+		}else if( moduleType == "MIDDLE_DATA"){
+			text += "background:#FFD9BF";
+		}else{
+			text += "background:#FF6600";
+		}
+		
 		text += "\" id=\"node_" + this.flows[flowId].nodes[i].id + "\">"
 				+ "<div>" + this.flows[flowId].nodes[i].name + "</div><div>"
 				+ "(" + moduleName + ")</div>" + "</div>";

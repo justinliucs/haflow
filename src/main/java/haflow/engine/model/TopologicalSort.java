@@ -29,8 +29,9 @@ public class TopologicalSort {
 			DepthFirstSearch depthFirstSearch = new DepthFirstSearch(graph);
 			this.setOrder(depthFirstSearch.getReversePostorder());
 			this.setDirectedAcyclicGraph(true);
+		}else{
+			this.setDirectedAcyclicGraph(false);
 		}
-		this.setDirectedAcyclicGraph(false);
 	}
 
 }

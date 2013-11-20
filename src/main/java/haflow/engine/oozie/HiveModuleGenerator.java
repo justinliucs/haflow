@@ -10,7 +10,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.tools.ant.filters.StringInputStream;
 import org.w3c.dom.Document;
 
-public class HiveModuleGenerator extends OozieXmlGenerator {
+public class HiveModuleGenerator extends OozieNodeXmlGenerator {
 
 	public static final String JOB_TRACKER = "job-tracker";
 	public static final String NAME_NODE = "name-node";

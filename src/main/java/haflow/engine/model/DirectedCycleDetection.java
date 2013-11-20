@@ -49,7 +49,10 @@ public class DirectedCycleDetection {
 		this.setVisited(new boolean[graph.getNodeCount()]);
 		this.setOnStack(new boolean[graph.getNodeCount()]);
 		this.setEdgeTo(new int[graph.getNodeCount()]);
-		detectCycle(graph, graph.getStartNodeIndex());
+		for( int i = 0; i < graph.getNodeCount(); i++){
+			if( !visited[i]) 
+				detectCycle(graph, i);
+		}
 	}
 
 	private void detectCycle(DirectedGraph graph, int nodeIndex) {

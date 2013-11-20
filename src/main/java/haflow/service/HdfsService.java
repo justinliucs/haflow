@@ -24,8 +24,6 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import antlr.collections.impl.Vector;
-
 @Component
 public class HdfsService {
 	private ClusterConfiguration clusterConfiguration;
@@ -46,6 +44,7 @@ public class HdfsService {
 				ClusterConfiguration.FS_DEFAULT_NAME,
 				this.getClusterConfiguration().getProperty(
 						ClusterConfiguration.FS_DEFAULT_NAME));
+		conf.set("user.name", "root");
 		return FileSystem.get(conf);
 	}
 

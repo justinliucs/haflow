@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 public class ClusterConfiguration {
 	private static final String PROERTIES_FILE_NAME = "cluster.properties";
 	public static final String WORKSPACE_HDFS = "workspace_hdfs";
+	public static final String MIDDLE_DATA_HDFS = "middle_data_hdfs";
 	public static final String WORKSPACE_LOCAL = "workspace_local";
 	public static final String FS_DEFAULT_NAME = "fs.default.name";
 

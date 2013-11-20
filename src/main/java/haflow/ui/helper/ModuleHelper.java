@@ -100,6 +100,7 @@ public class ModuleHelper {
 			moduleBriefModel.setId(UUID.fromString(module.id()));
 			moduleBriefModel.setName(module.name());
 			moduleBriefModel.setCategory(module.category());
+			moduleBriefModel.setType(module.type().name());
 			moduleBriefModel
 					.setConfigurations(new ArrayList<ModuleConfigurationModel>());
 			moduleBriefModel.setInputs(new ArrayList<ModuleEndpointModel>());
