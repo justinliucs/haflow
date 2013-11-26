@@ -33,198 +33,61 @@ dojo.require("dojox.layout.ContentPane");
 
 HAFlow.Main.prototype.openoozie = function() {
 	var _currentInstance = this;
-	$
-			.ajax({
-				url : _currentInstance.basePath + "oozie/",
-				type : "Post",
-				success : function(data, status) {
-					if((dijit.byId("oozie")==null)&&(dijit.byId("hive")==null))
-					{
-						var contentPane = new dijit.layout.ContentPane(
-								{
-									id : "oozie",
-									title : "Oozie",
-									content : data,
-									closable : true,
-									onClose : function() {
-										dijit.registry.remove("oozie");
-										if(dijit.byId("hive")==null)
-											{
-											_currentInstance.ui.mainoozieContainer
-											.addChild(_currentInstance.ui.leadingContainer);
-											_currentInstance.ui.mainoozieContainer
-											.addChild(_currentInstance.ui.trailingContainer);
-											_currentInstance.ui.mainoozieContainer
-											.addChild(_currentInstance.ui.centerContainerParent);
-											_currentInstance.ui.centerContainerParent
-											.addChild(_currentInstance.ui.centerContainer);
-											_currentInstance.ui.mainoozieContainer
-											.removeChild(_currentInstance.ui.oozieHiveContainer);									
-											}
-										else
-											{
-											
-											}
-										return true;
-									}
-								});
+	if (dijit.byId("oozie") != null) {
+		_currentInstance.ui.centerContainer.selectChild(dijit.byId("oozie"));
+		return;
+	}
 
-
-						_currentInstance.ui.mainoozieContainer
-								.removeChild(_currentInstance.ui.leadingContainer);
-						_currentInstance.ui.mainoozieContainer
-								.removeChild(_currentInstance.ui.trailingContainer);
-						_currentInstance.ui.mainoozieContainer
-								.removeChild(_currentInstance.ui.centerContainerParent);
-						_currentInstance.ui.centerContainerParent
-						.removeChild(_currentInstance.ui.centerContainer);
-						_currentInstance.ui.mainoozieContainer
-						.addChild(_currentInstance.ui.oozieHiveContainer);	
-						_currentInstance.ui.oozieHiveContainer.addChild(contentPane);
-						_currentInstance.ui.oozieHiveContainer.selectChild(contentPane);
-					}
-					else
-						{
-						if(dijit.byId("oozie")==null)
-							{
-							var contentPane = new dijit.layout.ContentPane(
-									{
-										id : "oozie",
-										title : "Oozie",
-										content : data,
-										closable : true,
-										onClose : function() {
-											dijit.registry.remove("oozie");
-											if(dijit.byId("hive")==null)
-											{
-											_currentInstance.ui.mainoozieContainer
-											.addChild(_currentInstance.ui.leadingContainer);
-											_currentInstance.ui.mainoozieContainer
-											.addChild(_currentInstance.ui.trailingContainer);
-											_currentInstance.ui.mainoozieContainer
-											.addChild(_currentInstance.ui.centerContainerParent);
-											_currentInstance.ui.centerContainerParent
-											.addChild(_currentInstance.ui.centerContainer);
-											_currentInstance.ui.mainoozieContainer
-											.removeChild(_currentInstance.ui.oozieHiveContainer);
-											}
-											else{
-												
-											}
-											return true;
-										}
-									});
-							_currentInstance.ui.oozieHiveContainer.addChild(contentPane);
-							_currentInstance.ui.oozieHiveContainer.selectChild(contentPane);
-							}
-						else{
-							_currentInstance.ui.oozieHiveContainer.selectChild("oozie");
-						}
-						}
-					
-				},
-				error : function(request, status, error) {
-					HAFlow.showDialog("Error",
-							"An error occurred while opening: " + error);
+	$.ajax({
+		url : _currentInstance.basePath + "oozie/",
+		type : "Post",
+		success : function(data, status) {
+			var contentPane = new dijit.layout.ContentPane({
+				id : "oozie",
+				title : "Oozie",
+				content : data,
+				closable : true,
+				onClose : function() {
+					dijit.registry.remove("oozie");
+					return true;
 				}
 			});
+			_currentInstance.ui.centerContainer.addChild(contentPane);
+			_currentInstance.ui.centerContainer.selectChild(contentPane);
+		},
+		error : function(request, status, error) {
+			HAFlow.showDialog("Error", "An error occurred while opening oozie: "
+					+ error);
+		}
+	});
 };
 
 HAFlow.Main.prototype.openhive = function() {
 	var _currentInstance = this;
-	$
-			.ajax({
-				url : _currentInstance.basePath + "hive/",
-				type : "Post",
-				success : function(data, status) {
-					if((dijit.byId("oozie")==null)&&(dijit.byId("hive")==null))
-					{
-						var contentPane = new dijit.layout.ContentPane(
-								{
-									id : "hive",
-									title : "Hive",
-									content : data,
-									closable : true,
-									onClose : function() {
-										dijit.registry.remove("hive");
-										if(dijit.byId("oozie")==null)
-											{
-											_currentInstance.ui.mainoozieContainer
-												.removeChild(_currentInstance.ui.oozieHiveContainer);
-											_currentInstance.ui.mainoozieContainer
-												.addChild(_currentInstance.ui.leadingContainer);
-											_currentInstance.ui.mainoozieContainer
-												.addChild(_currentInstance.ui.trailingContainer);
-											_currentInstance.ui.mainoozieContainer
-												.addChild(_currentInstance.ui.centerContainerParent);
-											_currentInstance.ui.centerContainerParent
-												.addChild(_currentInstance.ui.centerContainer);
-											}
-										else
-											{
-											
-											
-											}
-										return true;
-									}
-								});
-						_currentInstance.ui.mainoozieContainer
-						.removeChild(_currentInstance.ui.leadingContainer);
-						_currentInstance.ui.mainoozieContainer
-								.removeChild(_currentInstance.ui.trailingContainer);
-						_currentInstance.ui.mainoozieContainer
-								.removeChild(_currentInstance.ui.centerContainerParent);
-						_currentInstance.ui.centerContainerParent
-							.removeChild(_currentInstance.ui.centerContainer);
-						_currentInstance.ui.mainoozieContainer
-							.addChild(_currentInstance.ui.oozieHiveContainer);	
-						_currentInstance.ui.oozieHiveContainer.addChild(contentPane);
-						_currentInstance.ui.oozieHiveContainer.selectChild(contentPane);
-					}
-					else
-						{
-						if(dijit.byId("hive")==null)
-							{
-							var contentPane = new dijit.layout.ContentPane(
-									{
-										id : "hive",
-										title : "Hive",
-										content : data,
-										closable : true,
-										onClose : function() {
-											dijit.registry.remove("hive");
-											if(dijit.byId("oozie")==null)
-											{
-											_currentInstance.ui.mainoozieContainer
-											.addChild(_currentInstance.ui.leadingContainer);
-											_currentInstance.ui.mainoozieContainer
-											.addChild(_currentInstance.ui.trailingContainer);
-											_currentInstance.ui.mainoozieContainer
-											.addChild(_currentInstance.ui.centerContainerParent);
-											_currentInstance.ui.centerContainerParent
-											.addChild(_currentInstance.ui.centerContainer);
-											_currentInstance.ui.mainoozieContainer
-											.removeChild(_currentInstance.ui.oozieHiveContainer);
-											}
-										else
-											{
-											
-											}
-											return true;
-										}
-									});						
-							_currentInstance.ui.oozieHiveContainer.addChild(contentPane);
-							_currentInstance.ui.oozieHiveContainer.selectChild(contentPane);
-							}
-						else{
-							_currentInstance.ui.oozieHiveContainer.selectChild("hive");
-						}
-						}
-					
-				},
-				error : function(request, status, error) {
-					HAFlow.showDialog("Error",
-							"An error occurred while opening: " + error);
+	if (dijit.byId("hive") != null) {
+		_currentInstance.ui.oozieHiveContainer.selectChild(dijit.byId("hive"));
+		return;
+	}
+	$.ajax({
+		url : _currentInstance.basePath + "hive/",
+		type : "Post",
+		success : function(data, status) {
+			var contentPane = new dijit.layout.ContentPane({
+				id : "hive",
+				title : "Hive",
+				content : data,
+				closable : true,
+				onClose : function() {
+					dijit.registry.remove("hive");
+					return true;
 				}
 			});
+			_currentInstance.ui.centerContainer.addChild(contentPane);
+			_currentInstance.ui.centerContainer.selectChild(contentPane);
+		},
+		error : function(request, status, error) {
+			HAFlow.showDialog("Error", "An error occurred while opening hive: "
+					+ error);
+		}
+	});
 };

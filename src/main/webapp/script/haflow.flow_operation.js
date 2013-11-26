@@ -122,25 +122,6 @@ HAFlow.Main.prototype.initFlowListTree = function() {
 	});
 	tree.on("dblclick", function(item) {
 		if (item.node == true) {
-			watchHandle=_currentInstance.ui.centerContainer.watch("selectedChildWidget", function(name, from,
-					to) {
-				var flowId = to.domNode.id.replace("flowContainerPane_", "");
-				//TODO:
-				var hdfsreg = new RegExp("^hdfs://");
-				if(hdfsreg.test(flowId))
-					{
-//					alert("hdfs");
-//					_currentInstance.toolbar.removeFlowButton.set("disabled", "disabled");
-					}
-				else
-					{
-					_currentInstance.toolbar.removeFlowButton.set("disabled", false);
-					_currentInstance.currentFlowId = flowId;
-					_currentInstance.setupDroppable(flowId);
-					_currentInstance.paintFlow(flowId);
-					}
-
-			});
 			_currentInstance.loadFlow(item.id);
 		}
 	}, true);

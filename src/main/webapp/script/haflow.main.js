@@ -494,7 +494,11 @@ HAFlow.Main.prototype.initFlowContainer = function() {
 		var hdfsreg = new RegExp("^hdfs://");
 		if(hdfsreg.test(flowId)){
 			_currentInstance.toolbar.removeFlowButton.set("disabled","disabled");
+			_currentInstance.ui.centerRightContainer.removeChild(_currentInstance.ui.trailingContainer);
+		}else if( flowId == "oozie" || flowId == "hive"){
+			_currentInstance.ui.centerRightContainer.removeChild(_currentInstance.ui.trailingContainer);
 		}else{
+			_currentInstance.ui.centerRightContainer.addChild(_currentInstance.ui.trailingContainer);
 			_currentInstance.toolbar.removeFlowButton.set("disabled", false);
 			_currentInstance.currentFlowId = flowId;
 			_currentInstance.setupDroppable(flowId);
