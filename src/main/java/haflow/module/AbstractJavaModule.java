@@ -17,31 +17,15 @@ public abstract class AbstractJavaModule extends AbstractModule {
 
 		List<String> result = new ArrayList<String>();
 		for (ModuleEndpoint input : inputs) {
-			switch (input.dataType()) {
-			case PlainText:
-				String textValue = configurations.get(input.name()).trim();
-				result.add("--" + input.name());
-				result.add(textValue);
-				break;
-			case None:
-			default:
-				System.out.println("Invalid Parameters!");
-				break;
-			}
+			String textValue = configurations.get(input.name()).trim();
+			result.add("--" + input.name());
+			result.add(textValue);
 		}
 
 		for (ModuleEndpoint output : outputs) {
-			switch (output.dataType()) {
-			case PlainText:
-				String textValue = configurations.get(output.name()).trim();
-				result.add("--" + output.name());
-				result.add(textValue);
-				break;
-			case None:
-			default:
-				System.out.println("Invalid Parameters!");
-				break;
-			}
+			String textValue = configurations.get(output.name()).trim();
+			result.add("--" + output.name());
+			result.add(textValue);
 		}
 
 		for (String key : configurations.keySet()) {

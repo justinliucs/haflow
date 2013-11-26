@@ -15,7 +15,7 @@ import java.util.Map;
 		@ModuleConfiguration(key = "descriptor", displayName = "descriptor: Data descriptor", pattern = "^(.*)$", type = ModuleConfigurationType.PLAIN_TEXT),
 		@ModuleConfiguration(key = "regression", displayName = "regression: Regression Problem", pattern = "^(.*)$", type = ModuleConfigurationType.BOOLEAN) }, 
 	inputs = { 
-		@ModuleEndpoint(name = "path", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText) }, 
+		@ModuleEndpoint(name = "path", minNumber = 1, maxNumber = 1, dataType = DataType.Arff) }, 
 	outputs = {
 		@ModuleEndpoint(name = "file", minNumber = 1, maxNumber = 1, dataType = DataType.PlainText) })
 public class DescribeModule extends AbstractJavaModule {
