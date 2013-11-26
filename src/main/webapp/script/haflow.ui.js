@@ -84,7 +84,7 @@ HAFlow.UI.prototype.initCenterRightContainer = function() {
 		splitter : "true"
 	});
 	this.centerRightContainer.addChild(this.centerContainer);
-	this.centerRightContainer.addChild(this.trailingContainer);
+//	this.centerRightContainer.addChild(this.trailingContainer);
 	this.centerRightContainer.startup();
 };
 

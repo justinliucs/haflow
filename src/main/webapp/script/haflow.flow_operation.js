@@ -31,7 +31,7 @@ dojo.require("dojo.data.ItemFileWriteStore");
 dojo.require("dojox.grid.cells.dijit");
 dojo.require("dojox.layout.ContentPane");
 
-//public
+// public
 HAFlow.Main.prototype.initFlowList = function() {
 	var flowListContentPane = new dijit.layout.ContentPane({
 		id : this.flowListContainerId,
@@ -82,41 +82,42 @@ HAFlow.Main.prototype.initFlowListTree = function() {
 		targetNodeIds : [ _currentInstance.flowListTreeId ],
 		selector : ".dijitTreeNode"
 	});
-	this.menu.flowtreeMenu.NewFlowMenuItem = new dijit.MenuItem({
-		id : "NewFlowMenuItem",
-		label : "New flow"
+	this.menu.flowtreeMenu.newFlowMenuItem = new dijit.MenuItem({
+		id : "newFlowPopupMenuItem",
+		label : "New Flow"
 	});
-	this.menu.flowtreeMenu.DeleteFlowMenuItem = new dijit.MenuItem({
-		id : "DeleteFlowMenuItem",
-		label : "Delete flow"
+	this.menu.flowtreeMenu.saveFlowMenuItem = new dijit.MenuItem({
+		id : "saveFlowPopupMenuItem",
+		label : "Save Flow"
+	});
+	this.menu.flowtreeMenu.deleteFlowMenuItem = new dijit.MenuItem({
+		id : "deleteFlowPopupMenuItem",
+		label : "Delete Flow"
 	});
 
-	this.menu.flowtreeMenu.addChild(this.menu.flowtreeMenu.NewFlowMenuItem);
-	this.menu.flowtreeMenu.addChild(this.menu.flowtreeMenu.DeleteFlowMenuItem);
-	
-	dojo
-	.connect(
-			this.menu.flowtreeMenu.NewFlowMenuItem,
-			"onClick",
+	this.menu.flowtreeMenu.addChild(this.menu.flowtreeMenu.newFlowMenuItem);
+	this.menu.flowtreeMenu.addChild(this.menu.flowtreeMenu.saveFlowMenuItem);
+	this.menu.flowtreeMenu.addChild(this.menu.flowtreeMenu.deleteFlowMenuItem);
+
+	dojo.connect(this.menu.flowtreeMenu.newFlowMenuItem, "onClick", function() {
+		_currentInstance.newFlow();
+	});
+	dojo.connect(this.menu.flowtreeMenu.saveFlowMenuItem, "onClick",
 			function() {
-//				var tn = dijit.byNode(this.getParent().currentTarget);
-//				var path = tn.item.path;
-				_currentInstance.newFlow();
+				var targetNode = dijit.byNode(this.getParent().currentTarget);
+				var targetFlowId = targetNode.item.id;
+				_currentInstance.saveFlow(targetFlowId);
 			});
-	dojo
-	.connect(
-			this.menu.flowtreeMenu.DeleteFlowMenuItem,
-			"onClick",
+	dojo.connect(this.menu.flowtreeMenu.seleteFlowMenuItem, "onClick",
 			function() {
-				var tn = dijit.byNode(this.getParent().currentTarget);
-				var flowId = tn.item.id;
-				_currentInstance.removeFlow(flowId);
+				var targetNode = dijit.byNode(this.getParent().currentTarget);
+				var targetFlowId = targetNode.item.id;
+				_currentInstance.removeFlow(targetFlowId);
 			});
-	
+
 	tree.on("click", function(item) {
 		if (item.node == true) {
 			_currentInstance.onFlowClicked(_currentInstance, item.id);
-
 		}
 
 	});
@@ -129,23 +130,16 @@ HAFlow.Main.prototype.initFlowListTree = function() {
 	tree.startup();
 };
 
-//Event Handler
+// Event Handler
 HAFlow.Main.prototype.onFlowClicked = function(instance, flowId) {
 	var flowBrief = instance.getFlowBriefById(instance, flowId);
 	var text = "";
-	text+="<table border=\"0\">";
-	text+="<tr style=\"tr\"><th align=\"left\">Flow Info</th><td>"+ flowBrief.id +"</td></tr>";
-	text+="<tr style=\"tr\"><th align=\"left\">Name</th><td><span id=\"flow_name_text_box\" class=\"configuration-content\"></span></td></tr>";
-	text+="<tr style=\"tr\"><td align=\"left\"><div id=\"save_flow_name_button\" class=\"configuration-content\"></div></td></tr>";
-	text+="</table>";
-//	text += "<div class=\"configuration\">";
-//	text += "<div class=\"configuration-content\"><strong>Flow Info:</strong></div>";
-//	text += "<div class=\"configuration-content\"><span><strong>Id:</strong> "
-//			+ flowBrief.id + "</span></div>";
-//	text += "<div class=\"configuration-content\"><span><strong>Name:</strong></span>";
-//	text += "<span id=\"flow_name_text_box\" class=\"configuration-content\"></span></div>";
-//	text += "<div id=\"save_flow_name_button\" class=\"configuration-content\"></div>";
-//	text += "</div>";
+	text += "<table border=\"0\">";
+	text += "<tr style=\"tr\"><th align=\"left\">Flow Info</th><td>"
+			+ flowBrief.id + "</td></tr>";
+	text += "<tr style=\"tr\"><th align=\"left\">Name</th><td><span id=\"flow_name_text_box\" class=\"configuration-content\"></span></td></tr>";
+	text += "<tr style=\"tr\"><td align=\"left\"><div id=\"save_flow_name_button\" class=\"configuration-content\"></div></td></tr>";
+	text += "</table>";
 	$("#" + instance.informationContainerId).html(text);
 	if (dijit.byId("flow_" + flowBrief.id + "_name") != null) {
 		dijit.registry.remove("flow_" + flowBrief.id + "_name");
@@ -197,6 +191,12 @@ HAFlow.Main.prototype.newFlow = function() {
 
 HAFlow.Main.prototype.saveFlow = function(flowId) {
 	var _currentInstance = this;
+	if (flowId == null) {
+		HAFlow.showDialog("Error",
+				"No flow selected, please double click a flow!");
+		return;
+	}
+
 	$.ajax({
 		url : _currentInstance.basePath + "flow/" + flowId,
 		type : "PUT",
@@ -216,6 +216,11 @@ HAFlow.Main.prototype.saveFlow = function(flowId) {
 
 HAFlow.Main.prototype.removeFlow = function(flowId) {
 	var _currentInstance = this;
+	if (flowId == null) {
+		HAFlow.showDialog("Error",
+				"No flow selected, please double click a flow!");
+		return;
+	}
 	$.ajax({
 		url : _currentInstance.basePath + "flow/" + flowId,
 		type : "DELETE",
@@ -223,12 +228,12 @@ HAFlow.Main.prototype.removeFlow = function(flowId) {
 		contentType : "application/json",
 		data : JSON.stringify({}),
 		success : function(data, status) {
-			HAFlow.showDialog("Remove Flow", "Flow removed.");
 			_currentInstance.ui.centerContainer.removeChild(dijit
 					.byId("flowContainerPane_" + flowId));
 			_currentInstance.refreshFlowList();
 			_currentInstance.flowListStore
 					.remove(_currentInstance.flows[flowId].id);
+			HAFlow.showDialog("Remove Flow", "Flow removed.");
 		},
 		error : function(request, status, error) {
 			HAFlow.showDialog("Error",
@@ -237,7 +242,7 @@ HAFlow.Main.prototype.removeFlow = function(flowId) {
 	});
 };
 
-//double click on flow item
+// double click on flow item
 HAFlow.Main.prototype.loadFlow = function(flowId) {
 	if (dojo.byId("flowContainer_" + flowId) == null) {
 		var _currentInstance = this;
@@ -275,6 +280,10 @@ HAFlow.Main.prototype.loadFlow = function(flowId) {
 
 HAFlow.Main.prototype.runFlow = function(flowId) {
 	var _currentInstance = this;
+	if (flowId == null || flowId.length == 0) {
+		HAFlow.showDialog("Error", "No flow selected!");
+		return;
+	}
 	$.ajax({
 		url : _currentInstance.basePath + "flow/" + flowId,
 		type : "PUT",
@@ -307,20 +316,21 @@ HAFlow.Main.prototype.runFlow = function(flowId) {
 	});
 };
 
-
 HAFlow.Main.prototype.showRunHistory = function(flowId) {
-	if( flowId == null){
-		alert("No flow selected, please double click a flow!");
+	if (flowId == null) {
+		HAFlow.showDialog("Error",
+				"No flow selected, please double click a flow!");
 		return;
 	}
-	
+
 	var found = false;
-	var children = this.ui.bottomContainer.getChildren();	
+	var children = this.ui.bottomContainer.getChildren();
 	var i;
-	for( i = 0; i < children.length; i++ ){
+	for (i = 0; i < children.length; i++) {
 		var child = children[i];
-		if( child.id == ("runHistoryPane_" + flowId)){
-			alert("Run History Panel for " + flowId + " already opened!");
+		if (child.id == ("runHistoryPane_" + flowId)) {
+			HAFlow.showDialog("Info", "Run History Panel for " + flowId
+					+ " already opened!");
 			this.ui.bottomContainer.selectChild(child);
 			found = true;
 			break;
@@ -328,12 +338,13 @@ HAFlow.Main.prototype.showRunHistory = function(flowId) {
 	}
 	var _currentInstance = this;
 	dojo.xhrGet({
-		url :  _currentInstance.basePath + "runHistory/get/" + flowId,
-		load : function(data, ioArgs){
-			if( found == true){
-				var contentPane = dijit.registry.byId("runHistoryPaneInline_" + flowId);
-				contentPane.set('content', data);	
-			}else {
+		url : _currentInstance.basePath + "runHistory/get/" + flowId,
+		load : function(data, ioArgs) {
+			if (found == true) {
+				var contentPane = dijit.registry.byId("runHistoryPaneInline_"
+						+ flowId);
+				contentPane.set('content', data);
+			} else {
 				var contentPaneInner = new dijit.layout.ContentPane({
 					id : "runHistoryPaneInline_" + flowId,
 					title : "History_" + _currentInstance.flows[flowId].name,
@@ -346,11 +357,11 @@ HAFlow.Main.prototype.showRunHistory = function(flowId) {
 					content : contentPaneInner,
 					closable : true
 				});
-				_currentInstance.ui.bottomContainer.addChild(contentPane);			
+				_currentInstance.ui.bottomContainer.addChild(contentPane);
 				_currentInstance.ui.bottomContainer.selectChild(contentPane);
 			}
 		},
-		error : function(err, ioArgs){
+		error : function(err, ioArgs) {
 			alert(err);
 		}
 	});
