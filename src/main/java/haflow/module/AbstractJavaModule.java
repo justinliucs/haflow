@@ -33,7 +33,7 @@ public abstract class AbstractJavaModule extends AbstractModule {
 			switch (confType) {
 			case BOOLEAN:
 				String boolValue = configurations.get(key);
-				if (boolValue.equals("true")) {
+				if (boolValue.equals("true") || boolValue.equals("on")) {
 					result.add("--" + key);
 				}
 				break;
