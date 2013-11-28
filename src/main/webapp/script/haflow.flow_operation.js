@@ -153,9 +153,10 @@ HAFlow.Main.prototype.initFlowListTree = function(FlowListStoreId) {
 		label : "Save Flow"
 	});
 
-	this.menu.flowtreeMenu.CreateFlowFolderMenuItem = new dijit.MenuItem({
-		id : "CreateFlowFolderMenuItem",
+	this.menu.flowtreeMenu.createFlowFolderMenuItem = new dijit.MenuItem({
+		id : "createFlowFolderMenuItem",
 		label : "Create flow folder"
+	});
 	this.menu.flowtreeMenu.deleteFlowMenuItem = new dijit.MenuItem({
 		id : "deleteFlowPopupMenuItem",
 		label : "Delete Flow"
@@ -164,6 +165,7 @@ HAFlow.Main.prototype.initFlowListTree = function(FlowListStoreId) {
 	this.menu.flowtreeMenu.addChild(this.menu.flowtreeMenu.newFlowMenuItem);
 	this.menu.flowtreeMenu.addChild(this.menu.flowtreeMenu.saveFlowMenuItem);
 	this.menu.flowtreeMenu.addChild(this.menu.flowtreeMenu.deleteFlowMenuItem);
+	this.menu.flowtreeMenu.addChild(this.menu.flowtreeMenu.createFlowFolderMenuItem);
 
 	dojo
 	.connect(
@@ -172,7 +174,6 @@ HAFlow.Main.prototype.initFlowListTree = function(FlowListStoreId) {
 			function() {
 				var tn = dijit.byNode(this.getParent().currentTarget);
 				var isnode=tn.item.node;
-				var path=tn.item.path;
 				if(isnode==false)
 					{
 					_currentInstance.newFlow(tn.item.id,tn.item.path);
@@ -183,9 +184,17 @@ HAFlow.Main.prototype.initFlowListTree = function(FlowListStoreId) {
 					}
 				
 			});
+	
+	dojo.connect(this.menu.flowtreeMenu.saveFlowMenuItem, "onClick",
+			function() {
+				var targetNode = dijit.byNode(this.getParent().currentTarget);
+				var targetFlowId = targetNode.item.id;
+				_currentInstance.saveFlow(targetFlowId);
+			});
+
 	dojo
 	.connect(
-			this.menu.flowtreeMenu.DeleteFlowMenuItem,
+			this.menu.flowtreeMenu.deleteFlowMenuItem,
 			"onClick",
 			function() {
 				var tn = dijit.byNode(this.getParent().currentTarget);
@@ -204,7 +213,7 @@ HAFlow.Main.prototype.initFlowListTree = function(FlowListStoreId) {
 	
 	dojo
 	.connect(
-			this.menu.flowtreeMenu.CreateFlowFolderMenuItem,
+			this.menu.flowtreeMenu.createFlowFolderMenuItem,
 			"onClick",
 			function() {
 				var tn = dijit.byNode(this.getParent().currentTarget);
