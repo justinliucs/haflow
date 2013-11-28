@@ -65,14 +65,17 @@ public class FlowHelper {
 		this.nodeConfigurationProfileService = nodeConfigurationProfileService;
 	}
 
-	public FlowListModel getFlowList(int userid) {
-		List<Flow> flowList = this.getFlowService().getFlowList(userid);
+	public FlowListModel getFlowList(int userid,String path) {
+		List<Flow> flowList = this.getFlowService().getFlowList(userid,path);
 		FlowListModel flowListModel = new FlowListModel();
 		flowListModel.setFlows(new ArrayList<FlowBriefModel>());
 		for (Flow flow : flowList) {
 			FlowBriefModel flowBriefModel = new FlowBriefModel();
 			flowBriefModel.setId(flow.getId());
 			flowBriefModel.setName(flow.getName());
+			flowBriefModel.setNode(flow.getNode());
+			flowBriefModel.setPath(flow.getPath());
+			flowBriefModel.setParentpath(flow.getParentpath());
 			flowListModel.getFlows().add(flowBriefModel);
 		}
 		return flowListModel;
@@ -185,8 +188,8 @@ public class FlowHelper {
 		}
 		boolean result = true;
 		result = result
-				&& this.getFlowService().saveFlow(flowId, model.getName(),
-						nodes, edges,userid);
+				&& this.getFlowService().saveFlow(flowId, model.getName(),model.getNode(),model.getPath(),
+						model.getParentpath(),nodes, edges,userid);
 		result = result
 				&& this.getNodeAppearanceService()
 						.cleanUpOrphanNodeAppearance();
@@ -213,5 +216,13 @@ public class FlowHelper {
 			result.setMessage("fail");
 		}
 		return result;
+	}
+
+	public boolean renameFlowFolder(UUID flowId, String name,int userid) {
+		System.out.println("rename flow helper");
+		if(this.getFlowService().renameFlowFolder(userid, flowId, name))
+			return true;
+		else
+			return false;
 	}
 }

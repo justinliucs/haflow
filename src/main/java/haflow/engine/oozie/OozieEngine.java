@@ -8,7 +8,9 @@ import haflow.engine.AbstractEngine;
 import haflow.engine.Engine;
 import haflow.engine.RunFlowResult;
 import haflow.engine.ValidateFlowResult;
+import haflow.engine.model.AdjMatrixNode;
 import haflow.engine.model.DirectedGraph;
+import haflow.module.DataType;
 import haflow.module.Module;
 import haflow.module.ModuleConfiguration;
 import haflow.module.ModuleEndpoint;
@@ -17,6 +19,7 @@ import haflow.service.HdfsService;
 import haflow.service.NodeConfigurationService;
 import haflow.util.ClusterConfiguration;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -49,8 +52,9 @@ public class OozieEngine extends AbstractEngine {
 			Map<UUID, Class<?>> moduleClasses = this.moduleUtil
 					.searchForModuleClasses();
 			
+			DirectedGraph originalGraph = new DirectedGraph(flow.getNodes(), flow.getEdges());
 			messageBuilder.append("Start validating flow inputs and outputs ...");
-			boolean isValidGraph = true;//validateGraph(graph, moduleClasses, messageBuilder);//TODO
+			boolean isValidGraph = validateGraph(originalGraph, moduleClasses, messageBuilder);//TODO
 			if (isValidGraph) {
 				messageBuilder.append(" done"  + "<br>");
 				
@@ -63,7 +67,7 @@ public class OozieEngine extends AbstractEngine {
 					String flowName = flow.getName();
 					String workflowXml = null;
 					try {
-						workflowXml = this.oozieFlowXmlGenerator.genWorkflowXml(flow, moduleClasses, messageBuilder);
+						workflowXml = this.oozieFlowXmlGenerator.genWorkflowXml(flow, originalGraph, moduleClasses, messageBuilder);
 					} catch (Exception e) {
 						messageBuilder.append(e.getMessage());
 					}
@@ -146,10 +150,89 @@ public class OozieEngine extends AbstractEngine {
 		return jarPaths;
 	}
 
+	/**
+	 * validate graph 
+	 * @param graph
+	 * @param moduleClasses
+	 * @param messageBuilder
+	 * @return
+	 */
 	private boolean validateGraph(DirectedGraph graph,
 			Map<UUID, Class<?>> moduleClasses, StringBuilder messageBuilder) {
+		boolean idtm = isDataTypeMatch(graph, moduleClasses, messageBuilder);
+		if(idtm == false)
+			return false;
+		boolean veio = hasNoEmptyInputOutput(graph, moduleClasses, messageBuilder);
+		if( veio == false)
+			return false;
+		return true;
+		
+	}
+	
+	private boolean isDataTypeMatch(DirectedGraph graph,
+			Map<UUID, Class<?>> moduleClasses, StringBuilder messageBuilder){
 		List<Edge> edges = graph.getEdgeList();
 
+		Map<Edge, DataType> sourceDataTypeMap = new HashMap<Edge, DataType>();
+		Map<Edge, DataType> targetDataTypeMap = new HashMap<Edge, DataType>();
+		
+		for( Edge edge : edges ){
+			Node sourceNode = edge.getSourceNode();
+			Class<?> sourceNodeModuleClass = moduleClasses.get(sourceNode.getModuleId());
+			Module sourceNodeModule = sourceNodeModuleClass.getAnnotation(Module.class);
+			ModuleEndpoint[] outputs = sourceNodeModule.outputs();
+			DataType sourceEndPointDataType = null;
+			for( ModuleEndpoint output : outputs){
+				if( output.name().equals(edge.getSourceEndpoint()) ){
+					sourceEndPointDataType = output.dataType();
+				}
+			}
+			
+			Node targetNode = edge.getTargetNode();
+			Class<?> targetNodeModuleClass = moduleClasses.get(targetNode.getModuleId());
+			Module targetNodeModule = targetNodeModuleClass.getAnnotation(Module.class);
+			ModuleEndpoint[] inputs = targetNodeModule.inputs();
+			DataType targetEndPointDataType = null;
+			for( ModuleEndpoint input : inputs ){
+				if( input.name().equals(edge.getTargetEndpoint())){
+					targetEndPointDataType = input.dataType();
+				}
+			}
+			
+			if( !sourceDataTypeMap.containsKey(edge)){
+				sourceDataTypeMap.put(edge, sourceEndPointDataType);
+			}
+			if(targetEndPointDataType == DataType.AUTO){
+				int nodeIndex = graph.getNodeIndex(targetNode);
+				List<AdjMatrixNode> adjEdges = graph.getAdjacent(nodeIndex);
+				for(AdjMatrixNode adjEdge : adjEdges ){
+					targetDataTypeMap.put(adjEdge.getPath(), sourceEndPointDataType);
+				}
+			}else{
+				if( !targetDataTypeMap.containsKey(edge)){
+					targetDataTypeMap.put(edge, targetEndPointDataType);
+				}
+			}
+		}
+		
+		//validate data type of each edge
+		for( Edge edge : edges ){
+			DataType sourceEndPointDataType = sourceDataTypeMap.get(edge);
+			DataType targetEndPointDataType = targetDataTypeMap.get(edge);
+			
+			if( !DataType.matches(sourceEndPointDataType, targetEndPointDataType) ){
+				messageBuilder.append("<br>" + "Data type mismatch: " + edge.getSourceNode().getName() + "." + 
+					edge.getSourceEndpoint() + " to " + edge.getTargetNode().getName() + "." + edge.getTargetEndpoint());
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	private boolean hasNoEmptyInputOutput(DirectedGraph graph,
+			Map<UUID, Class<?>> moduleClasses, StringBuilder messageBuilder){
+		List<Edge> edges = graph.getEdgeList();
+		//check the graph
 		for (int i = 0; i < graph.getNodeCount(); i++) {
 			Node node = graph.getNode(i);
 			UUID moduleId = node.getModuleId();
@@ -158,6 +241,7 @@ public class OozieEngine extends AbstractEngine {
 			ModuleEndpoint[] inputs = annotation.inputs();
 			ModuleEndpoint[] outputs = annotation.outputs();
 
+			//check empty input
 			for (ModuleEndpoint input : inputs) {
 				String inputName = input.name();
 				boolean found = false;
@@ -169,11 +253,12 @@ public class OozieEngine extends AbstractEngine {
 					}
 				}				
 				if( !found){
-					messageBuilder.append("Empty input of node " + node.getName() + " input " + inputName);
+					messageBuilder.append("<br>" + "Empty input of node " + node.getName() + " input " + inputName);
 					return false;
 				}
 			}
 			
+			//check empty output
 			for(ModuleEndpoint output : outputs){
 				String outputName = output.name();
 				boolean found = false;

@@ -734,4 +734,3 @@ HAFlow.Main.prototype.saveConfiguration = function(instance, flowId, nodeId) {
 	}
 
 };
-

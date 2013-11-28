@@ -24,11 +24,11 @@ import org.w3c.dom.Document;
 @Component
 public class OozieFlowXmlGenerator {
 	
-	public String genWorkflowXml(Flow flow, Map<UUID, Class<?>> moduleClasses, StringBuilder messageBuilder)
+	public String genWorkflowXml(Flow flow, DirectedGraph originalGraph, Map<UUID, Class<?>> moduleClasses, StringBuilder messageBuilder)
 			throws Exception {
 		messageBuilder.append("Start sorting nodes ...");
 		
-		DirectedGraph originalGraph = new DirectedGraph(flow.getNodes(), flow.getEdges());
+//		DirectedGraph originalGraph = new DirectedGraph(flow.getNodes(), flow.getEdges());
 		Map<UUID, Map<String, String>> inputConfigurations = new HashMap<UUID, Map<String, String>>();
 		DirectedGraph graph = this.graphTransformer.transform(flow, originalGraph, moduleClasses, inputConfigurations);
 		List<Integer> sorted = new TopologicalSort(graph).getOrder();

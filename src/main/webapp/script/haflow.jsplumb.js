@@ -178,19 +178,11 @@ HAFlow.Main.prototype.onConnectionClicked = function(instance, flowId, info) {
 	var targetNode = instance.getNodeById(instance, flowId, target);
 
 	var text = "";
-//	text+="<table border=\"0\">";
-//	text+="<tr style=\"tr\"><th align=\"left\">From</th><td>"+ sourceNode.name +"</td></tr>";
-//	text+="<tr style=\"tr\"><th align=\"left\">Flow</th><td>"+ instance.flows[node.flowId].name +"</td></tr>";
-//	text+="<tr style=\"tr\"><th align=\"left\">Module</th><td>"+ module.name +"</td></tr>";
-//	text+="<tr style=\"tr\"><th align=\"left\">Name</th><td><span id=\"node_name_text_box\" class=\"configuration-content\"></span><span id=\"save_node_name_button\" class=\"configuration-content\"></span></div></td></tr>";
-//	text+="<tr style=\"tr\"><th align=\"left\">Delete</th><td><span id=\"delete_node_button\" class=\"configuration-content\"></span></div></td></tr>";
-//	text+="</table>";
 	text += "<div class=\"configuration\">";
-	text += "<div class=\"configuration-content\"><span><strong>From: "
+	text += "<div class=\"configuration-content\"><span><strong><span width='115em'>From: </span>"
 			+ sourceNode.name + "." + sourceEndpoint + "</strong></span></div>"
-			+ "<div class=\"configuration-content\"><span><strong>To: "
+			+ "<div class=\"configuration-content\"><span><strong><span width='115em'>To: </span>"
 			+ targetNode.name + "." + targetEndpoint + "</strong></span></div>";
-	text += "<div class=\"configuration-content\">Delete?</div>";
 	text += "<div class=\"configuration-content\" id=\"delete_connection_button\"></div>";
 	text += "</div>";
 	$("#" + instance.informationContainerId).html(text);
@@ -252,6 +244,7 @@ HAFlow.Main.prototype.onNodeClicked = function(instance, flowId, nodeId) {
 	var node = instance.getNodeById(instance, flowId, nodeId);
 	var module = instance.getModuleById(instance, node.moduleId);
 	var text = "";
+	text+="<h2>Node Information</h2>";
 	text+="<table border=\"0\">";
 	text+="<tr style=\"tr\"><th align=\"left\">Node Id</th><td>"+ node.id +"</td></tr>";
 	text+="<tr style=\"tr\"><th align=\"left\">Flow</th><td>"+ instance.flows[node.flowId].name +"</td></tr>";
@@ -259,22 +252,40 @@ HAFlow.Main.prototype.onNodeClicked = function(instance, flowId, nodeId) {
 	text+="<tr style=\"tr\"><th align=\"left\">Name</th><td><span id=\"node_name_text_box\" class=\"configuration-content\"></span><span id=\"save_node_name_button\" class=\"configuration-content\"></span></div></td></tr>";
 	text+="<tr style=\"tr\"><th align=\"left\">Delete</th><td><span id=\"delete_node_button\" class=\"configuration-content\"></span></div></td></tr>";
 	text+="</table>";
-//	text += "<div class=\"configuration\">";
-//	text += "<div class=\"configuration-content\"><span><strong>Node Id:</strong> "
-//			+ node.id + "</span></div>";
-//	text += "<div class=\"configuration-content\"><span><strong>Flow:</strong> "
-//			+ instance.flows[node.flowId].name + "</span></div>";
-//	text += "<div class=\"configuration-content\"><span><strong>Module:</strong> "
-//			+ module.name + "</span></div>";
-//	text += "<div class=\"configuration-content\">";
-//	text += "<span><strong>Name:</strong> </span>";
-//	text += "<span id=\"node_name_text_box\" class=\"configuration-content\"></span>";
-//	text += "<div id=\"save_node_name_button\" class=\"configuration-content\"></div>";
-//	text += "</div>";
-//	text += "<div class=\"configuration-content\"><strong>Delete?</strong></div>";
-//	text += "<div id=\"delete_node_button\" class=\"configuration-content\"></div>";
-//	text += "</div>";
+
+	var form = "";
+	form += "<h2>Node Configuration</h2>";
+	form += "<div class=\"configuration\">";
+//	form += "<div class=\"configuration-content\"><strong>Configuration:</strong></div>";
+	var i;
+	for (i = 0; i < module.configurations.length; i++) {
+		var textBoxId = "flow_" + flowId + "_node_" + nodeId + "_"
+				+ module.configurations[i].key;
+		var divId = textBoxId + "_container";
+		var hdfspathButtonId = textBoxId + "_hdfspathButton";
+		form += "<div class=\"configuration-content\">";
+		if (module.configurations[i].type == "BOOLEAN") {
+			form += "<div class=\"configuration-content\"><span><strong>"
+					+ module.configurations[i].displayName
+					+ "</strong></span><span id=\"" + divId
+					+ "\" class=\"configuration-content\"></span></div>";
+		} else {
+			form += ("<span><strong>" + module.configurations[i].displayName + "</strong></span>");
+			form += "<div class=\"configuration-content\"><span id=\"" + divId
+					+ "\" class=\"configuration-content\"></span><span id=\""
+					+ hdfspathButtonId
+					+ "\" class=\"configuration-content\"></div>";
+		}
+		form += "</div>";
+	}
+	form += "<div class=\"configuration-content\" id=\"save_configuration_button\"></div>";
+	form += "</div>";
+//	var information = $("#" + instance.informationContainerId).html();
+//	$("#" + instance.informationContainerId).html(information + form);
+	text += "<p></br>" + form;
 	$("#" + instance.informationContainerId).html(text);
+	
+	
 
 	if (dijit.byId("node_" + nodeId + "_name") != null) {
 		dijit.registry.remove("node_" + nodeId + "_name");
@@ -304,34 +315,8 @@ HAFlow.Main.prototype.onNodeClicked = function(instance, flowId, nodeId) {
 	});
 	deleteNodeButton.placeAt(dojo.byId("delete_node_button"));
 	deleteNodeButton.startup();
-
-	var form = "";
-	form += "<div class=\"configuration\">";
-//	form += "<div class=\"configuration-content\"><strong>Configuration:</strong></div>";
-	var i;
-	for (i = 0; i < module.configurations.length; i++) {
-		var textBoxId = "flow_" + flowId + "_node_" + nodeId + "_"
-				+ module.configurations[i].key;
-		var divId = textBoxId + "_container";
-		var hdfspathButtonId = textBoxId + "_hdfspathButton";
-		form += "<div class=\"configuration-content\">";
-		if (module.configurations[i].type == "BOOLEAN") {
-			form += "<div class=\"configuration-content\"><span><strong>"
-					+ module.configurations[i].displayName
-					+ "</strong></span><span id=\"" + divId
-					+ "\" class=\"configuration-content\"></span></div>";
-		} else {
-			form += ("<span><strong>" + module.configurations[i].displayName + "</strong></span>");
-			form += "<div class=\"configuration-content\"><span id=\"" + divId
-					+ "\" class=\"configuration-content\"></span><span id=\""
-					+ hdfspathButtonId
-					+ "\" class=\"configuration-content\"></div>";
-		}
-		form += "</div>";
-	}
-	form += "<div class=\"configuration-content\" id=\"save_configuration_button\"></div>";
-	form += "</div>";
-	$("#" + instance.configurationContainerId).html(form);
+	
+	
 	for (i = 0; i < module.configurations.length; i++) {
 		var textBoxId = "flow_" + flowId + "_node_" + nodeId + "_"
 				+ module.configurations[i].key;

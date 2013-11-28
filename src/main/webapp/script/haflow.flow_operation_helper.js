@@ -32,7 +32,7 @@ dojo.require("dojox.grid.cells.dijit");
 dojo.require("dojox.layout.ContentPane");
 
 // Flow Operation Helper
-HAFlow.Main.prototype.refreshFlowList = function() {
+/*HAFlow.Main.prototype.refreshFlowList = function() {
 	var _currentInstance = this;
 	$.ajax({
 		url : this.basePath + "flow",
@@ -47,13 +47,13 @@ HAFlow.Main.prototype.refreshFlowList = function() {
 					"An error occurred while refreshing flow list: " + error);
 		}
 	});
-};
+};*/
 
 HAFlow.Main.prototype.getFlowBriefById = function(instance, flowId) {
 	var i;
-	for (i = 0; i < instance.flowList.flows.length; i++) {
-		if (instance.flowList.flows[i].id == flowId) {
-			return instance.flowList.flows[i];
+	for (i = 0; i < instance.flowListStore.data.length; i++) {
+		if (instance.flowListStore.data[i].id == flowId) {
+			return instance.flowListStore.data[i];
 		}
 	}
 	return null;

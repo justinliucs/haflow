@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
@@ -36,10 +37,9 @@ public class FlowController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
-	public FlowListModel get(HttpServletRequest request) {
-		return this.getFlowHelper().getFlowList((Integer)request.getSession().getAttribute("userid"));
+	public FlowListModel get(HttpServletRequest request,@RequestParam(value = "path", required = true) String path) {
+		return this.getFlowHelper().getFlowList((Integer)request.getSession().getAttribute("userid"),path);
 	}
-
 	@RequestMapping(value = "/{flowId}", method = RequestMethod.GET)
 	@ResponseBody
 	public FlowModel get(@PathVariable UUID flowId,HttpServletRequest request) {
@@ -54,10 +54,23 @@ public class FlowController {
 	}
 
 	@RequestMapping(value = "/{flowId}", method = RequestMethod.PUT)
+	
 	@ResponseBody
 	public SaveFlowResultModel put(@PathVariable UUID flowId,
 			@RequestBody SaveFlowModel model,HttpServletRequest request) {
+		System.out.println("save flow");
 		return this.getFlowHelper().saveFlow(flowId, model,(Integer)request.getSession().getAttribute("userid"));
+	}
+	
+	@RequestMapping(value = "/rename/{flowId}", method = RequestMethod.GET)
+	@ResponseBody
+	public boolean renameFlowFolder(@PathVariable UUID flowId,
+			@RequestParam(value = "name", required = true) String name,HttpServletRequest request) {
+		System.out.println("rename flow controller");
+		if(getFlowHelper().renameFlowFolder(flowId, name,(Integer)request.getSession().getAttribute("userid")))
+			return true;
+		else
+			return false;
 	}
 
 	@RequestMapping(value = "/{flowId}", method = RequestMethod.DELETE)

@@ -31,7 +31,7 @@ public class FlowService {
 		this.sessionHelper = sessionHelper;
 	}
 
-	public boolean saveFlow(UUID flowId, String name, Set<Node> nodes,
+	public boolean saveFlow(UUID flowId, String name, boolean isnode,String path,String parentpath,Set<Node> nodes,
 			Set<Edge> edges, int userid) {
 		Session session = this.getSessionHelper().openSession();
 		Transaction transaction = session.beginTransaction();
@@ -42,12 +42,18 @@ public class FlowService {
 				flow = new Flow();
 				flow.setId(flowId);
 				flow.setName(name);
+				flow.setNode(isnode);
+				flow.setPath(path);
+				flow.setParentpath(parentpath);
 				flow.setNodes(new HashSet<Node>());
 				flow.setEdges(new HashSet<Edge>());
 				flow.setUser(user);
 			} 
 			
 			flow.setName(name);
+			flow.setNode(isnode);
+			flow.setPath(path);
+			flow.setParentpath(parentpath);
 			flow.getNodes().clear();
 			flow.getEdges().clear();
 			
@@ -115,43 +121,18 @@ public class FlowService {
 			return false;
 		}
 	}
-		/*for(Flow f:user.getFlows()){
-			if(f.getId().equals(flowId)){
-//				user.getFlows().remove(f);
-//				f.setUser(null);
-				session.delete(f);
-				transaction.commit();
-				session.close();
-				return true;
-			}
-					
-		}*/
-		
-		
-		/*Flow flow = (Flow) session.get(Flow.class, flowId);
-		if (flow == null) {
-			return false;
-		}
-
-		try {
-			System.out.println("remove flow before");
-			session.delete(flow);
-			transaction.commit();
-			session.close();
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			transaction.rollback();
-			session.close();
-			return false;
-		}*/
 	
 	@SuppressWarnings("unchecked")
-	public List<Flow> getFlowList(int userid) {
+	public List<Flow> getFlowList(int userid, String path) {
 		Session session = this.getSessionHelper().openSession();
 		try {
-			Query query = session.createQuery("select f from Flow f join f.user u where u.id= "+userid);
+			Query query = session.createQuery("select f from Flow f where f.parentpath =?");
+			query.setString(0, path); 
 			List<Flow> flows = (List<Flow>) query.list();
+	        for(Flow flow : flows){
+	        	
+	            System.out.println("database："+flow.getId() + " : " + flow.getNode() + " : " + flow.getPath()+ " : " + flow.getParentpath());      
+	        } 
 			session.close();
 			return flows;
 		} catch (Exception e) {
@@ -160,7 +141,67 @@ public class FlowService {
 			return null;
 		}
 	}
-
+	
+	@SuppressWarnings("unchecked")
+	public void renameFlowPath(int userid,UUID flowId,String path,Session session)
+	{
+		Flow flowfolder = (Flow) session.get(Flow.class, flowId);
+		//修改路径
+		String newpath=path+"/"+flowfolder.getName();
+		flowfolder.setPath(newpath);
+		session.update(flowfolder);
+		String parentpath=flowId.toString();
+		Query querychild= session.createQuery("select f from Flow f where f.parentpath =?");
+		querychild.setString(0, parentpath); 
+		List<Flow> flows = (List<Flow>)querychild.list();
+        for(Flow flow : flows){	        	
+            System.out.println("child："+flow.getId() + " : " + flow.getNode() + " : " + flow.getPath()+ " : " + flow.getParentpath());         
+            if(flow.getNode()==false)
+            {
+            	renameFlowPath(userid,flow.getId(),newpath,session);
+            }
+            
+        } 
+	}
+	
+	@SuppressWarnings("unchecked")
+	public boolean renameFlowFolder(int userid,UUID flowId,String name) {
+		Session session = this.getSessionHelper().openSession();
+		Transaction trans=session.beginTransaction();
+		try {
+			//修改文件名
+			Flow flowfolder = (Flow) session.get(Flow.class, flowId);
+			flowfolder.setName(name);
+			//修改路径
+			String []path=flowfolder.getPath().split("/");
+			String newpath="";
+		     for(int i=0;i<path.length-1;i++)
+		     {
+		      newpath+=path[i]+"/";
+		     }
+		    newpath+=name;
+			flowfolder.setPath(newpath);
+			session.update(flowfolder);
+			//查找子文件
+			String parentpath=flowId.toString();
+			Query querychild= session.createQuery("select f from Flow f where f.parentpath =?");
+			querychild.setString(0, parentpath); 
+			List<Flow> flows = (List<Flow>)querychild.list();
+	        for(Flow flow : flows){	        	
+	            System.out.println("child："+flow.getId() + " : " + flow.getNode() + " : " + flow.getPath()+ " : " + flow.getParentpath());
+	            renameFlowPath(userid,flow.getId(),newpath,session);	            
+	        } 
+			//找到，改写文件路径
+	        trans.commit();
+			session.close();			
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			session.close();
+			return false;
+		}
+		
+	}
 	public Flow getFlow(UUID flowId,int userid) {
 		Session session = this.getSessionHelper().openSession();
 		try {

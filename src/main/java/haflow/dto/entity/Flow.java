@@ -12,12 +12,16 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlElement;
 
 @Entity
 @Table(name = "flow")
 public class Flow {
 	private UUID id;
 	private String name;
+	private boolean node;
+	private String path;
+	private String parentpath;
 	private Set<Node> nodes;
 	private Set<Edge> edges;
 	private MainUser user;
@@ -42,6 +46,32 @@ public class Flow {
 		this.name = name;
 	}
 
+	@Column(name = "node")
+	public boolean getNode() {
+		return node;
+	}
+
+	public void setNode(boolean node) {
+		this.node = node;
+	}
+	
+	@Column(name = "path")
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+	
+	@Column(name = "parentpath")
+	public String getParentpath() {
+		return parentpath;
+	}
+
+	public void setParentpath(String parentpath) {
+		this.parentpath = parentpath;
+	}
 	@OneToMany(mappedBy = "flow", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	public Set<Node> getNodes() {
 		return nodes;

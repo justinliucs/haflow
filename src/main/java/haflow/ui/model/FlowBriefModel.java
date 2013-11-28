@@ -9,6 +9,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class FlowBriefModel {
 	private UUID id;
 	private String name;
+	private boolean node;
+	private String path;
+	private String parentpath;
 
 	@XmlElement
 	public UUID getId() {
@@ -26,6 +29,33 @@ public class FlowBriefModel {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	@XmlElement
+	public boolean getNode() {
+		return node;
+	}
+
+	public void setNode(boolean node) {
+		this.node = node;
+	}
+	
+	@XmlElement
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+	
+	@XmlElement
+	public String getParentpath() {
+		return parentpath;
+	}
+
+	public void setParentpath(String parentpath) {
+		this.parentpath = parentpath;
 	}
 
 }
