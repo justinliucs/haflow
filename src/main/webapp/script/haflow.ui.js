@@ -19,6 +19,7 @@ HAFlow.UI.prototype.init = function() {
 	this.initLeadingContainer();
 	this.initCenterContainer();
 	this.initTrailingContainer();
+	this.initSecondTrailingContainer();
 	this.initCenterRightContainer();
 	this.initBottomContainer();
 	this.initCenterContainerParent();
@@ -36,6 +37,7 @@ HAFlow.UI.prototype.initId = function() {
 	this.bottomContainerId = "bottom";
 	this.leadingContainerId = "leading";
 	this.trailingContainerId = "trailing";
+	this.secondTrailingContainerId = "secondTrailing";
 	this.centerContainerId = "center";
 };
 
@@ -69,12 +71,23 @@ HAFlow.UI.prototype.initCenterContainer = function() {
 };
 
 HAFlow.UI.prototype.initTrailingContainer = function() {
+	this.trailingContainerLoaded = false;
 	this.trailingContainer = new dijit.layout.AccordionContainer({
 		id : this.trailingContainerId,
 		region : "trailing",
 		splitter : "true"
 	});
 	this.trailingContainer.startup();
+};
+
+HAFlow.UI.prototype.initSecondTrailingContainer = function() {
+	this.secondTrailingContainerLoaded = false;
+	this.secondTrailingContainer = new dijit.layout.AccordionContainer({
+		id : this.secondTrailingContainerId,
+		region : "trailing",
+		splitter : "true"
+	});
+	this.secondTrailingContainer.startup();
 };
 
 HAFlow.UI.prototype.initCenterRightContainer = function() {
@@ -85,6 +98,7 @@ HAFlow.UI.prototype.initCenterRightContainer = function() {
 	});
 	this.centerRightContainer.addChild(this.centerContainer);
 //	this.centerRightContainer.addChild(this.trailingContainer);
+//	this.centerRightContainer.addChild(this.secondTrailingContainer);
 	this.centerRightContainer.startup();
 };
 

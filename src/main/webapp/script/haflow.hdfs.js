@@ -390,10 +390,10 @@ HAFlow.Main.prototype.initHdfsFileListTree = function() {
 																			.showDialog(
 																					"Remove HdfsFile",
 																					"HdfsFile removed.");
-																	if(dijit.byId("flowContainerPane_"+ path)!=null)
+																	if(dijit.byId("hdfsContainerPane_"+ path)!=null)
 																	_currentInstance.ui.centerContainer
 																			.removeChild(dijit
-																					.byId("flowContainerPane_"
+																					.byId("hdfsContainerPane_"
 																							+ path));
 																} else
 																	HAFlow
@@ -720,7 +720,7 @@ HAFlow.Main.prototype.initHdfsFileListTree = function() {
 							} else if (text.test(item.name)) {
 								var url = item.parentPath+ "/" + item.name;
 								if (dijit
-										.byId("flowContainerPane_"
+										.byId("hdfsContainerPane_"
 												+ url) == null) {
 									_currentInstance
 											.getHdfsFile(
@@ -729,10 +729,10 @@ HAFlow.Main.prototype.initHdfsFileListTree = function() {
 								} else {
 									_currentInstance.ui.centerContainer
 											.removeChild(dijit
-													.byId("flowContainerPane_"
+													.byId("hdfsContainerPane_"
 															+ url));
 									dijit.registry
-											.remove("flowContainerPane_"
+											.remove("hdfsContainerPane_"
 													+ url);
 									_currentInstance
 											.getHdfsFile(
@@ -776,21 +776,20 @@ HAFlow.Main.prototype.getHdfsFile = function(path, fileName) {
 			if(length<100)
 				{
 				var contentPane = new dijit.layout.ContentPane({
-					id : "flowContainerPane_" + url,
+					id : "hdfsContainerPane_" + url,
 					title : fileName,
-					content : "<div id=\"flowContainer_" + url + "\">"
+					content : "<div id=\"hdfsContainer_" + url + "\">"
 							+ content + "</div>",
 					closable : true,
 					onClose : function() {
-						dijit.registry.remove("flowContainerPane_" + url);
+						dijit.registry.remove("hdfsContainerPane_" + url);
 						return true;
 					}
 				});
-//				watchHandle.unwatch();
 				_currentInstance.ui.centerContainer.addChild(contentPane);
 				
 				_currentInstance.ui.centerContainer.selectChild(dijit
-						.byId("flowContainerPane_" + url));
+						.byId("hdfsContainerPane_" + url));
 				}
 			else
 				{
@@ -837,20 +836,20 @@ HAFlow.Main.prototype.getHdfsFile = function(path, fileName) {
 											content = content.substring(0, count);
 										}
 										var contentPane = new dijit.layout.ContentPane({
-											id : "flowContainerPane_" + url,
+											id : "hdfsContainerPane_" + url,
 											title : fileName,
-											content : "<div id=\"flowContainer_" + url + "\">"
+											content : "<div id=\"hdfsContainer_" + url + "\">"
 													+ content + "</div>",
 											closable : true,
 											onClose : function() {
-												dijit.registry.remove("flowContainerPane_" + url);
+												dijit.registry.remove("hdfsContainerPane_" + url);
 												return true;
 											}
 										});
 										_currentInstance.ui.centerContainer.addChild(contentPane);
 										
 										_currentInstance.ui.centerContainer.selectChild(dijit
-												.byId("flowContainerPane_" + url));
+												.byId("hdfsContainerPane_" + url));
 									}
 									setreadlinedialog.destroy();
 									});
@@ -867,27 +866,27 @@ HAFlow.Main.prototype.getHdfsFile = function(path, fileName) {
 HAFlow.Main.prototype.getHdfsPicture = function(path, fileName) {
 	var url = this.basePath + "hdfs/picture" + "?path=" + path + "&fileName="
 			+ fileName;
-	if (dijit.byId("flowContainerPane_"+ path + "/" + fileName) == null) {
+	if (dijit.byId("hdfsContainerPane_"+ path + "/" + fileName) == null) {
 		var text = "";
-		text += "<div id=\"flowContainer_" + url + "\"><img src=\"" + url
+		text += "<div id=\"hdfsContainer_" + url + "\"><img src=\"" + url
 				+ "\"/>";
 		text += "</div>";
 		var contentPane = new dijit.layout.ContentPane({
-			id : "flowContainerPane_" + path + "/" + fileName,
+			id : "hdfsContainerPane_" + path + "/" + fileName,
 			title : fileName,
 			content : text,
 			closable : true,
 			onClose : function() {
-				dijit.registry.remove("flowContainerPane_" + path + "/"
+				dijit.registry.remove("hdfsContainerPane_" + path + "/"
 						+ fileName);
 				return true;
 			}
 		});
 		this.ui.centerContainer.addChild(contentPane);
-		this.ui.centerContainer.selectChild(dijit.byId("flowContainerPane_"
+		this.ui.centerContainer.selectChild(dijit.byId("hdfsContainerPane_"
 				+ path + "/" + fileName));
 	} else
-		this.ui.centerContainer.selectChild(dijit.byId("flowContainerPane_"
+		this.ui.centerContainer.selectChild(dijit.byId("hdfsContainerPane_"
 				+ path + "/" + fileName));
 };
 
@@ -915,28 +914,27 @@ HAFlow.Main.prototype.getHdfsCsv = function(path, fileName) {
 				table+="</tr>";
 				}
 			table += "</table>";
-			if(dijit.byId("flowContainerPane_" + path + "/"+ fileName)!=null)
+			if(dijit.byId("hdfsContainerPane_" + path + "/"+ fileName)!=null)
 				{
-				_currentInstance.ui.centerContainer.selectChild(dijit.byId("flowContainerPane_"
+				_currentInstance.ui.centerContainer.selectChild(dijit.byId("hdfsContainerPane_"
 						+ path + "/" + fileName));
 				}
 			else{
 				var contentPane = new  dojox.layout.ContentPane(
 						{
-							id : "flowContainerPane_" + path + "/"+ fileName,
+							id : "hdfsContainerPane_" + path + "/"+ fileName,
 							title : fileName,
 							content : table,
 							closable : true,
 							onClose : function() {
-								dijit.registry.remove("flowContainerPane_" + path + "/"+ fileName);
+								dijit.registry.remove("hdfsContainerPane_" + path + "/"+ fileName);
 								return true;
 							}
 						
 						});
 //				contentPane.setHref(url);
 				_currentInstance.ui.centerContainer.addChild(contentPane);
-//				watchHandle.unwatch();
-				_currentInstance.ui.centerContainer.selectChild(dijit.byId("flowContainerPane_"
+				_currentInstance.ui.centerContainer.selectChild(dijit.byId("hdfsContainerPane_"
 						+ path + "/" + fileName));
 			}
 		},
@@ -1006,5 +1004,5 @@ HAFlow.Main.prototype.onFileClicked = function(instance,fileInformation) {
 
 //TODO for now not used
 HAFlow.Main.prototype.onCloseTab_hdfs = function(instance) {
-	this.id.replace("flowContainerPane_", "");
+	this.id.replace("hdfsContainerPane_", "");
 };

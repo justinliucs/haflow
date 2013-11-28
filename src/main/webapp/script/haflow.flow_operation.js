@@ -56,8 +56,6 @@ HAFlow.Main.prototype.initFlowListStore = function(FlowListStoreId) {
 			var children = this.query({
 				parentpath: object.id
 			});
-			console.log('----------children of id:'+object.id);
-			console.log(children);
 			return children; 
 		}
 	}));
@@ -120,10 +118,7 @@ HAFlow.Main.prototype.initFlowListData = function() {
 
 
 HAFlow.Main.prototype.initFlowListTree = function(FlowListStoreId) {
-	console.log("------query store id")
-	console.log(FlowListStoreId);
 	var _currentInstance = this;
-	
 	
 	var treeModel = new dijit.tree.ObjectStoreModel({
 		store : this.flowListStore,
@@ -155,11 +150,11 @@ HAFlow.Main.prototype.initFlowListTree = function(FlowListStoreId) {
 
 	this.menu.flowtreeMenu.createFlowFolderMenuItem = new dijit.MenuItem({
 		id : "createFlowFolderMenuItem",
-		label : "Create flow folder"
+		label : "New Folder"
 	});
 	this.menu.flowtreeMenu.deleteFlowMenuItem = new dijit.MenuItem({
 		id : "deleteFlowPopupMenuItem",
-		label : "Delete Flow"
+		label : "Delete"
 	});
 
 	this.menu.flowtreeMenu.addChild(this.menu.flowtreeMenu.newFlowMenuItem);
@@ -200,15 +195,11 @@ HAFlow.Main.prototype.initFlowListTree = function(FlowListStoreId) {
 				var tn = dijit.byNode(this.getParent().currentTarget);
 				var flowId = tn.item.id;
 				var isnode=tn.item.node;
-				if(isnode==true)
-					{
+				if(isnode==true){
 						_currentInstance.removeFlow(flowId);
-					}
-				else
-					{
-						_currentInstance.removeFlowFolder(flowId);
-					/*HAFlow.showDialog("Error", "It's not a flow! ");*/
-					}				
+				}else{
+					_currentInstance.removeFlowFolder(flowId);
+				}				
 			});
 	
 	dojo
@@ -218,20 +209,16 @@ HAFlow.Main.prototype.initFlowListTree = function(FlowListStoreId) {
 			function() {
 				var tn = dijit.byNode(this.getParent().currentTarget);
 				var isnode=tn.item.node;
-				if(isnode==false)
-					{
+				if(isnode==false){
 					_currentInstance.createFlowFolder(tn.item.id,tn.item.path);
-					}
-				else{
+				}else{
 					HAFlow.showDialog("Error", "It's a flow! ");
 				}
-				
 			});
 	
 	tree.on("click", function(item) {
 		if (item.node == true) {
 			_currentInstance.onFlowClicked(_currentInstance, item.id);
-
 		}
 		else{
 			_currentInstance.onFlowFolderClicked(_currentInstance, item.id);
@@ -240,25 +227,6 @@ HAFlow.Main.prototype.initFlowListTree = function(FlowListStoreId) {
 	});
 	tree.on("dblclick", function(item) {
 		if (item.node == true) {
-			watchHandle=_currentInstance.ui.centerContainer.watch("selectedChildWidget", function(name, from,
-					to) {
-				var flowId = to.domNode.id.replace("flowContainerPane_", "");
-				//TODO:
-				var hdfsreg = new RegExp("^hdfs://");
-				if(hdfsreg.test(flowId))
-					{
-//					alert("hdfs");
-//					_currentInstance.toolbar.removeFlowButton.set("disabled", "disabled");
-					}
-				else
-					{
-					_currentInstance.toolbar.removeFlowButton.set("disabled", false);
-					_currentInstance.currentFlowId = flowId;
-					_currentInstance.setupDroppable(flowId);
-					_currentInstance.paintFlow(flowId);
-					}
-
-			});
 			_currentInstance.loadFlow(item.id);
 		}
 	}, true);
@@ -733,7 +701,6 @@ HAFlow.Main.prototype.saveConfiguration = function(instance, flowId, nodeId) {
 		}
 	}
 	for (i = 0; i < module.configurations.length; i++) {
-		console.log(module.configurations[i].displayName);
 		node.configurations.push({
 			key : module.configurations[i].key,
 			value : dijit.registry.byId(

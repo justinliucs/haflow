@@ -35,233 +35,273 @@ var flow;
 var watchHandle;
 
 dojo.ready(function() {
-	flow = new HAFlow.Main(new HAFlow.UI());
-	flow.init();
+    flow = new HAFlow.Main(new HAFlow.UI());
+    flow.init();
 });
 
 HAFlow.Main = function(ui) {
-	this.basePath = dojo.byId("basePath").value;
-	this.ui = ui;
-	this.rootPath = "hdfs://133.133.2.150:9000/user/root/" + username;
-	this.hdfspath = null;
+    this.basePath = dojo.byId("basePath").value;
+    this.ui = ui;
+    this.rootPath = "hdfs://133.133.2.150:9000/user/root/" + username;
+    this.userId = userid;
+    this.userName = username;
+    this.hdfspath = null;
 };
 
 // Initialize
 HAFlow.Main.prototype.init = function() {
-	this.flows = {};
-	this.jsPlumb = {};
-	this.initUserInterface();
-	this.initData();
+    this.flows = {};
+    this.jsPlumb = {};
+    this.reports = {};
+    this.initUserInterface();
+    this.initData();
 };
 
 HAFlow.Main.prototype.initUserInterface = function() {
-	this.ui.init();
-	this.initUserInterfaceId();
-	this.initMainMenu();
-	this.initToolbar();
-	this.initBottomTabs();
-	this.initFlowList();
-	this.initFlowContainer();
-	this.initHdfsFileList();
-	this.ui.refresh();
+    this.ui.init();
+    this.initUserInterfaceId();
+    this.initMainMenu();
+    this.initToolbar();
+    this.initBottomTabs();
+    this.initFlowList();
+    this.initFlowContainer();
+    this.initHdfsFileList();
+    this.initReportList();
+    this.ui.refresh();
 };
 
 HAFlow.Main.prototype.initUserInterfaceId = function() {
-	this.flowListContainerId = "flowListTreeContainer";
-	this.flowListTreeId = "flowListTree";
-	this.hdfsFileListContainerId = "hdfsFileListContainer";
-	this.hdfsFileListTreeId = "hdfsFileListTree";
-	this.moduleListContainerId = "moduleListContainer";
-	this.flowContainerId = "flowContainer";
-	this.propertyContainerId = "propertyContainer";
-	this.informationContainerId = "informationContainer";
-	this.consoleContainerId = "consoleContainer";
-	this.logContainerId = "logContainer";
-	this.configurationContainerId = "configurationContainer";
+    this.flowListContainerId = "flowListTreeContainer";
+    this.flowListTreeId = "flowListTree";
+    this.hdfsFileListContainerId = "hdfsFileListContainer";
+    this.hdfsFileListTreeId = "hdfsFileListTree";
+    this.moduleListContainerId = "moduleListContainer";
+    this.reportListContainerId = "reportListContainer";
+    this.reportListTreeId = "reportListTree";
+    this.flowContainerId = "flowContainer";
+    this.propertyContainerId = "propertyContainer";
+    this.informationContainerId = "informationContainer";
+    this.consoleContainerId = "consoleContainer";
+    this.logContainerId = "logContainer";
+    this.configurationContainerId = "configurationContainer";
 };
 
 HAFlow.Main.prototype.initMainMenu = function() {
-	this.menu = {};
-	this.initFlowMenu();
+    this.menu = {};
+    this.initFlowMenu();
 };
 
 // initFlowMenu -->  haflow.toolbar.js
 // initToolbar --> haflow.toolbar.js
 
 HAFlow.Main.prototype.initBottomTabs = function() {
-	this.initPropertyTab();
-	this.initInformationTab();
-//	this.initConfigurationTab();
-//	this.initConsoleTab();
-//	this.initLogTab();
+    this.initPropertyTab();
+    this.initInformationTab();
 };
 
 HAFlow.Main.prototype.initPropertyTab = function() {
-	var propertyContentPane = (new dijit.layout.ContentPane({
-		id : this.propertyContainerId,
-		title : "Property"
-	}));
+    var propertyContentPane = (new dijit.layout.ContentPane({
+        id : this.propertyContainerId,
+        title : "Property"
+    }));
 };
 
 HAFlow.Main.prototype.initInformationTab = function() {
-	var informationContentPane = (new dijit.layout.ContentPane({
-		id : this.informationContainerId,
-		title : "Information"
-	}));
-	this.ui.bottomContainer.addChild(informationContentPane);
+    var informationContentPane = (new dijit.layout.ContentPane({
+        id : this.informationContainerId,
+        title : "Information"
+    }));
+    this.ui.bottomContainer.addChild(informationContentPane);
 };
-//HAFlow.Main.prototype.initConfigurationTab = function() {
-//	var configurationContentPane = new dijit.layout.ContentPane({
-//		id : this.configurationContainerId,
-//		title : "Configuration"
-//	});
-//	this.ui.bottomContainer.addChild(configurationContentPane);
-//};
-//HAFlow.Main.prototype.initConsoleTab = function() {
-//	var consoleContentPane = new dijit.layout.ContentPane({
-//		id : this.consoleContainerId,
-//		title : "Console"
-//	});
-//	this.ui.bottomContainer.addChild(consoleContentPane);
-//};
-
-//HAFlow.Main.prototype.initLogTab = function() {
-//	var logContentPane = new dijit.layout.ContentPane({
-//		id : this.logContainerId,
-//		title : "Log"
-//	});
-//	this.ui.bottomContainer.addChild(logContentPane);
-//};
-
-
 
 // initFlowList --> haflow.flow_list.js
 
 HAFlow.Main.prototype.initFlowContainer = function() {
-	var _currentInstance = this;
-	watchHandle=this.ui.centerContainer.watch("selectedChildWidget", function(name, from,
-			to) {
-		var flowId = to.domNode.id.replace("flowContainerPane_", "");
-		var hdfsreg = new RegExp("^hdfs://");
-		if(hdfsreg.test(flowId)){//hdfs opened
-			_currentInstance.afterFlowUnSelected();
-		}else if( flowId == "oozie" || flowId == "hive"){//oozie or hive opened
-			_currentInstance.afterFlowUnSelected();
-		}else{ //flow opened	
-			_currentInstance.afterFlowSelected();
-			_currentInstance.currentFlowId = flowId;
-			_currentInstance.setupDroppable(flowId);
-			_currentInstance.paintFlow(flowId);
-		}
+    var _currentInstance = this;
+    watchHandle=this.ui.centerContainer.watch("selectedChildWidget", function(name, from,
+            to) {
+        var targetContainerPaneId = to.domNode.id; 
+        var flowContainerPaneString = "flowContainerPane_";
+        var reportContainerPaneString = "reportContainerPane_";
+        var hdfsContainerPaneString = "hdfsContainerPane_";
+        
+        if(targetContainerPaneId.substring(0, reportContainerPaneString.length) 
+                === reportContainerPaneString){//report opened
+            _currentInstance.afterFlowUnSelected();
+            _currentInstance.afterReportSelected();
+            
+            var reportId = targetContainerPaneId.replace(reportContainerPaneString, "");
+            _currentInstance.setupReportDroppable(reportId);
+//            _currentInstance.paintReport(reportId);    
+        }else if(targetContainerPaneId.substring(0, flowContainerPaneString.length) 
+                === flowContainerPaneString){ //flow opened
+            
+            _currentInstance.afterReportUnSelected();
+            _currentInstance.afterFlowSelected();
+            
+            var flowId = targetContainerPaneId.replace(flowContainerPaneString, "");
+            _currentInstance.currentFlowId = flowId;
+            _currentInstance.setupDroppable(flowId);
+            _currentInstance.paintFlow(flowId);            
+        }else{
+            _currentInstance.afterFlowUnSelected();
+            _currentInstance.afterReportUnSelected();
+            
+//            var hdfsreg = new RegExp("^hdfs://");hdfsreg.test(targetContainerPaneId)
+            if(targetContainerPaneId.substring(0, hdfsContainerPaneString.length) 
+                    === hdfsContainerPaneString){ //hdfs opened                
+                
+            }else if( targetContainerPaneId == "oozie" 
+                || targetContainerPaneId == "hive"){//oozie or hive opened
+                
+            }else {
+                alert("not known target container!");
+            }
+        }
 
-	});
-	
-	dojo.connect(this.ui.centerContainer, "closeChild", function(child){
-		if( !_currentInstance.ui.centerContainer.hasChildren()){
-			_currentInstance.ui.centerRightContainer.removeChild(_currentInstance.ui.trailingContainer);
-		}
+    });
+    
+    dojo.connect(this.ui.centerContainer, "closeChild", function(child){
+        if( !_currentInstance.ui.centerContainer.hasChildren()){
+            _currentInstance.ui.centerRightContainer.removeChild(_currentInstance.ui.trailingContainer);
+        }
     });
 };
 
+HAFlow.Main.prototype.afterReportSelected = function(){
+    var _currentInstance = this;
+    _currentInstance.ui.centerRightContainer.addChild(_currentInstance.ui.secondTrailingContainer);
+    if(_currentInstance.ui.secondTrailingContainerLoaded == false){
+        _currentInstance.paintReportList();
+        _currentInstance.ui.secondTrailingContainerLoaded = true;
+    }
+};
+
+HAFlow.Main.prototype.afterReportUnSelected = function(){
+    var _currentInstance = this;
+    _currentInstance.ui.centerRightContainer.removeChild(_currentInstance.ui.secondTrailingContainer);
+};
+
 HAFlow.Main.prototype.afterFlowSelected = function(){
-	var _currentInstance = this;
-	
-	//toolbar
-	_currentInstance.toolbar.removeFlowButton.set("disabled", false);
-	_currentInstance.toolbar.saveFlowButton.set("disabled", false);
-	_currentInstance.toolbar.runFlowButton.set("disabled", false);
-	//menu item
-	_currentInstance.menu.flowMenu.deleteFlowMenuItem.set("disabled", false);
-	_currentInstance.menu.flowMenu.saveFlowMenuItem.set("disabled", false);
-	_currentInstance.menu.runMenu.runFlowMenuItem.set("disabled", false);
-	_currentInstance.menu.runMenu.runFlowHistoryMenuItem.set("disabled", false);
-	
-	_currentInstance.ui.centerRightContainer.addChild(_currentInstance.ui.trailingContainer);
+    var _currentInstance = this;
+    
+    //toolbar
+    _currentInstance.toolbar.removeFlowButton.set("disabled", false);
+    _currentInstance.toolbar.saveFlowButton.set("disabled", false);
+    _currentInstance.toolbar.runFlowButton.set("disabled", false);
+    //menu item
+    _currentInstance.menu.flowMenu.deleteFlowMenuItem.set("disabled", false);
+    _currentInstance.menu.flowMenu.saveFlowMenuItem.set("disabled", false);
+    _currentInstance.menu.runMenu.runFlowMenuItem.set("disabled", false);
+    _currentInstance.menu.runMenu.runFlowHistoryMenuItem.set("disabled", false);
+    
+    _currentInstance.ui.centerRightContainer.addChild(_currentInstance.ui.trailingContainer);
+    if(_currentInstance.ui.trailingContainerLoaded == false){
+        _currentInstance.paintModuleList();
+        _currentInstance.ui.trailingContainerLoaded = true;
+    }    
 };
 
 HAFlow.Main.prototype.afterFlowUnSelected = function() {
-	var _currentInstance = this;
-	
-	//toolbar
-	_currentInstance.toolbar.removeFlowButton.set("disabled", true);
-	_currentInstance.toolbar.saveFlowButton.set("disabled", true);
-	_currentInstance.toolbar.runFlowButton.set("disabled", true);
-	//menu item
-	_currentInstance.menu.flowMenu.deleteFlowMenuItem.set("disabled", true);
-	_currentInstance.menu.flowMenu.saveFlowMenuItem.set("disabled", true);
-	_currentInstance.menu.runMenu.runFlowMenuItem.set("disabled", true);
-	_currentInstance.menu.runMenu.runFlowHistoryMenuItem.set("disabled", true);
-	
-	_currentInstance.ui.centerRightContainer.removeChild(_currentInstance.ui.trailingContainer);
+    var _currentInstance = this;
+    
+    //toolbar
+    _currentInstance.toolbar.removeFlowButton.set("disabled", true);
+    _currentInstance.toolbar.saveFlowButton.set("disabled", true);
+    _currentInstance.toolbar.runFlowButton.set("disabled", true);
+    //menu item
+    _currentInstance.menu.flowMenu.deleteFlowMenuItem.set("disabled", true);
+    _currentInstance.menu.flowMenu.saveFlowMenuItem.set("disabled", true);
+    _currentInstance.menu.runMenu.runFlowMenuItem.set("disabled", true);
+    _currentInstance.menu.runMenu.runFlowHistoryMenuItem.set("disabled", true);
+    
+    _currentInstance.ui.centerRightContainer.removeChild(_currentInstance.ui.trailingContainer);
 };
 // initHdfsFileList --> halow.hdfs.js
-
+// initReportList --> haflow.report_list.js
 // end initUserInterface
 
 HAFlow.Main.prototype.initData = function() {
-/*	this.initFlowListData();*/
-	this.initModuleListData();
+/*    this.initFlowListData();*/
+    this.initModuleListData();
 };
 
-
+//HAFlow.Main.prototype.initFlowListData = function() {
+//    var _currentInstance = this;
+//    $.ajax({
+//        url : this.basePath + "flow",
+//        type : "GET",
+//        cache : false,
+//        dataType : "json",
+//        success : function(data, status) {
+//            _currentInstance.flowList = data;
+//            _currentInstance.initModuleListData();
+//        },
+//        error : function(request, status, error) {
+//            HAFlow.showDialog("Error",
+//                    "An error occurred while loading flow list: " + error);
+//        }
+//    });
+//};
 
 HAFlow.Main.prototype.initModuleListData = function() {
-	var _currentInstance = this;
-	$.ajax({
+    var _currentInstance = this;
+    $.ajax({
 
-		url : _currentInstance.basePath + "module",
-		type : "GET",
-		cache : false,
-		dataType : "json",
-		success : function(data, status) {
-			_currentInstance.moduleList = data;
-			_currentInstance.drawLists(_currentInstance);
-		},
-		error : function(request, status, error) {
-			HAFlow.showDialog("Error",
-					"An error occurred while loading module list: " + error);
-		}
-	});
+        url : _currentInstance.basePath + "module",
+        type : "GET",
+        cache : false,
+        dataType : "json",
+        success : function(data, status) {
+            _currentInstance.moduleList = data;
+            _currentInstance.drawLists(_currentInstance);
+        },
+        error : function(request, status, error) {
+            HAFlow.showDialog("Error",
+                    "An error occurred while loading module list: " + error);
+        }
+    });
 };
 
 HAFlow.Main.prototype.drawLists = function(instance) {
-	instance.paintModuleList();
-/*	instance.buildFlowListTree();*/
+    instance.paintModuleList();
+/*    instance.buildFlowListTree();*/
 };
 
 HAFlow.Main.prototype.paintModuleList = function() {
-	var i;
-	for (i = 0; i < this.moduleList.modules.length; i++) {
-		if (dijit.byId(this.moduleListContainerId + "_"
-				+ this.moduleList.modules[i].category) == null) {
-			var moduleListPane = new dijit.layout.ContentPane({
-				id : this.moduleListContainerId + "_"
-						+ this.moduleList.modules[i].category,
-				title : this.moduleList.modules[i].category
-			});
-			this.ui.trailingContainer.addChild(moduleListPane);
-		}
-		text = "<div class=\"module\" id=\"module_"
-				+ this.moduleList.modules[i].id + "\"><div>"
-				+ this.moduleList.modules[i].name + "</div></div>";
-		$(
-				"#" + this.moduleListContainerId + "_"
-						+ this.moduleList.modules[i].category).append(text);
-	}
-	this.ui.refresh();
+    var i;
+    for (i = 0; i < this.moduleList.modules.length; i++) {
+        if (dijit.byId(this.moduleListContainerId + "_"
+                + this.moduleList.modules[i].category) == null) {
+            var moduleListPane = new dijit.layout.ContentPane({
+                id : this.moduleListContainerId + "_"
+                        + this.moduleList.modules[i].category,
+                title : this.moduleList.modules[i].category
+            });
+            this.ui.trailingContainer.addChild(moduleListPane);
+        }
+        text = "<div class=\"module\" id=\"module_"
+                + this.moduleList.modules[i].id + "\"><div>"
+                + this.moduleList.modules[i].name + "</div></div>";
+        $("#" + this.moduleListContainerId + "_"
+                + this.moduleList.modules[i].category).append(text);
+    }
+    this.ui.refresh();
 
 };
 
+//paintReportList --> haflow.report.js
+
+
 /*HAFlow.Main.prototype.buildFlowListTree = function() {
-	var i;
-	for (i = 0; i < this.flowList.flows.length; i++) {
-		this.flowListStore.put({
-			id : this.flowList.flows[i].id,
-			name : this.flowList.flows[i].name,
-			node : true
-		});
-	}
+    var i;
+    for (i = 0; i < this.flowList.flows.length; i++) {
+        this.flowListStore.put({
+            id : this.flowList.flows[i].id,
+            name : this.flowList.flows[i].name,
+            node : true
+        });
+    }
 };*/
 
 //end initData
-

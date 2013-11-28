@@ -23,6 +23,7 @@
 <link rel="stylesheet" href="<%=basePath%>/style/haflow.css">
 <link rel="stylesheet" href="<%=basePath%>/style/haflow.ui.css">
 <link rel="stylesheet" href="<%=basePath%>/style/haflow.main.css">
+<link rel="stylesheet" href="<%=basePath%>/style/haflow.report.css">
 
 
 
@@ -42,6 +43,8 @@
 <script type="text/javascript" src="<%=basePath%>/script/haflow.flow_operation.js"></script>
 <script type="text/javascript" src="<%=basePath%>/script/haflow.flow_operation_helper.js"></script>
 <script type="text/javascript" src="<%=basePath%>/script/haflow.hdfs.js"></script>
+<script type="text/javascript" src="<%=basePath%>/script/haflow.report.js"></script>
+<script type="text/javascript" src="<%=basePath%>/script/haflow.report_list.js"></script>
 <script type="text/javascript" src="<%=basePath%>/script/haflow.jsplumb.js"></script>
 <script type="text/javascript" src="<%=basePath%>/script/haflow.oozie_hive.js"></script>
 <script type="text/javascript" src="<%=basePath%>/script/haflow.toolbar.js"></script>

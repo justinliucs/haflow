@@ -1,0 +1,26 @@
+.reportmodule {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	margin-left: 10px;
+	margin-right: 5px;
+	width: 8em;
+	padding: 1em;
+	z-index: 4;
+	border-radius: 1em;
+	box-shadow: 2px 2px 19px #e0e0e0;
+	-o-box-shadow: 2px 2px 19px #e0e0e0;
+	-webkit-box-shadow: 2px 2px 19px #e0e0e0;
+	-moz-box-shadow: 2px 2px 19px #e0e0e0;
+	-moz-border-radius: 0.5em;
+	border-radius: 0.5em;
+	opacity: 0.8;
+	filter: alpha(opacity-80);
+	cursor: move;
+	border: 2px solid #800080;
+}
+
+.reportcontainer {
+	position: relative;
+	width: 2000px;
+	height: 1500px;
+}
