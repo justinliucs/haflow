@@ -1,7 +1,6 @@
 package haflow.ui.controller;
 
 import haflow.ui.helper.FlowHelper;
-import haflow.ui.model.SaveFlowModel;
 import haflow.ui.model.FlowListModel;
 import haflow.ui.model.FlowModel;
 import haflow.ui.model.SaveFlowResultModel;
@@ -49,7 +48,7 @@ public class FlowController {
 	@RequestMapping(value = "/{flowId}", method = RequestMethod.POST)
 	@ResponseBody
 	public SaveFlowResultModel post(@PathVariable UUID flowId,
-			@RequestBody SaveFlowModel model,HttpServletRequest request) {
+			@RequestBody FlowModel model,HttpServletRequest request) {
 		return this.getFlowHelper().saveFlow(flowId, model,(Integer)request.getSession().getAttribute("userid"));
 	}
 
@@ -57,7 +56,7 @@ public class FlowController {
 	
 	@ResponseBody
 	public SaveFlowResultModel put(@PathVariable UUID flowId,
-			@RequestBody SaveFlowModel model,HttpServletRequest request) {
+			@RequestBody FlowModel model,HttpServletRequest request) {
 		System.out.println("save flow");
 		return this.getFlowHelper().saveFlow(flowId, model,(Integer)request.getSession().getAttribute("userid"));
 	}

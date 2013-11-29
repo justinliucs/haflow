@@ -22,7 +22,6 @@ import haflow.ui.model.EdgeModel;
 import haflow.ui.model.FlowBriefModel;
 import haflow.ui.model.FlowListModel;
 import haflow.ui.model.FlowModel;
-import haflow.ui.model.SaveFlowModel;
 import haflow.ui.model.SaveFlowResultModel;
 import haflow.ui.model.NodeModel;
 import haflow.ui.model.PositionModel;
@@ -89,6 +88,9 @@ public class FlowHelper {
 		FlowModel flowModel = new FlowModel();
 		flowModel.setId(flow.getId());
 		flowModel.setName(flow.getName());
+		flowModel.setNode(flow.getNode());
+		flowModel.setPath(flow.getPath());
+		flowModel.setParentpath(flow.getParentpath());
 		flowModel.setNodes(new HashSet<NodeModel>());
 		for (Node node : flow.getNodes()) {
 			NodeModel nodeModel = new NodeModel();
@@ -130,7 +132,7 @@ public class FlowHelper {
 		return flowModel;
 	}
 
-	public SaveFlowResultModel saveFlow(UUID flowId, SaveFlowModel model,int userid) {
+	public SaveFlowResultModel saveFlow(UUID flowId, FlowModel model,int userid) {
 		boolean success = this.doSaveFlow(flowId, model,userid);
 		SaveFlowResultModel result = new SaveFlowResultModel();
 		result.setFlowId(flowId);
@@ -143,7 +145,7 @@ public class FlowHelper {
 		return result;
 	}
 
-	public boolean doSaveFlow(UUID flowId, SaveFlowModel model,int userid) {
+	public boolean doSaveFlow(UUID flowId, FlowModel model,int userid) {
 		Set<Node> nodes = new HashSet<Node>();
 		Set<Edge> edges = new HashSet<Edge>();
 		for (NodeModel nodeModel : model.getNodes()) {
