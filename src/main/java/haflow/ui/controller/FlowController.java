@@ -36,37 +36,44 @@ public class FlowController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
-	public FlowListModel get(HttpServletRequest request,@RequestParam(value = "path", required = true) String path) {
-		return this.getFlowHelper().getFlowList((Integer)request.getSession().getAttribute("userid"),path);
+	public FlowListModel get(HttpServletRequest request,
+			@RequestParam(value = "path", required = true) String path) {
+		return this.getFlowHelper().getFlowList(
+				(Integer) request.getSession().getAttribute("userid"), path);
 	}
+
 	@RequestMapping(value = "/{flowId}", method = RequestMethod.GET)
 	@ResponseBody
-	public FlowModel get(@PathVariable UUID flowId,HttpServletRequest request) {
-		return this.getFlowHelper().getFlow(flowId,(Integer)request.getSession().getAttribute("userid"));
+	public FlowModel get(@PathVariable UUID flowId, HttpServletRequest request) {
+		return this.getFlowHelper().getFlow(flowId,
+				(Integer) request.getSession().getAttribute("userid"));
 	}
 
 	@RequestMapping(value = "/{flowId}", method = RequestMethod.POST)
 	@ResponseBody
 	public SaveFlowResultModel post(@PathVariable UUID flowId,
-			@RequestBody FlowModel model,HttpServletRequest request) {
-		return this.getFlowHelper().saveFlow(flowId, model,(Integer)request.getSession().getAttribute("userid"));
+			@RequestBody FlowModel model, HttpServletRequest request) {
+		return this.getFlowHelper().saveFlow(flowId, model,
+				(Integer) request.getSession().getAttribute("userid"));
 	}
 
 	@RequestMapping(value = "/{flowId}", method = RequestMethod.PUT)
-	
 	@ResponseBody
 	public SaveFlowResultModel put(@PathVariable UUID flowId,
-			@RequestBody FlowModel model,HttpServletRequest request) {
+			@RequestBody FlowModel model, HttpServletRequest request) {
 		System.out.println("save flow");
-		return this.getFlowHelper().saveFlow(flowId, model,(Integer)request.getSession().getAttribute("userid"));
+		return this.getFlowHelper().saveFlow(flowId, model,
+				(Integer) request.getSession().getAttribute("userid"));
 	}
-	
+
 	@RequestMapping(value = "/rename/{flowId}", method = RequestMethod.GET)
 	@ResponseBody
 	public boolean renameFlowFolder(@PathVariable UUID flowId,
-			@RequestParam(value = "name", required = true) String name,HttpServletRequest request) {
+			@RequestParam(value = "name", required = true) String name,
+			HttpServletRequest request) {
 		System.out.println("rename flow controller");
-		if(getFlowHelper().renameFlowFolder(flowId, name,(Integer)request.getSession().getAttribute("userid")))
+		if (getFlowHelper().renameFlowFolder(flowId, name,
+				(Integer) request.getSession().getAttribute("userid")))
 			return true;
 		else
 			return false;
@@ -75,8 +82,9 @@ public class FlowController {
 	@RequestMapping(value = "/{flowId}", method = RequestMethod.DELETE)
 	@ResponseBody
 	public RemoveFlowResultModel delete(@PathVariable UUID flowId,
-			@RequestBody RemoveFlowModel model,HttpServletRequest request) {
-		return this.getFlowHelper().removeFlow(flowId, model,(Integer)request.getSession().getAttribute("userid"));
+			@RequestBody RemoveFlowModel model, HttpServletRequest request) {
+		return this.getFlowHelper().removeFlow(flowId, model,
+				(Integer) request.getSession().getAttribute("userid"));
 	}
 
 }
