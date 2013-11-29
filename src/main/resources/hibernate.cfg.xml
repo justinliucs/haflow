@@ -21,6 +21,9 @@
         <mapping class="haflow.dto.entity.MainUser"/>
         <mapping class="haflow.dto.entity.FlowRunHistory" />
         
+        <mapping class="haflow.dto.entity.Report" />
+        <mapping class="haflow.dto.entity.Portlet" />
+        
 		<mapping class="haflow.dto.profile.NodeAppearance" />
 		<mapping class="haflow.dto.profile.NodeConfiguration" />
 	</session-factory>

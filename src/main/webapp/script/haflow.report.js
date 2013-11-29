@@ -6,30 +6,41 @@ dojo.require("dojox.charting.axis2d.Default");
 dojo.require("dojox.charting.plot2d.Columns");
 dojo.require("dojo/fx/easing");
 
-HAFlow.Main.prototype.openReport = function(reportId){
-	this.loadReport(reportId);
-};
+//HAFlow.Main.prototype.openReport = function(reportId){
+//	this.loadReport(reportId);
+//};
 
 HAFlow.Main.prototype.newReport = function(parentId) {
 	var newReportId = HAFlow.generateUUID();
+	this.newReportItem(newReportId, parentId, false);
+	this.openReport(newReportId);
+};
+
+HAFlow.Main.prototype.newReportDirectory = function(parentId) {
+	var newReportId = HAFlow.generateUUID();
+	this.newReportItem(newReportId, parentId, true);
+};
+
+HAFlow.Main.prototype.newReportItem = function(newReportId, parentId, isdirectory){	
 	this.reports[newReportId] = {};
 	this.reports[newReportId].id = newReportId;
-	this.reports[newReportId].name = "NewReport";
+	this.reports[newReportId].name = "NewReport" + (isdirectory ? "Dir" : "");
+	this.reports[newReportId].isdirectory = isdirectory;
+	this.reports[newReportId].parentid = parentId;
 	this.reports[newReportId].portlets = new Array();
-	
-	this.loadReport(newReportId);
-	this.saveReport(newReportId);//save this.reports[newReportId]
 	
 	this.reportListStore.put({
 		id : newReportId,
 		name : this.reports[newReportId].name,
-		directory : false,
+		isdirectory : isdirectory,
 		parent : parentId
 	});
+	
+	this.saveReport(newReportId);//save this.reports[newReportId]
 };
 
 //private
-HAFlow.Main.prototype.loadReport = function(reportId){
+HAFlow.Main.prototype.openReport = function(reportId){
 	var contentPane = dijit.byId("reportContainerPane_" + reportId);//mush be dijit.byId
 	if( contentPane == null){
 		var currentReport = this.reports[reportId];
@@ -51,9 +62,22 @@ HAFlow.Main.prototype.loadReport = function(reportId){
 };
 
 
-
 HAFlow.Main.prototype.saveReport = function(reportId){
-	
+	var _currentInstance = this;
+	$.ajax({
+		url : _currentInstance.basePath + "report/" + reportId,
+		type : "PUT",
+		dataType : "json",
+		contentType : "application/json",
+		data : JSON.stringify(_currentInstance.reports[reportId]),//reports???
+		success : function(data, status) {
+			HAFlow.showDialog("Save Report", "Report saved.");
+		},
+		error : function(request, status, error) {
+			HAFlow.showDialog("Error", "An error occurred while saving flow: "
+					+ error + " status : " + status);
+		}
+	});
 };
 
 // public
@@ -154,20 +178,24 @@ HAFlow.Main.prototype.onReportModuleAdded = function(currentInstance, reportId,
 	var newPortletId = HAFlow.generateUUID();
 	if (reportModuleId == "text") {
 		var currentPortlet = {
-				id: newPortletId, 
-				title: reportModuleId, 
-				report_id: reportId, 
-				index: 1,
-				type: "text"};
+			id: newPortletId, 
+			title: reportModuleId, 
+			type: "text",
+			position: 1,
+			
+			reportId: reportId, 
+		};
 		this.reports[reportId].portlets.push(currentPortlet);
 		this.addReport(reportId, currentPortlet);
 	} else if (reportModuleId == "curve") {
 		var currentPortlet = {
 				id: newPortletId, 
 				title: reportModuleId, 
-				report_id: reportId, 
-				index: 1,
-				type: "curve"};
+				type: "curve",
+				position: 1,
+				
+				reportId: reportId, 
+			};
 		this.reports[reportId].portlets.push(currentPortlet);
 		this.addReport(reportId, currentPortlet);
 	} else {
