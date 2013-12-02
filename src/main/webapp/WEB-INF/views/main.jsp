@@ -37,6 +37,7 @@
 	src="script/jsPlumb/jquery.jsPlumb-1.4.1-all.js"></script>
 <script type="text/javascript"
 	src="http://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dojo/dojo.js"></script>
+<script type="text/javascript" src="<%=basePath%>/script/ajax.setup.js"></script>
 <script type="text/javascript" src="<%=basePath%>/script/haflow.js"></script>
 <script type="text/javascript" src="<%=basePath%>/script/haflow.ui.js"></script>
 <script type="text/javascript" src="<%=basePath%>/script/haflow.main.js"></script>

@@ -90,7 +90,6 @@ public class MainLogonController {
 		password=Md5Util.getMd5Hex(password);
 		int userid=this.getUserHelper().validate(username, password, "main");
 		if (userid!=-1) {
-			//System.out.println("logon enter!!!!!!");
 			request.getSession().setAttribute("userid", userid);
 			request.getSession().setAttribute("username", username);
 			request.getSession().setAttribute("scope", 0);
@@ -98,7 +97,6 @@ public class MainLogonController {
 			return "redirect:/main";
 
 		} else {
-			//System.out.println("logon failed!!!!!!");
 			redirectAttributes.addFlashAttribute("message","用户名密码错误");
 			return "redirect:/";
 		}
@@ -106,18 +104,17 @@ public class MainLogonController {
 
 	@RequestMapping(value = "/main")
 	public ModelAndView post(HttpServletRequest request) {
-		//System.out.println("main enter!!!!!");
-		boolean flag = UserHelper.isUserLogon(request,0);
-		if(flag){
+		//boolean flag = UserHelper.isUserLogon(request,0);
+		//if(flag){
 			ModelAndView main=new ModelAndView("main");
 			main.addObject("username", request.getSession().getAttribute("username"));
 			return main;
-		}
-		else{
+		//}
+		/*else{
 			ModelAndView mav=new ModelAndView("logon");
 			mav.addObject("message","请填写用户名和密码！");
 			return mav;
-		}
+		}*/
 	}
 	
 }
