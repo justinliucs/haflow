@@ -89,6 +89,9 @@ public class MainLogonController {
 		}
 		password=Md5Util.getMd5Hex(password);
 		int userid=this.getUserHelper().validate(username, password, "main");
+		System.out.println("!!!!!!!!!!");
+		System.out.println(username);
+		System.out.println(password);
 		if (userid!=-1) {
 			request.getSession().setAttribute("userid", userid);
 			request.getSession().setAttribute("username", username);
