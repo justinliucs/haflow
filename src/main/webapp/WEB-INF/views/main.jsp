@@ -36,13 +36,9 @@
 <script type="text/javascript"
 	src="script/jsPlumb/jquery.jsPlumb-1.4.1-all.js"></script>
 <script type="text/javascript"
-<<<<<<< HEAD
 	src="http://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dojo/dojo.js" 
 	djConfig="isDebug:true,parseOnLoad:true,locale:'zh-cn'"></script>
 <script type="text/javascript" src="<%=basePath%>/script/locale/nls/en/myfile.js"></script>
-=======
-	src="http://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dojo/dojo.js"></script>
->>>>>>> branch 'master' of https://github.com/justinliucs/haflow.git
 <script type="text/javascript" src="<%=basePath%>/script/ajax.setup.js"></script>
 <script type="text/javascript" src="<%=basePath%>/script/haflow.js"></script>
 <script type="text/javascript" src="<%=basePath%>/script/haflow.ui.js"></script>
