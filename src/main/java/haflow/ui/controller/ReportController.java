@@ -2,8 +2,8 @@ package haflow.ui.controller;
 
 import haflow.ui.helper.ReportHelper;
 import haflow.ui.model.ReportListModel;
+import haflow.ui.model.ReportResultModel;
 import haflow.ui.model.SaveReportModel;
-import haflow.ui.model.SaveReportResultModel;
 
 import java.util.UUID;
 
@@ -30,7 +30,7 @@ public class ReportController {
 
 	@RequestMapping(value = "/{reportId}", method = RequestMethod.PUT)
 	@ResponseBody
-	public SaveReportResultModel put(@PathVariable UUID reportId,
+	public ReportResultModel put(@PathVariable UUID reportId,
 			@RequestBody SaveReportModel model,HttpServletRequest request) {
 		System.out.println("save report");
 		return this.reportHelper.saveReport(reportId, model,(Integer)request.getSession().getAttribute("userid"));
@@ -52,5 +52,12 @@ public class ReportController {
 			reportListModel =  this.reportHelper.getReportList(userid);
 		}
 		return reportListModel;
+	}
+	
+	@RequestMapping(value = "/{reportId}", method = RequestMethod.DELETE)
+	@ResponseBody
+	public ReportResultModel delete(@PathVariable UUID reportId, HttpServletRequest request) {
+		return this.reportHelper.removeReport(reportId,
+				(Integer) request.getSession().getAttribute("userid"));
 	}
 }

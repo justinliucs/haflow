@@ -73,14 +73,10 @@ HAFlow.Main.prototype.initFlowListData = function() {
 		},				
 		success : function(data, status) {
 			var newFlowId;
-			if(data.flows.length==1)
-				{
+			if(data.flows.length==1) {
 				newFlowId=data.flows[0].id;
 				_currentInstance.getFlowList(data.flows[0].id);
-				}
-				
-			else
-				{
+			} else {
 				newFlowId = HAFlow.generateUUID();;
 				_currentInstance.flows[newFlowId] = {};
 				_currentInstance.flows[newFlowId].id =newFlowId;
@@ -100,8 +96,8 @@ HAFlow.Main.prototype.initFlowListData = function() {
 						//#_currentInstance.refreshFlowList();
 					},
 					error : function(request, status, error) {
-						HAFlow.showDialog("Error", "An error occurred while saving flow: "
-								+ error);
+						_currentInstance.addToConsole("An error occurred while saving flow: "
+								+ error, true);
 					}
 				});
 				}
@@ -109,8 +105,7 @@ HAFlow.Main.prototype.initFlowListData = function() {
 			_currentInstance.initFlowListTree(newFlowId);
 		},
 		error : function(request, status, error) {
-			HAFlow.showDialog("Error",
-					"An error occurred while loading "+path+"list: " + error);
+			_currentInstance.addToConsole("An error occurred while loading "+path+"list: " + error, true);
 		}
 	});
 };
@@ -162,21 +157,17 @@ HAFlow.Main.prototype.initFlowListTree = function(FlowListStoreId) {
 	this.menu.flowtreeMenu.addChild(this.menu.flowtreeMenu.deleteFlowMenuItem);
 	this.menu.flowtreeMenu.addChild(this.menu.flowtreeMenu.createFlowFolderMenuItem);
 
-	dojo
-	.connect(
+	dojo.connect(
 			this.menu.flowtreeMenu.newFlowMenuItem,
 			"onClick",
 			function() {
 				var tn = dijit.byNode(this.getParent().currentTarget);
 				var isnode=tn.item.node;
-				if(isnode==false)
-					{
+				if(isnode==false){
 					_currentInstance.newFlow(tn.item.id,tn.item.path);
-					}
-				else
-					{
-					HAFlow.showDialog("Error", "It's not a directory! ");
-					}
+				}else{
+					_currentInstance.addToConsole("It's not a directory! ", true);
+				}
 				
 			});
 	
@@ -212,15 +203,14 @@ HAFlow.Main.prototype.initFlowListTree = function(FlowListStoreId) {
 				if(isnode==false){
 					_currentInstance.createFlowFolder(tn.item.id,tn.item.path);
 				}else{
-					HAFlow.showDialog("Error", "It's a flow! ");
+					_currentInstance.addToConsole("It's a flow! ", true);
 				}
 			});
 	
 	tree.on("click", function(item) {
 		if (item.node == true) {
 			_currentInstance.onFlowClicked(_currentInstance, item.id);
-		}
-		else{
+		}else{
 			_currentInstance.onFlowFolderClicked(_currentInstance, item.id);
 		}
 
@@ -248,8 +238,7 @@ HAFlow.Main.prototype.getFlowList= function(flowid) {
 			_currentInstance.refreshFlowList(_currentInstance, flowid, data);
 		},
 		error : function(request, status, error) {
-			HAFlow.showDialog("Error",
-					"An error occurred while loading "+path+"list: " + error);
+			_currentInstance.addToConsole("An error occurred while loading "+path+"list: " + error, true);
 		}
 	});
 };
@@ -299,6 +288,8 @@ HAFlow.Main.prototype.onFlowClicked = function(instance, flowId) {
 	});
 	button.placeAt(dojo.byId("save_flow_name_button"));
 	button.startup();
+	var informationPane = dijit.byId(instance.informationContainerId);
+	_currentInstance.ui.bottomContainer.selectChild(informationPane);
 };
 
 HAFlow.Main.prototype.onFlowFolderClicked = function(instance, flowId) {
@@ -327,6 +318,8 @@ HAFlow.Main.prototype.onFlowFolderClicked = function(instance, flowId) {
 	});
 	button.placeAt(dojo.byId("save_flow_name_button"));
 	button.startup();
+	var informationPane = dijit.byId(instance.informationContainerId);
+	_currentInstance.ui.bottomContainer.selectChild(informationPane);
 };
 
 HAFlow.Main.prototype.newFlow = function(parentpath,path) {
@@ -380,11 +373,11 @@ HAFlow.Main.prototype.createFlowFolder = function(parentpath,path) {
 		contentType : "application/json",
 		data : JSON.stringify(_currentInstance.flows[newFlowId]),
 		success : function(data, status) {
-			HAFlow.showDialog("Save FlowFolder", "FlowFolder saved.");
+			_currentInstance.addToConsole("FlowFolder saved.", false);
 		},
 		error : function(request, status, error) {
-			HAFlow.showDialog("Error", "An error occurred while saving flowfolder: "
-					+ error);
+			_currentInstance.addToConsole("An error occurred while saving flowfolder: "
+					+ error, true);
 		}
 	});
 	this.flowListStore.put({
@@ -398,6 +391,10 @@ HAFlow.Main.prototype.createFlowFolder = function(parentpath,path) {
 
 HAFlow.Main.prototype.saveFlow = function(flowId) {
 	var _currentInstance = this;
+	if( _currentInstance.flows[flowId] == null ){
+		_currentInstance.addToConsole("Flow have not modified!");
+		return;
+	}
 	$.ajax({
 		url : _currentInstance.basePath + "flow/" + flowId,
 		type : "PUT",
@@ -405,12 +402,15 @@ HAFlow.Main.prototype.saveFlow = function(flowId) {
 		contentType : "application/json",
 		data : JSON.stringify(_currentInstance.flows[flowId]),
 		success : function(data, status) {
-			HAFlow.showDialog("Save Flow", "Flow saved.");
-			/*_currentInstance.refreshFlowList();*/
+			if( data.success){
+				_currentInstance.addToConsole( "Flow saved.", false);
+			} else {
+				_currentInstance.addToConsole( "Failed to save flow." + "</br> status : " + status, true);
+			}
 		},
 		error : function(request, status, error) {
-			HAFlow.showDialog("Error", "An error occurred while saving flow: "
-					+ error);
+			_currentInstance.addToConsole("An error occurred while saving flow: "
+					+ error, true);
 		}
 	});
 };
@@ -419,8 +419,8 @@ HAFlow.Main.prototype.saveFlow = function(flowId) {
 HAFlow.Main.prototype.removeFlow = function(flowId) {
 	var _currentInstance = this;
 	if (flowId == null) {
-		HAFlow.showDialog("Error",
-				"No flow selected, please double click a flow!");
+		_currentInstance.addToConsole(
+				"No flow selected, please double click a flow!", true);
 		return;
 	}
 	$.ajax({
@@ -435,11 +435,10 @@ HAFlow.Main.prototype.removeFlow = function(flowId) {
 				_currentInstance.ui.centerContainer.removeChild(dijit
 						.byId("flowContainerPane_" + flowId));
 			_currentInstance.flowListStore.remove(flowId);
-			HAFlow.showDialog("Remove Flow", "Flow removed.");
+			_currentInstance.addToConsole("Flow removed.", false);
 		},
 		error : function(request, status, error) {
-			HAFlow.showDialog("Error",
-					"An error occurred while removing flow: " + error);
+			_currentInstance.addToConsole("An error occurred while removing flow: " + error, true);
 		}
 	});
 };
@@ -454,21 +453,17 @@ HAFlow.Main.prototype.removeFlowFolder = function(flowId) {
 		data : JSON.stringify({}),
 		success : function(data, status) {			
 			var item=_currentInstance.flowListStore.query({parentpath:flowId});
-			for(var i=0;i<item.length;i++)
-				{
-				if(item[i].node==true)
-					{
+			for ( var i = 0; i < item.length; i++) {
+				if (item[i].node == true) {
 					_currentInstance.removeFlow(item[i].id);
-					}
-				else
+				} else
 					_currentInstance.removeFlowFolder(item[i].id);
-				}
+			}
 			_currentInstance.flowListStore.remove(flowId);
-			HAFlow.showDialog("Remove FlowFolder", "FlowFolder removed.");
+			_currentInstance.addToConsole("FlowFolder removed.", false);
 		},
 		error : function(request, status, error) {
-			HAFlow.showDialog("Error",
-					"An error occurred while removing flow: " + error);
+			_currentInstance.addToConsole("An error occurred while removing flow: " + error, true);
 		}
 	});
 };
@@ -499,8 +494,7 @@ HAFlow.Main.prototype.loadFlow = function(flowId) {
 						.byId("flowContainerPane_" + flowId));
 			},
 			error : function(request, status, error) {
-				HAFlow.showDialog("Error",
-						"An error occurred while loading flow: " + error);
+				_currentInstance.addToConsole("An error occurred while loading flow: " + error, true);
 			}
 		});
 	} else {
@@ -512,7 +506,7 @@ HAFlow.Main.prototype.loadFlow = function(flowId) {
 HAFlow.Main.prototype.runFlow = function(flowId) {
 	var _currentInstance = this;
 	if (flowId == null || flowId.length == 0) {
-		HAFlow.showDialog("Error", "No flow selected!");
+		_currentInstance.addToConsole("No flow selected!", true);
 		return;
 	}
 	$.ajax({
@@ -522,7 +516,7 @@ HAFlow.Main.prototype.runFlow = function(flowId) {
 		contentType : "application/json",
 		data : JSON.stringify(_currentInstance.flows[flowId]),
 		success : function(data, status) {
-			HAFlow.showDialog("Save Flow", "Flow saved.");
+			_currentInstance.addToConsole("Flow saved.", false);
 			/*_currentInstance.refreshFlowList();*/
 			$.ajax({
 				url : _currentInstance.basePath + "run/" + flowId,
@@ -531,18 +525,18 @@ HAFlow.Main.prototype.runFlow = function(flowId) {
 				contentType : "application/json",
 				data : JSON.stringify({}),
 				success : function(data, status) {
-					HAFlow.showDialog("Run Flow", " Commited: " + data.commited
-							+ "\n" + "Result: " + data.message);
+					_currentInstance.addToConsole("Run Commited: " + data.commited
+							+ "\n" + "Result: " + data.message, false);
 				},
 				error : function(request, status, error) {
-					HAFlow.showDialog("Error",
-							"An error occurred while running flow: " + error);
+					_currentInstance.addToConsole(
+							"An error occurred while running flow: " + error, true);
 				}
 			});
 		},
 		error : function(request, status, error) {
-			HAFlow.showDialog("Error", "An error occurred while saving flow: "
-					+ error);
+			_currentInstance.addToConsole("An error occurred while saving flow: "
+					+ error, true);
 		}
 	});
 };
@@ -550,8 +544,8 @@ HAFlow.Main.prototype.runFlow = function(flowId) {
 
 HAFlow.Main.prototype.showRunHistory = function(flowId) {
 	if (flowId == null) {
-		HAFlow.showDialog("Error",
-				"No flow selected, please double click a flow!");
+		_currentInstance.addToConsole(
+				"No flow selected, please double click a flow!", true);
 		return;
 	}
 
@@ -561,8 +555,8 @@ HAFlow.Main.prototype.showRunHistory = function(flowId) {
 	for( i = 0; i < children.length; i++ ){
 		var child = children[i];
 		if (child.id == ("runHistoryPane_" + flowId)) {
-			HAFlow.showDialog("Info", "Run History Panel for " + flowId
-					+ " already opened!");
+			_currentInstance.addToConsole("Run History Panel for " + flowId
+					+ " already opened!", true);
 			this.ui.bottomContainer.selectChild(child);
 			found = true;
 			break;
@@ -618,11 +612,10 @@ HAFlow.Main.prototype.saveFlowName = function(instance, flowId) {
 				parentpath:instance.flows[flowId].parentpath
 			});
 		} else {
-			HAFlow.showDialog("Error", "Invalid flow name");
+			_currentInstance.addToConsole( "Invalid flow name", true);
 		}
 	} else {
-		HAFlow.showDialog("Error",
-				"Please load the flow before saving flow metadata!");
+		_currentInstance.addToConsole("Please load the flow before saving flow metadata!", true);
 	}
 };
 
@@ -661,12 +654,12 @@ HAFlow.Main.prototype.saveFlowFolderName = function(instance, flowId) {
 				});
 				}
 			else
-				HAFlow.showDialog("Error", "An error occurred while saving flowfolder");
+				_currentInstance.addToConsole("An error occurred while saving flowfolder", true);
 
 		},
 		error : function(request, status, error) {
-			HAFlow.showDialog("Error", "An error occurred while saving flowfolder: "
-					+ error);
+			_currentInstance.addToConsole("An error occurred while saving flowfolder: "
+					+ error, true);
 		}
 	});
 };
@@ -680,7 +673,7 @@ HAFlow.Main.prototype.saveNodeName = function(instance, flowId, nodeId) {
 		instance.paintFlow(flowId);
 		instance.jsPlumb[flowId].repaintEverything();
 	} else {
-		HAFlow.showDialog("Error", "Invalid node name");
+		_currentInstance.addToConsole("Invalid node name", true);
 	}
 };
 
@@ -695,8 +688,8 @@ HAFlow.Main.prototype.saveConfiguration = function(instance, flowId, nodeId) {
 						+ module.configurations[i].key).get("value");
 		if (module.configurations[i].type != "BOOLEAN" && val != null
 				&& val.match(module.configurations[i].pattern) == null) {
-			HAFlow.showDialog("Error", "Invalid node configuration: "
-					+ module.configurations[i].displayName);
+			_currentInstance.addToConsole("Invalid node configuration: "
+					+ module.configurations[i].displayName, true);
 			return;
 		}
 	}

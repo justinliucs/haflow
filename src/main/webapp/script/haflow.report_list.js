@@ -19,7 +19,7 @@ HAFlow.Main.prototype.initReportList = function() {
         	_currentInstance.initReportListTree();
         },
         error: function(request, status, error) {
-            HAFlow.showDialog("Error", "An error occurred while loading flow list: " + error);
+        	_currentInstance.addToConsole("An error occurred while loading flow list: " + error, true);
         }
     });
 };
@@ -57,27 +57,33 @@ HAFlow.Main.prototype.fillReportsData = function(data) {
     	this.reports[reportItemId].name = reportItem.name;
     	this.reports[reportItemId].isdirectory = reportItem.isdirectory;
     	this.reports[reportItemId].parentid = reportItem.parentid;
-    	this.reports[reportItemId].portlets = new Array();//TODO
+    	this.reports[reportItemId].portlets = new Array();
+    	var portlets = reportItem.portlets;
+    	for( var j = 0; j < portlets.length; j++){
+    		var currentPortlet = {
+    				id: portlets[j].id, 
+    				title: portlets[j].title, 
+    				type: portlets[j].type,
+    				position: portlets[j].position,
+    				
+    				reportId: portlets[j].reportId, 
+    			};
+    		this.reports[reportItemId].portlets.push(currentPortlet);
+    	}
     }
 };
 
 HAFlow.Main.prototype.checkReportItem = function(isDirectory, needsDirectory){
-//	if( tn.isdirectory ){    		
-//	       _currentInstance.newReport(tn.item.id);
-// 	}else{
-// 		HAFlow.showDialog("Error", "It's not a flow directory! ");
-// 	}
-	
 	if( needsDirectory ){
 		if( isDirectory){
 			return true;
 		}else{
-			HAFlow.showDialog("Error", "It's not a flow directory! ");
+			_currentInstance.addToConsole("It's not a flow directory!", true);
 			return false;
 		}
 	}else{
 		if( isDirectory){
-			HAFlow.showDialog("Error", "It's not a flow! ");
+			_currentInstance.addToConsole("It's not a flow! ", true);
 			return false;
 		}else{
 			return true;
@@ -164,7 +170,8 @@ HAFlow.Main.prototype.initReportListTree = function() {
     });
     dojo.connect(this.menu.reportTreeMenu.deleteReportMenuItem, "onClick",
 	    function() {
-    	
+    	var tn = dijit.byNode(this.getParent().currentTarget);
+		_currentInstance.deleteReport(tn.item.id);
 	    });
     dojo.connect(this.menu.reportTreeMenu.renameReportMenuItem, "onClick",
 	    function() {
@@ -181,10 +188,7 @@ HAFlow.Main.prototype.initReportListTree = function() {
  
     this.menu.reportTreeMenu.startup();
     tree.on("click", function(item) {
-	    	var information = [];
-	    	information.id = item.id;
-	    	information.name = item.name;
-	    	_currentInstance.onReportClicked(_currentInstance, information);
+	    	_currentInstance.onReportClicked(_currentInstance, item.id);
     	}, true);
     var picture = new RegExp("^[A-Za-z0-9_]*\.jpg$");
     var text = new RegExp("^[A-Za-z0-9_]*\.(txt|ini)$");
@@ -201,13 +205,39 @@ HAFlow.Main.prototype.initReportListTree = function() {
     tree.startup();
 };
 
-HAFlow.Main.prototype.onReportClicked = function(instance, reportInformation) {
-    var text = "";
-    text += "<table border=\"0\">";
-    text += "<tr style=\"tr\"><th align=\"left\">Name</th><td>" + reportInformation.id + "</td></tr>";
-    text += "<tr style=\"tr\"><th align=\"left\">Path</th><td>" + reportInformation.name + "</td></tr>";
-    text += "</table>";
-    $("#" + instance.informationContainerId).html(text);
+HAFlow.Main.prototype.onReportClicked = function(instance, reportId) {
+	var reportInfo = instance.reports[reportId];
+	var text = "";
+	text += "<table border=\"0\">";
+	text += "<tr style=\"tr\"><th align=\"left\">Flow Info</th>" + "<td>" + reportInfo.id + "</td></tr>";
+	text += "<tr style=\"tr\"><th align=\"left\">IsDirectory</th><td>" + reportInfo.isdirectory + "</td></tr>";
+	text += "<tr style=\"tr\"><th align=\"left\">ParentId</th><td>" + reportInfo.parentid + "</td></tr>";
+	text += "<tr style=\"tr\"><th align=\"left\">Name</th><td><span id=\"report_name_text_box\" class=\"configuration-content\"></span></td></tr>";
+	text += "<tr style=\"tr\"><td align=\"left\"><div id=\"save_report_name_button\" class=\"configuration-content\"></div></td></tr>";	
+	text += "</table>";
+	$("#" + instance.informationContainerId).html(text);
+	
+	var reportNameTextBoxId = "report_" + reportInfo.id + "_name";
+	if (dijit.byId(reportNameTextBoxId) != null) {
+		dijit.registry.remove(reportNameTextBoxId);
+	}
+	var flowNameTextBox = new dijit.form.TextBox({
+		id : reportNameTextBoxId,
+		value : reportInfo.name,
+		style : "width:300px;"
+	});
+	flowNameTextBox.placeAt(dojo.byId("report_name_text_box"));
+	flowNameTextBox.startup();
+	var button = new dijit.form.Button({
+		label : "Save",
+		onClick : function() {
+			instance.saveReportName(instance, reportInfo.id);
+		}
+	});
+	button.placeAt(dojo.byId("save_report_name_button"));
+	button.startup();
+	var informationPane = dijit.byId(instance.informationContainerId);
+	_currentInstance.ui.bottomContainer.selectChild(informationPane);
 };
 
 // TODO for now not used

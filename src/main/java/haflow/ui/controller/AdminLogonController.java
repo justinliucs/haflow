@@ -56,9 +56,7 @@ public class AdminLogonController {
 	}
 	@RequestMapping(value="/adminlogon", method = RequestMethod.POST)
 	public String post(RedirectAttributes redirectAttributes,HttpServletRequest request,@RequestParam("username") String username,@RequestParam("password") String password) {
-		System.out.println("admin logon enter!!!");
-		System.out.println(username);
-		System.out.println(password);
+		
 		if(username==""||password==""){
 			redirectAttributes.addFlashAttribute("message", "ÇëÌîĞ´ÓÃ»§ÃûÃÜÂë");
 			return "redirect:/";

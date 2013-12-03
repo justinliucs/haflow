@@ -233,7 +233,7 @@ public class UserService {
 			} else
 				return -1;
 		} catch (Exception e) {
-			// e.printStackTrace();
+			 e.printStackTrace();
 			session.close();
 			return -1;
 		}

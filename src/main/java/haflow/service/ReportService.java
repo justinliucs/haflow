@@ -6,11 +6,9 @@ import haflow.dto.entity.Report;
 import haflow.util.SessionHelper;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,17 +28,20 @@ public class ReportService {
 		this.sessionHelper = sessionHelper;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public List<Report> getReportList(int userid){
+	public Set<Report> getReportList(int userid){
 		Session session = this.getSessionHelper().openSession();
 		Transaction transaction = session.beginTransaction();
 		try{
-			Query query = session.createQuery("select r from Report r where r.user.id =?");
-			query.setInteger(0, userid); 
-			List<Report> reports = (List<Report>) query.list();
-			for(Report report : reports){
-				System.out.println(report.getId());
-			}
+//			Query query = session.createQuery("select r from Report r where r.user.id =?");
+//			query.setInteger(0, userid); 
+//			List<Report> reports = (List<Report>) query.list();
+//			for(Report report : reports){
+//				System.out.println(report.getId());
+//			}
+//			return reports;
+			
+			MainUser user = (MainUser)session.get(MainUser.class, userid);
+			Set<Report> reports = user.getReports();
 			return reports;
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -93,5 +94,63 @@ public class ReportService {
 			if (session != null)
 				session.close();
 		}
+	}
+
+	public boolean removeReport(UUID reportId, Integer userId, Set<UUID> deletedReportIds) {
+		Session session = this.sessionHelper.openSession();
+		Report report = (Report)session.get(Report.class, reportId);
+		MainUser user = (MainUser)session.get(MainUser.class, userId);
+		if( report == null || user == null){
+			return false;
+		}
+		boolean result = this.doRemoveReportItem(report, user, session, deletedReportIds);
+		session.close();
+		return result;
+		
+	}
+	
+	private boolean doRemoveReportItem(Report report, MainUser user, Session session, Set<UUID> deletedReportIds) {
+		if (report == null || user == null) {
+			return false;
+		}
+		Set<Report> children = new HashSet<Report>();//report.getChildren();
+		children.addAll(report.getChildren());
+		if( children != null && children.size() > 0){
+			for( Report child : children ){
+				boolean result = doRemoveReportItem(child, user, session, deletedReportIds);
+				if( !result){
+					return false;
+				}
+			}
+		}
+		return this.doRemoveReport(report, user, session, deletedReportIds);
+	}
+	
+	private boolean doRemoveReport(Report report, MainUser user, Session session, Set<UUID> deletedReportIds){
+		Transaction transaction = session.beginTransaction();
+		if( report == null || user == null){
+			return false;
+		}
+		if( report.getParent() != null){
+			report.getParent().getChildren().remove(report);
+		}
+		try{
+			for (Report userReport : user.getReports()) {
+				if (report.getId().equals(userReport.getId())) {
+					user.getReports().remove(userReport);
+					report.setUser(null);
+					report.setParent(null);
+					session.delete(report);
+					System.out.println("done delete " + report.getName() + " " + report.getId() + " " + report.isDirectory());
+					transaction.commit();
+					deletedReportIds.add(report.getId());
+					return true;
+				}
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			transaction.rollback();
+		}
+		return true;
 	}
 }

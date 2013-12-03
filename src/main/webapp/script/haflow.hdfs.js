@@ -147,6 +147,7 @@ HAFlow.Main.prototype.initHdfsFileListTree = function() {
             return originalPut.call(flow.hdfsFileListStore, obj, options);
         };
     });
+<<<<<<< HEAD
 	//TODO:
 //	dojo.aspect.after(this.hdfsFileListStore, "put", function() {
 //		if (dijit.byId(_currentInstance.hdfsFileListTreeId) != null) {
@@ -204,6 +205,65 @@ HAFlow.Main.prototype.initHdfsFileListTree = function() {
 		id : "RefreshMenuItem",
 		label : myfile.refresh
 	});
+=======
+    // TODO:
+    // dojo.aspect.after(this.hdfsFileListStore, "put", function() {
+    // if (dijit.byId(_currentInstance.hdfsFileListTreeId) != null) {
+    // dijit.registry.remove(_currentInstance.hdfsFileListTreeId);
+    // }
+    // _currentInstance.getHdfsFileList(_currentInstance.rootPath);
+    // });
+    if (dijit.byId("treeMenu") != null) {
+        dijit.registry.remove("treeMenu");
+    }
+    this.menu.treeMenu = new dijit.Menu({
+        id: "treeMenu",
+        targetNodeIds: [_currentInstance.hdfsFileListTreeId],
+        selector: ".dijitTreeNode"
+    });
+    if (dijit.byId("DownloadMenuItem") != null) {
+        dijit.registry.remove("DownloadMenuItem");
+    }
+    this.menu.treeMenu.DownloadMenuItem = new dijit.MenuItem({
+        id: "DownloadMenuItem",
+        label: "Download from Hdfs"
+    });
+    if (dijit.byId("CreateMenuItem") != null) {
+        dijit.registry.remove("CreateMenuItem");
+    }
+    this.menu.treeMenu.CreateMenuItem = new dijit.MenuItem({
+        id: "CreateMenuItem",
+        label: "Create new directory"
+    });
+    if (dijit.byId("DeleteMenuItem") != null) {
+        dijit.registry.remove("DeleteMenuItem");
+    }
+    this.menu.treeMenu.DeleteMenuItem = new dijit.MenuItem({
+        id: "DeleteMenuItem",
+        label: "Delete"
+    });
+    if (dijit.byId("UploadMenuItem") != null) {
+        dijit.registry.remove("UploadMenuItem");
+    }
+    this.menu.treeMenu.UploadMenuItem = new dijit.MenuItem({
+        id: "UploadMenuItem",
+        label: "Upload files to Hdfs"
+    });
+    if (dijit.byId("RenameMenuItem") != null) {
+        dijit.registry.remove("RenameMenuItem");
+    }
+    this.menu.treeMenu.RenameMenuItem = new dijit.MenuItem({
+        id: "RenameMenuItem",
+        label: "Rename"
+    });
+    if (dijit.byId("RefreshMenuItem") != null) {
+        dijit.registry.remove("RefreshMenuItem");
+    }
+    this.menu.treeMenu.RefreshMenuItem = new dijit.MenuItem({
+        id: "RefreshMenuItem",
+        label: "Refresh"
+    });
+>>>>>>> branch 'master' of https://github.com/justinliucs/haflow.git
 
     this.menu.treeMenu.addChild(this.menu.treeMenu.DownloadMenuItem);
     this.menu.treeMenu.addChild(this.menu.treeMenu.CreateMenuItem);

@@ -23,6 +23,7 @@ public class Report {
 	private boolean isDirectory;
 	private Set<Portlet> portlets;
 	private MainUser user;
+	private Set<Report> children;
 	
 	@Id
 	@Column(name = "id", length = 16)
@@ -74,6 +75,15 @@ public class Report {
 	}
 	public void setUser(MainUser user) {
 		this.user = user;
+	}
+
+	@OneToMany(mappedBy="parent", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+	public Set<Report> getChildren() {
+		return children;
+	}
+
+	public void setChildren(Set<Report> children) {
+		this.children = children;
 	}
 	
 }

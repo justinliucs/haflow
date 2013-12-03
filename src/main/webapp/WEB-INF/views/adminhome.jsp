@@ -73,9 +73,9 @@ require(["dojo/parser", "dijit/Dialog","dijit/layout/TabContainer", "dojox/layou
 
 </head>
 <body class="claro">
+<script type="text/javascript" src="<%=basePath%>/script/ajax.setup.js"></script>
 <script type="text/javascript" src="<%=basePath%>script/admin.js"></script>
-<script type="text/javascript"
-	src="<%=basePath%>script/adminusermana.js"></script>
+<script type="text/javascript" src="<%=basePath%>script/adminusermana.js"></script>
 
 	<div data-dojo-type="dijit/layout/BorderContainer"
 		data-dojo-props="design:'sidebar', gutters:true, liveSplitters:true"
