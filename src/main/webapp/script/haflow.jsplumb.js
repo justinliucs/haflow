@@ -187,7 +187,7 @@ HAFlow.Main.prototype.onConnectionClicked = function(instance, flowId, info) {
 	text += "</div>";
 	$("#" + instance.informationContainerId).html(text);
 	var button = new dijit.form.Button({
-		label : "Delete Connection",
+		label : myfile.deleteConnection,
 		onClick : function() {
 			instance.deleteConnection(instance, flowId, info);
 		}
@@ -299,7 +299,7 @@ HAFlow.Main.prototype.onNodeClicked = function(instance, flowId, nodeId) {
 	nodeNameTextBox.startup();
 
 	var saveNodeNameButton = new dijit.form.Button({
-		label : "Save Node Name",
+		label : myfile.saveNodeName,
 		onClick : function() {
 			instance.saveNodeName(instance, flowId, nodeId);
 		}
@@ -308,7 +308,7 @@ HAFlow.Main.prototype.onNodeClicked = function(instance, flowId, nodeId) {
 	saveNodeNameButton.startup();
 
 	var deleteNodeButton = new dijit.form.Button({
-		label : "Delete Node",
+		label : myfile.deleteNode,
 		onClick : function() {
 			instance.deleteNode(instance, flowId, nodeId);
 		}
@@ -352,7 +352,7 @@ HAFlow.Main.prototype.onNodeClicked = function(instance, flowId, nodeId) {
 			var a="_hdfspath";
 			var hdfspathButton = new dijit.form.Button({
 				id : textBoxId+a,
-				label : "HDFS Path",
+				label : myfile.HDFSPath,
 				onClick : function() {
 					dijit.byId(this.id.replace(a,"")).set("value", hdfspath);
 				}
@@ -363,7 +363,7 @@ HAFlow.Main.prototype.onNodeClicked = function(instance, flowId, nodeId) {
 	}
 
 	var saveConfigurationButton = new dijit.form.Button({
-		label : "Save Configuration",
+		label : myfile.saveConfiguration,
 		onClick : function() {
 			instance.saveConfiguration(instance, flowId, nodeId);
 		}

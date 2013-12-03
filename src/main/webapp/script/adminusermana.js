@@ -30,13 +30,13 @@ confirmDialog.init=function(){
 	
 	
 	var confirmButton=new dijit.form.Button({
-		label:"Yes",
+		label:myfile.yes,
 		
 	},"yesButton");
 	
 	
 	var cancelButton=new dijit.form.Button({
-		label:"No",
+		label:myfile.no,
 	},"noButton");
 	confirmdialog.startup();
 	dojo.connect(confirmButton,"onClick",delUser);
@@ -95,7 +95,7 @@ newDialog.init=function(){
 	
 	
 	var button = new dijit.form.Button({
-		label : "Save",
+		label : myfile.save,
 		onClick : function() {
 			user.role=userRoleTextBox.get("value");
 			user.space=userSpaceTextBox.get("value");

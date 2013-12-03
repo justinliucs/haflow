@@ -5,11 +5,11 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 	});
 	this.menu.flowMenu.newFlowMenuItem = new dijit.MenuItem({
 		id : "newFlowMenuItem",
-		label : "New",
+		label : myfile.new_,
 	});
 	this.menu.flowMenu.saveFlowMenuItem = new dijit.MenuItem({
 		id : "saveFlowMenuItem",
-		label : "Save",
+		label : myfile.save,
 		disabled : true
 	});
 //	this.menu.flowMenu.openFlowMenuItem = new dijit.MenuItem({
@@ -24,17 +24,17 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 //	});
 	this.menu.flowMenu.deleteFlowMenuItem = new dijit.MenuItem({
 		id : "deleteFlowMenuItem",
-		label : "Delete",
+		label : myfile.delete_,
 		disabled : true
 	});
 	this.menu.flowMenu.exportFlowMenuItem = new dijit.MenuItem({
 		id : "exportFlowMenuItem",
-		label : "Export",
+		label : myfile.export_,
 		disabled : true
 	});
 	this.menu.flowMenu.importFlowMenuItem = new dijit.MenuItem({
 		id : "importFlowMenuItem",
-		label : "Import",
+		label : myfile.import,
 		disabled : true
 	});
 	this.menu.flowMenu.addChild(this.menu.flowMenu.newFlowMenuItem);
@@ -51,27 +51,27 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 	});
 	this.menu.runMenu.runFlowMenuItem = new dijit.MenuItem({
 		id : "runFlowMenuItem",
-		label : "Run",
+		label : myfile.run,
 		disabled : true
 	});
 	this.menu.runMenu.debugFlowMenuItem = new dijit.MenuItem({
 		id : "debugFlowMenuItem",
-		label : "Debug",
+		label : myfile.debug,
 		disabled : true
 	});
 	this.menu.runMenu.validateFlowMenuItem = new dijit.MenuItem({
 		id : "validateFlowMenuItem",
-		label : "Validate",
+		label : myfile.validate,
 		disabled : true
 	});
 	this.menu.runMenu.runFlowHistoryMenuItem = new dijit.MenuItem({
 		id : "runFlowHistoryMenuItem",
-		label : "Run History",
+		label : myfile.runHistory,
 		disabled : true
 	});
 	this.menu.runMenu.debugHistoryMenuItem = new dijit.MenuItem({
 		id : "debugHistoryMenuItem",
-		label : "Debug History",
+		label : myfile.debugHistory,
 		disabled : true
 	});
 	this.menu.runMenu.addChild(this.menu.runMenu.runFlowMenuItem);
@@ -86,17 +86,17 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 	});
 	this.menu.searchMenu.searchFlowMenuItem = new dijit.MenuItem({
 		id : "searchFlowMenuItem",
-		label : "Search Flow",
+		label : myfile.searchFlow,
 		disabled : true
 	});
 	this.menu.searchMenu.searchModuleMenuItem = new dijit.MenuItem({
 		id : "searchModuleMenuItem",
-		label : "Search Module",
+		label : myfile.searchModule,
 		disabled : true
 	});
 	this.menu.searchMenu.searchLogMenuItem = new dijit.MenuItem({
 		id : "searchLogMenuItem",
-		label : "Search Log",
+		label : myfile.searchLog,
 		disabled : true
 	});
 	this.menu.searchMenu.addChild(this.menu.searchMenu.searchFlowMenuItem);
@@ -109,7 +109,7 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 	});
 	this.menu.windowMenu.hideToolbarMenuItem = new dijit.MenuItem({
 		id : "hideToolbarMenuItem",
-		label : "Hide Toolbar",
+		label : myfile.hideToolbar,
 		disabled : true
 	});
 	this.menu.windowMenu.addChild(this.menu.windowMenu.hideToolbarMenuItem);
@@ -120,12 +120,12 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 	});
 	this.menu.helpMenu.aboutMenuItem = new dijit.MenuItem({
 		id : "aboutMenuItem",
-		label : "About",
+		label : myfile.about,
 		disabled : true
 	});
 	this.menu.helpMenu.manualMenuItem = new dijit.MenuItem({
 		id : "manualMenuItem",
-		label : "Manual",
+		label : myfile.manual,
 		disabled : true
 	});
 	this.menu.helpMenu.addChild(this.menu.helpMenu.aboutMenuItem);
@@ -139,11 +139,11 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 
 	this.menu.oozieMenu.openoozieMenuItem = new dijit.MenuItem({
 		id : "openoozieMenuItem",
-		label : "Open"
+		label :myfile.open
 	});
 	this.menu.oozieMenu.closeoozieMenuItem = new dijit.MenuItem({
 		id : "closeoozieMenuItem",
-		label : "Close",
+		label : myfile.close,
 		disabled : true
 	});
 	this.menu.oozieMenu.addChild(this.menu.oozieMenu.openoozieMenuItem);
@@ -157,11 +157,11 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 
 	this.menu.hiveMenu.openhiveMenuItem = new dijit.MenuItem({
 		id : "openhiveMenuItem",
-		label : "Open"
+		label : myfile.open
 	});
 	this.menu.hiveMenu.closehiveMenuItem = new dijit.MenuItem({
 		id : "closehiveMenuItem",
-		label : "Close",
+		label : myfile.close,
 		disabled : true
 	});
 	this.menu.hiveMenu.addChild(this.menu.hiveMenu.openhiveMenuItem);
@@ -170,39 +170,66 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 
 	this.ui.mainMenu.addChild(new dijit.PopupMenuBarItem({
 		id : "flowPopupMenuBarItem",
-		label : "Flow",
+		label :myfile.flow,
 		popup : this.menu.flowMenu
 	}));
 	this.ui.mainMenu.addChild(new dijit.PopupMenuBarItem({
 		id : "runPopupMenuBarItem",
-		label : "Run",
+		label : myfile.run,
 		popup : this.menu.runMenu
 	}));
 	this.ui.mainMenu.addChild(new dijit.PopupMenuBarItem({
 		id : "searchPopupMenuBarItem",
-		label : "Search",
+		label : myfile.search,
 		popup : this.menu.searchMenu
 	}));
 	this.ui.mainMenu.addChild(new dijit.PopupMenuBarItem({
 		id : "windowPopupMenuBarItem",
-		label : "Window",
+		label : myfile.window,
 		popup : this.menu.windowMenu
 	}));
 	this.ui.mainMenu.addChild(new dijit.PopupMenuBarItem({
 		id : "helpPopupMenuBarItem",
-		label : "Help",
+		label : myfile.help,
 		popup : this.menu.helpMenu
 	}));
 	this.ui.mainMenu.addChild(new dijit.PopupMenuBarItem({
 		id : "ooziePopupMenuBarItem",
-		label : "Oozie",
+		label : myfile.oozie,
 		popup : this.menu.oozieMenu
 	}));
 	this.ui.mainMenu.addChild(new dijit.PopupMenuBarItem({
 		id : "hivePopupMenuBarItem",
-		label : "Hive",
+		label : myfile.hive,
 		popup : this.menu.hiveMenu
 	}));
+	
+	//change language
+	if(language=="Chinese"){
+		this.ui.mainMenu
+		.addChild(new dijit.layout.ContentPane(
+				{
+					id : "tipContentPane_zh",
+					title : "tip",
+					content : "<div style='margin-bottom:0px; padding-top:4px; font-family:Times, serif;'>" +
+							"|&nbsp<a href=main style='text-decoration: none;'>" +
+							"<font size=2px>切换英文</font></a>&nbsp&nbsp</div>",
+					style : "float:right;"
+				}));
+	}
+	else{
+		this.ui.mainMenu
+		.addChild(new dijit.layout.ContentPane(
+				{
+					id : "tipContentPane_zh",
+					title : "tip",
+					content : "<div style='margin-bottom:0px; padding-top:4px; font-family:Times, serif;'>" +
+							"|&nbsp<a href=zh style='text-decoration: none;'>" +
+							"<font size=2px>切换中文</font></a>&nbsp&nbsp</div>",
+					style : "float:right;"
+				}));
+	}
+
 	// userInformation
 	this.ui.mainMenu
 			.addChild(new dijit.layout.ContentPane(
@@ -214,13 +241,13 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 								"<font size=2px>quit</font></a>&nbsp&nbsp</div>",
 						style : "float:right;"
 					}));
-
+	
 	this.menu.userMenu = new dijit.Menu({
 		id : "userMenu"
 	});
 	this.menu.userMenu.userInforMenuItem = new dijit.MenuItem({
 		id : "userInforMenuItem",
-		label : "user information"
+		label : myfile.userinformation
 	});
 	this.menu.userMenu.addChild(this.menu.userMenu.userInforMenuItem);
 	this.menu.userMenu.startup();
@@ -273,7 +300,7 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 	});
 
 	var button1 = new dijit.form.Button({
-		label : "edit",
+		label : myfile.edit,
 		onClick : function() {
 			dojo.byId("user_real_text_box").innerHTML = '';
 			dojo.byId("user_email_text_box").innerHTML = '';
@@ -288,7 +315,7 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 	button1.startup();
 
 	var button = new dijit.form.Button({
-		label : "Save",
+		label : myfile.save,
 		onClick : function() {
 			user.realname = userRealTextBox.get("value");
 			user.email = userEmailTextBox.get("value");
@@ -306,15 +333,15 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 			data : JSON.stringify(user),
 			success : function(data, status) {
 				userDialog.hide();
-				HAFlow.showDialog("Success",
-						"Successfully update user information! ");
+				_currentInstance.addToConsole(
+						"Successfully update user information! ", false);
 
 			},
 			error : function(request, status, error) {
 				userDialog.hide();
-				HAFlow.showDialog("Error",
+				_currentInstance.addToConsole(
 						"An error occurred while updating user information: "
-								+ error);
+								+ error, true);
 			}
 		});
 	};
@@ -341,9 +368,9 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 
 			},
 			error : function(request, status, error) {
-				HAFlow.showDialog("Error",
+				_currentInstance.addToConsole(
 						"An error occurred while loading user information: "
-								+ error);
+								+ error, true);
 			}
 		});
 	});
@@ -396,13 +423,13 @@ HAFlow.Main.prototype.initFlowToolbar = function() {
 	});
 	this.toolbar.newFlowButton = new dijit.form.Button({
 		id : "toolbar_newFlow",
-		label : "New Flow",
+		label : myfile.newFlow,
 		showLabel : false,
 		iconClass : "dijitEditorIcon dijitEditorIconNewPage"
 	});
 	this.toolbar.saveFlowButton = new dijit.form.Button({
 		id : "toolbar_saveFlow",
-		label : "Save Flow",
+		label : myfile.saveFlow,
 		showLabel : false,
 		iconClass : "dijitEditorIcon dijitEditorIconSave",
 		disabled : true
@@ -410,21 +437,21 @@ HAFlow.Main.prototype.initFlowToolbar = function() {
 
 	this.toolbar.openFlowButton = new dijit.form.Button({
 		id : "toolbar_openFlow",
-		label : "Open Flow",
+		label : myfile.openFlow,
 		showLabel : false,
 		iconClass : "dijitIconFolderOpen",
 		disabled : true
 	});
 	this.toolbar.closeFlowButton = new dijit.form.Button({
 		id : "toolbar_closeFlow",
-		label : "Close Flow",
+		label : myfile.closeFlow,
 		showLabel : false,
 		iconClass : "dijitIconFolderClosed",
 		disabled : true
 	});
 	this.toolbar.removeFlowButton = new dijit.form.Button({
 		id : "toolbar_removeFlow",
-		label : "Remove Flow",
+		label : myfile.removeFlow,
 		showLabel : false,
 		iconClass : "dijitEditorIcon dijitEditorIconDelete",
 		disabled : true
@@ -437,7 +464,7 @@ HAFlow.Main.prototype.initFlowToolbar = function() {
 
 	this.toolbar.runFlowButton = new dijit.form.Button({
 		id : "toolbar_runFlow",
-		label : "Run Flow",
+		label : myfile.runFlow,
 		showLabel : false,
 		iconClass : "dijitEditorIcon dijitEditorIconTabIndent",
 		disabled : true
@@ -449,7 +476,7 @@ HAFlow.Main.prototype.initFlowToolbar = function() {
 	});
 	this.toolbar.searchButton = new dijit.form.Button({
 		id : "toolbar_search",
-		label : "Search Flow",
+		label : myfile.searchFlow,
 		showLabel : false,
 		iconClass : "dijitIconSearch",
 		disabled : "disabled"
@@ -461,7 +488,7 @@ HAFlow.Main.prototype.initFlowToolbar = function() {
 	});
 	this.toolbar.hideToolbarButton = new dijit.form.Button({
 		id : "toolbar_hidetoolbar",
-		label : "Hide Toolbar",
+		label : myfile.hideToolbar,
 		showLabel : false,
 		iconClass : "dijitIconClear",
 		disabled : true
@@ -473,7 +500,7 @@ HAFlow.Main.prototype.initFlowToolbar = function() {
 	});
 	this.toolbar.manual = new dijit.form.Button({
 		id : "toolbar_manual",
-		label : "Manual",
+		label : myfile.manual,
 		showLabel : false,
 		iconClass : "dijitIconBookmark",
 		disabled : true
@@ -485,12 +512,12 @@ HAFlow.Main.prototype.initFlowToolbar = function() {
 	});
 	this.toolbar.openOozieButton = new dijit.form.Button({
 		id : "toolbar_openOozie",
-		label : "Open Oozie",
+		label : myfile.openOozie,
 		iconClass : "dijitIconFolderOpen"
 	});
 	this.toolbar.closeOozieButton = new dijit.form.Button({
 		id : "toolbar_closeOozie",
-		label : "Close Oozie",
+		label : myfile.closeOozie,
 		iconClass : "dijitIconFolderClosed",
 		disabled : "disabled"
 	});
@@ -501,12 +528,12 @@ HAFlow.Main.prototype.initFlowToolbar = function() {
 	});
 	this.toolbar.openHiveButton = new dijit.form.Button({
 		id : "toolbar_openHive",
-		label : "Open Hive",
+		label : myfile.openHive,
 		iconClass : "dijitIconFolderOpen"
 	});
 	this.toolbar.closeHiveButton = new dijit.form.Button({
 		id : "toolbar_closeHive",
-		label : "Close Hive",
+		label : myfile.closeHive,
 		iconClass : "dijitIconFolderClosed",
 		disabled : "disabled"
 	});
@@ -517,49 +544,49 @@ HAFlow.Main.prototype.initFlowToolbar = function() {
 	});
 	this.toolbar.copyFlowButton = new dijit.form.Button({
 		id : "toolbar_copyFlow",
-		label : "Copy Flow",
+		label : myfile.copyFlow,
 		showLabel : false,
 		iconClass : "dijitEditorIcon dijitEditorIconCopy",
 		disabled : "disabled"
 	});
 	this.toolbar.pasteFlowButton = new dijit.form.Button({
 		id : "toolbar_pasteFlow",
-		label : "Paste Flow",
+		label : myfile.pasteFlow,
 		showLabel : false,
 		iconClass : "dijitEditorIcon dijitEditorIconPaste",
 		disabled : "disabled"
 	});
 	this.toolbar.undoFlowButton = new dijit.form.Button({
 		id : "toolbar_Undo",
-		label : "Undo",
+		label : myfile.undo,
 		showLabel : false,
 		iconClass : "dijitEditorIcon dijitEditorIconUndo",
 		disabled : "disabled"
 	});
 	this.toolbar.redoFlowButton = new dijit.form.Button({
 		id : "toolbar_Redo",
-		label : "Redo",
+		label : myfile.redo,
 		showLabel : false,
 		iconClass : "dijitEditorIcon dijitEditorIconRedo",
 		disabled : "disabled"
 	});
 	this.toolbar.BoldFlowButton = new dijit.form.Button({
 		id : "Bold",
-		label : "Bold",
+		label : myfile.bold,
 		showLabel : false,
 		iconClass : "dijitEditorIcon dijitEditorIconBold",
 		disabled : "disabled"
 	});
 	this.toolbar.CancelFlowButton = new dijit.form.Button({
 		id : "Cancel",
-		label : "Cancel",
+		label : myfile.cancel,
 		showLabel : false,
 		iconClass : "dijitEditorIcon dijitEditorIconCancel",
 		disabled : "disabled"
 	});
 	this.toolbar.InsertImageFlowButton = new dijit.form.Button({
 		id : "InsertImage",
-		label : "InsertImage",
+		label : myfile.insertImage,
 		showLabel : false,
 		iconClass : "dijitEditorIcon dijitEditorIconInsertImage",
 		disabled : "disabled"
@@ -629,13 +656,13 @@ HAFlow.Main.prototype.initHdfsToolbar = function() {
 	});
 	this.toolbar.downloadFileButton = new dijit.form.Button({
 		id : "hdfsToolbar_downloadFile",
-		label : "Download File",
+		label : myfile.downloadFile,
 		showLabel : false,
 		iconClass : "dijitEditorIcon dijitEditorIconNewPage"
 	});
 	this.toolbar.createNewDirButton = new dijit.form.Button({
 		id : "hdfsToolbar_createNewDir",
-		label : "Create New Directory",
+		label : myfile.createNewDirectory,
 		showLabel : false,
 		iconClass : "dijitEditorIcon dijitEditorIconSave",
 		disabled : true
@@ -643,21 +670,21 @@ HAFlow.Main.prototype.initHdfsToolbar = function() {
 
 	this.toolbar.deleteFileButton = new dijit.form.Button({
 		id : "hdfsToolbar_deleteFile",
-		label : "Delete File",
+		label : myfile.deleteFile,
 		showLabel : false,
 		iconClass : "dijitIconFolderOpen",
 		disabled : true
 	});
 	this.toolbar.uploadFileButton = new dijit.form.Button({
 		id : "hdfsToolbar_uploadFile",
-		label : "Upload",
+		label : myfile.upload,
 		showLabel : false,
 		iconClass : "dijitIconFolderClosed",
 		disabled : true
 	});
 	this.toolbar.renameFileButton = new dijit.form.Button({
 		id : "hdfsToolbar_renameFile",
-		label : "Rename File",
+		label : myfile.renameFile,
 		showLabel : false,
 		iconClass : "dijitEditorIcon dijitEditorIconDelete",
 		disabled : true
@@ -670,7 +697,7 @@ HAFlow.Main.prototype.initHdfsToolbar = function() {
 
 	this.toolbar.refreshHdfsListButton = new dijit.form.Button({
 		id : "hdfsToolbar_refreshHdfsList",
-		label : "Refresh",
+		label : myfile.refresh,
 		showLabel : false,
 		iconClass : "dijitEditorIcon dijitEditorIconTabIndent",
 		disabled : true

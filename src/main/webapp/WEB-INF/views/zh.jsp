@@ -6,6 +6,7 @@
 	String basePath = request.getScheme() + "://"
 			+ request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
+	System.out.println(basePath);
 	String username=request.getSession().getAttribute("username").toString();
 	Object userid=request.getSession().getAttribute("userid");
 	
@@ -38,8 +39,7 @@
 <script type="text/javascript"
 	src="http://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dojo/dojo.js" 
 	djConfig="isDebug:true,parseOnLoad:true,locale:'zh-cn'"></script>
-<script type="text/javascript" src="<%=basePath%>/script/locale/nls/en/myfile.js"></script>
-<script type="text/javascript" src="<%=basePath%>/script/ajax.setup.js"></script>
+<script type="text/javascript" src="<%=basePath%>/script/locale/nls/zh-cn/myfile.js"></script>
 <script type="text/javascript" src="<%=basePath%>/script/haflow.js"></script>
 <script type="text/javascript" src="<%=basePath%>/script/haflow.ui.js"></script>
 <script type="text/javascript" src="<%=basePath%>/script/haflow.main.js"></script>
@@ -58,7 +58,7 @@
 	<script type="text/javascript">
 		var username="<%=username%>";
 		var userid=<%=userid%>;
-		var language="English";
+		var language="Chinese";
 	</script>
 	<input type="hidden" value="<%=basePath%>" id="basePath" />
 	

@@ -141,20 +141,20 @@ HAFlow.Main.prototype.initFlowListTree = function(FlowListStoreId) {
 	});
 	this.menu.flowtreeMenu.newFlowMenuItem = new dijit.MenuItem({
 		id : "newFlowPopupMenuItem",
-		label : "New Flow"
+		label : myfile.newFlow
 	});
 	this.menu.flowtreeMenu.saveFlowMenuItem = new dijit.MenuItem({
 		id : "saveFlowPopupMenuItem",
-		label : "Save Flow"
+		label : myfile.saveFlow
 	});
 
 	this.menu.flowtreeMenu.createFlowFolderMenuItem = new dijit.MenuItem({
 		id : "createFlowFolderMenuItem",
-		label : "New Folder"
+		label : myfile.createnewdirectory
 	});
 	this.menu.flowtreeMenu.deleteFlowMenuItem = new dijit.MenuItem({
 		id : "deleteFlowPopupMenuItem",
-		label : "Delete"
+		label : myfile.delete_
 	});
 
 	this.menu.flowtreeMenu.addChild(this.menu.flowtreeMenu.newFlowMenuItem);
@@ -292,7 +292,7 @@ HAFlow.Main.prototype.onFlowClicked = function(instance, flowId) {
 	flowNameTextBox.placeAt(dojo.byId("flow_name_text_box"));
 	flowNameTextBox.startup();
 	var button = new dijit.form.Button({
-		label : "Save",
+		label : myfile.save,
 		onClick : function() {
 			instance.saveFlowName(instance, flowBrief.id);
 		}
@@ -320,7 +320,7 @@ HAFlow.Main.prototype.onFlowFolderClicked = function(instance, flowId) {
 	flowNameTextBox.placeAt(dojo.byId("flow_name_text_box"));
 	flowNameTextBox.startup();
 	var button = new dijit.form.Button({
-		label : "Save",
+		label : myfile.save,
 		onClick : function() {
 			instance.saveFlowFolderName(instance, flowBrief.id);
 		}
