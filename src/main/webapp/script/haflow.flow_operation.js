@@ -35,7 +35,7 @@ dojo.require("dojox.layout.ContentPane");
 HAFlow.Main.prototype.initFlowList = function() {
 	var flowListContentPane = new dijit.layout.ContentPane({
 		id : this.flowListContainerId,
-		title : "Flows"
+		title : myfile.flows
 	});
 	this.ui.leadingContainer.addChild(flowListContentPane);
 /*	this.initFlowListStore();*/
@@ -264,9 +264,9 @@ HAFlow.Main.prototype.onFlowClicked = function(instance, flowId) {
 	var flowBrief = instance.getFlowBriefById(instance, flowId);
 	var text = "";
 	text += "<table border=\"0\">";
-	text += "<tr style=\"tr\"><th align=\"left\">Flow Info</th><td>"
+	text += "<tr style=\"tr\"><th align=\"left\">"+myfile.flowInfo+"</th><td>"
 			+ flowBrief.id + "</td></tr>";
-	text += "<tr style=\"tr\"><th align=\"left\">Name</th><td><span id=\"flow_name_text_box\" class=\"configuration-content\"></span></td></tr>";
+	text += "<tr style=\"tr\"><th align=\"left\">"+myfile.name+"</th><td><span id=\"flow_name_text_box\" class=\"configuration-content\"></span></td></tr>";
 	text += "<tr style=\"tr\"><td align=\"left\"><div id=\"save_flow_name_button\" class=\"configuration-content\"></div></td></tr>";
 	text += "</table>";
 	$("#" + instance.informationContainerId).html(text);
@@ -296,7 +296,7 @@ HAFlow.Main.prototype.onFlowFolderClicked = function(instance, flowId) {
 	var flowBrief = instance.getFlowBriefById(instance, flowId);
 	var text = "";
 	text+="<table border=\"0\">";
-	text+="<tr style=\"tr\"><th align=\"left\">Name</th><td><span id=\"flow_name_text_box\" class=\"configuration-content\"></span></td></tr>";
+	text+="<tr style=\"tr\"><th align=\"left\">"+myfile.name+"</th><td><span id=\"flow_name_text_box\" class=\"configuration-content\"></span></td></tr>";
 	text+="<tr style=\"tr\"><td align=\"left\"><div id=\"save_flow_name_button\" class=\"configuration-content\"></div></td></tr>";
 	text+="</table>";
 	$("#" + instance.informationContainerId).html(text);

@@ -770,10 +770,10 @@ HAFlow.Main.prototype.changepath = function(instance, child, newparentpath, newh
 HAFlow.Main.prototype.onFileClicked = function(instance, fileInformation) {
     var text = "";
     text += "<table border=\"0\">";
-    text += "<tr style=\"tr\"><th align=\"left\">Name</th><td>" + fileInformation.name + "</td></tr>";
-    text += "<tr style=\"tr\"><th align=\"left\">Path</th><td>" + fileInformation.path + "</td></tr>";
-    text += "<tr style=\"tr\"><th align=\"left\">Update Time</th><td>" + fileInformation.time + "</td></tr>";
-    text += "<tr style=\"tr\"><th align=\"left\">Size</th><td>" + fileInformation.size + "B</td></tr>";
+    text += "<tr style=\"tr\"><th align=\"left\">"+myfile.name+"</th><td>" + fileInformation.name + "</td></tr>";
+    text += "<tr style=\"tr\"><th align=\"left\">"+myfile.path+"</th><td>" + fileInformation.path + "</td></tr>";
+    text += "<tr style=\"tr\"><th align=\"left\">"+myfile.updateTime+"</th><td>" + fileInformation.time + "</td></tr>";
+    text += "<tr style=\"tr\"><th align=\"left\">"+myfile.size+"</th><td>" + fileInformation.size + "B</td></tr>";
     text += "</table>";
     $("#" + instance.informationContainerId).html(text);
     var informationPane = dijit.byId(instance.informationContainerId);

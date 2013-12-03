@@ -1,8 +1,6 @@
  myfile={ 
-"first": "欢迎", 
-"myname": "�������ˡ� ����ʱ���ǣ�${0}��", 
-"mynumber": "���� ${0} �š�",
 "flow":"流程",
+"flows":"流程",
 "run":"运行",
 "search":"搜索",
 "window":"窗口",
@@ -64,5 +62,16 @@
 "deleteNode":"删除节点",
 "HDFSPath":"HDFS路径",
 "saveConfiguration":"保存配置",
+"newReport":"新建报表",
+"newReportDirectory":"新建报表文件夹",
+"console":"控制台",
+"information":"基本信息",
+"reports":"报表",
+"quit":"退出",
+"updateTime":"更新时间",
+"name":"名称",
+"path":"路径",
+"size":"大小",
+"flowInfo":"流程信息",
  } 
  

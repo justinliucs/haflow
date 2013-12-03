@@ -238,7 +238,7 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 						title : "tip",
 						content : "<div style='margin-bottom:0px; padding-top:4px; font-family:Times, serif;'>" +
 								"|&nbsp<a href=quit style='text-decoration: none;'>" +
-								"<font size=2px>quit</font></a>&nbsp&nbsp</div>",
+								"<font size=2px>"+myfile.quit+"</font></a>&nbsp&nbsp</div>",
 						style : "float:right;"
 					}));
 	
@@ -285,7 +285,7 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 	});
 	userForm.startup();
 	userDialog = new dijit.Dialog({
-		title : "User Infomation",
+		title : myfile.userInfomation,
 		style : "width: 400px"
 	});
 	userDialog.addChild(userForm);

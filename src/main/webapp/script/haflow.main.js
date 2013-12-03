@@ -101,7 +101,7 @@ HAFlow.Main.prototype.initBottomTabs = function() {
 HAFlow.Main.prototype.initConsoleTab = function() {
     var consoleContentPane = (new dijit.layout.ContentPane({
         id : this.consoleContainerId,
-        title : "Console"
+        title : myfile.console
     }));
     this.ui.bottomContainer.addChild(consoleContentPane);
 };
@@ -109,7 +109,7 @@ HAFlow.Main.prototype.initConsoleTab = function() {
 HAFlow.Main.prototype.initInformationTab = function() {
     var informationContentPane = (new dijit.layout.ContentPane({
         id : this.informationContainerId,
-        title : "Information"
+        title : myfile.information
     }));
     this.ui.bottomContainer.addChild(informationContentPane);
 };

@@ -2,7 +2,7 @@
 HAFlow.Main.prototype.initReportList = function() {
     var reportListContentPane = new dijit.layout.ContentPane({
         id: this.reportListContainerId,
-        title: "Reports"
+        title: myfile.reports
     });
     this.ui.leadingContainer.addChild(reportListContentPane);
     
@@ -127,23 +127,23 @@ HAFlow.Main.prototype.initReportListTree = function() {
     });
     this.menu.reportTreeMenu.newReportMenuItem = new dijit.MenuItem({
         id: "newReportMenuItem",
-        label: "New Report"
+        label: myfile.newReport
     });
     this.menu.reportTreeMenu.newReportDirectoryMenuItem = new dijit.MenuItem({
         id: "newReportDirectoryMenuItem",
-        label: "New Report Directory"
+        label: myfile.newReportDirectory
     });
     this.menu.reportTreeMenu.deleteReportMenuItem = new dijit.MenuItem({
         id: "deleteReportMenuItem",
-        label: "Delete"
+        label: myfile.delete_
     });
     this.menu.reportTreeMenu.renameReportMenuItem = new dijit.MenuItem({
         id: "renameReportMenuItem",
-        label: "Rename"
+        label: myfile.rename
     });
     this.menu.reportTreeMenu.saveReportMenuItem = new dijit.MenuItem({
         id: "saveReportMenuItem",
-        label: "Save"
+        label: myfile.save
     });
 
     this.menu.reportTreeMenu.addChild(this.menu.reportTreeMenu.newReportMenuItem);

@@ -1,8 +1,6 @@
 myfile={ 
-"first": "Welcome!", 
-"myname":  "Good Man. Now time is:${0}.", 
-"mynumber":  "You are NO ${0}.", 
 "flow":"Flow",
+"flow":"Flows",
 "run":"Run",
 "search":"Search",
 "window":"Window",
@@ -62,5 +60,16 @@ myfile={
 "deleteNode":"Delete Node",
 "HDFSPath":"HDFS Path",
 "saveConfiguration":"Save Configuration",
+"newReport":"New Report",
+"newReportDirectory":"New Report Directory",
+"console":"Console",
+"information":"Information",
+"reports":"Reports",
+"quit":"quit",
+"updateTime":"Update Time",
+"name":"Name",
+"path":"Path",
+"size":"Size",
+"flowInfo":"Flow Info"
 } 
  
