@@ -55,16 +55,16 @@ public class MainLogonController {
 //					.println("controller:"+(this.getHdfsHelper()==null));
 			if(this.getHdfsHelper().createdirectory("hdfs://133.133.2.150:9000/user/root",username))
 			{
-			redirectAttributes.addFlashAttribute("message", "×¢²á³É¹¦");
+			redirectAttributes.addFlashAttribute("message", "×¢ï¿½ï¿½É¹ï¿½");
 			return "redirect:/";
 			}
 			else{
-				redirectAttributes.addFlashAttribute("message", "ÓÃ»§hdfs¿Õ¼äÎ´·ÖÅä³É¹¦£¡");
+				redirectAttributes.addFlashAttribute("message", "ï¿½Ã»ï¿½hdfsï¿½Õ¼ï¿½Î´ï¿½ï¿½ï¿½ï¿½É¹ï¿½ï¿½ï¿½");
 				return "redirect:/registration";
 			}
 
 		} else {
-			redirectAttributes.addFlashAttribute("message", "ÓÃ»§Ãû»òÓÊÏäÒÑ´æÔÚ");
+			redirectAttributes.addFlashAttribute("message", "ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½ï¿½ï¿½");
 			return "redirect:/registration";
 		}
 	}
@@ -84,13 +84,15 @@ public class MainLogonController {
 			@RequestParam("password") String password) {
 		
 		if (username == "" || password == "") {
-			redirectAttributes.addFlashAttribute("message", "ÇëÌîĞ´ÓÃ»§ÃûÃÜÂë");
+			redirectAttributes.addFlashAttribute("message", "ï¿½ï¿½ï¿½ï¿½Ğ´ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
 			return "redirect:/";
 		}
 		password=Md5Util.getMd5Hex(password);
 		int userid=this.getUserHelper().validate(username, password, "main");
+		System.out.println("!!!!!!!!!!");
+		System.out.println(username);
+		System.out.println(password);
 		if (userid!=-1) {
-			//System.out.println("logon enter!!!!!!");
 			request.getSession().setAttribute("userid", userid);
 			request.getSession().setAttribute("username", username);
 			request.getSession().setAttribute("scope", 0);
@@ -98,26 +100,32 @@ public class MainLogonController {
 			return "redirect:/main";
 
 		} else {
-			//System.out.println("logon failed!!!!!!");
-			redirectAttributes.addFlashAttribute("message","ÓÃ»§ÃûÃÜÂë´íÎó");
+			redirectAttributes.addFlashAttribute("message","ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
 			return "redirect:/";
 		}
 	}
 
 	@RequestMapping(value = "/main")
 	public ModelAndView post(HttpServletRequest request) {
-		//System.out.println("main enter!!!!!");
-		boolean flag = UserHelper.isUserLogon(request,0);
-		if(flag){
+		//boolean flag = UserHelper.isUserLogon(request,0);
+		//if(flag){
 			ModelAndView main=new ModelAndView("main");
 			main.addObject("username", request.getSession().getAttribute("username"));
 			return main;
-		}
-		else{
+		//}
+		/*else{
 			ModelAndView mav=new ModelAndView("logon");
-			mav.addObject("message","ÇëÌîĞ´ÓÃ»§ÃûºÍÃÜÂë£¡");
+			mav.addObject("message","ï¿½ï¿½ï¿½ï¿½Ğ´ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ë£¡");
 			return mav;
-		}
+		}*/
+	}
+	
+	@RequestMapping(value = "/zh")
+	public ModelAndView changetozh(HttpServletRequest request) {
+		//System.out.println("main enter!!!!!");
+			ModelAndView main=new ModelAndView("zh");
+			main.addObject("username", request.getSession().getAttribute("username"));
+			return main;
 	}
 	
 }
