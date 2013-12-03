@@ -6,7 +6,7 @@ import haflow.service.ReportService;
 import haflow.ui.model.PortletModel;
 import haflow.ui.model.ReportListModel;
 import haflow.ui.model.SaveReportModel;
-import haflow.ui.model.SaveReportResultModel;
+import haflow.ui.model.ReportResultModel;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -32,7 +32,7 @@ public class ReportHelper {
 	}
 
 	public ReportListModel getReportList(int userid){
-		List<Report> reports = this.reportService.getReportList(userid);
+		Set<Report> reports = this.reportService.getReportList(userid);
 		ReportListModel reportListModel = new ReportListModel();
 		List<SaveReportModel> reportModels = new ArrayList<SaveReportModel>();
 		for( Report report : reports ){
@@ -54,6 +54,7 @@ public class ReportHelper {
 				portletModel.setReportId(portlet.getReport().getId());
 				portletModel.setTitle(portlet.getTitle());
 				portletModel.setType(portlet.getType());
+				portletModels.add(portletModel);
 			}
 			reportModel.setPortlets(portletModels);
 			reportModels.add(reportModel);
@@ -62,10 +63,10 @@ public class ReportHelper {
 		return reportListModel;
 	}
 	
-	public SaveReportResultModel saveReport(UUID reportId, SaveReportModel model,int userid) {
+	public ReportResultModel saveReport(UUID reportId, SaveReportModel model,int userid) {
 		boolean success = this.doSaveReport(reportId, model, userid);
-		SaveReportResultModel result = new SaveReportResultModel();
-		result.setFlowId(reportId);
+		ReportResultModel result = new ReportResultModel();
+		result.setReportId(reportId);
 		result.setSuccess(success);
 		if (success) {
 			result.setMessage("success");
@@ -96,5 +97,20 @@ public class ReportHelper {
 				&& this.getReportService().saveReport(reportId, model.getName(), model.getIsdirectory(), model.getParentid(), portlets, userid);
 		
 		return result;
+	}
+
+	public ReportResultModel removeReport(UUID reportId, Integer userId) {
+		Set<UUID> deletedReportIds = new HashSet<UUID>();
+		boolean result = this.reportService.removeReport(reportId, userId, deletedReportIds);
+		ReportResultModel reportResultModel = new ReportResultModel();
+		reportResultModel.setReportId(reportId);
+		reportResultModel.setSuccess(result);
+		reportResultModel.setDeletedReportIds(deletedReportIds);
+		if(result){
+			reportResultModel.setMessage("success");
+		}else{
+			reportResultModel.setMessage("fail");
+		}
+		return reportResultModel;
 	}
 }

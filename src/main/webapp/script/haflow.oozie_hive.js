@@ -56,8 +56,8 @@ HAFlow.Main.prototype.openoozie = function() {
 			_currentInstance.ui.centerContainer.selectChild(contentPane);
 		},
 		error : function(request, status, error) {
-			HAFlow.showDialog("Error", "An error occurred while opening oozie: "
-					+ error);
+			_currentInstance.addToConsole("An error occurred while opening oozie: "
+					+ error, true);
 		}
 	});
 };
@@ -86,8 +86,8 @@ HAFlow.Main.prototype.openhive = function() {
 			_currentInstance.ui.centerContainer.selectChild(contentPane);
 		},
 		error : function(request, status, error) {
-			HAFlow.showDialog("Error", "An error occurred while opening hive: "
-					+ error);
+			_currentInstance.addToConsole("An error occurred while opening hive: "
+					+ error, true);
 		}
 	});
 };

@@ -306,15 +306,15 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 			data : JSON.stringify(user),
 			success : function(data, status) {
 				userDialog.hide();
-				HAFlow.showDialog("Success",
-						"Successfully update user information! ");
+				_currentInstance.addToConsole(
+						"Successfully update user information! ", false);
 
 			},
 			error : function(request, status, error) {
 				userDialog.hide();
-				HAFlow.showDialog("Error",
+				_currentInstance.addToConsole(
 						"An error occurred while updating user information: "
-								+ error);
+								+ error, true);
 			}
 		});
 	};
@@ -341,9 +341,9 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 
 			},
 			error : function(request, status, error) {
-				HAFlow.showDialog("Error",
+				_currentInstance.addToConsole(
 						"An error occurred while loading user information: "
-								+ error);
+								+ error, true);
 			}
 		});
 	});

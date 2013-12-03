@@ -25,6 +25,7 @@ public class MainUser {
 	private double usedspace;
 	private String realname;
 	private Set<Flow> flows;
+	private Set<Report> reports;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -116,6 +117,15 @@ public class MainUser {
 
 	public void setFlows(Set<Flow> flows) {
 		this.flows = flows;
+	}
+
+	@OneToMany(mappedBy="user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+	public Set<Report> getReports() {
+		return reports;
+	}
+
+	public void setReports(Set<Report> reports) {
+		this.reports = reports;
 	}
 
 }

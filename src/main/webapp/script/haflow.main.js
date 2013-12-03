@@ -79,7 +79,6 @@ HAFlow.Main.prototype.initUserInterfaceId = function() {
     this.reportListContainerId = "reportListContainer";
     this.reportListTreeId = "reportListTree";
     this.flowContainerId = "flowContainer";
-    this.propertyContainerId = "propertyContainer";
     this.informationContainerId = "informationContainer";
     this.consoleContainerId = "consoleContainer";
     this.logContainerId = "logContainer";
@@ -95,15 +94,16 @@ HAFlow.Main.prototype.initMainMenu = function() {
 // initToolbar --> haflow.toolbar.js
 
 HAFlow.Main.prototype.initBottomTabs = function() {
-    this.initPropertyTab();
-    this.initInformationTab();
+	this.initInformationTab();
+	this.initConsoleTab();
 };
 
-HAFlow.Main.prototype.initPropertyTab = function() {
-    var propertyContentPane = (new dijit.layout.ContentPane({
-        id : this.propertyContainerId,
-        title : "Property"
+HAFlow.Main.prototype.initConsoleTab = function() {
+    var consoleContentPane = (new dijit.layout.ContentPane({
+        id : this.consoleContainerId,
+        title : "Console"
     }));
+    this.ui.bottomContainer.addChild(consoleContentPane);
 };
 
 HAFlow.Main.prototype.initInformationTab = function() {
@@ -226,24 +226,6 @@ HAFlow.Main.prototype.initData = function() {
     this.initModuleListData();
 };
 
-//HAFlow.Main.prototype.initFlowListData = function() {
-//    var _currentInstance = this;
-//    $.ajax({
-//        url : this.basePath + "flow",
-//        type : "GET",
-//        cache : false,
-//        dataType : "json",
-//        success : function(data, status) {
-//            _currentInstance.flowList = data;
-//            _currentInstance.initModuleListData();
-//        },
-//        error : function(request, status, error) {
-//            HAFlow.showDialog("Error",
-//                    "An error occurred while loading flow list: " + error);
-//        }
-//    });
-//};
-
 HAFlow.Main.prototype.initModuleListData = function() {
     var _currentInstance = this;
     $.ajax({
@@ -257,8 +239,7 @@ HAFlow.Main.prototype.initModuleListData = function() {
             _currentInstance.drawLists(_currentInstance);
         },
         error : function(request, status, error) {
-            HAFlow.showDialog("Error",
-                    "An error occurred while loading module list: " + error);
+            _currentInsance.addToConsole("An error occurred while loading module list: " + error, true);
         }
     });
 };
@@ -290,18 +271,23 @@ HAFlow.Main.prototype.paintModuleList = function() {
 
 };
 
+HAFlow.Main.prototype.addToConsole = function(message, isError) {
+	var consoleContainer = dijit.registry
+			.byId(_currentInstance.consoleContainerId);
+	
+	var text = "</br> &gt;&gt;&gt;</br> ";
+	if( isError){
+		text += "<div style=\"color:red\">" + message + "</div>";
+	}else{
+		text += "<div style=\"color:green\">" + message + "</div>";
+	}
+	var randomId = HAFlow.generateUUID();
+	text += "<div id='" + randomId + "'>" + "" + "</div>";
+	$("#" + _currentInstance.consoleContainerId).append(text);
+	dojo.window.scrollIntoView(randomId);
+	_currentInstance.ui.bottomContainer.selectChild(consoleContainer);
+};
+
 //paintReportList --> haflow.report.js
-
-
-/*HAFlow.Main.prototype.buildFlowListTree = function() {
-    var i;
-    for (i = 0; i < this.flowList.flows.length; i++) {
-        this.flowListStore.put({
-            id : this.flowList.flows[i].id,
-            name : this.flowList.flows[i].name,
-            node : true
-        });
-    }
-};*/
 
 //end initData
