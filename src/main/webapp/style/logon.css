@@ -809,7 +809,7 @@ ul#mini-menu li a{ color:#666;  text-decoration:none;  font-family: Helvetica, '
 ul#mini-menu li a strong{ color:#363636;  text-decoration:none;  font-family: Helvetica, 'helvetica-neue', Arial,sans-serif}
 
 /*-------------inner pages----------------*/
-#wrapp-content{ position:relative;  width:1122px !important;  height:auto !important;  z-index:900;  padding:0;  top:51px;  background:#fff}
+#wrapp-content{ position:relative;  width:1122px !important;  height:auto !important;  z-index:900;  padding:0;  top:0px;  background:#fff}
 
 #wrapp-content.ad{ position:relative;  width:1122px !important;  height:auto !important;  z-index:900;  padding:0;  top:0;  background:#fff}
 
