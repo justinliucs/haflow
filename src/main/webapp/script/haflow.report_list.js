@@ -67,7 +67,13 @@ HAFlow.Main.prototype.fillReportsData = function(data) {
     				position: portlets[j].position,
     				
     				reportId: portlets[j].reportId, 
+    				configurations:[]
     			};
+    		var configurations = portlets[j].configurations;
+    		for( var x = 0; x < configurations.length; x++){
+    			var configuration = configurations[x];
+    			currentPortlet.configurations.push(configuration);
+    		}
     		this.reports[reportItemId].portlets.push(currentPortlet);
     	}
     }

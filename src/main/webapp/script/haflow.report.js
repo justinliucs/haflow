@@ -2,12 +2,16 @@ dojo.require("dojox.widget.Portlet");
 dojo.require("dojox.charting.Chart");
 dojo.require("dojox.charting.plot2d.StackedAreas");
 dojo.require("dojox.charting.themes.Wetland");
+dojo.require("dojox/charting/themes/Claro");
 dojo.require("dojox.charting.axis2d.Default");
 dojo.require("dojox.charting.plot2d.Columns");
 dojo.require("dojo.fx.easing");
 dojo.require("dojox.fx.scroll");
 dojo.require("dijit.registry");
 dojo.require("dojo.window");
+dojo.require("dojox.charting.plot2d.Pie");
+dojo.require("dojox.charting.axis2d.Default");
+dojo.require("dojox/charting/action2d/Tooltip");	 
 
 HAFlow.Main.prototype.newReport = function(parentId) {
 	var newReportId = HAFlow.generateUUID();
@@ -199,31 +203,36 @@ HAFlow.Main.prototype.paintReportList = function() {
 HAFlow.Main.prototype.addReport = function(reportId, currentPortlet){
 	var reportContainer = dijit.byId("reportContainer_" + reportId);
 	var portlet = new dojox.widget.Portlet({
-		title : currentPortlet.type
+		title : currentPortlet.type,
+		id : "portlet_" + currentPortlet.id,
 	});
 	if (currentPortlet.type == "text") {
-		portlet.set("content", currentPortlet.text_content);
+//		portlet.set("content", currentPortlet.text_content);
 		portlet.startup();
 		reportContainer.addChild(portlet);//, currentPortlet.index
 	} else if (currentPortlet.type == "curve") {
 		var chartId = currentPortlet.id;
-		var chartDivId = "chart_" + chartId;
+		var chartDivId = "chart_" + chartId + "_div_id";
 		portlet.set("content", "<div id=\"" + chartDivId
 				+ "\" style=\"height:180px; width:480px;\"></div>");
 		portlet.startup();
 		reportContainer.addChild(portlet);//, currentPortlet.index
 
-		var c = new dojox.charting.Chart(chartDivId, {
+		var chart = new dojox.charting.Chart(chartDivId, {
+//			id : "chart_" + chartId,
 			title : currentPortlet.title,// "Production(Quantity)",
 			titlePos : "bottom",
 			titleGap : 25,
 			titleFont : "normal normal normal 15pt Arial",
 			titleFontColor : "orange"
 		});
+					 
 		var chart_series = [ 1, 2, 0.5, 1.5, 1, 2.8, 0.4 ];
-		c.addPlot("default", {
-			type : dojox.charting.plot2d.StackedAreas,
-			tension : 3
+//		var chart_series2 = [ 2, 4, 1, 3, 2, 5.6, 0.8 ];
+		chart.addPlot("default", {
+			type : dojox.charting.plot2d.StackedAreas,//dojox.charting.plot2d.PiePlot,//StackedAreas,
+//			tension : 3,
+			markers: true,
 		}).addAxis("x", {
 			fixLower : "major",
 			fixUpper : "major"
@@ -234,11 +243,111 @@ HAFlow.Main.prototype.addReport = function(reportId, currentPortlet){
 			min : 0
 		}).setTheme(dojox.charting.themes.Wetland).addSeries("Series A",
 				chart_series).render();
-
+		chart.render();
+//		chart.title = "newTitle";
+//		chart.fullRender();
+//		chart.addSeries("Series B", chart_series2).render();
+//		chart.render();
 	} else {
 		alert("unknown report");
 	}
+	
+	dojo.connect(portlet, "onClick", function(event){
+		var portletId = event.currentTarget.id;
+		portletId = portletId.replace("portlet_", "");
+		_currentInstance.onReportPortletClicked(portletId, chart);
+	});
 };
+
+HAFlow.Main.prototype.onReportPortletClicked = function(portletId, chart) {
+	var instance = this;
+	var reportInfo = instance.reports[this.currentReportId];
+	var text = "";
+	text += "<table border=\"0\">";
+	text += "<tr style=\"tr\"><th align=\"left\">Portlet Info</th>" + "<td>" + portletId + "</td></tr>";
+	var portlets = reportInfo.portlets;
+	var portlet;
+	for( var i = 0; i < portlets.length; i++ ){
+		if( portlets[i].id == portletId){
+			portlet = portlets[i];
+			break;
+		}
+	}
+	var configurations = portlet.configurations;
+	for( var i = 0; i < configurations.length; i++ ){
+		var configuration = configurations[i];
+		var configurationTextBoxSpanId = "portlet_configuration_" + configuration.id + "_text_box_pane";
+		text += "<tr style=\"tr\"><th align=\"left\">" + configuration.key + "</th>" 
+		+ "<td><span id=" + configurationTextBoxSpanId + ">" +  "</span></td></tr>";
+	}
+	text += "<tr style=\"tr\"><td align=\"left\">" +
+			"<div id=\"save_portlet_configurations_button_pane\" class=\"configuration-content\"></div>" +
+			"</td></tr>";	
+	text += "</table>";
+	$("#" + instance.informationContainerId).html(text);
+	
+	for( var i = 0; i < configurations.length; i++ ){
+		var configuration = configurations[i];
+		var configurationTextBoxId = "portlet_configuration_" + configuration.id + "_text_box";
+		var configurationTextBoxSpanId = "portlet_configuration_" + configuration.id + "_text_box_pane";
+		if (dijit.byId(configurationTextBoxId) != null) {
+			dijit.registry.remove(configurationTextBoxId);
+		}
+		var configurationTextBox = new dijit.form.TextBox({
+			id : configurationTextBoxId,
+			value : configuration.value,
+			style : "width:300px;"
+		});
+		configurationTextBox.placeAt(dojo.byId(configurationTextBoxSpanId));
+		configurationTextBox.startup();
+	}
+	
+	var button = new dijit.form.Button({
+		label : "Save",
+		onClick : function() {
+			instance.savePortletConfiguration(portletId, chart);
+		}
+	});
+	button.placeAt(dojo.byId("save_portlet_configurations_button_pane"));
+	button.startup();
+	
+	var informationPane = dijit.byId(instance.informationContainerId);
+	_currentInstance.ui.bottomContainer.selectChild(informationPane);
+};
+
+HAFlow.Main.prototype.savePortletConfiguration = function(portletId, chart){
+	
+	this.addToConsole("something", false);
+	var reportInfo = this.reports[this.currentReportId];
+	var portlets = reportInfo.portlets;
+	var portlet;
+	for( var i = 0; i < portlets.length; i++ ){
+		if( portlets[i].id == portletId){
+			portlet = portlets[i];
+			break;
+		}
+	}
+	
+	var configurations = portlet.configurations;
+	for( var i = 0; i < configurations.length; i++ ){
+		var configuration = configurations[i];
+		var configurationTextBoxId = "portlet_configuration_" + configuration.id + "_text_box";
+		var newValue = dijit.byId(configurationTextBoxId).value;
+		if( portlet.type == "text"){
+			var portletWidget = dijit.byId("portlet_" + portletId);
+			portletWidget.set(configuration.key, newValue);
+		}else{
+			//var chartDivId = "chart_" + portletId;
+			var chartWidget = chart;//dijit.byId(chartDivId);
+//			var chartWidget2 = dijit.byId(chartDivId);
+			var plot = chart.getPlot("default");
+			chartWidget.set(configuration.key, newValue);
+			chart.render();	
+		}
+//		alert(newValue);
+	}
+};
+
 //private
 HAFlow.Main.prototype.paintReport = function(reportId) {
 	var currentReport = this.reports[reportId];
@@ -262,7 +371,8 @@ HAFlow.Main.prototype.onReportModuleAdded = function(currentInstance, reportId,
 			type: "text",
 			position: 1,
 			
-			reportId: reportId, 
+			reportId: reportId,
+			configurations : [{id: HAFlow.generateUUID(), key:"content", value:"hello world!"}]
 		};
 		this.reports[reportId].portlets.push(currentPortlet);
 		this.addReport(reportId, currentPortlet);
@@ -273,7 +383,9 @@ HAFlow.Main.prototype.onReportModuleAdded = function(currentInstance, reportId,
 				type: "curve",
 				position: 1,
 				
-				reportId: reportId, 
+				reportId: reportId,
+				configurations : [{id: HAFlow.generateUUID(), key: 'type', value : "Pie"}, 
+				       {id: HAFlow.generateUUID(), key: 'markers', value: 'true'}]
 			};
 		this.reports[reportId].portlets.push(currentPortlet);
 		this.addReport(reportId, currentPortlet);

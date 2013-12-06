@@ -1,12 +1,14 @@
 package haflow.ui.helper;
 
 import haflow.dto.entity.Portlet;
+import haflow.dto.entity.PortletConfiguration;
 import haflow.dto.entity.Report;
 import haflow.service.ReportService;
+import haflow.ui.model.PortletConfigurationItemModel;
 import haflow.ui.model.PortletModel;
 import haflow.ui.model.ReportListModel;
-import haflow.ui.model.SaveReportModel;
 import haflow.ui.model.ReportResultModel;
+import haflow.ui.model.SaveReportModel;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -54,6 +56,15 @@ public class ReportHelper {
 				portletModel.setReportId(portlet.getReport().getId());
 				portletModel.setTitle(portlet.getTitle());
 				portletModel.setType(portlet.getType());
+				Set<PortletConfigurationItemModel> configurations = new HashSet<PortletConfigurationItemModel>();
+				for( PortletConfiguration pc : portlet.getConfigurations() ){
+					PortletConfigurationItemModel pcim = new PortletConfigurationItemModel();
+					pcim.setId(pc.getId());
+					pcim.setKey(pc.getKey());
+					pcim.setValue(pc.getValue());
+					configurations.add(pcim);
+				}
+				portletModel.setConfigurations(configurations);
 				portletModels.add(portletModel);
 			}
 			reportModel.setPortlets(portletModels);
@@ -89,6 +100,16 @@ public class ReportHelper {
 				portlet.setTitle(portletModel.getTitle());
 				portlet.setType(portletModel.getType());
 				
+				Set<PortletConfiguration> portletConfigurations = new HashSet<PortletConfiguration>();
+				for( PortletConfigurationItemModel cim : portletModel.getConfigurations()){
+					PortletConfiguration pc = new PortletConfiguration();
+					pc.setId(cim.getId());
+					pc.setKey(cim.getKey());
+					pc.setValue(cim.getValue());
+					pc.setPortlet(portlet);
+					portletConfigurations.add(pc);
+				}
+				portlet.setConfigurations(portletConfigurations);
 				portlets.add(portlet);
 			}
 		}

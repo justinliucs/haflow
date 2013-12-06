@@ -1,8 +1,10 @@
 package haflow.ui.model;
 
+import java.util.Set;
 import java.util.UUID;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name="portlet")
@@ -13,6 +15,7 @@ public class PortletModel {
 	private int position;
 	
 	private UUID reportId;
+	private Set<PortletConfigurationItemModel> configurations;
 
 	@XmlElement
 	public UUID getId() {
@@ -52,5 +55,14 @@ public class PortletModel {
 	}
 	public void setReportId(UUID reportId) {
 		this.reportId = reportId;
+	}
+	
+	@XmlElementWrapper(name="configurations")
+	@XmlElement(name="configuration")
+	public Set<PortletConfigurationItemModel> getConfigurations() {
+		return configurations;
+	}
+	public void setConfigurations(Set<PortletConfigurationItemModel> configurations) {
+		this.configurations = configurations;
 	}
 }

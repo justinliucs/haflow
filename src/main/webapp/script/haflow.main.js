@@ -131,6 +131,7 @@ HAFlow.Main.prototype.initFlowContainer = function() {
             _currentInstance.afterReportSelected();
             
             var reportId = targetContainerPaneId.replace(reportContainerPaneString, "");
+            _currentInstance.currentReportId = reportId;
             _currentInstance.setupReportDroppable(reportId);
 //            _currentInstance.paintReport(reportId);    
         }else if(targetContainerPaneId.substring(0, flowContainerPaneString.length) 

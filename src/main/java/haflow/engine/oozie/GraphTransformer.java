@@ -74,12 +74,14 @@ public class GraphTransformer {
 					nodeConfiguration.put(v.getPath().getSourceEndpoint(), v.getValue());//source end point
 					inputConfiguration.put(v.getPath().getTargetEndpoint(), v.getValue());//target end point
 					if( moduleType != ModuleType.SOURCE && moduleType != ModuleType.DEST ){
-						newGraphNodes.add(node);
 						if( targetModuleType != ModuleType.SOURCE && targetModuleType != ModuleType.DEST ){
 							newGraphEdges.add(v.getPath());
 						}
 					}
 				}
+			}
+			if( moduleType != ModuleType.SOURCE && moduleType != ModuleType.DEST ){
+				newGraphNodes.add(node);
 			}
 		}
 		
