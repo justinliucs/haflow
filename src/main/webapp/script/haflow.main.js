@@ -101,7 +101,7 @@ HAFlow.Main.prototype.initBottomTabs = function() {
 HAFlow.Main.prototype.initConsoleTab = function() {
     var consoleContentPane = (new dijit.layout.ContentPane({
         id : this.consoleContainerId,
-        title : "Console"
+        title : myfile.console
     }));
     this.ui.bottomContainer.addChild(consoleContentPane);
 };
@@ -109,7 +109,7 @@ HAFlow.Main.prototype.initConsoleTab = function() {
 HAFlow.Main.prototype.initInformationTab = function() {
     var informationContentPane = (new dijit.layout.ContentPane({
         id : this.informationContainerId,
-        title : "Information"
+        title : myfile.information
     }));
     this.ui.bottomContainer.addChild(informationContentPane);
 };
@@ -131,6 +131,7 @@ HAFlow.Main.prototype.initFlowContainer = function() {
             _currentInstance.afterReportSelected();
             
             var reportId = targetContainerPaneId.replace(reportContainerPaneString, "");
+            _currentInstance.currentReportId = reportId;
             _currentInstance.setupReportDroppable(reportId);
 //            _currentInstance.paintReport(reportId);    
         }else if(targetContainerPaneId.substring(0, flowContainerPaneString.length) 
