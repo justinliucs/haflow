@@ -55,16 +55,16 @@ public class MainLogonController {
 //					.println("controller:"+(this.getHdfsHelper()==null));
 			if(this.getHdfsHelper().createdirectory("hdfs://133.133.2.150:9000/user/root",username))
 			{
-			redirectAttributes.addFlashAttribute("message", "ע��ɹ�");
+			redirectAttributes.addFlashAttribute("message", "successfully registed!");
 			return "redirect:/";
 			}
 			else{
-				redirectAttributes.addFlashAttribute("message", "�û�hdfs�ռ�δ����ɹ���");
+				redirectAttributes.addFlashAttribute("message", "the assignment of hdfs space failed!");
 				return "redirect:/registration";
 			}
 
 		} else {
-			redirectAttributes.addFlashAttribute("message", "�û���������Ѵ���");
+			redirectAttributes.addFlashAttribute("message", "user name or email already exist!");
 			return "redirect:/registration";
 		}
 	}
@@ -84,14 +84,12 @@ public class MainLogonController {
 			@RequestParam("password") String password) {
 		
 		if (username == "" || password == "") {
-			redirectAttributes.addFlashAttribute("message", "����д�û�������");
+			redirectAttributes.addFlashAttribute("message", "username or password is empty!");
 			return "redirect:/";
 		}
 		password=Md5Util.getMd5Hex(password);
 		int userid=this.getUserHelper().validate(username, password, "main");
-		System.out.println("!!!!!!!!!!");
-		System.out.println(username);
-		System.out.println(password);
+		
 		if (userid!=-1) {
 			request.getSession().setAttribute("userid", userid);
 			request.getSession().setAttribute("username", username);
@@ -100,7 +98,7 @@ public class MainLogonController {
 			return "redirect:/main";
 
 		} else {
-			redirectAttributes.addFlashAttribute("message","�û����������");
+			redirectAttributes.addFlashAttribute("message","invalid username or password!");
 			return "redirect:/";
 		}
 	}
