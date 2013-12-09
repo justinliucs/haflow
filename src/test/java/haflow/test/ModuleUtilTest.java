@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import haflow.module.Module;
 import haflow.module.AbstractModule;
-import haflow.module.util.ModuleUtil;
+import haflow.service.ModuleService;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -15,14 +15,14 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
 @ContextConfiguration(locations = "classpath:servlet-context.xml")
 public class ModuleUtilTest extends AbstractJUnit4SpringContextTests {
-	private ModuleUtil moduleUtil;
+	private ModuleService moduleUtil;
 
-	private ModuleUtil getModuleUtil() {
+	private ModuleService getModuleUtil() {
 		return moduleUtil;
 	}
 
 	@Autowired
-	private void setModuleUtil(ModuleUtil moduleUtil) {
+	private void setModuleUtil(ModuleService moduleUtil) {
 		this.moduleUtil = moduleUtil;
 	}
 

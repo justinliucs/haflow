@@ -1,4 +1,4 @@
-package haflow.module.util;
+package haflow.util;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;

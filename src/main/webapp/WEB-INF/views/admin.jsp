@@ -1,4 +1,4 @@
-<%@page import="haflow.module.util.ModuleUtil"%>
+<%@page import="haflow.service.ModuleService"%>
 <%@page import="haflow.ui.model.ModuleBriefModel"%>
 <%@page import="haflow.ui.helper.ModuleHelper"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"

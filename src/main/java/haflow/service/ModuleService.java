@@ -1,5 +1,5 @@
 
-package haflow.module.util;
+package haflow.service;
 
 import haflow.module.AbstractModule;
 import haflow.module.Module;
@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ModuleUtil {
+public class ModuleService {
 	private ClassHelper classHelper;
 
 	private ClassHelper getClassHelper() {

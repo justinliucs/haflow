@@ -3,8 +3,8 @@ package haflow.ui.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
-import haflow.module.util.Md5Util;
 import haflow.ui.helper.UserHelper;
+import haflow.util.Md5Util;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -58,7 +58,7 @@ public class AdminLogonController {
 	public String post(RedirectAttributes redirectAttributes,HttpServletRequest request,@RequestParam("username") String username,@RequestParam("password") String password) {
 		
 		if(username==""||password==""){
-			redirectAttributes.addFlashAttribute("message", "ÇëÌîĞ´ÓÃ»§ÃûÃÜÂë");
+			redirectAttributes.addFlashAttribute("message", "ï¿½ï¿½ï¿½ï¿½Ğ´ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
 			return "redirect:/";
 		}
 		password=Md5Util.getMd5Hex(password);
@@ -71,7 +71,7 @@ public class AdminLogonController {
 			return "redirect:/adminhome";
 		}
 		else{
-			redirectAttributes.addFlashAttribute("message","ÓÃ»§ÃûÃÜÂë´íÎó");
+			redirectAttributes.addFlashAttribute("message","ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
 			return "redirect:/";
 		}
 		

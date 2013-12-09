@@ -14,8 +14,8 @@ import haflow.module.DataType;
 import haflow.module.Module;
 import haflow.module.ModuleConfiguration;
 import haflow.module.ModuleEndpoint;
-import haflow.module.util.ModuleUtil;
 import haflow.service.HdfsService;
+import haflow.service.ModuleService;
 import haflow.service.NodeConfigurationService;
 import haflow.util.ClusterConfiguration;
 
@@ -331,7 +331,7 @@ public class OozieEngine extends AbstractEngine {
 	}
 
 	@Autowired
-	private void setModuleUtil(ModuleUtil moduleUtil) {
+	private void setModuleUtil(ModuleService moduleUtil) {
 		this.moduleUtil = moduleUtil;
 	}
 
@@ -352,7 +352,7 @@ public class OozieEngine extends AbstractEngine {
 
 	private Logger logger = Logger.getLogger(this.getClass().getName());
 	
-	private ModuleUtil moduleUtil;
+	private ModuleService moduleUtil;
 	private HdfsService hdfsService;
 	private OozieService oozieService;
 	private FlowDeployService flowDeployService;

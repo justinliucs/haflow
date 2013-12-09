@@ -3,9 +3,9 @@ package haflow.ui.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
-import haflow.module.util.Md5Util;
 import haflow.ui.helper.HdfsHelper;
 import haflow.ui.helper.UserHelper;
+import haflow.util.Md5Util;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

@@ -3,7 +3,7 @@ package haflow.ui.helper;
 import haflow.module.Module;
 import haflow.module.ModuleConfiguration;
 import haflow.module.ModuleEndpoint;
-import haflow.module.util.ModuleUtil;
+import haflow.service.ModuleService;
 import haflow.ui.model.ModuleConfigurationModel;
 import haflow.ui.model.ModuleBriefModel;
 import haflow.ui.model.ModuleEndpointModel;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ModuleHelper {
 	private static ModuleHelper moduleHelper;
-	private ModuleUtil moduleUtil;
+	private ModuleService moduleUtil;
 
 	public static ModuleHelper getModuleHelper() {
 		return moduleHelper;
@@ -30,12 +30,12 @@ public class ModuleHelper {
 		ModuleHelper.moduleHelper = moduleHelper;
 	}
 
-	private ModuleUtil getModuleUtil() {
+	private ModuleService getModuleUtil() {
 		return moduleUtil;
 	}
 
 	@Autowired
-	private void setModuleUtil(ModuleUtil moduleUtil) {
+	private void setModuleUtil(ModuleService moduleUtil) {
 		this.moduleUtil = moduleUtil;
 	}
 
