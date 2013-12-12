@@ -126,12 +126,13 @@ public class FlowService {
 	public List<Flow> getFlowList(int userid, String path) {
 		Session session = this.getSessionHelper().openSession();
 		try {
-			Query query = session.createQuery("select f from Flow f where f.parentpath =?");
+			Query query = session.createQuery("select f from Flow f where f.parentpath =? and f.user.id=?");
 			query.setString(0, path); 
+			query.setInteger(1, userid);
 			List<Flow> flows = (List<Flow>) query.list();
 	        for(Flow flow : flows){
 	        	
-	            System.out.println("database£º"+flow.getId() + " : " + flow.getNode() + " : " + flow.getPath()+ " : " + flow.getParentpath());      
+	            System.out.println("databaseï¿½ï¿½"+flow.getId() + " : " + flow.getNode() + " : " + flow.getPath()+ " : " + flow.getParentpath());      
 	        } 
 			session.close();
 			return flows;
@@ -146,7 +147,7 @@ public class FlowService {
 	public void renameFlowPath(int userid,UUID flowId,String path,Session session)
 	{
 		Flow flowfolder = (Flow) session.get(Flow.class, flowId);
-		//ÐÞ¸ÄÂ·¾¶
+		//ï¿½Þ¸ï¿½Â·ï¿½ï¿½
 		String newpath=path+"/"+flowfolder.getName();
 		flowfolder.setPath(newpath);
 		session.update(flowfolder);
@@ -155,7 +156,7 @@ public class FlowService {
 		querychild.setString(0, parentpath); 
 		List<Flow> flows = (List<Flow>)querychild.list();
         for(Flow flow : flows){	        	
-            System.out.println("child£º"+flow.getId() + " : " + flow.getNode() + " : " + flow.getPath()+ " : " + flow.getParentpath());         
+            System.out.println("childï¿½ï¿½"+flow.getId() + " : " + flow.getNode() + " : " + flow.getPath()+ " : " + flow.getParentpath());         
             if(flow.getNode()==false)
             {
             	renameFlowPath(userid,flow.getId(),newpath,session);
@@ -169,10 +170,10 @@ public class FlowService {
 		Session session = this.getSessionHelper().openSession();
 		Transaction trans=session.beginTransaction();
 		try {
-			//ÐÞ¸ÄÎÄ¼þÃû
+			//ï¿½Þ¸ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½
 			Flow flowfolder = (Flow) session.get(Flow.class, flowId);
 			flowfolder.setName(name);
-			//ÐÞ¸ÄÂ·¾¶
+			//ï¿½Þ¸ï¿½Â·ï¿½ï¿½
 			String []path=flowfolder.getPath().split("/");
 			String newpath="";
 		     for(int i=0;i<path.length-1;i++)
@@ -182,16 +183,16 @@ public class FlowService {
 		    newpath+=name;
 			flowfolder.setPath(newpath);
 			session.update(flowfolder);
-			//²éÕÒ×ÓÎÄ¼þ
+			//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½
 			String parentpath=flowId.toString();
 			Query querychild= session.createQuery("select f from Flow f where f.parentpath =?");
 			querychild.setString(0, parentpath); 
 			List<Flow> flows = (List<Flow>)querychild.list();
 	        for(Flow flow : flows){	        	
-	            System.out.println("child£º"+flow.getId() + " : " + flow.getNode() + " : " + flow.getPath()+ " : " + flow.getParentpath());
+	            System.out.println("childï¿½ï¿½"+flow.getId() + " : " + flow.getNode() + " : " + flow.getPath()+ " : " + flow.getParentpath());
 	            renameFlowPath(userid,flow.getId(),newpath,session);	            
 	        } 
-			//ÕÒµ½£¬¸ÄÐ´ÎÄ¼þÂ·¾¶
+			//ï¿½Òµï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½Ä¼ï¿½Â·ï¿½ï¿½
 	        trans.commit();
 			session.close();			
 			return true;

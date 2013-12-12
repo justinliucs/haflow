@@ -1,6 +1,6 @@
 myfile={ 
 "flow":"Flow",
-"flow":"Flows",
+"flows":"Flows",
 "run":"Run",
 "search":"Search",
 "window":"Window",
