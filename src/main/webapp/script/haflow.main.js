@@ -240,7 +240,7 @@ HAFlow.Main.prototype.initModuleListData = function() {
             _currentInstance.drawLists(_currentInstance);
         },
         error : function(request, status, error) {
-            _currentInsance.addToConsole("An error occurred while loading module list: " + error, true);
+        	_currentInstance.addToConsole("An error occurred while loading module list: " + error, true);
         }
     });
 };
