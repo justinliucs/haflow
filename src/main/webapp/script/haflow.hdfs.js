@@ -204,15 +204,28 @@ HAFlow.Main.prototype.initHdfsFileListTree = function() {
 		id : "RefreshMenuItem",
 		label : myfile.refresh
 	});
+	if(dijit.byId("CopyHdfsMenuItem")!=null){
+		dijit.registry.remove("CopyHdfsMenuItem");
+	}
+	this.menu.treeMenu.CopyHdfsMenuItem= new dijit.MenuItem({
+		id:"CopyHdfsMenuItem",
+		label:myfile.copyHdfsPath
+	});
     this.menu.treeMenu.addChild(this.menu.treeMenu.DownloadMenuItem);
     this.menu.treeMenu.addChild(this.menu.treeMenu.CreateMenuItem);
     this.menu.treeMenu.addChild(this.menu.treeMenu.DeleteMenuItem);
     this.menu.treeMenu.addChild(this.menu.treeMenu.UploadMenuItem);
     this.menu.treeMenu.addChild(this.menu.treeMenu.RenameMenuItem);
     this.menu.treeMenu.addChild(this.menu.treeMenu.RefreshMenuItem);
-
+    this.menu.treeMenu.addChild(this.menu.treeMenu.CopyHdfsMenuItem);
+    //added by dawn
+    dojo.connect(this.menu.treeMenu.CopyHdfsMenuItem,"onClick",function(){
+    	 var tn = dijit.byNode(this.getParent().currentTarget);
+         
+    	 _currentInstance.hdfspath = tn.item.path;
+    });
     dojo.connect(
-
+    		
     this.menu.treeMenu.UploadMenuItem, "onClick",
     function() {
         var tn = dijit.byNode(this.getParent().currentTarget);
@@ -523,7 +536,7 @@ HAFlow.Main.prototype.initHdfsFileListTree = function() {
         if (item.directory == "true") {
 
         } else {
-            hdfspath = item.path;
+            _currentInstance.hdfspath = item.path;
             var information = [];
             information.name = item.name;
             information.path = item.path;
@@ -698,6 +711,7 @@ HAFlow.Main.prototype.getHdfsCsv = function(path, fileName) {
             }
             table += "</table>";
             if (dijit.byId("hdfsContainerPane_" + path + "/" + fileName) != null) {
+            	dijit.byId("hdfsContainerPane_" + path + "/" + fileName).setContent(table);
                 _currentInstance.ui.centerContainer.selectChild(dijit.byId("hdfsContainerPane_" + path + "/" + fileName));
             } else {
                 var contentPane = new dojox.layout.ContentPane({

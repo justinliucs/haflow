@@ -205,7 +205,7 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 	}));
 	
 	//change language
-	if(language=="Chinese"){
+	/*if(language=="Chinese"){
 		this.ui.mainMenu
 		.addChild(new dijit.layout.ContentPane(
 				{
@@ -228,7 +228,7 @@ HAFlow.Main.prototype.initFlowMenu = function() {
 							"<font size=2px>切换中文</font></a>&nbsp&nbsp</div>",
 					style : "float:right;"
 				}));
-	}
+	}*/
 
 	// userInformation
 	this.ui.mainMenu

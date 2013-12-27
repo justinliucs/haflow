@@ -1,3 +1,8 @@
+dojo.registerModulePath("widget","/haflow/script/widget");
+dojo.require("widget.MultipleEditor");
+dojo.require("dijit.Menu");
+dojo.require("dijit.MenuItem");
+
 //jsplumb helper
 
 //public
@@ -240,7 +245,185 @@ HAFlow.Main.prototype.bindFunctions = function(flowId) {
 	});
 };
 
-HAFlow.Main.prototype.onNodeClicked = function(instance, flowId, nodeId) {
+
+//changed by dawn
+HAFlow.Main.prototype.onNodeClicked = function(instance, flowId, nodeId){
+	
+	var text="";
+	text+="<div id='delete_node_button' ></div>";
+	text+="<div id='gridDiv' style='width:100%; height:100%'></div>";
+	
+	$("#" + instance.informationContainerId).html(text);
+	
+	var button = new dijit.form.Button({
+		label : myfile.deletenode,
+		onClick:function() {
+			instance.deleteNode(instance, flowId, nodeId);
+		}
+	});
+	button.placeAt("delete_node_button");
+	button.startup();
+	this.initNodeDataGrid(instance,flowId,nodeId);
+	
+	
+};
+HAFlow.Main.prototype.initNodeDataGrid=function(instance,flowId,nodeId){
+	var node = instance.getNodeById(instance, flowId, nodeId);
+	var module = instance.getModuleById(instance, node.moduleId);
+	
+	if (dijit.byId("flow_" + flowId + "_node_"+nodeId+"_Table") != null) {
+		dijit.registry.remove("flow_" + flowId + "_node_"+nodeId+"_Table");
+	}
+	
+	var items = [];
+
+	items.push({
+		key : myfile.NodeId,
+		value : node.id,
+	});
+	items.push({
+		key : myfile.flow,
+		value : instance.flows[node.flowId].name,
+	});
+	items.push({
+		key : myfile.module,
+		value : module.name,
+	});
+	items.push({
+		key : myfile.name,
+		value : node.name,
+	});
+	var configItems=this.getNodeConfigurationItems(instance, flowId, nodeId);
+	var allitems=items.concat(configItems);
+	
+	var store = new dojo.data.ItemFileWriteStore({
+		data : {
+			items : allitems
+		}
+	});
+	
+
+	var layout = [ {
+		name : myfile.description,
+		field : "key",
+		width : "50%",
+	}, {
+		name : myfile.value,
+		field : "value",
+		width : "50%",
+		editable : true,
+		type:widget.MultipleEditor
+	}
+
+	];
+	var grid = new dojox.grid.DataGrid({
+		id : "flow_" + flowId + "_node_"+nodeId+"_Table",
+		store : store,
+		structure : layout,
+		onRowContextMenu: function(e){
+			initCellMenu(e);
+		},
+		autoHeight:true
+	});
+	grid.placeAt("gridDiv");
+
+	grid.startup();
+	grid.canSort = function() {
+		return false;
+	};
+	grid.canEdit = function(inCell, inRowIndex) {
+	
+		if (inCell.index == 1 && inRowIndex < 3)
+			return false;
+		else
+			return true;
+	};
+	onSet = function(item, attr, oldVal, newVal) {
+		if (item._0 == "3" && attr == "value") {
+
+			if (oldVal == null)
+				oldVal = "";
+			if (oldVal != newVal) {
+
+				instance.saveNodeName(newVal, instance, flowId, nodeId);
+			}
+		}
+		if (item._0 > "3" && attr == "value") {
+			var _baseRowIndex = 4;
+			//console.log("------>>>>>>>>>beforeSaveNodeConfiguration");
+			//console.log(node.configurations);
+			instance.saveNodeConfiguration(_baseRowIndex, instance, flowId,
+					nodeId);
+			//console.log("------>>>>>>>>>afterSaveNodeConfiguration");
+			//console.log(node.configurations);
+		}
+	};
+	dojo.connect(grid.store, "onSet", grid, onSet);
+	initCellMenu=function(e){
+	//function initCellMenu(e) {
+		var cellMenu = new dijit.Menu({
+
+		});
+		var cellMenuItem=new dijit.MenuItem({
+			label : myfile.pasteHdfsPath,
+			onClick: function(){
+				var item=e.grid.getItem(e.rowIndex);
+				var columname=e.grid.getCell(e.cellIndex).field;
+				if(columname=="value"&&e.rowIndex>3&&instance.hdfspath!=null)
+					
+					grid.store.setValue(item,columname,instance.hdfspath);
+				//console.log(e.cellIndex);
+			}
+		});
+		if(instance.hdfspath==null)
+			cellMenuItem.set("disabled",true);
+		/*else
+			cellMenuItem.set("disabled",false);*/
+		cellMenu.addChild(cellMenuItem);
+		
+			
+		cellMenu.startup();
+		cellMenu.bindDomNode(e.grid.domNode);
+	};
+};
+HAFlow.Main.prototype.getNodeConfigurationItems = function(instance, flowId,
+		nodeId) {
+	var node = instance.getNodeById(instance, flowId, nodeId);
+	var module = instance.getModuleById(instance, node.moduleId);
+	var configItems = [];
+	var i;
+	for (i = 0; i < module.configurations.length; i++) {
+
+		if (module.configurations[i].type == "BOOLEAN") {
+
+			//console.log("----->>>>>>>>>configuration is boolean!");
+			//console.log(instance.getConfigurationValue(instance, flowId,
+					//nodeId, module.configurations[i].key));
+			configItems.push({
+				key : module.configurations[i].displayName,
+				value : (instance.getConfigurationValue(instance, flowId,
+						nodeId, module.configurations[i].key) == "true"||instance.getConfigurationValue(instance, flowId,
+								nodeId, module.configurations[i].key) == true) ? true
+						: false,
+				type:"bool"
+			});
+		} else {
+
+			configItems.push({
+				key : module.configurations[i].displayName,
+				value : instance.getConfigurationValue(instance, flowId,
+						nodeId, module.configurations[i].key),
+				type:"string"
+			});
+		}
+
+	}
+	return configItems;
+
+};
+
+// ended by dawn
+/*HAFlow.Main.prototype.onNodeClicked = function(instance, flowId, nodeId) {
 	var node = instance.getNodeById(instance, flowId, nodeId);
 	var module = instance.getModuleById(instance, node.moduleId);
 	var text = "";
@@ -301,7 +484,7 @@ HAFlow.Main.prototype.onNodeClicked = function(instance, flowId, nodeId) {
 	var saveNodeNameButton = new dijit.form.Button({
 		label : myfile.saveNodeName,
 		onClick : function() {
-			instance.saveNodeName(instance, flowId, nodeId);
+			instance.saveNodeName($("#" + "node_" + nodeId + "_name").val(),instance, flowId, nodeId);
 		}
 	});
 	saveNodeNameButton.placeAt(dojo.byId("save_node_name_button"));
@@ -371,7 +554,7 @@ HAFlow.Main.prototype.onNodeClicked = function(instance, flowId, nodeId) {
 	saveConfigurationButton.placeAt(dojo.byId("save_configuration_button"));
 	saveConfigurationButton.startup();
 };
-
+*/
 HAFlow.Main.prototype.onModuleClicked = function(instance, flowId, moduleId) {
 	var text = "";
 	var i;

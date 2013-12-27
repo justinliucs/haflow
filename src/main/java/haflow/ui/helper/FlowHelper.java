@@ -85,6 +85,8 @@ public class FlowHelper {
 		if (flow == null) {
 			return null;
 		}
+		System.out.println("tiaoshi!!!!!!!!!!!!!!");
+		System.out.println(flow.getId());
 		FlowModel flowModel = new FlowModel();
 		flowModel.setId(flow.getId());
 		flowModel.setName(flow.getName());
@@ -115,8 +117,13 @@ public class FlowHelper {
 				model.setKey(profile.getKey());
 				model.setValue(profile.getValue());
 				nodeModel.getConfigurations().add(model);
+				System.out.println("configuration!!!!!!!");
+				System.out.println(profile.getValue());
 			}
 			flowModel.getNodes().add(nodeModel);
+			System.out.println("node!!!!!!!!!");
+			System.out.println(node.getId());
+			System.out.println(node.getName());
 		}
 		flowModel.setEdges(new HashSet<EdgeModel>());
 		for (Edge edge : flow.getEdges()) {
@@ -146,6 +153,7 @@ public class FlowHelper {
 	}
 
 	public boolean doSaveFlow(UUID flowId, FlowModel model,int userid) {
+		
 		Set<Node> nodes = new HashSet<Node>();
 		Set<Edge> edges = new HashSet<Edge>();
 		for (NodeModel nodeModel : model.getNodes()) {

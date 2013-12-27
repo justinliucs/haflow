@@ -1,4 +1,11 @@
- myfile={ 
+ myfile={
+"deletenode":"删除结点",
+"copyHdfsPath":"复制HDFS路径",
+"pasteHdfsPath":"粘贴HDFS路径",
+"module":"模块",
+"description":"描述",
+"value":"值",
+"NodeId":"结点编号",
 "flow":"流程",
 "flows":"流程",
 "run":"运行",
@@ -65,7 +72,7 @@
 "newReport":"新建报表",
 "newReportDirectory":"新建报表文件夹",
 "console":"控制台",
-"information":"基本信息",
+"information":"配置信息",
 "reports":"报表",
 "quit":"退出",
 "updateTime":"更新时间",

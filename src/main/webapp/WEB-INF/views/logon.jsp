@@ -163,7 +163,24 @@
         </tr>
         </table>
         </li>
-
+      <div class="clear"></div><br /> 
+		<li class='mktFormReq mktField' style="width:500px;" >
+        <table>
+        <tr>
+        <td style="width:150px;"><label>Language:</label><span style="color:#F00">*</span></td>
+        <td><span class='mktInput'>
+        <select name="language" class='mktFormText mktFormString mktFReq' style="
+    width: 322px;
+    height: 30px;">
+        <option value="english" class='mktFormText mktFormString mktFReq'>English</option>
+        <option value="chinese" class='mktFormText mktFormString mktFReq'>简体中文</option>
+        </select>
+        <span class='mktFormMsg' id="error_password"></span>
+       </span>
+        </td>
+        </tr>
+        </table>
+        </li>
       <div class="clear"></div><br />
 		
         <li class='mktField' style="width:500px;">

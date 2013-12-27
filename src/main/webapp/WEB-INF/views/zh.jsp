@@ -15,6 +15,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Haflow - a big data analysis service platform!</title>
+<link rel="Stylesheet" href="http://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dojox/grid/resources/soriaGrid.css" />
 <link rel="stylesheet"
 	href="http://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dijit/themes/claro/claro.css">
 <link rel="stylesheet"
@@ -40,6 +41,7 @@
 	src="http://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dojo/dojo.js" 
 	djConfig="isDebug:true,parseOnLoad:true,locale:'zh-cn'"></script>
 <script type="text/javascript" src="<%=basePath%>/script/locale/nls/zh-cn/myfile.js"></script>
+<script type="text/javascript" src="<%=basePath%>/script/ajax.setup.js"></script>
 <script type="text/javascript" src="<%=basePath%>/script/haflow.js"></script>
 <script type="text/javascript" src="<%=basePath%>/script/haflow.ui.js"></script>
 <script type="text/javascript" src="<%=basePath%>/script/haflow.main.js"></script>
