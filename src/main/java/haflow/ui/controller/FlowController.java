@@ -38,6 +38,7 @@ public class FlowController {
 	@ResponseBody
 	public FlowListModel get(HttpServletRequest request,
 			@RequestParam(value = "path", required = true) String path) {
+		System.out.println("call /flow!!!!!!!");
 		return this.getFlowHelper().getFlowList(
 				(Integer) request.getSession().getAttribute("userid"), path);
 	}

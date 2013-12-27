@@ -81,7 +81,8 @@ public class MainLogonController {
 	public String login(RedirectAttributes redirectAttributes,
 			HttpServletRequest request,
 			@RequestParam("username") String username,
-			@RequestParam("password") String password) {
+			@RequestParam("password") String password,
+			@RequestParam("language") String language) {
 		
 		if (username == "" || password == "") {
 			redirectAttributes.addFlashAttribute("message", "username or password is empty!");
@@ -94,9 +95,10 @@ public class MainLogonController {
 			request.getSession().setAttribute("userid", userid);
 			request.getSession().setAttribute("username", username);
 			request.getSession().setAttribute("scope", 0);
-			
-			return "redirect:/main";
-
+			if(language.equals("English")||language.equals("english"))
+				return "redirect:/main";
+			else
+				return "redirect:/zh";
 		} else {
 			redirectAttributes.addFlashAttribute("message","invalid username or password!");
 			return "redirect:/";
@@ -105,17 +107,12 @@ public class MainLogonController {
 
 	@RequestMapping(value = "/main")
 	public ModelAndView post(HttpServletRequest request) {
-		//boolean flag = UserHelper.isUserLogon(request,0);
-		//if(flag){
+		
 			ModelAndView main=new ModelAndView("main");
 			main.addObject("username", request.getSession().getAttribute("username"));
 			return main;
-		//}
-		/*else{
-			ModelAndView mav=new ModelAndView("logon");
-			mav.addObject("message","����д�û�������룡");
-			return mav;
-		}*/
+		
+		
 	}
 	
 	@RequestMapping(value = "/zh")

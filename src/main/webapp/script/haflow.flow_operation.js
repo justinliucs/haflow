@@ -30,6 +30,8 @@ dojo.require("dojox.grid.EnhancedGrid");
 dojo.require("dojo.data.ItemFileWriteStore");
 dojo.require("dojox.grid.cells.dijit");
 dojo.require("dojox.layout.ContentPane");
+dojo.require("dojox.grid.DataGrid");
+dojo.require("dojo.data.ItemFileWriteStore");
 
 // public
 HAFlow.Main.prototype.initFlowList = function() {
@@ -263,65 +265,202 @@ HAFlow.Main.prototype.refreshFlowList = function(instance, parentPath, data) {
 HAFlow.Main.prototype.onFlowClicked = function(instance, flowId) {
 	var flowBrief = instance.getFlowBriefById(instance, flowId);
 	var text = "";
-	text += "<table border=\"0\">";
-	text += "<tr style=\"tr\"><th align=\"left\">"+myfile.flowInfo+"</th><td>"
-			+ flowBrief.id + "</td></tr>";
-	text += "<tr style=\"tr\"><th align=\"left\">"+myfile.name+"</th><td><span id=\"flow_name_text_box\" class=\"configuration-content\"></span></td></tr>";
-	text += "<tr style=\"tr\"><td align=\"left\"><div id=\"save_flow_name_button\" class=\"configuration-content\"></div></td></tr>";
-	text += "</table>";
+	text += "<div id='save_flow_table_button'></div>";
+	text += "<div id='gridDiv' style='width:100%; height:350px'></div>";
 	$("#" + instance.informationContainerId).html(text);
-	if (dijit.byId("flow_" + flowBrief.id + "_name") != null) {
-		dijit.registry.remove("flow_" + flowBrief.id + "_name");
-	}
-	var flowNameTextBox = new dijit.form.TextBox({
-		id : "flow_" + flowBrief.id + "_name",
-		value : flowBrief.name,
-		style : "width:300px;"
-	});
-	flowNameTextBox.placeAt(dojo.byId("flow_name_text_box"));
-	flowNameTextBox.startup();
 	var button = new dijit.form.Button({
 		label : myfile.save,
 		onClick : function() {
-			instance.saveFlowName(instance, flowBrief.id);
+			console.log("save Table:");
+			console.log(instance);
+			var grid = dijit.byId("flow_" + flowBrief.id + "_InfoTable");
+			var length = grid.store._arrayOfAllItems.length;
+			var newFlowName = "NewFlow";
+			for ( var i = 0; i < length; i++) {
+				var row = grid.getItem(i);
+				
+				var key = row["key"];
+				
+				if (key == myfile.name) {
+					
+					newFlowName=grid.store.getValue(row,"value");
+					
+					break;
+				}
+
+			}
+
+			
+			instance.saveFlowName(newFlowName, instance, flowBrief.id);
 		}
 	});
-	button.placeAt(dojo.byId("save_flow_name_button"));
+	button.placeAt("save_flow_table_button");
 	button.startup();
+	this.initFlowDataGrid(flowBrief, instance, flowId);
 	var informationPane = dijit.byId(instance.informationContainerId);
 	_currentInstance.ui.bottomContainer.selectChild(informationPane);
+};
+HAFlow.Main.prototype.initFlowDataGrid = function(flowBrief, instance, flowId) {
+	if (dijit.byId("flow_" + flowBrief.id + "_InfoTable") != null) {
+		dijit.registry.remove("flow_" + flowBrief.id + "_InfoTable");
+	}
+	var items = [];
+
+	items.push({
+		key : myfile.flowInfo,
+		value : flowBrief.id,
+	});
+	items.push({
+		key : myfile.name,
+		value : flowBrief.name,
+	});
+
+	var store = new dojo.data.ItemFileWriteStore({
+		data : {
+			items : items
+		}
+	});
+	
+	var layout = [ {
+		name : myfile.description,
+		field : "key",
+		width : "50%",
+	}, {
+		name : myfile.value,
+		field : "value",
+		width : "50%",
+		editable : true,
+	}
+
+	];
+	var grid = new dojox.grid.DataGrid({
+		id : "flow_" + flowBrief.id + "_InfoTable",
+		store : store,
+		structure : layout,
+	});
+	grid.placeAt("gridDiv");
+
+	grid.startup();
+	grid.canSort = function() {
+		return false;
+	};
+	grid.canEdit = function(inCell, inRowIndex) {
+		
+
+		if (inCell.index == 1 && inRowIndex == 0)
+			return false;
+		else
+			return true;
+	};
+
 };
 
 HAFlow.Main.prototype.onFlowFolderClicked = function(instance, flowId) {
 	var flowBrief = instance.getFlowBriefById(instance, flowId);
-	var text = "";
-	text+="<table border=\"0\">";
-	text+="<tr style=\"tr\"><th align=\"left\">"+myfile.name+"</th><td><span id=\"flow_name_text_box\" class=\"configuration-content\"></span></td></tr>";
-	text+="<tr style=\"tr\"><td align=\"left\"><div id=\"save_flow_name_button\" class=\"configuration-content\"></div></td></tr>";
-	text+="</table>";
+	var text="";
+	text+="<div id='gridDiv' style='width:100%; height:350px'></div>";
 	$("#" + instance.informationContainerId).html(text);
-	if (dijit.byId("flow_" + flowBrief.id + "_name") != null) {
-		dijit.registry.remove("flow_" + flowBrief.id + "_name");
-	}
-	var flowNameTextBox = new dijit.form.TextBox({
-		id : "flow_" + flowBrief.id + "_name",
-		value : flowBrief.name,
-		style : "width:300px;"
-	});
-	flowNameTextBox.placeAt(dojo.byId("flow_name_text_box"));
-	flowNameTextBox.startup();
-	var button = new dijit.form.Button({
-		label : myfile.save,
-		onClick : function() {
-			instance.saveFlowFolderName(instance, flowBrief.id);
-		}
-	});
-	button.placeAt(dojo.byId("save_flow_name_button"));
-	button.startup();
+	
+	this.initFloderDataGrid(flowBrief,instance, flowId);
 	var informationPane = dijit.byId(instance.informationContainerId);
 	_currentInstance.ui.bottomContainer.selectChild(informationPane);
 };
-
+HAFlow.Main.prototype.initFloderDataGrid=function(flowBrief,instance,flowId){
+	if (dijit.byId("flow_" + flowBrief.id + "_InfoTable") != null) {
+		dijit.registry.remove("flow_" + flowBrief.id + "_InfoTable");
+	}
+	var items=[];
+	
+	items.push({
+		key:myfile.flowInfo,
+		value:flowBrief.id,
+	});
+	items.push({
+		key:myfile.name,
+		value:flowBrief.name,
+	});
+	
+	var store=new dojo.data.ItemFileWriteStore({data:{items:items}});
+	
+	
+	var layout=[ 
+                { name: "c1", field: "key", width: "50%", },
+                { name: "c2", field: "value", width: "50%" ,
+                	editable: true,}
+                
+               
+            ];
+	var grid=new dojox.grid.DataGrid({
+		id:"flow_"+flowBrief.id+"_InfoTable",
+		store:store,
+		structure:layout,
+		autoHeight: true
+	});
+	grid.placeAt("gridDiv");
+	
+	grid.startup();
+	grid.canSort=function(){
+		return false;
+	};
+	grid.canEdit=function(inCell,inRowIndex){
+    	
+    	
+    	if(inCell.index==1&&inRowIndex==0)
+    		return false;
+    	else
+    		return true;
+    };
+    onSet=function(item,attr,oldVal,newVal){
+    	if (item._0 == "1" && attr == "value") {
+			if (oldVal == null)
+				oldVal = "";
+			if (oldVal != newVal) {
+				instance.saveFlowFolderName(newVal, instance, flowBrief.id);
+			}
+		}
+    };
+    dojo.connect(grid.store, "onSet", grid,onSet);
+};
+/*
+ * HAFlow.Main.prototype.onFlowClicked = function(instance, flowId) { var
+ * flowBrief = instance.getFlowBriefById(instance, flowId); var text = ""; text += "<table
+ * border=\"0\">"; text += "<tr style=\"tr\"><th align=\"left\">"+myfile.flowInfo+"</th><td>" +
+ * flowBrief.id + "</td></tr>"; text += "<tr style=\"tr\"><th align=\"left\">"+myfile.name+"</th><td><span
+ * id=\"flow_name_text_box\" class=\"configuration-content\"></span></td></tr>";
+ * text += "<tr style=\"tr\"><td align=\"left\"><div
+ * id=\"save_flow_name_button\" class=\"configuration-content\"></div></td></tr>";
+ * text += "</table>"; $("#" + instance.informationContainerId).html(text); if
+ * (dijit.byId("flow_" + flowBrief.id + "_name") != null) {
+ * dijit.registry.remove("flow_" + flowBrief.id + "_name"); } var
+ * flowNameTextBox = new dijit.form.TextBox({ id : "flow_" + flowBrief.id +
+ * "_name", value : flowBrief.name, style : "width:300px;" });
+ * flowNameTextBox.placeAt(dojo.byId("flow_name_text_box"));
+ * flowNameTextBox.startup(); var button = new dijit.form.Button({ label :
+ * myfile.save, onClick : function() { instance.saveFlowName(instance,
+ * flowBrief.id); } }); button.placeAt(dojo.byId("save_flow_name_button"));
+ * button.startup(); var informationPane =
+ * dijit.byId(instance.informationContainerId);
+ * _currentInstance.ui.bottomContainer.selectChild(informationPane); };
+ * 
+ * HAFlow.Main.prototype.onFlowFolderClicked = function(instance, flowId) { var
+ * flowBrief = instance.getFlowBriefById(instance, flowId); var text = "";
+ * text+="<table border=\"0\">"; text+="<tr style=\"tr\"><th align=\"left\">"+myfile.name+"</th><td><span
+ * id=\"flow_name_text_box\" class=\"configuration-content\"></span></td></tr>";
+ * text+="<tr style=\"tr\"><td align=\"left\"><div
+ * id=\"save_flow_name_button\" class=\"configuration-content\"></div></td></tr>";
+ * text+="</table>"; $("#" + instance.informationContainerId).html(text); if
+ * (dijit.byId("flow_" + flowBrief.id + "_name") != null) {
+ * dijit.registry.remove("flow_" + flowBrief.id + "_name"); } var
+ * flowNameTextBox = new dijit.form.TextBox({ id : "flow_" + flowBrief.id +
+ * "_name", value : flowBrief.name, style : "width:300px;" });
+ * flowNameTextBox.placeAt(dojo.byId("flow_name_text_box"));
+ * flowNameTextBox.startup(); var button = new dijit.form.Button({ label :
+ * myfile.save, onClick : function() { instance.saveFlowFolderName(instance,
+ * flowBrief.id); } }); button.placeAt(dojo.byId("save_flow_name_button"));
+ * button.startup(); var informationPane =
+ * dijit.byId(instance.informationContainerId);
+ * _currentInstance.ui.bottomContainer.selectChild(informationPane); };
+ */
 HAFlow.Main.prototype.newFlow = function(parentpath,path) {
 	var newFlowId = HAFlow.generateUUID();
 	this.flows[newFlowId] = {};
@@ -395,8 +534,10 @@ HAFlow.Main.prototype.saveFlow = function(flowId) {
 		_currentInstance.addToConsole("Flow have not modified!");
 		return;
 	}
+	
 	$.ajax({
 		url : _currentInstance.basePath + "flow/" + flowId,
+		
 		type : "PUT",
 		dataType : "json",
 		contentType : "application/json",
@@ -411,7 +552,9 @@ HAFlow.Main.prototype.saveFlow = function(flowId) {
 		error : function(request, status, error) {
 			_currentInstance.addToConsole("An error occurred while saving flow: "
 					+ error, true);
+			console.log(status);
 		}
+		
 	});
 };
 
@@ -592,9 +735,15 @@ HAFlow.Main.prototype.showRunHistory = function(flowId) {
 	});
 };
 
-HAFlow.Main.prototype.saveFlowName = function(instance, flowId) {
+HAFlow.Main.prototype.saveFlowName = function(newFlowName,instance, flowId) {
 	if (instance.flows[flowId]) {
-		var value = $("#" + "flow_" + flowId + "_name").val();
+		/*
+		 * old save Flow Name
+		 * 
+		 * var value = $("#" + "flow_" + flowId + "_name").val();
+		 */
+		   var value=newFlowName;
+		   
 		if (this.checkFlowName(instance, instance.flows[flowId].name, value)) {
 			instance.flows[flowId].name = value;
 			instance.getFlowBriefById(instance, flowId).name = value;
@@ -620,8 +769,14 @@ HAFlow.Main.prototype.saveFlowName = function(instance, flowId) {
 };
 
 //TODO:
-HAFlow.Main.prototype.saveFlowFolderName = function(instance, flowId) {
-	var value = $("#" + "flow_" + flowId + "_name").val();
+HAFlow.Main.prototype.saveFlowFolderName = function(newVal,instance, flowId) {
+	/*
+	 * old value
+	 * 
+	 * var value = $("#" + "flow_" + flowId + "_name").val();
+	 * 
+	 * */
+	var value=newVal;
 	var item=instance.flowListStore.query({id:flowId});
 	var flowfolder={};
 	instance.getFlowBriefById(instance, flowId).name = value;
@@ -665,9 +820,15 @@ HAFlow.Main.prototype.saveFlowFolderName = function(instance, flowId) {
 };
 
 
-HAFlow.Main.prototype.saveNodeName = function(instance, flowId, nodeId) {
+HAFlow.Main.prototype.saveNodeName = function(newVal,instance, flowId, nodeId) {
+	
 	var node = instance.getNodeById(instance, flowId, nodeId);
-	var value = $("#" + "node_" + nodeId + "_name").val();
+	if(node==null) return _currentInstance.addToConsole("Please choose a valid node!",true);
+	/*
+	 * old value
+	 * var value = $("#" + "node_" + nodeId + "_name").val();
+	 */
+	value=newVal;
 	if (instance.checkNodeName(instance, flowId, node.name, value)) {
 		node.name = value;
 		instance.paintFlow(flowId);
@@ -675,6 +836,37 @@ HAFlow.Main.prototype.saveNodeName = function(instance, flowId, nodeId) {
 	} else {
 		_currentInstance.addToConsole("Invalid node name", true);
 	}
+};
+HAFlow.Main.prototype.saveNodeConfiguration = function(_baseRowIndex,instance, flowId, nodeId){
+	var node = instance.getNodeById(instance, flowId, nodeId);
+	var module = instance.getModuleById(instance, node.moduleId);
+	node.configurations = [];
+	var i;
+	var grid = dijit.registry.byId("flow_" + flowId + "_node_" + nodeId
+			+ "_Table");
+
+	//var length = grid.store._arrayOfAllItems.length;
+
+	for (i = 0; i < module.configurations.length; i++) {
+
+		var row = grid.getItem(i+_baseRowIndex);
+
+		var val = grid.store.getValue(row, "value");
+		console.log(val);
+		if (module.configurations[i].type != "BOOLEAN" && val != null
+				&& val.match(module.configurations[i].pattern) == null) {
+			_currentInstance.addToConsole("Invalid node configuration: "
+					+ module.configurations[i].displayName, true);
+			return;
+		}
+	}
+	for (i = 0; i < module.configurations.length; i++) {
+		node.configurations.push({
+			key : module.configurations[i].key,
+			value : grid.store.getValue(grid.getItem(i+_baseRowIndex),"value")
+		});
+	}
+	
 };
 
 HAFlow.Main.prototype.saveConfiguration = function(instance, flowId, nodeId) {

@@ -198,9 +198,11 @@ HAFlow.Main.prototype.doAddModule = function(instance, flowId, moduleId, left,
 	for (i = 0; i < instance.flows[flowId].nodes.length; i++) {
 		var pattern = /^NewNode(\d+)$/;
 		var matches = pattern.exec(instance.flows[flowId].nodes[i].name);
-		for (j = 0; j < matches.length; j++) {
-			if (parseInt(matches[j]) > currentNewNodeNumber) {
-				currentNewNodeNumber = parseInt(matches[j]);
+		if (matches != null) {
+			for (j = 0; j < matches.length; j++) {
+				if (parseInt(matches[j]) > currentNewNodeNumber) {
+					currentNewNodeNumber = parseInt(matches[j]);
+				}
 			}
 		}
 	}

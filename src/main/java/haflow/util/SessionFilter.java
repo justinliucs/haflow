@@ -51,7 +51,7 @@ public class SessionFilter extends OncePerRequestFilter{
   
         //uri which make request
         String uri = request.getRequestURI(); 
-        System.out.println(uri);
+        
         
         String userName=(String)request.getSession().getAttribute("username");
 		Integer scope=(Integer)request.getSession().getAttribute("scope");
@@ -61,8 +61,7 @@ public class SessionFilter extends OncePerRequestFilter{
         	return;
         }
         //admin user filter
-        System.out.println(isUserLogon(uri,userName,scope,notFilter,"admin"));
-        System.out.println(isUserLogon(uri,userName,scope,notFilter,"haflow"));
+       
        boolean isLogon=isUserLogon(uri,userName,scope,notFilter,"admin")&&isUserLogon(uri,userName,scope,notFilter,"haflow");
        if(isLogon){
     	   filterChain.doFilter(request, response);

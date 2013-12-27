@@ -16,6 +16,7 @@
 <title>Haflow - a big data analysis service platform!</title>
 <link rel="stylesheet"
 	href="http://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dijit/themes/claro/claro.css">
+<link rel="Stylesheet" href="http://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dojox/grid/resources/soriaGrid.css" />
 <link rel="stylesheet"
 	href="http://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dijit/themes/soria/soria.css">
 <link rel="stylesheet"
