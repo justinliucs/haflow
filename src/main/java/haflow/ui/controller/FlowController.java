@@ -69,15 +69,12 @@ public class FlowController {
 
 	@RequestMapping(value = "/rename/{flowId}", method = RequestMethod.GET)
 	@ResponseBody
-	public boolean renameFlowFolder(@PathVariable UUID flowId,
+	public FlowListModel renameFlowFolder(@PathVariable UUID flowId,
 			@RequestParam(value = "name", required = true) String name,
 			HttpServletRequest request) {
 		System.out.println("rename flow controller");
-		if (getFlowHelper().renameFlowFolder(flowId, name,
-				(Integer) request.getSession().getAttribute("userid")))
-			return true;
-		else
-			return false;
+		return getFlowHelper().renameFlowFolder(flowId, name,
+				(Integer) request.getSession().getAttribute("userid"));
 	}
 
 	@RequestMapping(value = "/{flowId}", method = RequestMethod.DELETE)

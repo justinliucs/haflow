@@ -7,6 +7,7 @@ import haflow.dto.entity.MainUser;
 import haflow.dto.entity.Node;
 import haflow.util.SessionHelper;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -144,6 +145,30 @@ public class FlowService {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<Flow> afterrenamegetFlowList(int userid, String path) {
+		System.out.println(userid);
+		System.out.println(path);
+		Session session = this.getSessionHelper().openSession();
+		try {
+			
+			Query query = session.createQuery("select f from Flow f where f.id =? and f.user.id=?");
+			query.setString(0, path); 
+			query.setInteger(1, userid);
+			List<Flow> flows = (List<Flow>) query.list();
+	        for(Flow flow : flows){
+	        	
+	            System.out.println("database��"+flow.getId() + " : " + flow.getNode() + " : " + flow.getPath()+ " : " + flow.getParentpath());      
+	        } 
+			session.close();
+			return flows;
+		} catch (Exception e) {
+			e.printStackTrace();
+			session.close();
+			return null;
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
 	public void renameFlowPath(int userid,UUID flowId,String path,Session session)
 	{
 		Flow flowfolder = (Flow) session.get(Flow.class, flowId);
@@ -166,11 +191,12 @@ public class FlowService {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public boolean renameFlowFolder(int userid,UUID flowId,String name) {
+	public List<Flow> renameFlowFolder(int userid,UUID flowId,String name) {
 		Session session = this.getSessionHelper().openSession();
 		Transaction trans=session.beginTransaction();
 		try {
 			//�޸��ļ���
+			List<Flow> flowandfolder=new ArrayList<Flow>();
 			Flow flowfolder = (Flow) session.get(Flow.class, flowId);
 			flowfolder.setName(name);
 			//�޸�·��
@@ -183,23 +209,25 @@ public class FlowService {
 		    newpath+=name;
 			flowfolder.setPath(newpath);
 			session.update(flowfolder);
+			flowandfolder.add(flowfolder);
 			//�������ļ�
 			String parentpath=flowId.toString();
 			Query querychild= session.createQuery("select f from Flow f where f.parentpath =?");
 			querychild.setString(0, parentpath); 
 			List<Flow> flows = (List<Flow>)querychild.list();
-	        for(Flow flow : flows){	        	
+	        for(Flow flow : flows){	 
+	        	flowandfolder.add(flow);
 	            System.out.println("child��"+flow.getId() + " : " + flow.getNode() + " : " + flow.getPath()+ " : " + flow.getParentpath());
 	            renameFlowPath(userid,flow.getId(),newpath,session);	            
 	        } 
 			//�ҵ�����д�ļ�·��
 	        trans.commit();
 			session.close();			
-			return true;
+			return flowandfolder;
 		} catch (Exception e) {
 			e.printStackTrace();
 			session.close();
-			return false;
+			return null;
 		}
 		
 	}

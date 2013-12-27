@@ -228,11 +228,20 @@ public class FlowHelper {
 		return result;
 	}
 
-	public boolean renameFlowFolder(UUID flowId, String name,int userid) {
+	public FlowListModel renameFlowFolder(UUID flowId, String name,int userid) {
 		System.out.println("rename flow helper");
-		if(this.getFlowService().renameFlowFolder(userid, flowId, name))
-			return true;
-		else
-			return false;
+		List<Flow> flowList =this.getFlowService().renameFlowFolder(userid, flowId, name);
+		FlowListModel flowListModel = new FlowListModel();
+		flowListModel.setFlows(new ArrayList<FlowBriefModel>());
+		for (Flow flow : flowList) {
+			FlowBriefModel flowBriefModel = new FlowBriefModel();
+			flowBriefModel.setId(flow.getId());
+			flowBriefModel.setName(flow.getName());
+			flowBriefModel.setNode(flow.getNode());
+			flowBriefModel.setPath(flow.getPath());
+			flowBriefModel.setParentpath(flow.getParentpath());
+			flowListModel.getFlows().add(flowBriefModel);
+		}
+		return flowListModel;
 	}
 }

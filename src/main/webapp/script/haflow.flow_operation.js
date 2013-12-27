@@ -796,19 +796,18 @@ HAFlow.Main.prototype.saveFlowFolderName = function(newVal,instance, flowId) {
 			name : value
 		},
 		success : function(data, status) {
-			if(data==true)
-				{
-				instance.getFlowBriefById(instance, flowId).name = value;
-				instance.flowListStore.remove(flowId);
+			if(data!=null){
+				for(var i=0;i<data.flows.length;i++) {
+				instance.flowListStore.remove(data.flows[i].id);
 				instance.flowListStore.put({
-					id : flowfolder.id,
-					name : flowfolder.name,
-					node : false,
-					path:flowfolder.path,
-					parentpath:flowfolder.parentpath
-				});
+					id : data.flows[i].id,
+					name : data.flows[i].name,
+					node : data.flows[i].node,
+					path:data.flows[i].path,
+					parentpath:data.flows[i].parentpath
+					});
 				}
-			else
+			} else
 				_currentInstance.addToConsole("An error occurred while saving flowfolder", true);
 
 		},

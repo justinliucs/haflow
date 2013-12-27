@@ -199,6 +199,9 @@ HAFlow.Main.prototype.onConnectionClicked = function(instance, flowId, info) {
 	});
 	button.placeAt(dojo.byId("delete_connection_button"));
 	button.startup();
+	
+	var informationPane = dijit.byId(instance.informationContainerId);
+	this.ui.bottomContainer.selectChild(informationPane);
 };
 
 HAFlow.Main.prototype.onConnectionCreated = function(instance, flowId, info) {
@@ -265,7 +268,8 @@ HAFlow.Main.prototype.onNodeClicked = function(instance, flowId, nodeId){
 	button.startup();
 	this.initNodeDataGrid(instance,flowId,nodeId);
 	
-	
+	var informationPane = dijit.byId(instance.informationContainerId);
+	this.ui.bottomContainer.selectChild(informationPane);
 };
 HAFlow.Main.prototype.initNodeDataGrid=function(instance,flowId,nodeId){
 	var node = instance.getNodeById(instance, flowId, nodeId);

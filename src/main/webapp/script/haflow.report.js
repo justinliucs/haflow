@@ -830,7 +830,7 @@ HAFlow.Main.prototype.initChart = function(chart, currentPortlet, legendDivId){
 	var legend;
 
 	$.ajax({
-		url : "http://localhost:8080/haflow/report/getchartseries",
+		url : _currentInstance.basePath + "report/" + "getchartseries",
 		type : "POST",
 		dataType : "json",
 		data : JSON.stringify(currentPortlet.chartSeries),
