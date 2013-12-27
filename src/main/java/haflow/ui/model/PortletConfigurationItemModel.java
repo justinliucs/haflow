@@ -10,6 +10,7 @@ public class PortletConfigurationItemModel {
 	private UUID id;
 	private String key;
 	private String value;
+	private String value_type;
 	
 	@XmlElement
 	public UUID getId() {
@@ -38,4 +39,13 @@ public class PortletConfigurationItemModel {
 		this.value = value;
 	}
 
+	@XmlElement
+	public String getValue_type() {
+		return value_type;
+	}
+
+	public void setValue_type(String value_type) {
+		this.value_type = value_type;
+	}
+	
 }

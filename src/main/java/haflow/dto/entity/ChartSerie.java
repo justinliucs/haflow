@@ -10,17 +10,17 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table( name = "portletconfiguration")
-public class PortletConfiguration {
-
+@Table( name = "chartserie")
+public class ChartSerie {
 	private UUID id;
-	private String key;
-	private String value;
-	private String value_type;
+	private String column_index;
+	private String file_path;
+	private String name;
+	
 	private Portlet portlet;
 	
 	@Id
-	@Column( name="id", length=16)
+    @Column(name="id", length = 16)
 	public UUID getId() {
 		return id;
 	}
@@ -28,28 +28,28 @@ public class PortletConfiguration {
 		this.id = id;
 	}
 	
-	@Column( name="configurationKey")
-	public String getKey() {
-		return key;
+	@Column(name="column_index")
+	public String getColumn_index() {
+		return column_index;
 	}
-	public void setKey(String key) {
-		this.key = key;
-	}
-	
-	@Column( name="configurationValue")
-	public String getValue() {
-		return value;
-	}
-	public void setValue(String value) {
-		this.value = value;
+	public void setColumn_index(String column_index) {
+		this.column_index = column_index;
 	}
 	
-	@Column( name="value_type")
-	public String getValue_type() {
-		return value_type;
+	@Column(name="file_path")
+	public String getFile_path() {
+		return file_path;
 	}
-	public void setValue_type(String value_type) {
-		this.value_type = value_type;
+	public void setFile_path(String file_path) {
+		this.file_path = file_path;
+	}
+	
+	@Column(name="name")
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	@ManyToOne

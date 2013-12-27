@@ -53,6 +53,8 @@ HAFlow.Main.prototype.init = function() {
     this.flows = {};
     this.jsPlumb = {};
     this.reports = {};
+    this.chartMap = {};
+    this.reportPortletClipboard = null;//TODO
     this.initUserInterface();
     this.initData();
 };
@@ -132,8 +134,7 @@ HAFlow.Main.prototype.initFlowContainer = function() {
             
             var reportId = targetContainerPaneId.replace(reportContainerPaneString, "");
             _currentInstance.currentReportId = reportId;
-            _currentInstance.setupReportDroppable(reportId);
-//            _currentInstance.paintReport(reportId);    
+            _currentInstance.setupReportDroppable(reportId); 
         }else if(targetContainerPaneId.substring(0, flowContainerPaneString.length) 
                 === flowContainerPaneString){ //flow opened
             
@@ -156,7 +157,7 @@ HAFlow.Main.prototype.initFlowContainer = function() {
                 || targetContainerPaneId == "hive"){//oozie or hive opened
                 
             }else {
-                alert("not known target container!");
+            	_currentInstance.addToConsole("not known target container!", true);
             }
         }
 
@@ -276,7 +277,7 @@ HAFlow.Main.prototype.addToConsole = function(message, isError) {
 	var consoleContainer = dijit.registry
 			.byId(_currentInstance.consoleContainerId);
 	
-	var text = "</br> &gt;&gt;&gt;</br> ";
+	var text = " &gt;&gt;&gt; ";
 	if( isError){
 		text += "<div style=\"color:red\">" + message + "</div>";
 	}else{

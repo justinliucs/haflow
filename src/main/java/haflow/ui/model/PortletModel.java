@@ -13,9 +13,17 @@ public class PortletModel {
 	private String title;
 	private String type;
 	private int position;
+	private int zone;
+	private int column;
+	private int width;
+	private int height;
+	private int left;
+	private int top;
 	
 	private UUID reportId;
 	private Set<PortletConfigurationItemModel> configurations;
+	
+	private Set<ChartSerieModel> chartSeries;
 
 	@XmlElement
 	public UUID getId() {
@@ -65,4 +73,64 @@ public class PortletModel {
 	public void setConfigurations(Set<PortletConfigurationItemModel> configurations) {
 		this.configurations = configurations;
 	}
+	
+	@XmlElement
+	public int getZone() {
+		return zone;
+	}
+	public void setZone(int zone) {
+		this.zone = zone;
+	}
+	
+	@XmlElement
+	public int getColumn() {
+		return column;
+	}
+	public void setColumn(int column) {
+		this.column = column;
+	}
+	
+	@XmlElement
+	public int getWidth() {
+		return width;
+	}
+	public void setWidth(int width) {
+		this.width = width;
+	}
+	
+	@XmlElement
+	public int getHeight() {
+		return height;
+	}
+	public void setHeight(int height) {
+		this.height = height;
+	}
+	
+	@XmlElement
+	public int getLeft() {
+		return left;
+	}
+	public void setLeft(int left) {
+		this.left = left;
+	}
+	
+	@XmlElement
+	public int getTop() {
+		return top;
+	}
+	public void setTop(int top) {
+		this.top = top;
+	}
+	
+	@XmlElementWrapper(name="chartSeries")
+	@XmlElement(name="chartSerie")
+	public Set<ChartSerieModel> getChartSeries() {
+		return chartSeries;
+	}
+	
+	public void setChartSeries(Set<ChartSerieModel> chartSeries) {
+		this.chartSeries = chartSeries;
+	}
+	
+	
 }

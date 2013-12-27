@@ -56,8 +56,11 @@ HAFlow.Main.prototype.fillReportsData = function(data) {
     	this.reports[reportItemId].id = reportItemId;
     	this.reports[reportItemId].name = reportItem.name;
     	this.reports[reportItemId].isdirectory = reportItem.isdirectory;
+    	this.reports[reportItemId].nbZones = reportItem.nbZones;
+    	this.reports[reportItemId].panelType = reportItem.panelType;//TODO
     	this.reports[reportItemId].parentid = reportItem.parentid;
     	this.reports[reportItemId].portlets = new Array();
+    	
     	var portlets = reportItem.portlets;
     	for( var j = 0; j < portlets.length; j++){
     		var currentPortlet = {
@@ -67,12 +70,26 @@ HAFlow.Main.prototype.fillReportsData = function(data) {
     				position: portlets[j].position,
     				
     				reportId: portlets[j].reportId, 
-    				configurations:[]
+    				configurations:[],
+    				chartSeries:[],
+    				column: portlets[j].column,
+    				zone: portlets[j].zone,
+    				width: portlets[j].width,
+    				height: portlets[j].height,
+    				left: portlets[j].left,
+    				right: portlets[j].right,
     			};
     		var configurations = portlets[j].configurations;
     		for( var x = 0; x < configurations.length; x++){
     			var configuration = configurations[x];
     			currentPortlet.configurations.push(configuration);
+    		}
+    		var chartSeries = portlets[j].chartSeries;
+    		if(chartSeries != null){
+	    		for( var x = 0; x < chartSeries.length; x++){
+	    			var chartSerie = chartSeries[x];
+	    			currentPortlet.chartSeries.push(chartSerie);
+	    		}
     		}
     		this.reports[reportItemId].portlets.push(currentPortlet);
     	}
@@ -135,6 +152,10 @@ HAFlow.Main.prototype.initReportListTree = function() {
         id: "newReportMenuItem",
         label: myfile.newReport
     });
+    this.menu.reportTreeMenu.newFloatReportMenuItem = new dijit.MenuItem({
+        id: "newFloatReportMenuItem",
+        label: myfile.newReport
+    });
     this.menu.reportTreeMenu.newReportDirectoryMenuItem = new dijit.MenuItem({
         id: "newReportDirectoryMenuItem",
         label: myfile.newReportDirectory
@@ -153,6 +174,7 @@ HAFlow.Main.prototype.initReportListTree = function() {
     });
 
     this.menu.reportTreeMenu.addChild(this.menu.reportTreeMenu.newReportMenuItem);
+    this.menu.reportTreeMenu.addChild(this.menu.reportTreeMenu.newFloatReportMenuItem);
     this.menu.reportTreeMenu.addChild(this.menu.reportTreeMenu.newReportDirectoryMenuItem);
     this.menu.reportTreeMenu.addChild(this.menu.reportTreeMenu.deleteReportMenuItem);
     this.menu.reportTreeMenu.addChild(this.menu.reportTreeMenu.renameReportMenuItem);
@@ -166,6 +188,14 @@ HAFlow.Main.prototype.initReportListTree = function() {
 	       _currentInstance.newReport(tn.item.id);
     	}
     });
+    dojo.connect(this.menu.reportTreeMenu.newFloatReportMenuItem, "onClick",
+    	    function() {
+        	var tn = dijit.byNode(this.getParent().currentTarget);
+        	var checkResult = _currentInstance.checkReportItem(tn.item.isdirectory, true);
+        	if( checkResult ){    		
+    	       _currentInstance.newFloatReport(tn.item.id);
+        	}
+        });
     dojo.connect(this.menu.reportTreeMenu.newReportDirectoryMenuItem, "onClick",
 	    function() {
     	var tn = dijit.byNode(this.getParent().currentTarget);

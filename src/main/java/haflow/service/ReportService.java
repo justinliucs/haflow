@@ -53,7 +53,7 @@ public class ReportService {
 		}
 	}
 	
-	public boolean saveReport(UUID reportId, String name, boolean isDirectory, UUID parentId, Set<Portlet> portlets,
+	public boolean saveReport(UUID reportId, String name, boolean isDirectory, Integer nbZones, String panelType, UUID parentId, Set<Portlet> portlets,
 			int userid) {
 		Session session = this.getSessionHelper().openSession();
 		Transaction transaction = session.beginTransaction();
@@ -73,6 +73,8 @@ public class ReportService {
 			
 			report.setName(name);
 			report.setDirectory(isDirectory);
+			report.setNbZones(nbZones);
+			report.setPanelType(panelType);
 			report.setParent(parentReport);
 			report.getPortlets().clear();
 

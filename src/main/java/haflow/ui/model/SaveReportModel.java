@@ -15,6 +15,8 @@ public class SaveReportModel {
 	
 	private UUID parentid;
 	private Set<PortletModel> portlets;
+	private Integer nbZones;
+	private String panelType;
 	
 	@XmlElement
 	public UUID getId() {
@@ -57,4 +59,22 @@ public class SaveReportModel {
 	public void setPortlets(Set<PortletModel> portlets) {
 		this.portlets = portlets;
 	}
+	
+	@XmlElement
+	public Integer getNbZones() {
+		return nbZones;
+	}
+	public void setNbZones(Integer nbZones) {
+		this.nbZones = nbZones;
+	}
+	
+	@XmlElement
+	public String getPanelType() {
+		return panelType;
+	}
+	public void setPanelType(String panelType) {
+		this.panelType = panelType;
+	}
+	
+	
 }

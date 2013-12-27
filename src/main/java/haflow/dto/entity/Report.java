@@ -21,6 +21,8 @@ public class Report {
 	private String name;
 	private Report parent;
 	private boolean isDirectory;
+	private Integer nbZones;
+	private String panelType;
 	private Set<Portlet> portlets;
 	private MainUser user;
 	private Set<Report> children;
@@ -60,6 +62,24 @@ public class Report {
 		this.isDirectory = isDirectory;
 	}
 	
+	@Column(name="nbZones")
+	public Integer getNbZones() {
+		return nbZones;
+	}
+
+	public void setNbZones(Integer nbZones) {
+		this.nbZones = nbZones;
+	}
+
+	@Column(name="panelType")
+	public String getPanelType() {
+		return panelType;
+	}
+
+	public void setPanelType(String panelType) {
+		this.panelType = panelType;
+	}
+
 	@OneToMany(mappedBy = "report", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	public Set<Portlet> getPortlets() {
 		return portlets;

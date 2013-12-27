@@ -312,4 +312,5 @@ public class HdfsController {
 		return this.getHdfsHelper().movefile(out_frompath, out_topath,
 				out_filename);
 	}
+	
 }

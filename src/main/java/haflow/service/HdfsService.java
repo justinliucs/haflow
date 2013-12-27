@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
@@ -270,6 +272,78 @@ public class HdfsService {
 			return false;
 		}
         return true;
-    }  
+    }
+
+	public List<List<String>> getCsvColumnData(String formatedPath) {
+		List<List<String>> results = new ArrayList<List<String>>();
+		try {
+			FileSystem fs = this.getFileSystem();
+			FSDataInputStream hdfsInStream = fs.open(new Path(formatedPath));
+			BufferedReader d = new BufferedReader(new InputStreamReader(
+					hdfsInStream));			
+			String line;
+			if ((line = d.readLine()) != null) {
+				List<String> header = new ArrayList<String>();
+				String[] value = line.split(",");
+				int columnNumber = value.length;
+				for (int i = 0; i < columnNumber; i++) {
+					header.add(value[i]);
+				}
+				results.add(header);
+				for (int lineCount = 0; ((line = d.readLine()) != null) && (lineCount <= 9); lineCount++) {
+					List<String> result = new ArrayList<String>();
+					value = line.split(",");
+					for (int j = 0; j < columnNumber; j++) {
+						result.add(value[j]);
+					}
+					results.add(result);
+				}
+				d.close();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return results;
+//		try {
+//			FileSystem fs = this.getFileSystem();
+//			FSDataInputStream hdfsInStream = fs.open(new Path(formatedPath));
+//			BufferedReader d = new BufferedReader(new InputStreamReader(
+//					hdfsInStream));
+//			String line;
+//			JSONArray arr = new JSONArray();
+//			JSONObject obj = new JSONObject();
+//
+//			arr.put(obj);
+//			if ((line = d.readLine()) != null) {
+//				String[] value = line.split(",");
+//				int columnNumber = value.length;
+//				String[] col = new String[columnNumber];
+//				obj.put("length", columnNumber);
+//				JSONObject jobj = new JSONObject();
+//				for (int i = 0; i < columnNumber; i++) {
+//					col[i] = value[i];
+//					String s1 = "" + i;
+//					jobj.put(s1, col[i]);
+//				}
+//				arr.put(jobj);
+//				int lineCount = 0;
+//				while (((line = d.readLine()) != null) && (lineCount <= 9)) {
+//					lineCount++;
+//					value = line.split(",");
+//					JSONObject jobj1 = new JSONObject();
+//					for (int j = 0; j < columnNumber; j++) {
+//						jobj1.put(col[j], value[j]);
+//					}
+//					arr.put(jobj1);
+//				}
+//				d.close();
+//				System.out.println(arr.toString());
+//			}
+//			return arr.toString();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			return null;
+//		}
+	}
 
 }

@@ -24,6 +24,7 @@
         <mapping class="haflow.dto.entity.Report" />
         <mapping class="haflow.dto.entity.Portlet" />
         <mapping class="haflow.dto.entity.PortletConfiguration" />
+        <mapping class="haflow.dto.entity.ChartSerie" />
         
 		<mapping class="haflow.dto.profile.NodeAppearance" />
 		<mapping class="haflow.dto.profile.NodeConfiguration" />

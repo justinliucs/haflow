@@ -1,16 +1,18 @@
 package haflow.ui.helper;
 
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-
 import haflow.service.HdfsService;
+import haflow.ui.model.CsvColumnModel;
 import haflow.ui.model.HdfsFileListItemModel;
 import haflow.ui.model.HdfsFileListModel;
 import haflow.ui.model.HdfsFileModel;
 
-import org.apache.hadoop.fs.FileStatus;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.hadoop.fs.FSDataInputStream;
+import org.apache.hadoop.fs.FileStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -104,5 +106,29 @@ public class HdfsHelper {
 		boolean ret=this.getHdfsService().renameFile(fromPath,toPath);
 		System.out.println("movefile:"+ret);
 		return ret;
+	}
+
+	public CsvColumnModel getCsvColumnData(String formatedPath, int column_index) {
+		List<List<String>> table = this.getHdfsService().getCsvColumnData(formatedPath);
+		CsvColumnModel ccm = new CsvColumnModel();
+		List<Double> columnData = new ArrayList<Double>();
+		for( int i = 0; i < table.size(); i++){
+			List<String> lineData = table.get(i);
+			if( lineData.size() > column_index && column_index >= 0){
+				if( i == 0){
+					ccm.setColumnname(lineData.get(column_index));
+				}else{
+					columnData.add(Double.valueOf(lineData.get(column_index)));
+				}
+			}else{
+				ccm.setMessage("Wrong Column Index!");
+				ccm.setSuccess(false);
+				return ccm;
+			}				
+		}
+		ccm.setData(columnData);
+		ccm.setMessage("Load successfully!");
+		ccm.setSuccess(true);
+		return ccm;
 	}
 }

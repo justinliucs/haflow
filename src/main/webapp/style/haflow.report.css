@@ -21,6 +21,37 @@
 
 .reportcontainer {
 	position: relative;
-	width: 2000px;
-	height: 1500px;
+/* 	width: 900px; */
+/* 	height: 978px; */
+	background-color: #ECF5FF;
+}
+
+.reportcontainerdiv {
+	position: relative;
+	width: 900px;
+	height: 978px;
+	background-color: #FFF4C1;
+}
+
+ .gridContainerTable{
+	width: 880px;	
+	height:100%;
+	margin:5px 5px 25px 5px;
+} 
+
+.gridContainerTable tbody, .gridContainerTable tr{
+
+}
+
+.gridContainerTable th, .gridContainerTable td{
+	border: 1px dashed #BEBEBE;
+	vertical-align:top;
+	padding: 3px 3px 3px 3px;
+	margin: 3px 3px 3px 3px;
+}
+
+.testFixedSize {
+	width: 300px;
+	height: 200px;
+	padding: 7px;
 }
