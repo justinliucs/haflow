@@ -16,6 +16,7 @@
 <title>Haflow - a big data analysis service platform!</title>
 <link rel="stylesheet"
 	href="http://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dijit/themes/claro/claro.css">
+<link rel="Stylesheet" href="http://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dojox/grid/resources/soriaGrid.css" />
 <link rel="stylesheet"
 	href="http://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dijit/themes/soria/soria.css">
 <link rel="stylesheet"
@@ -24,7 +25,11 @@
 <link rel="stylesheet" href="<%=basePath%>/style/haflow.ui.css">
 <link rel="stylesheet" href="<%=basePath%>/style/haflow.main.css">
 <link rel="stylesheet" href="<%=basePath%>/style/haflow.report.css">
-
+<link rel="stylesheet" 
+	href="http://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dijit/themes/tundra/tundra.css">
+<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dojox/layout/resources/FloatingPane.css">	
+<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dojox/layout/resources/ResizeHandle.css">
+<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/dojo/1.9.0/dojox/layout/resources/ResizeHandle.css" />
 
 
 <script type="text/javascript"
@@ -48,6 +53,7 @@
 <script type="text/javascript" src="<%=basePath%>/script/haflow.hdfs.js"></script>
 <script type="text/javascript" src="<%=basePath%>/script/haflow.report_list.js"></script>
 <script type="text/javascript" src="<%=basePath%>/script/haflow.report.js"></script>
+<script type="text/javascript" src="<%=basePath%>/script/haflow.report_float.js"></script>
 <script type="text/javascript" src="<%=basePath%>/script/haflow.jsplumb.js"></script>
 <script type="text/javascript" src="<%=basePath%>/script/haflow.oozie_hive.js"></script>
 <script type="text/javascript" src="<%=basePath%>/script/haflow.toolbar.js"></script>
