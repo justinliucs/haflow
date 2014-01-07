@@ -29,6 +29,7 @@ dojo.require("dojo.dnd.Moveable");
 dojo.require("dojo.dom");
 dojo.require("dojo.on");
 dojo.require("dojox.layout.ResizeHandle");
+dojo.require("dojo.dnd.Mover");
 
 HAFlow.Main.prototype.newReport = function(parentId) {
 	var _currentInstance = this;
@@ -125,10 +126,11 @@ HAFlow.Main.prototype.addGridPanel = function(reportId, reportContainerDivId, cu
 
 HAFlow.Main.prototype.addFloatPanel = function(reportId, reportContainerDivId) {
 //	var reportContainer = dijit.byId("reportContainer_" + reportId);
+//	dojo.create("div", {innerHTML: "<div id='chartchart' style='width:90%; height:60%;'></div>"});
 	var innerContentPane = new dijit.layout.ContentPane({
 		id : "reportContainer_" + reportId,
 		class : "reportcontainer",
-		style : ' width:100%; height:100%; background-color: blue;',//
+		style : ' width:98%; height:98%; background-color: blue;',//
 	}, reportContainerDivId);
 
 };
@@ -150,23 +152,24 @@ HAFlow.Main.prototype.openReport = function(reportId){
 		});
 		contentPane.startup();
 		this.ui.centerContainer.addChild(contentPane);
-		this.ui.centerContainer.selectChild(contentPane);	//todo
+		this.ui.centerContainer.selectChild(contentPane);
 		
-		//todtooo
 		var panelType = this.reports[reportId].panelType;
 		if( panelType == "grid"){
 			this.addGridPanel(reportId, reportContainerDivId, currentReport);
 		}else if( panelType == "float" ){
 			this.addFloatPanel(reportId, reportContainerDivId);
 		}
-	    
-		this.paintReports(reportId);		
+		this.paintReports(reportId);
+		//this.ui.centerContainer.selectChild(contentPane);	//todo
 	}else{
-		//dijit.byId("reportContainer_" + reportId).resize();//important!!
 		this.ui.centerContainer.selectChild(contentPane);	//todo
+		if( this.reports[reportId].panelType == "float"){
+			this.paintReports(reportId);
+		}
 	}
-//	var tt  = dijit.byId("reportContainer_" + reportId);
-//	tt.resize();//important!!
+	//dijit.byId("reportContainer_" + reportId).resize();//important!!
+	
 	this.setupReportDroppable(reportId);
 };
 
@@ -365,6 +368,9 @@ HAFlow.Main.prototype.onReportPortletClicked = function(portletId, chart, portle
 	text += "<tr style=\"tr\"><td align=\"left\">" +
 			"<div id=\"save_portlet_configurations_button_pane\" class=\"configuration-content\"></div>" +
 			"</td></tr>";	
+	text += "<tr style=\"tr\"><td align=\"left\">" +
+			"<div id=\"delete_portlet_configurations_button_pane\" class=\"configuration-content\"></div>" +
+			"</td></tr>";
 	text += "</table>";
 	$("#" + instance.informationContainerId).html(text);
 	
@@ -414,17 +420,45 @@ HAFlow.Main.prototype.onReportPortletClicked = function(portletId, chart, portle
 		columnIndexTextBox.startup();
 	}
 	
-	var button = new dijit.form.Button({
+	var saveButton = new dijit.form.Button({
 		label : "Save",
 		onClick : function() {
 			instance.savePortletConfiguration(portletId, chart);
 		}
 	});
-	button.placeAt(dojo.byId("save_portlet_configurations_button_pane"));
-	button.startup();
+	saveButton.placeAt(dojo.byId("save_portlet_configurations_button_pane"));
+	saveButton.startup();
+	
+	var deleteButton = new dijit.form.Button({
+		label: "Delete",
+		onClick: function(){
+			instance.deletePortlet(portletId);
+		}
+	});
+	deleteButton.placeAt(dojo.byId("delete_portlet_configurations_button_pane"));
+	deleteButton.startup();
 	
 	var informationPane = dijit.byId(instance.informationContainerId);
 	_currentInstance.ui.bottomContainer.selectChild(informationPane);
+};
+
+HAFlow.Main.prototype.deletePortlet = function(portletId){//TODO
+	var _currentInstance = this;
+	var reportInfo = this.reports[this.currentReportId];
+	var portlets = reportInfo.portlets;
+	var i;
+	for( i = 0; i < portlets.length; i++ ){
+		if( portlets[i].id == portletId){
+			break;
+		}
+	}
+	portlets.splice(i, 1);
+	var reportContainer = dijit.byId("reportContainer_" + this.currentReportId);
+	if( dijit.byId("portlet_" + portletId) != null){
+		reportContainer.removeChild(dijit.byId("portlet_" + portletId));
+		dijit.registry.remove("portlet_" + portletId);
+	}
+	this.saveReport(this.currentReportId);
 };
 
 HAFlow.Main.prototype.savePortletConfiguration = function(portletId, chart){
@@ -639,6 +673,19 @@ HAFlow.Main.prototype.onReportModuleAdded = function(currentInstance, reportId,
 			break;
 		}
 	}
+	var floatLeft =  ui.position.left;
+	if( floatLeft < 0){
+		floatLeft = 0;
+	}else if( floatLeft > 900){
+		floatLeft = 800;
+	}
+	var floatTop = ui.position.top;
+	if( floatTop < 0){
+		floatTop = 0;
+	}else if( floatTop > 978 ){
+		floatTop = 878;
+	}
+	
 	var currentPortlet = {
 			id: newPortletId, 
 			title: reportModuleId, 
@@ -650,8 +697,8 @@ HAFlow.Main.prototype.onReportModuleAdded = function(currentInstance, reportId,
 			//for float pane
 			height: 200,//TODO
 			width: 200,//TODO
-			left: 10,
-			top: 10,
+			left: floatLeft,
+			top: floatTop,
 			
 			//for grid pane
 			column: column,
@@ -679,7 +726,8 @@ HAFlow.Main.prototype.addReport = function(reportId, currentPortlet){
 		id : "portlet_" + currentPortlet.id,
 		closable: false,
         dndType: 'Portlet',
-        style: (this.reports[reportId].panelType == "grid" ? '' : "width:" + currentPortlet.width + "px;"),//TODO
+        style: (this.reports[reportId].panelType == "grid" ? '' : "width:" + currentPortlet.width + "px;"
+        		+ " position:absolute; left:" + currentPortlet.left + "px; top:" + currentPortlet.top + "px;") ,//TODO
 	});
 	
 	if (currentPortlet.type == "text") {
@@ -730,6 +778,7 @@ HAFlow.Main.prototype.addReport = function(reportId, currentPortlet){
 };
 
 HAFlow.Main.prototype.addPortletToReportContainer = function(reportId, portlet, currentPortlet, reportContainer){
+	var _currentInstance = this;
 	//TODO
 	// different panel type.
 	//column zone vs left top
@@ -741,27 +790,38 @@ HAFlow.Main.prototype.addPortletToReportContainer = function(reportId, portlet, 
 			reportContainer.addChild(portlet, currentPortlet.column);//
 		}
 	}else if( panelType == "float"){
-//		portlet.resize()
 		reportContainer.addChild(portlet);
 		
 		var portletId = "portlet_" + currentPortlet.id;
+		
 		var dnd = new dojo.dnd.Moveable(dojo.byId(portletId));//dnd
+		dojo.connect( dnd, "onMoveStop", function(mover){
+			var currentPortlet = dojo.byId(portletId);
+			var newLeft = currentPortlet.offsetLeft;
+			var newTop = currentPortlet.offsetTop;
+			_currentInstance.updatePortletPositionOnFloatPane(reportId, portletId, newLeft, newTop);
+		});
+		
 		var handle = new dojox.layout.ResizeHandle({
 			targetId : portletId,
+//			resizeAxis : "x",
 		}).placeAt(portletId);
-		handle.startup();		
-		dojo.subscribe("/dojo/resize/stop", function(inst) {
-			var newHeight = inst.targetDomNode.offsetHeight;
-			var newWidth = inst.targetDomNode.offsetWidth;
-//			chart.resize(newWidth * 0.9, newHeight * 0.9 - 10);
-			_currentInstance.addToConsole("123456~~" + inst.targetDomNode.id, false);
-			var chartId = inst.targetDomNode.id.replace("portlet_", "");
+		handle.startup();
+		
+		dojo.connect(handle, "onResize", function(e, t) {
+			var h = handle;
+			var newHeight = h.targetDomNode.offsetHeight;
+			var newWidth = h.targetDomNode.offsetWidth;
+			_currentInstance.addToConsole("123456~~" + h.targetId, false);
+			var chartId = h.targetId.replace("portlet_", "");
 			var chart = _currentInstance.chartMap[chartId];
 			
 			currentPortlet.width = newWidth;
 			currentPortlet.height = newHeight;
 			
-			chart.resize(newWidth * 0.9, newHeight * 0.9 - 40);
+			if( chart != null){
+				chart.resize(newWidth * 0.9, newHeight * 0.9 - 40);
+			}
 			_currentInstance.addToConsole("newWidth:" + newWidth
 					+ " newHeight:" + newHeight, false);// the original size
 		});
@@ -861,6 +921,20 @@ HAFlow.Main.prototype.initChart = function(chart, currentPortlet, legendDivId){
 		},
 	});
 	chart.render();
+};
+
+HAFlow.Main.prototype.updatePortletPositionOnFloatPane = function(reportId, portletId, newLeft, newTop){
+	portletId = portletId.replace("portlet_", "");
+	var portlets = this.reports[reportId].portlets;
+	for( var y = 0; y < portlets.length; y++ ){
+		var tmp_portlet = portlets[y];
+		if( tmp_portlet.id == portletId){
+			tmp_portlet.left = newLeft;
+			tmp_portlet.top = newTop;
+			this.addToConsole("new portlet position - left:" + newLeft + " top:" + newTop + ";");
+			break;
+		}
+	}
 };
 
 HAFlow.Main.prototype.updatePosition = function(reportId){

@@ -129,12 +129,15 @@ HAFlow.Main.prototype.initFlowContainer = function() {
         
         if(targetContainerPaneId.substring(0, reportContainerPaneString.length) 
                 === reportContainerPaneString){//report opened
+        	
             _currentInstance.afterFlowUnSelected();
             _currentInstance.afterReportSelected();
             
             var reportId = targetContainerPaneId.replace(reportContainerPaneString, "");
             _currentInstance.currentReportId = reportId;
             _currentInstance.setupReportDroppable(reportId); 
+            
+//            _currentInstance.paintReports(reportId);
         }else if(targetContainerPaneId.substring(0, flowContainerPaneString.length) 
                 === flowContainerPaneString){ //flow opened
             
@@ -274,6 +277,7 @@ HAFlow.Main.prototype.paintModuleList = function() {
 };
 
 HAFlow.Main.prototype.addToConsole = function(message, isError) {
+	var _currentInstance = this;
 	var consoleContainer = dijit.registry
 			.byId(_currentInstance.consoleContainerId);
 	
