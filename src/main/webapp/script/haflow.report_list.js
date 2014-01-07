@@ -150,11 +150,11 @@ HAFlow.Main.prototype.initReportListTree = function() {
     });
     this.menu.reportTreeMenu.newReportMenuItem = new dijit.MenuItem({
         id: "newReportMenuItem",
-        label: myfile.newReport
+        label: myfile.newGridReport
     });
     this.menu.reportTreeMenu.newFloatReportMenuItem = new dijit.MenuItem({
         id: "newFloatReportMenuItem",
-        label: myfile.newReport
+        label: myfile.newFloatReport
     });
     this.menu.reportTreeMenu.newReportDirectoryMenuItem = new dijit.MenuItem({
         id: "newReportDirectoryMenuItem",

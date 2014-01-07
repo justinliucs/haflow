@@ -67,7 +67,8 @@ myfile={
 "deleteNode":"Delete Node",
 "HDFSPath":"HDFS Path",
 "saveConfiguration":"Save Configuration",
-"newReport":"New Report",
+"newGridReport":"New Grid Report",
+"newFloatReport":"New Float Report",
 "newReportDirectory":"New Report Directory",
 "console":"Console",
 "information":"Property",
@@ -78,5 +79,5 @@ myfile={
 "path":"Path",
 "size":"Size",
 "flowInfo":"Flow Info"
-} 
+};
  

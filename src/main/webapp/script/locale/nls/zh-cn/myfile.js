@@ -69,7 +69,8 @@
 "deleteNode":"删除节点",
 "HDFSPath":"HDFS路径",
 "saveConfiguration":"保存配置",
-"newReport":"新建报表",
+"newGridReport":"新建表格报表",
+"newFloatReport":"新建自由报表",
 "newReportDirectory":"新建报表文件夹",
 "console":"控制台",
 "information":"配置信息",
@@ -80,5 +81,5 @@
 "path":"路径",
 "size":"大小",
 "flowInfo":"流程信息",
- } 
+ };
  
