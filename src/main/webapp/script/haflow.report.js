@@ -130,7 +130,7 @@ HAFlow.Main.prototype.addFloatPanel = function(reportId, reportContainerDivId) {
 	var innerContentPane = new dijit.layout.ContentPane({
 		id : "reportContainer_" + reportId,
 		class : "reportcontainer",
-		style : ' width:98%; height:98%; background-color: blue;',//
+		style : ' width:98%; height:98%; ',//background-color: blue;
 	}, reportContainerDivId);
 
 };
@@ -902,7 +902,8 @@ HAFlow.Main.prototype.initChart = function(chart, currentPortlet, legendDivId){
 //				_currentInstance.addToConsole(ccm.columnname + ": " + ccm.data, false);
 				var series_data = new Array();
 				for( var j = 0; j < ccm.data.length; j++ ){
-					series_data.push({x:Math.floor((Math.random()*10)+1), y:ccm.data[j], text: 'a', tooltip: 'b'});
+					series_data.push({y:ccm.data[j], text: 'a', tooltip: 'b'});
+//					series_data.push({x:Math.floor((Math.random()*10)+1), y:ccm.data[j], text: 'a', tooltip: 'b'});
 				}
 				chart.addSeries(ccm.columnname, series_data);
 			}

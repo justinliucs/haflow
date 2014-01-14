@@ -65,9 +65,9 @@ HAFlow.Main.prototype.initUserInterface = function() {
     this.initMainMenu();
     this.initToolbar();
     this.initBottomTabs();
+    this.initHdfsFileList();
     this.initFlowList();
     this.initFlowContainer();
-    this.initHdfsFileList();
     this.initReportList();
     this.ui.refresh();
 };
@@ -77,6 +77,7 @@ HAFlow.Main.prototype.initUserInterfaceId = function() {
     this.flowListTreeId = "flowListTree";
     this.hdfsFileListContainerId = "hdfsFileListContainer";
     this.hdfsFileListTreeId = "hdfsFileListTree";
+    this.hiveTableListContainerId = "hiveTableListContainer";
     this.moduleListContainerId = "moduleListContainer";
     this.reportListContainerId = "reportListContainer";
     this.reportListTreeId = "reportListTree";
