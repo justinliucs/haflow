@@ -80,5 +80,6 @@ myfile={
 "size":"Size",
 "flowInfo":"Flow Info",
 "data":"Data",
+"charts":"Charts"
 };
  

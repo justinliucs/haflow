@@ -294,7 +294,7 @@ HAFlow.Main.prototype.paintReportList = function() {
 	this.simpleReportListPaneId = this.reportListContainerId + "_" + "test";
 	var reportListPane = new dijit.layout.ContentPane({
 		id : this.simpleReportListPaneId,
-		title : "Simple",
+		title : myfile.charts,
 	});
 	this.ui.secondTrailingContainer.addChild(reportListPane);
 	text = "<div class=\"reportmodule\" id=\"reportmodule_" + "text"

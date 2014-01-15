@@ -4,13 +4,13 @@ import haflow.dto.entity.Flow;
 import haflow.dto.entity.Node;
 import haflow.dto.profile.NodeConfiguration;
 import haflow.engine.model.DirectedGraph;
-import haflow.engine.model.GlobalConfiguration;
 import haflow.engine.model.TopologicalSort;
 import haflow.module.AbstractHiveModule;
 import haflow.module.AbstractJavaModule;
 import haflow.module.Module;
 import haflow.service.NodeConfigurationService;
 import haflow.util.DocumentTransformer;
+import haflow.util.OozieJobGlobalConfiguration;
 
 import java.util.HashMap;
 import java.util.List;
@@ -143,7 +143,7 @@ public class OozieFlowXmlGenerator {
 	}
 
 	private NodeConfigurationService nodeConfigurationService;
-	private GlobalConfiguration globalConfiguration;
+	private OozieJobGlobalConfiguration globalConfiguration;
 	private GraphTransformer graphTransformer;
 
 	@Autowired
@@ -153,7 +153,7 @@ public class OozieFlowXmlGenerator {
 	}
 
 	@Autowired
-	private void setGlobalConfiguration(GlobalConfiguration globalConfiguration) {
+	private void setGlobalConfiguration(OozieJobGlobalConfiguration globalConfiguration) {
 		this.globalConfiguration = globalConfiguration;
 	}
 
