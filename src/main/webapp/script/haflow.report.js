@@ -330,6 +330,7 @@ HAFlow.Main.prototype.onReportPortletClicked = function(portletId, chart, portle
 	var text = "";
 	text += "<table border=\"0\">";
 	text += "<tr style=\"tr\"><th align=\"left\">Portlet Info</th>" + "<td>" + portletId + "</td></tr>";
+	
 	//find current protlet
 	var portlets = reportInfo.portlets;
 	var portlet;
@@ -340,6 +341,19 @@ HAFlow.Main.prototype.onReportPortletClicked = function(portletId, chart, portle
 		}
 	}
 	
+	//portlet configuration -- title
+	var titleTextBoxId = "portlet_title_text_box_" + portletId;
+	var titleTextBoxSpanId = "portlet_title_text_box_pane_" + portletId;
+	text += "<tr style=\"tr\"><th align=\"left\">" + "title" + "</th>" 
+	+ "<td><span id=" + titleTextBoxSpanId + ">" +  "</span></td></tr>";
+	
+	//portlet configuration -- chart title
+	var chartTitleTextBoxId = "portlet_chart_title_text_box_" + portletId;
+	var chartTitleTextBoxSpanId = "portlet_chart_title_text_box_pane_" + portletId;
+	text += "<tr style=\"tr\"><th align=\"left\">" + "chart title" + "</th>" 
+	+ "<td><span id=" + chartTitleTextBoxSpanId + ">" +  "</span></td></tr>";
+	
+	//chart configurations
 	var configurations = portlet.configurations;
 	for( var i = 0; i < configurations.length; i++ ){
 		var configuration = configurations[i];
@@ -348,6 +362,7 @@ HAFlow.Main.prototype.onReportPortletClicked = function(portletId, chart, portle
 		+ "<td><span id=" + configurationTextBoxSpanId + ">" +  "</span></td></tr>";
 	}
 	
+	//series configurations
 	var series = portlet.chartSeries;
 	for ( var i = 0; i < series.length; i++) {
 		var serie = series[i];
@@ -368,11 +383,36 @@ HAFlow.Main.prototype.onReportPortletClicked = function(portletId, chart, portle
 	text += "<tr style=\"tr\"><td align=\"left\">" +
 			"<div id=\"save_portlet_configurations_button_pane\" class=\"configuration-content\"></div>" +
 			"</td></tr>";	
+	//delete button
 	text += "<tr style=\"tr\"><td align=\"left\">" +
 			"<div id=\"delete_portlet_configurations_button_pane\" class=\"configuration-content\"></div>" +
 			"</td></tr>";
 	text += "</table>";
 	$("#" + instance.informationContainerId).html(text);
+	
+	//title
+	if( dijit.byId(titleTextBoxId) != null ){
+		dijit.registry.remove(titleTextBoxId);
+	}
+	var titleTextBox = new dijit.form.TextBox({
+		id : titleTextBoxId,
+		value : portlet.title,
+		style : "width:300px;"
+	});
+	titleTextBox.placeAt(dojo.byId(titleTextBoxSpanId));
+	titleTextBox.startup();
+	
+	//chart title
+	if( dijit.byId(chartTitleTextBoxId) != null ){
+		dijit.registry.remove(chartTitleTextBoxId);
+	}
+	var chartTitleTextBox = new dijit.form.TextBox({
+		id : chartTitleTextBoxId,
+		value : portlet.chartTitle,
+		style : "width:300px;"
+	});
+	chartTitleTextBox.placeAt(dojo.byId(chartTitleTextBoxSpanId));
+	chartTitleTextBox.startup();
 	
 	for( var i = 0; i < configurations.length; i++ ){
 		var configuration = configurations[i];
@@ -473,6 +513,17 @@ HAFlow.Main.prototype.savePortletConfiguration = function(portletId, chart){
 		}
 	}
 	
+	//save portlet title
+	var titleTextBoxId = "portlet_title_text_box_" + portletId;
+	var newTitle = dijit.byId(titleTextBoxId).value;
+	portlet.title = newTitle;
+	
+	//save chart title
+	var chartTitleTextBoxId = "portlet_chart_title_text_box_" + portletId;
+	var newChartTitle = dijit.byId(chartTitleTextBoxId).value;
+	portlet.chartTitle = newChartTitle;
+	
+	//save chart configurations
 	var configurations = portlet.configurations;
 	for( var i = 0; i < configurations.length; i++ ){
 		var configuration = configurations[i];
@@ -481,6 +532,7 @@ HAFlow.Main.prototype.savePortletConfiguration = function(portletId, chart){
 		configuration.value = newValue;
 	}
 	
+	//save series configurations
 	var series = portlet.chartSeries;
 	for( var i = 0; i < series.length; i++ ){
 		var serie = series[i];
@@ -688,7 +740,7 @@ HAFlow.Main.prototype.onReportModuleAdded = function(currentInstance, reportId,
 	
 	var currentPortlet = {
 			id: newPortletId, 
-			title: reportModuleId, 
+			title: "untitled " + reportModuleId, 
 			type: reportModuleId,
 			reportId: reportId,
 			configurations : portletConfigurations,
@@ -703,6 +755,8 @@ HAFlow.Main.prototype.onReportModuleAdded = function(currentInstance, reportId,
 			//for grid pane
 			column: column,
 			zone: -1,
+			
+			chartTitle : reportModuleId + " graph",
 		};
 	this.reports[reportId].portlets.push(currentPortlet);
 	this.addReport(reportId, currentPortlet);
@@ -722,7 +776,7 @@ HAFlow.Main.prototype.addReport = function(reportId, currentPortlet){
 		dijit.registry.remove("portlet_" + currentPortlet.id);
 	}
 	var portlet = new dojox.widget.Portlet({
-		title : currentPortlet.type,
+		title : currentPortlet.title,//TODO
 		id : "portlet_" + currentPortlet.id,
 		closable: false,
         dndType: 'Portlet',
@@ -852,7 +906,7 @@ HAFlow.Main.prototype.calculateChartDivSize = function(reportId, currentPortlet,
 HAFlow.Main.prototype.initChart = function(chart, currentPortlet, legendDivId){
 	this.chartMap[currentPortlet.id] = chart;
 	//var configurations
-	chart["title"] = currentPortlet.title;
+	chart["title"] = currentPortlet.chartTitle;
 	chart.titlePos = "bottom";
 	chart.titleGap = 25;
 	chart.titleFont = "normal normal normal 15pt Arial";
@@ -886,6 +940,10 @@ HAFlow.Main.prototype.initChart = function(chart, currentPortlet, legendDivId){
 		}
 		obj[configuration.key] = realValue;
 	}
+	
+	//this does not work because title is the property of chart not the plot 
+	//obj["title"] = "ttttttttttttttt";
+	
 	chart.addPlot("default", obj);//TODO
 	var legend;
 

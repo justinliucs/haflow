@@ -19,6 +19,7 @@ public class PortletModel {
 	private int height;
 	private int left;
 	private int top;
+	private String chartTitle;
 	
 	private UUID reportId;
 	private Set<PortletConfigurationItemModel> configurations;
@@ -122,6 +123,13 @@ public class PortletModel {
 		this.top = top;
 	}
 	
+	
+	public String getChartTitle() {
+		return chartTitle;
+	}
+	public void setChartTitle(String chartTitle) {
+		this.chartTitle = chartTitle;
+	}
 	@XmlElementWrapper(name="chartSeries")
 	@XmlElement(name="chartSerie")
 	public Set<ChartSerieModel> getChartSeries() {

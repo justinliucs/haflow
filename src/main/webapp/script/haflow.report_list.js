@@ -60,6 +60,7 @@ HAFlow.Main.prototype.fillReportsData = function(data) {
     	this.reports[reportItemId].panelType = reportItem.panelType;//TODO
     	this.reports[reportItemId].parentid = reportItem.parentid;
     	this.reports[reportItemId].portlets = new Array();
+    	this.reports[reportItemId].chartTitle = reportItem.chartTitle;
     	
     	var portlets = reportItem.portlets;
     	for( var j = 0; j < portlets.length; j++){

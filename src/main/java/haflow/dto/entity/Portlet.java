@@ -27,6 +27,7 @@ import javax.persistence.Table;
 	private int height;
 	private int left_pos;
 	private int top_pos;
+	private String chart_title;
 	
     private Report report;
     private Set<PortletConfiguration> configurations;
@@ -47,16 +48,23 @@ import javax.persistence.Table;
     public String getTitle() {
       return title;
     }
-  
     public void setTitle(String title) {
       this.title = title;
     }
-  
-    @Column(name="type")
+    
+    
+    @Column(name="chart_title")
+    public String getChart_title() {
+		return chart_title;
+	}
+	public void setChart_title(String chart_title) {
+		this.chart_title = chart_title;
+	}
+
+	@Column(name="type")
     public String getType() {
       return type;
     }
-  
     public void setType(String type) {
       this.type = type;
     }
@@ -65,7 +73,6 @@ import javax.persistence.Table;
     public int getPosition() {
       return position;
     }
-  
     public void setPosition(int position) {
       this.position = position;
     }
@@ -75,7 +82,6 @@ import javax.persistence.Table;
     public Report getReport() {
       return report;
     }
-  
     public void setReport(Report report) {
       this.report = report;
     }
