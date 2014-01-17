@@ -22,6 +22,9 @@ public final class SessionHelper {
 	public SessionHelper() {
 		try {
 			Configuration cfg = new Configuration().configure();
+//			cfg.setProperty("hibernate.connection.url", "jdbc:mysql://localhost:3306/haflow");
+//			cfg.setProperty("hibernate.connection.username", "root");
+//			cfg.setProperty("hibernate.connection.password", "123456");
 			ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
 					.applySettings(cfg.getProperties()).build();
 			this.setSessionFactory(cfg.buildSessionFactory(serviceRegistry));

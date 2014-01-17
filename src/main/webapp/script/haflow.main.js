@@ -42,7 +42,7 @@ dojo.ready(function() {
 HAFlow.Main = function(ui) {
     this.basePath = dojo.byId("basePath").value;
     this.ui = ui;
-    this.rootPath = "hdfs://133.133.2.150:9000/user/root/" + username;
+    this.rootPath = hdfsrootpath + username;
     this.userId = userid;
     this.userName = username;
     this.hdfspath = null;
@@ -65,9 +65,9 @@ HAFlow.Main.prototype.initUserInterface = function() {
     this.initMainMenu();
     this.initToolbar();
     this.initBottomTabs();
+    this.initHdfsFileList();
     this.initFlowList();
     this.initFlowContainer();
-    this.initHdfsFileList();
     this.initReportList();
     this.ui.refresh();
 };
@@ -77,6 +77,7 @@ HAFlow.Main.prototype.initUserInterfaceId = function() {
     this.flowListTreeId = "flowListTree";
     this.hdfsFileListContainerId = "hdfsFileListContainer";
     this.hdfsFileListTreeId = "hdfsFileListTree";
+    this.hiveTableListContainerId = "hiveTableListContainer";
     this.moduleListContainerId = "moduleListContainer";
     this.reportListContainerId = "reportListContainer";
     this.reportListTreeId = "reportListTree";
@@ -134,7 +135,7 @@ HAFlow.Main.prototype.initFlowContainer = function() {
             _currentInstance.afterReportSelected();
             
             var reportId = targetContainerPaneId.replace(reportContainerPaneString, "");
-            _currentInstance.currentReportId = reportId;
+            _currentInstance.currentReportId = reportId;//definition
             _currentInstance.setupReportDroppable(reportId); 
             
 //            _currentInstance.paintReports(reportId);

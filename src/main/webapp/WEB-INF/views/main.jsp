@@ -8,7 +8,7 @@
 			+ path + "/";
 	String username=request.getSession().getAttribute("username").toString();
 	Object userid=request.getSession().getAttribute("userid");
-	
+	String hdfsrootpath = request.getSession().getAttribute("hdfsrootpath").toString();
 %>
 <html>
 <head>
@@ -64,6 +64,7 @@
 	<script type="text/javascript">
 		var username="<%=username%>";
 		var userid=<%=userid%>;
+		var hdfsrootpath = "<%=hdfsrootpath%>";
 		var language="English";
 	</script>
 	<input type="hidden" value="<%=basePath%>" id="basePath" />

@@ -66,6 +66,7 @@ public class ReportHelper {
 				portletModel.setHeight(portlet.getHeight());
 				portletModel.setLeft(portlet.getLeft_pos());
 				portletModel.setTop(portlet.getTop_pos());
+				portletModel.setChartTitle(portlet.getChart_title());
 				
 				Set<PortletConfigurationItemModel> configurations = new HashSet<PortletConfigurationItemModel>();
 				for( PortletConfiguration pc : portlet.getConfigurations() ){
@@ -129,6 +130,7 @@ public class ReportHelper {
 				portlet.setHeight(portletModel.getHeight());
 				portlet.setLeft_pos(portletModel.getLeft());
 				portlet.setTop_pos(portletModel.getTop());
+				portlet.setChart_title(portletModel.getChartTitle());
 				
 				Set<PortletConfiguration> portletConfigurations = new HashSet<PortletConfiguration>();
 				for( PortletConfigurationItemModel cim : portletModel.getConfigurations()){

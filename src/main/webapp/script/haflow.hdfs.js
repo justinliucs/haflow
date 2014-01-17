@@ -33,11 +33,24 @@ dojo.require("dojox.layout.ContentPane");
 
 // public
 HAFlow.Main.prototype.initHdfsFileList = function() {
-    var hdfsFileListContentPane = new dijit.layout.ContentPane({
-        id: this.hdfsFileListContainerId,
-        title: "HDFS"
+    var dataContentPane = new dijit.layout.AccordionContainer({
+        id: "dataContentPaneId",
+        title: myfile.data,
+        splitter : "true",
     });
-    this.ui.leadingContainer.addChild(hdfsFileListContentPane);
+    
+    var hdfsFileListContentPane = new dijit.layout.ContentPane({
+		id : this.hdfsFileListContainerId,
+		title : "HDFS",
+	});
+    dataContentPane.addChild(hdfsFileListContentPane);    
+    var hiveTableListPane = new dijit.layout.ContentPane({
+		id : this.hiveTableListContainer,
+		title : "HIVE",
+	});
+    dataContentPane.addChild(hiveTableListPane);  
+    this.ui.leadingContainer.addChild(dataContentPane);
+    
     this.initHdfsFileListStore();
     this.getHdfsFileList(this.rootPath);
     this.initHdfsFileListTree();

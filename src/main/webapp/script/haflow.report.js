@@ -30,6 +30,7 @@ dojo.require("dojo.dom");
 dojo.require("dojo.on");
 dojo.require("dojox.layout.ResizeHandle");
 dojo.require("dojo.dnd.Mover");
+dojo.require("dojo.dom-style");
 
 HAFlow.Main.prototype.newReport = function(parentId) {
 	var _currentInstance = this;
@@ -89,6 +90,17 @@ HAFlow.Main.prototype.newReportItem = function(newReportId, parentId, isdirector
 	this.saveReport(newReportId);//save this.reports[newReportId]
 };
 
+HAFlow.Main.prototype.onNoReportThingSelected = function(e){
+	var id = e.explicitOriginalTarget.id;
+	var zoneContainerPattern=new RegExp("reportContainer_.*_dz.*");
+	if( e.currentTarget == e.explicitOriginalTarget || zoneContainerPattern.test(id) ){
+		_currentInstance.afterPortletUnSelected();
+		$("#" + _currentInstance.informationContainerId).html("Nothing selected!");
+		var informationPane = dijit.byId(_currentInstance.informationContainerId);
+		_currentInstance.ui.bottomContainer.selectChild(informationPane);
+	}
+};
+
 HAFlow.Main.prototype.addGridPanel = function(reportId, reportContainerDivId, currentReport) {
 	var gridContainer = new dojox.layout.GridContainer({
 		id : "reportContainer_" + reportId,
@@ -101,7 +113,11 @@ HAFlow.Main.prototype.addGridPanel = function(reportId, reportContainerDivId, cu
         dragHandleClass: 'dijitTitlePaneTitle',
 //        style: {width:'100%'},
         acceptTypes: ['Portlet'],
-        isOffset: true
+        isOffset: true,
+        onClick : function(e){
+			//alert("hahah");
+        	_currentInstance.onNoReportThingSelected(e);
+		},
     }, reportContainerDivId);
 
 	var dummyPortletId = "dummy_portlet_id_" + reportId;
@@ -127,10 +143,14 @@ HAFlow.Main.prototype.addGridPanel = function(reportId, reportContainerDivId, cu
 HAFlow.Main.prototype.addFloatPanel = function(reportId, reportContainerDivId) {
 //	var reportContainer = dijit.byId("reportContainer_" + reportId);
 //	dojo.create("div", {innerHTML: "<div id='chartchart' style='width:90%; height:60%;'></div>"});
+	var _currentInstance = this;
 	var innerContentPane = new dijit.layout.ContentPane({
 		id : "reportContainer_" + reportId,
 		class : "reportcontainer",
-		style : ' width:98%; height:98%; background-color: blue;',//
+		style : ' width:98%; height:98%; ',//background-color: blue;
+		onClick : function(e){
+			_currentInstance.onNoReportThingSelected(e);
+		},
 	}, reportContainerDivId);
 
 };
@@ -294,7 +314,7 @@ HAFlow.Main.prototype.paintReportList = function() {
 	this.simpleReportListPaneId = this.reportListContainerId + "_" + "test";
 	var reportListPane = new dijit.layout.ContentPane({
 		id : this.simpleReportListPaneId,
-		title : "Simple",
+		title : myfile.charts,
 	});
 	this.ui.secondTrailingContainer.addChild(reportListPane);
 	text = "<div class=\"reportmodule\" id=\"reportmodule_" + "text"
@@ -324,12 +344,34 @@ HAFlow.Main.prototype.paintReportList = function() {
 	this.ui.refresh();
 };
 
+HAFlow.Main.prototype.afterPortletSelected = function(portletId){
+	this.afterPortletUnSelected();
+	
+	var portletPane = dojo.query("#portlet_" + portletId + " > .dijitTitlePaneContentOuter");
+	portletPane.style("borderColor", "#FF0000");//#BFBFBF
+	portletPane.style("borderStyle", "dashed");//solid dotted double dashed
+};
+
+HAFlow.Main.prototype.afterPortletUnSelected = function(){
+	var portlets = this.reports[this.currentReportId].portlets;
+	for( var i = 0; i < portlets.length; i++ ){
+		var tmpPortletId = portlets[i].id;
+		var tmpPortletPane = dojo.query("#portlet_" + tmpPortletId + " > .dijitTitlePaneContentOuter");
+		tmpPortletPane.style("borderColor", "#BFBFBF");
+		tmpPortletPane.style("borderStyle", "solid");
+	}
+};
+
 HAFlow.Main.prototype.onReportPortletClicked = function(portletId, chart, portlet) {
+//	dojo.set(portlet, "border-right-color",  "red");
+	this.afterPortletSelected(portletId);
+	
 	var instance = this;
 	var reportInfo = instance.reports[this.currentReportId];
 	var text = "";
 	text += "<table border=\"0\">";
 	text += "<tr style=\"tr\"><th align=\"left\">Portlet Info</th>" + "<td>" + portletId + "</td></tr>";
+	
 	//find current protlet
 	var portlets = reportInfo.portlets;
 	var portlet;
@@ -340,6 +382,19 @@ HAFlow.Main.prototype.onReportPortletClicked = function(portletId, chart, portle
 		}
 	}
 	
+	//portlet configuration -- title
+	var titleTextBoxId = "portlet_title_text_box_" + portletId;
+	var titleTextBoxSpanId = "portlet_title_text_box_pane_" + portletId;
+	text += "<tr style=\"tr\"><th align=\"left\">" + "title" + "</th>" 
+	+ "<td><span id=" + titleTextBoxSpanId + ">" +  "</span></td></tr>";
+	
+	//portlet configuration -- chart title
+	var chartTitleTextBoxId = "portlet_chart_title_text_box_" + portletId;
+	var chartTitleTextBoxSpanId = "portlet_chart_title_text_box_pane_" + portletId;
+	text += "<tr style=\"tr\"><th align=\"left\">" + "chart title" + "</th>" 
+	+ "<td><span id=" + chartTitleTextBoxSpanId + ">" +  "</span></td></tr>";
+	
+	//chart configurations
 	var configurations = portlet.configurations;
 	for( var i = 0; i < configurations.length; i++ ){
 		var configuration = configurations[i];
@@ -348,6 +403,7 @@ HAFlow.Main.prototype.onReportPortletClicked = function(portletId, chart, portle
 		+ "<td><span id=" + configurationTextBoxSpanId + ">" +  "</span></td></tr>";
 	}
 	
+	//series configurations
 	var series = portlet.chartSeries;
 	for ( var i = 0; i < series.length; i++) {
 		var serie = series[i];
@@ -368,11 +424,36 @@ HAFlow.Main.prototype.onReportPortletClicked = function(portletId, chart, portle
 	text += "<tr style=\"tr\"><td align=\"left\">" +
 			"<div id=\"save_portlet_configurations_button_pane\" class=\"configuration-content\"></div>" +
 			"</td></tr>";	
+	//delete button
 	text += "<tr style=\"tr\"><td align=\"left\">" +
 			"<div id=\"delete_portlet_configurations_button_pane\" class=\"configuration-content\"></div>" +
 			"</td></tr>";
 	text += "</table>";
 	$("#" + instance.informationContainerId).html(text);
+	
+	//title
+	if( dijit.byId(titleTextBoxId) != null ){
+		dijit.registry.remove(titleTextBoxId);
+	}
+	var titleTextBox = new dijit.form.TextBox({
+		id : titleTextBoxId,
+		value : portlet.title,
+		style : "width:300px;"
+	});
+	titleTextBox.placeAt(dojo.byId(titleTextBoxSpanId));
+	titleTextBox.startup();
+	
+	//chart title
+	if( dijit.byId(chartTitleTextBoxId) != null ){
+		dijit.registry.remove(chartTitleTextBoxId);
+	}
+	var chartTitleTextBox = new dijit.form.TextBox({
+		id : chartTitleTextBoxId,
+		value : portlet.chartTitle,
+		style : "width:300px;"
+	});
+	chartTitleTextBox.placeAt(dojo.byId(chartTitleTextBoxSpanId));
+	chartTitleTextBox.startup();
 	
 	for( var i = 0; i < configurations.length; i++ ){
 		var configuration = configurations[i];
@@ -473,6 +554,17 @@ HAFlow.Main.prototype.savePortletConfiguration = function(portletId, chart){
 		}
 	}
 	
+	//save portlet title
+	var titleTextBoxId = "portlet_title_text_box_" + portletId;
+	var newTitle = dijit.byId(titleTextBoxId).value;
+	portlet.title = newTitle;
+	
+	//save chart title
+	var chartTitleTextBoxId = "portlet_chart_title_text_box_" + portletId;
+	var newChartTitle = dijit.byId(chartTitleTextBoxId).value;
+	portlet.chartTitle = newChartTitle;
+	
+	//save chart configurations
 	var configurations = portlet.configurations;
 	for( var i = 0; i < configurations.length; i++ ){
 		var configuration = configurations[i];
@@ -481,6 +573,7 @@ HAFlow.Main.prototype.savePortletConfiguration = function(portletId, chart){
 		configuration.value = newValue;
 	}
 	
+	//save series configurations
 	var series = portlet.chartSeries;
 	for( var i = 0; i < series.length; i++ ){
 		var serie = series[i];
@@ -688,7 +781,7 @@ HAFlow.Main.prototype.onReportModuleAdded = function(currentInstance, reportId,
 	
 	var currentPortlet = {
 			id: newPortletId, 
-			title: reportModuleId, 
+			title: "untitled " + reportModuleId, 
 			type: reportModuleId,
 			reportId: reportId,
 			configurations : portletConfigurations,
@@ -703,6 +796,8 @@ HAFlow.Main.prototype.onReportModuleAdded = function(currentInstance, reportId,
 			//for grid pane
 			column: column,
 			zone: -1,
+			
+			chartTitle : reportModuleId + " graph",
 		};
 	this.reports[reportId].portlets.push(currentPortlet);
 	this.addReport(reportId, currentPortlet);
@@ -722,12 +817,12 @@ HAFlow.Main.prototype.addReport = function(reportId, currentPortlet){
 		dijit.registry.remove("portlet_" + currentPortlet.id);
 	}
 	var portlet = new dojox.widget.Portlet({
-		title : currentPortlet.type,
+		title : currentPortlet.title,//TODO
 		id : "portlet_" + currentPortlet.id,
 		closable: false,
         dndType: 'Portlet',
         style: (this.reports[reportId].panelType == "grid" ? '' : "width:" + currentPortlet.width + "px;"
-        		+ " position:absolute; left:" + currentPortlet.left + "px; top:" + currentPortlet.top + "px;") ,//TODO
+        		+ " position:absolute; left:" + currentPortlet.left + "px; top:" + currentPortlet.top + "px; ") ,//TODO border-right-color:red;
 	});
 	
 	if (currentPortlet.type == "text") {
@@ -852,7 +947,7 @@ HAFlow.Main.prototype.calculateChartDivSize = function(reportId, currentPortlet,
 HAFlow.Main.prototype.initChart = function(chart, currentPortlet, legendDivId){
 	this.chartMap[currentPortlet.id] = chart;
 	//var configurations
-	chart["title"] = currentPortlet.title;
+	chart["title"] = currentPortlet.chartTitle;
 	chart.titlePos = "bottom";
 	chart.titleGap = 25;
 	chart.titleFont = "normal normal normal 15pt Arial";
@@ -886,6 +981,10 @@ HAFlow.Main.prototype.initChart = function(chart, currentPortlet, legendDivId){
 		}
 		obj[configuration.key] = realValue;
 	}
+	
+	//this does not work because title is the property of chart not the plot 
+	//obj["title"] = "ttttttttttttttt";
+	
 	chart.addPlot("default", obj);//TODO
 	var legend;
 
@@ -902,7 +1001,8 @@ HAFlow.Main.prototype.initChart = function(chart, currentPortlet, legendDivId){
 //				_currentInstance.addToConsole(ccm.columnname + ": " + ccm.data, false);
 				var series_data = new Array();
 				for( var j = 0; j < ccm.data.length; j++ ){
-					series_data.push({x:Math.floor((Math.random()*10)+1), y:ccm.data[j], text: 'a', tooltip: 'b'});
+					series_data.push({y:ccm.data[j], text: 'a', tooltip: 'b'});
+//					series_data.push({x:Math.floor((Math.random()*10)+1), y:ccm.data[j], text: 'a', tooltip: 'b'});
 				}
 				chart.addSeries(ccm.columnname, series_data);
 			}

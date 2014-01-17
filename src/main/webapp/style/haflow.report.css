@@ -55,3 +55,7 @@
 	height: 200px;
 	padding: 7px;
 }
+
+.dijitTitlePaneContentOuter {
+	border-right-color: red;
+}

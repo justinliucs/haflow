@@ -7,7 +7,7 @@ myfile={
 "value":"Value",
 "NodeId":"Node Id",
 "flow":"Flow",
-"flows":"Flows",
+"flows":"Flow",
 "run":"Run",
 "search":"Search",
 "window":"Window",
@@ -72,12 +72,14 @@ myfile={
 "newReportDirectory":"New Report Directory",
 "console":"Console",
 "information":"Property",
-"reports":"Reports",
+"reports":"Report",
 "quit":"quit",
 "updateTime":"Update Time",
 "name":"Name",
 "path":"Path",
 "size":"Size",
-"flowInfo":"Flow Info"
+"flowInfo":"Flow Info",
+"data":"Data",
+"charts":"Charts"
 };
  

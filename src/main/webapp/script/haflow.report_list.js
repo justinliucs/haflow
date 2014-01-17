@@ -78,6 +78,7 @@ HAFlow.Main.prototype.fillReportsData = function(data) {
     				height: portlets[j].height,
     				left: portlets[j].left,
     				top: portlets[j].top,
+    				chartTitle: portlets[j].chartTitle,
     			};
     		var configurations = portlets[j].configurations;
     		for( var x = 0; x < configurations.length; x++){
