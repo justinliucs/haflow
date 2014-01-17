@@ -11,6 +11,7 @@ import haflow.module.Module;
 import haflow.service.NodeConfigurationService;
 import haflow.util.DocumentTransformer;
 import haflow.util.OozieJobGlobalConfiguration;
+import haflow.util.XmlFilter;
 
 import java.util.HashMap;
 import java.util.List;
@@ -82,7 +83,9 @@ public class OozieFlowXmlGenerator {
 			for (NodeConfiguration ncp : ncps) {
 				String key = ncp.getKey();
 				String value = ncp.getValue();
-				userConfs.put(key, value);
+				String xmlValue=XmlFilter.encodeXml(value);
+				
+				userConfs.put(key, xmlValue);
 			}
 			
 			if( inputConfigurations.get(node.getId()) != null ){

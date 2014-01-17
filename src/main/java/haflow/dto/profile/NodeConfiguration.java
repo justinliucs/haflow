@@ -43,7 +43,7 @@ public class NodeConfiguration {
 		this.key = key;
 	}
 
-	@Column(name = "configurationValue")
+	@Column(name = "configurationValue",columnDefinition="TEXT")
 	public String getValue() {
 		return value;
 	}
