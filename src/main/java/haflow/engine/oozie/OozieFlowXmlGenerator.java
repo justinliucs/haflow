@@ -4,7 +4,6 @@ import haflow.dto.entity.Flow;
 import haflow.dto.entity.Node;
 import haflow.dto.profile.NodeConfiguration;
 import haflow.engine.model.DirectedGraph;
-import haflow.engine.model.GlobalConfiguration;
 import haflow.engine.model.TopologicalSort;
 import haflow.module.AbstractHiveModule;
 import haflow.module.AbstractJavaModule;
@@ -12,7 +11,6 @@ import haflow.module.Module;
 import haflow.service.NodeConfigurationService;
 import haflow.util.DocumentTransformer;
 import haflow.util.OozieJobGlobalConfiguration;
-import haflow.util.XmlFilter;
 
 import java.util.HashMap;
 import java.util.List;
@@ -83,12 +81,8 @@ public class OozieFlowXmlGenerator {
 					.getNodeConfiguration(node.getId());
 			for (NodeConfiguration ncp : ncps) {
 				String key = ncp.getKey();
-				
 				String value = ncp.getValue();
-				//convert to formatter xml style
-				String xmlValue=XmlFilter.encodeXml(value);
-				
-				userConfs.put(key, xmlValue);
+				userConfs.put(key, value);
 			}
 			
 			if( inputConfigurations.get(node.getId()) != null ){
