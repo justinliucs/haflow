@@ -30,6 +30,7 @@ dojo.require("dojo.dom");
 dojo.require("dojo.on");
 dojo.require("dojox.layout.ResizeHandle");
 dojo.require("dojo.dnd.Mover");
+dojo.require("dojo.dom-style");
 
 HAFlow.Main.prototype.newReport = function(parentId) {
 	var _currentInstance = this;
@@ -89,6 +90,17 @@ HAFlow.Main.prototype.newReportItem = function(newReportId, parentId, isdirector
 	this.saveReport(newReportId);//save this.reports[newReportId]
 };
 
+HAFlow.Main.prototype.onNoReportThingSelected = function(e){
+	var id = e.explicitOriginalTarget.id;
+	var zoneContainerPattern=new RegExp("reportContainer_.*_dz.*");
+	if( e.currentTarget == e.explicitOriginalTarget || zoneContainerPattern.test(id) ){
+		_currentInstance.afterPortletUnSelected();
+		$("#" + _currentInstance.informationContainerId).html("Nothing selected!");
+		var informationPane = dijit.byId(_currentInstance.informationContainerId);
+		_currentInstance.ui.bottomContainer.selectChild(informationPane);
+	}
+};
+
 HAFlow.Main.prototype.addGridPanel = function(reportId, reportContainerDivId, currentReport) {
 	var gridContainer = new dojox.layout.GridContainer({
 		id : "reportContainer_" + reportId,
@@ -101,7 +113,11 @@ HAFlow.Main.prototype.addGridPanel = function(reportId, reportContainerDivId, cu
         dragHandleClass: 'dijitTitlePaneTitle',
 //        style: {width:'100%'},
         acceptTypes: ['Portlet'],
-        isOffset: true
+        isOffset: true,
+        onClick : function(e){
+			//alert("hahah");
+        	_currentInstance.onNoReportThingSelected(e);
+		},
     }, reportContainerDivId);
 
 	var dummyPortletId = "dummy_portlet_id_" + reportId;
@@ -127,10 +143,14 @@ HAFlow.Main.prototype.addGridPanel = function(reportId, reportContainerDivId, cu
 HAFlow.Main.prototype.addFloatPanel = function(reportId, reportContainerDivId) {
 //	var reportContainer = dijit.byId("reportContainer_" + reportId);
 //	dojo.create("div", {innerHTML: "<div id='chartchart' style='width:90%; height:60%;'></div>"});
+	var _currentInstance = this;
 	var innerContentPane = new dijit.layout.ContentPane({
 		id : "reportContainer_" + reportId,
 		class : "reportcontainer",
 		style : ' width:98%; height:98%; ',//background-color: blue;
+		onClick : function(e){
+			_currentInstance.onNoReportThingSelected(e);
+		},
 	}, reportContainerDivId);
 
 };
@@ -324,7 +344,28 @@ HAFlow.Main.prototype.paintReportList = function() {
 	this.ui.refresh();
 };
 
+HAFlow.Main.prototype.afterPortletSelected = function(portletId){
+	this.afterPortletUnSelected();
+	
+	var portletPane = dojo.query("#portlet_" + portletId + " > .dijitTitlePaneContentOuter");
+	portletPane.style("borderColor", "#FF0000");//#BFBFBF
+	portletPane.style("borderStyle", "dashed");//solid dotted double dashed
+};
+
+HAFlow.Main.prototype.afterPortletUnSelected = function(){
+	var portlets = this.reports[this.currentReportId].portlets;
+	for( var i = 0; i < portlets.length; i++ ){
+		var tmpPortletId = portlets[i].id;
+		var tmpPortletPane = dojo.query("#portlet_" + tmpPortletId + " > .dijitTitlePaneContentOuter");
+		tmpPortletPane.style("borderColor", "#BFBFBF");
+		tmpPortletPane.style("borderStyle", "solid");
+	}
+};
+
 HAFlow.Main.prototype.onReportPortletClicked = function(portletId, chart, portlet) {
+//	dojo.set(portlet, "border-right-color",  "red");
+	this.afterPortletSelected(portletId);
+	
 	var instance = this;
 	var reportInfo = instance.reports[this.currentReportId];
 	var text = "";
@@ -781,7 +822,7 @@ HAFlow.Main.prototype.addReport = function(reportId, currentPortlet){
 		closable: false,
         dndType: 'Portlet',
         style: (this.reports[reportId].panelType == "grid" ? '' : "width:" + currentPortlet.width + "px;"
-        		+ " position:absolute; left:" + currentPortlet.left + "px; top:" + currentPortlet.top + "px;") ,//TODO
+        		+ " position:absolute; left:" + currentPortlet.left + "px; top:" + currentPortlet.top + "px; ") ,//TODO border-right-color:red;
 	});
 	
 	if (currentPortlet.type == "text") {

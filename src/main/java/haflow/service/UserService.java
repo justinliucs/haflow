@@ -3,6 +3,8 @@ package haflow.service;
 import java.util.List;
 
 import haflow.dto.entity.MainUser;
+import haflow.ui.helper.HdfsHelper;
+import haflow.util.ClusterConfiguration;
 import haflow.util.SessionHelper;
 
 import org.hibernate.HibernateException;
@@ -23,6 +25,25 @@ public class UserService {
 	@Autowired
 	private void setSessionHelper(SessionHelper sessionHelper) {
 		this.sessionHelper = sessionHelper;
+	}
+	
+	private HdfsHelper hdfsHelper;
+
+	private HdfsHelper getHdfsHelper() {
+		return hdfsHelper;
+	}
+	
+	@Autowired
+	private void setHdfsHelper(HdfsHelper hdfsHelper) {
+		this.hdfsHelper = hdfsHelper;
+	}
+	
+	private ClusterConfiguration clusterConfiguration;
+	
+	@Autowired
+	private void setClusterConfiguration(
+			ClusterConfiguration clusterConfiguration) {
+		this.clusterConfiguration = clusterConfiguration;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -179,6 +200,12 @@ public class UserService {
 			query1.setString(0, email);
 			List<MainUser> list1 = query1.list();
 
+			String userHdfsRootPath = this.clusterConfiguration.getProperty(ClusterConfiguration.USER_HDFS_ROOT_PATH);
+			if ( !this.getHdfsHelper().createdirectory(
+					userHdfsRootPath, username)) {
+				return false;
+			}
+			
 			if (list.size() == 0 && list1.size() == 0) {
 				System.out.println("success!");
 				MainUser user = new MainUser();

@@ -7,6 +7,7 @@ import haflow.ui.model.HdfsFileModel;
 import haflow.ui.model.RemoveHdfsFileModel;
 import haflow.ui.model.RenameModel;
 import haflow.ui.model.UploadFileModel;
+import haflow.util.ClusterConfiguration;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -42,6 +43,14 @@ public class HdfsController {
 		this.hdfsHelper = hdfsHelper;
 	}
 
+	private ClusterConfiguration clusterConfiguration;
+
+	@Autowired
+	private void setClusterConfiguration(
+			ClusterConfiguration clusterConfiguration) {
+		this.clusterConfiguration = clusterConfiguration;
+	}
+	
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	@ResponseBody
 	public UploadFileModel upload(
@@ -59,7 +68,8 @@ public class HdfsController {
 
 		try {
 			byte[] bytes = file.getBytes();
-			String uploadDir = "c:\\uploadFile";
+			String uploadDir = this.clusterConfiguration.getProperty(
+					ClusterConfiguration.USER_HDFS_UPLOAD_PATH);//"c:\\uploadFile";
 			File dirPath = new File(uploadDir);
 			if (!dirPath.exists()) {
 				dirPath.mkdirs();
@@ -95,7 +105,8 @@ public class HdfsController {
 		response.setHeader("content-disposition", "attachment;filename="
 				+ filename);
 		try {
-			String downloadDir = "c:\\downloadFile";
+			String downloadDir = this.clusterConfiguration.getProperty(
+					ClusterConfiguration.USER_HDFS_DOWNLOAD_PATH);//"c:\\downloadFile";
 			File dirPath = new File(downloadDir);
 			if (!dirPath.exists()) {
 				dirPath.mkdirs();

@@ -1,11 +1,11 @@
 package haflow.ui.controller;
 
 
-import javax.servlet.http.HttpServletRequest;
-
-import haflow.ui.helper.HdfsHelper;
 import haflow.ui.helper.UserHelper;
+import haflow.util.ClusterConfiguration;
 import haflow.util.Md5Util;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,16 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class MainLogonController {
 	private UserHelper userHelper;
-	private HdfsHelper hdfsHelper;
 
-	private HdfsHelper getHdfsHelper() {
-		return hdfsHelper;
-	}
-	
-	@Autowired
-	private void setHdfsHelper(HdfsHelper hdfsHelper) {
-		this.hdfsHelper = hdfsHelper;
-	}
 	private UserHelper getUserHelper() {
 		return userHelper;
 	}
@@ -37,6 +28,14 @@ public class MainLogonController {
 		this.userHelper = userHelper;
 	}
 
+	private ClusterConfiguration clusterConfiguration;
+
+	@Autowired
+	private void setClusterConfiguration(
+			ClusterConfiguration clusterConfiguration) {
+		this.clusterConfiguration = clusterConfiguration;
+	}
+	
 	@RequestMapping(value="/registration")
 	public ModelAndView toRegister() {
 		return new ModelAndView("registration");
@@ -49,22 +48,13 @@ public class MainLogonController {
 			@RequestParam("email") String email,@RequestParam("mora") String mora) {
 		
 		password=Md5Util.getMd5Hex(password);
-		if (this.getUserHelper().saveUser(username, password,email, mora)) {
-			//System.out.println("successful return main");
-//			System.out
-//					.println("controller:"+(this.getHdfsHelper()==null));
-			if(this.getHdfsHelper().createdirectory("hdfs://133.133.2.150:9000/user/root",username))
-			{
-			redirectAttributes.addFlashAttribute("message", "successfully registed!");
+		if (this.getUserHelper().saveUser(username, password, email, mora)) {
+			redirectAttributes.addFlashAttribute("message",
+					"successfully registed!");
 			return "redirect:/";
-			}
-			else{
-				redirectAttributes.addFlashAttribute("message", "the assignment of hdfs space failed!");
-				return "redirect:/registration";
-			}
-
 		} else {
-			redirectAttributes.addFlashAttribute("message", "user name or email already exist!");
+			redirectAttributes.addFlashAttribute("message",
+					"user name or email already exist!");
 			return "redirect:/registration";
 		}
 	}
@@ -94,6 +84,8 @@ public class MainLogonController {
 		if (userid!=-1) {
 			request.getSession().setAttribute("userid", userid);
 			request.getSession().setAttribute("username", username);
+			request.getSession().setAttribute("hdfsrootpath", 
+					this.clusterConfiguration.getProperty(ClusterConfiguration.USER_HDFS_ROOT_PATH));
 			request.getSession().setAttribute("scope", 0);
 			if(language.equals("English")||language.equals("english"))
 				return "redirect:/main";

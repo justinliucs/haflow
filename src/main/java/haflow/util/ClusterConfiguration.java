@@ -17,6 +17,10 @@ public class ClusterConfiguration {
 	
 	public static final String FS_DEFAULT_NAME = "fs.default.name";
 	
+	public static final String USER_HDFS_ROOT_PATH ="user_hdfs_root_path";
+	public static final String USER_HDFS_UPLOAD_PATH = "user_hdfs_upload_path";
+	public static final String USER_HDFS_DOWNLOAD_PATH = "user_hdfs_download_path";
+	
 
 	private Properties properties;
 

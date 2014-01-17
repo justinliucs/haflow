@@ -60,7 +60,6 @@ HAFlow.Main.prototype.fillReportsData = function(data) {
     	this.reports[reportItemId].panelType = reportItem.panelType;//TODO
     	this.reports[reportItemId].parentid = reportItem.parentid;
     	this.reports[reportItemId].portlets = new Array();
-    	this.reports[reportItemId].chartTitle = reportItem.chartTitle;
     	
     	var portlets = reportItem.portlets;
     	for( var j = 0; j < portlets.length; j++){
@@ -79,6 +78,7 @@ HAFlow.Main.prototype.fillReportsData = function(data) {
     				height: portlets[j].height,
     				left: portlets[j].left,
     				top: portlets[j].top,
+    				chartTitle: portlets[j].chartTitle,
     			};
     		var configurations = portlets[j].configurations;
     		for( var x = 0; x < configurations.length; x++){
