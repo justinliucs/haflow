@@ -11,6 +11,8 @@ import haflow.module.AbstractJavaModule;
 import haflow.module.Module;
 import haflow.service.NodeConfigurationService;
 import haflow.util.DocumentTransformer;
+import haflow.util.OozieJobGlobalConfiguration;
+import haflow.util.XmlFilter;
 
 import java.util.HashMap;
 import java.util.List;
@@ -81,8 +83,12 @@ public class OozieFlowXmlGenerator {
 					.getNodeConfiguration(node.getId());
 			for (NodeConfiguration ncp : ncps) {
 				String key = ncp.getKey();
+				
 				String value = ncp.getValue();
-				userConfs.put(key, value);
+				//convert to formatter xml style
+				String xmlValue=XmlFilter.encodeXml(value);
+				
+				userConfs.put(key, xmlValue);
 			}
 			
 			if( inputConfigurations.get(node.getId()) != null ){
@@ -143,7 +149,7 @@ public class OozieFlowXmlGenerator {
 	}
 
 	private NodeConfigurationService nodeConfigurationService;
-	private GlobalConfiguration globalConfiguration;
+	private OozieJobGlobalConfiguration globalConfiguration;
 	private GraphTransformer graphTransformer;
 
 	@Autowired
@@ -153,7 +159,7 @@ public class OozieFlowXmlGenerator {
 	}
 
 	@Autowired
-	private void setGlobalConfiguration(GlobalConfiguration globalConfiguration) {
+	private void setGlobalConfiguration(OozieJobGlobalConfiguration globalConfiguration) {
 		this.globalConfiguration = globalConfiguration;
 	}
 
