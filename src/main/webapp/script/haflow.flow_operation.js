@@ -262,6 +262,7 @@ HAFlow.Main.prototype.refreshFlowList = function(instance, parentPath, data) {
 };
 
 //Event Handler
+//changed by dawn
 HAFlow.Main.prototype.onFlowClicked = function(instance, flowId) {
 	var flowBrief = instance.getFlowBriefById(instance, flowId);
 	var text = "";

@@ -16,6 +16,9 @@ dojo.declare(
 						"string" : {
 							widgetClass : dijit.form.TextBox
 						},
+						"longstring":{
+							widgetClass: dijit.form.Textarea
+						},
 						"date" : {
 							widgetClass : dijit.form.DateTextBox
 						},
@@ -151,7 +154,9 @@ dojo.declare(
 							return val ? val : 0;
 						} else if (this.type == "select") {
 							return val ? val : "";
-						} else {
+						} else if(this.type=="longstring"){
+							return val;
+						} {
 							return this.inherited(arguments);
 						}
 					},

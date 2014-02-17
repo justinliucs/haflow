@@ -84,7 +84,6 @@ public class OozieFlowXmlGenerator {
 				String key = ncp.getKey();
 				String value = ncp.getValue();
 				String xmlValue=XmlFilter.encodeXml(value);
-				
 				userConfs.put(key, xmlValue);
 			}
 			

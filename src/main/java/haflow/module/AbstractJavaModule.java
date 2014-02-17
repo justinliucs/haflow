@@ -44,6 +44,13 @@ public abstract class AbstractJavaModule extends AbstractModule {
 					result.add(configurations.get(key));
 				}
 				break;
+			case TEXT_AREA:
+				String areaValue=configurations.get(key).trim();
+				if(areaValue.length()>0){
+					result.add("--"+key);
+					result.add(configurations.get(key));
+				}
+				break;
 			case TEXT_ARRAY:
 				String arrayValue = configurations.get(key).trim();
 				if (arrayValue.length() > 0) {

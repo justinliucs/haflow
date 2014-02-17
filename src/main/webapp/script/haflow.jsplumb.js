@@ -2,7 +2,7 @@ dojo.registerModulePath("widget","/haflow/script/widget");
 dojo.require("widget.MultipleEditor");
 dojo.require("dijit.Menu");
 dojo.require("dijit.MenuItem");
-
+dojo.require("dijit.form.Textarea");
 //jsplumb helper
 
 //public
@@ -284,22 +284,25 @@ HAFlow.Main.prototype.initNodeDataGrid=function(instance,flowId,nodeId){
 	items.push({
 		key : myfile.NodeId,
 		value : node.id,
+		type:"string",
 	});
 	items.push({
 		key : myfile.flow,
 		value : instance.flows[node.flowId].name,
+		type:"string",
 	});
 	items.push({
 		key : myfile.module,
 		value : module.name,
+		type:"string",
 	});
 	items.push({
 		key : myfile.name,
 		value : node.name,
+		type:"string",
 	});
 	var configItems=this.getNodeConfigurationItems(instance, flowId, nodeId);
 	var allitems=items.concat(configItems);
-	
 	var store = new dojo.data.ItemFileWriteStore({
 		data : {
 			items : allitems
@@ -409,10 +412,17 @@ HAFlow.Main.prototype.getNodeConfigurationItems = function(instance, flowId,
 						nodeId, module.configurations[i].key) == "true"||instance.getConfigurationValue(instance, flowId,
 								nodeId, module.configurations[i].key) == true) ? true
 						: false,
-				type:"bool"
+				type:"bool",
 			});
-		} else {
+		} else if(module.configurations[i].type=="TEXT_AREA"){
 
+			configItems.push({
+				key : module.configurations[i].displayName,
+				value : instance.getConfigurationValue(instance, flowId,
+						nodeId, module.configurations[i].key),
+				type:"longstring",
+			});
+		}else {
 			configItems.push({
 				key : module.configurations[i].displayName,
 				value : instance.getConfigurationValue(instance, flowId,

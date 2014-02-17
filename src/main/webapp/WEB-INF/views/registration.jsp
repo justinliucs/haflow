@@ -17,7 +17,7 @@
   <meta http-equiv="Content-Script-Type" content="text/javascript" />
   <script type="text/javascript" src="<%=basePath%>/script/js/registration.js"></script>
 	<link rel="stylesheet" href="<%=basePath%>/style/logon.css">
-  <script type="text/javascript" language="javascript" src="<%=basePath%>/script/js/website-min.js"></script>
+  
  
   
 
