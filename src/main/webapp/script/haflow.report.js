@@ -753,6 +753,11 @@ HAFlow.Main.prototype.onReportModuleAdded = function(currentInstance, reportId,
 			name : "Sa",
 			file_path : 'hdfs://133.133.2.150:9000/user/root/new/source/donut.csv',
 			column_index : '0'
+		},  {
+			id : HAFlow.generateUUID(),
+			name : "Sb",
+			file_path : 'hdfs://133.133.2.150:9000/user/root/new/source/donut.csv',
+			column_index : '1'
 		}];
 	}else {
 		alert("unknown report");
@@ -996,15 +1001,28 @@ HAFlow.Main.prototype.initChart = function(chart, currentPortlet, legendDivId){
 		contentType : "application/json",
 		success : function(model, status) {
 			var ccmList = model.series;
-			for ( var i = 0; i < ccmList.length; i++) {
-				var ccm = ccmList[i];
-//				_currentInstance.addToConsole(ccm.columnname + ": " + ccm.data, false);
+			if( currentPortlet.type == 'pie'){
+				var ccm = ccmList[0];
 				var series_data = new Array();
-				for( var j = 0; j < ccm.data.length; j++ ){
-					series_data.push({y:ccm.data[j], text: 'a', tooltip: 'b'});
-//					series_data.push({x:Math.floor((Math.random()*10)+1), y:ccm.data[j], text: 'a', tooltip: 'b'});
+				for ( var j = 0; j < ccm.data.length; j++) {
+					series_data.push({
+						y : ccm.data[j],
+						text : ccmList[1].data[j],//todo
+						tooltip : '... ...'
+					});
 				}
 				chart.addSeries(ccm.columnname, series_data);
+			}else{
+				for ( var i = 0; i < ccmList.length; i++) {
+					var ccm = ccmList[i];
+	//				_currentInstance.addToConsole(ccm.columnname + ": " + ccm.data, false);
+					var series_data = new Array();
+					for( var j = 0; j < ccm.data.length; j++ ){
+						series_data.push({y:ccm.data[j], text: 'a', tooltip: '... ...'});
+	//					series_data.push({x:Math.floor((Math.random()*10)+1), y:ccm.data[j], text: 'a', tooltip: 'b'});
+					}
+					chart.addSeries(ccm.columnname, series_data);
+				}
 			}
 			chart.render();
 			if( dijit.byId(legendDivId) != null){

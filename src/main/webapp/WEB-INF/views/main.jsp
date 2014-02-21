@@ -53,7 +53,6 @@
 <script type="text/javascript" src="<%=basePath%>/script/haflow.hdfs.js"></script>
 <script type="text/javascript" src="<%=basePath%>/script/haflow.report_list.js"></script>
 <script type="text/javascript" src="<%=basePath%>/script/haflow.report.js"></script>
-<script type="text/javascript" src="<%=basePath%>/script/haflow.report_float.js"></script>
 <script type="text/javascript" src="<%=basePath%>/script/haflow.jsplumb.js"></script>
 <script type="text/javascript" src="<%=basePath%>/script/haflow.oozie_hive.js"></script>
 <script type="text/javascript" src="<%=basePath%>/script/haflow.toolbar.js"></script>
